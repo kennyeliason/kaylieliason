@@ -38,14 +38,26 @@
 			.photo {
 				background: white;
 				border-radius: 1rem;
-				aspect-ratio: 1;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				color: #1a7f88;
-				font-size: 0.9rem;
+				overflow: hidden;
 				box-shadow: 0 4px 20px rgba(13, 92, 99, 0.1);
 				border: 1px solid rgba(13, 92, 99, 0.08);
+				position: relative;
+			}
+			.photo img {
+				width: 100%;
+				height: auto;
+				display: block;
+			}
+			.badge {
+				position: absolute;
+				top: 0.5rem;
+				right: 0.5rem;
+				background: linear-gradient(135deg, #e91e63, #c2185b);
+				color: white;
+				padding: 0.25rem 0.5rem;
+				border-radius: 0.5rem;
+				font-size: 0.7rem;
+				font-weight: 600;
 			}
 			.cta {
 				display: block;
@@ -68,10 +80,42 @@
 			<p class="subtitle">Contact for pricing</p>
 			
 			<div class="gallery">
-				<div class="photo">Photo coming soon</div>
-				<div class="photo">Photo coming soon</div>
-				<div class="photo">Photo coming soon</div>
-				<div class="photo">Photo coming soon</div>
+				<div class="photo">
+					<span class="badge">For Sale</span>
+					<img src="/images/holiday/IMG_3962.jpeg" alt="Valentine's Day Banner" />
+				</div>
+				<div class="photo">
+					<span class="badge">For Sale</span>
+					<img src="/images/holiday/IMG_2777.jpeg" alt="Valentine's Day Banner" />
+				</div>
+				<div class="photo">
+					<span class="badge">For Sale</span>
+					<img src="/images/holiday/FullSizeRender.jpeg" alt="Valentine's Day Banner" />
+				</div>
+				<div class="photo">
+					<img src="/images/holiday/IMG_2595.jpeg" alt="Holiday Banner" />
+				</div>
+				<div class="photo">
+					<img src="/images/holiday/IMG_2834.jpeg" alt="Holiday Banner" />
+				</div>
+				<div class="photo">
+					<img src="/images/holiday/IMG_2879.jpeg" alt="Holiday Banner" />
+				</div>
+				<div class="photo">
+					<img src="/images/holiday/IMG_3078.jpeg" alt="Holiday Banner" />
+				</div>
+				<div class="photo">
+					<img src="/images/holiday/IMG_3224.jpeg" alt="Holiday Banner" />
+				</div>
+				<div class="photo">
+					<img src="/images/holiday/IMG_3379.jpeg" alt="Holiday Banner" />
+				</div>
+				<div class="photo">
+					<img src="/images/holiday/IMG_3420.jpeg" alt="Holiday Banner" />
+				</div>
+				<div class="photo">
+					<img src="/images/holiday/FullSizeRender 2.jpeg" alt="Holiday Banner" />
+				</div>
 			</div>
 			
 			<a href="/#order" class="cta">Order a Holiday Banner</a>
