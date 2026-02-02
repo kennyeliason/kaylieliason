@@ -38,14 +38,15 @@
 			.photo {
 				background: white;
 				border-radius: 1rem;
-				aspect-ratio: 1;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				color: #1a7f88;
-				font-size: 0.9rem;
+				overflow: hidden;
 				box-shadow: 0 4px 20px rgba(13, 92, 99, 0.1);
 				border: 1px solid rgba(13, 92, 99, 0.08);
+				position: relative;
+			}
+			.photo img {
+				width: 100%;
+				height: auto;
+				display: block;
 			}
 			.cta {
 				display: block;
@@ -68,10 +69,12 @@
 			<p class="subtitle">Contact for pricing</p>
 			
 			<div class="gallery">
-				<div class="photo">Photo coming soon</div>
-				<div class="photo">Photo coming soon</div>
-				<div class="photo">Photo coming soon</div>
-				<div class="photo">Photo coming soon</div>
+				<div class="photo">
+					<img src="/images/church/FullSizeRender.jpeg" alt="Walk With Me Banner" />
+				</div>
+				<div class="photo">
+					<img src="/images/church/IMG_2879.jpeg" alt="We Love You Banner" />
+				</div>
 			</div>
 			
 			<a href="/#order" class="cta">Order a Church Banner</a>
