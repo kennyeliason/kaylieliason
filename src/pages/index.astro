@@ -12,7 +12,7 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-		<title>Kayli's Banners ✨</title>
+		<title>Kayli's Banners</title>
 		<style>
 			* {
 				margin: 0;
@@ -21,7 +21,13 @@
 			}
 			body {
 				font-family: 'Outfit', sans-serif;
-				background: linear-gradient(180deg, #e0f7fa 0%, #b2ebf2 30%, #80deea 70%, #4dd0e1 100%);
+				background: repeating-linear-gradient(
+					90deg,
+					#f8f9fa,
+					#f8f9fa 20px,
+					#f1f3f4 20px,
+					#f1f3f4 40px
+				);
 				min-height: 100vh;
 				padding: 2rem;
 			}
@@ -33,38 +39,25 @@
 				text-align: center;
 				margin-bottom: 2rem;
 			}
-			.logo {
-				font-size: 3.5rem;
-				margin-bottom: 0.5rem;
-				animation: float 3s ease-in-out infinite;
-			}
-			@keyframes float {
-				0%, 100% { transform: translateY(0); }
-				50% { transform: translateY(-10px); }
-			}
 			h1 {
 				font-size: 2.5rem;
 				font-weight: 700;
-				background: linear-gradient(135deg, #00838f, #006064);
-				-webkit-background-clip: text;
-				-webkit-text-fill-color: transparent;
-				background-clip: text;
+				color: #0d5c63;
 				margin-bottom: 0.25rem;
 			}
 			.tagline {
 				font-size: 1.1rem;
-				color: #00838f;
+				color: #1a7f88;
 				font-weight: 400;
 				letter-spacing: 0.5px;
 			}
 			.card {
-				background: rgba(255, 255, 255, 0.85);
-				backdrop-filter: blur(10px);
-				border-radius: 1.5rem;
-				padding: 2rem;
-				margin-bottom: 1.5rem;
-				box-shadow: 0 8px 32px rgba(0, 131, 143, 0.15);
-				border: 1px solid rgba(255, 255, 255, 0.5);
+				background: rgba(255, 255, 255, 0.95);
+				border-radius: 1.25rem;
+				padding: 1.75rem;
+				margin-bottom: 1.25rem;
+				box-shadow: 0 4px 20px rgba(13, 92, 99, 0.1);
+				border: 1px solid rgba(13, 92, 99, 0.08);
 			}
 			.services {
 				display: flex;
@@ -73,16 +66,35 @@
 				justify-content: center;
 			}
 			.service {
-				background: linear-gradient(135deg, #4dd0e1, #26c6da);
-				padding: 0.5rem 1rem;
+				background: linear-gradient(135deg, #0d5c63, #1a7f88);
+				padding: 0.6rem 1.25rem;
 				border-radius: 2rem;
 				color: white;
 				font-weight: 500;
 				font-size: 0.9rem;
-				box-shadow: 0 4px 15px rgba(77, 208, 225, 0.3);
+				text-decoration: none;
+				transition: all 0.3s ease;
+			}
+			.service:hover {
+				transform: translateY(-2px);
+				box-shadow: 0 4px 15px rgba(13, 92, 99, 0.3);
+			}
+			.pricing {
+				text-align: center;
+				padding: 1rem 0;
+			}
+			.price {
+				font-size: 1.8rem;
+				font-weight: 700;
+				color: #0d5c63;
+			}
+			.price-note {
+				color: #1a7f88;
+				font-size: 0.9rem;
+				margin-top: 0.25rem;
 			}
 			form h2 {
-				color: #00838f;
+				color: #0d5c63;
 				margin-bottom: 1.5rem;
 				text-align: center;
 				font-weight: 600;
@@ -91,26 +103,26 @@
 			label {
 				display: block;
 				margin-bottom: 0.4rem;
-				color: #006064;
+				color: #0d5c63;
 				font-weight: 500;
 				font-size: 0.9rem;
 			}
 			input, textarea {
 				width: 100%;
 				padding: 0.85rem 1rem;
-				border: 2px solid #b2ebf2;
-				border-radius: 1rem;
+				border: 2px solid #e0e5e6;
+				border-radius: 0.75rem;
 				margin-bottom: 1rem;
 				font-size: 1rem;
 				font-family: inherit;
-				background: rgba(255, 255, 255, 0.7);
+				background: #fafbfb;
 				transition: all 0.3s ease;
 			}
 			input:focus, textarea:focus {
 				outline: none;
-				border-color: #26c6da;
+				border-color: #1a7f88;
 				background: white;
-				box-shadow: 0 0 0 4px rgba(38, 198, 218, 0.15);
+				box-shadow: 0 0 0 4px rgba(26, 127, 136, 0.1);
 			}
 			textarea {
 				min-height: 100px;
@@ -118,46 +130,34 @@
 			}
 			button {
 				width: 100%;
-				background: linear-gradient(135deg, #26c6da, #00acc1);
+				background: linear-gradient(135deg, #0d5c63, #1a7f88);
 				color: white;
 				padding: 1rem;
 				border: none;
-				border-radius: 1rem;
+				border-radius: 0.75rem;
 				font-size: 1.1rem;
 				font-weight: 600;
 				cursor: pointer;
 				transition: all 0.3s ease;
-				box-shadow: 0 4px 20px rgba(38, 198, 218, 0.4);
 				font-family: inherit;
 			}
 			button:hover {
 				transform: translateY(-2px);
-				box-shadow: 0 6px 25px rgba(38, 198, 218, 0.5);
+				box-shadow: 0 6px 25px rgba(13, 92, 99, 0.3);
 			}
 			button:active {
 				transform: translateY(0);
 			}
 			.venmo {
 				margin-top: 1.25rem;
-				color: #00838f;
+				color: #1a7f88;
 				font-size: 0.85rem;
 				text-align: center;
-				opacity: 0.8;
-			}
-			.sparkle {
-				display: inline-block;
-				animation: sparkle 1.5s ease-in-out infinite;
-			}
-			.sparkle:nth-child(2) { animation-delay: 0.5s; }
-			.sparkle:nth-child(3) { animation-delay: 1s; }
-			@keyframes sparkle {
-				0%, 100% { opacity: 1; transform: scale(1); }
-				50% { opacity: 0.5; transform: scale(0.8); }
 			}
 			.footer {
 				text-align: center;
-				margin-top: 1rem;
-				color: #00838f;
+				margin-top: 1.5rem;
+				color: #0d5c63;
 				font-size: 0.85rem;
 				opacity: 0.7;
 			}
@@ -166,45 +166,47 @@
 	<body>
 		<div class="container">
 			<div class="header">
-				<div class="logo">🎀</div>
 				<h1>Kayli's Banners</h1>
-				<p class="tagline">
-					<span class="sparkle">✨</span> 
-					handmade with love 
-					<span class="sparkle">✨</span>
-				</p>
+				<p class="tagline">handmade with love</p>
 			</div>
 			
 			<div class="card">
 				<div class="services">
-					<span class="service">🎂 birthdays</span>
-					<span class="service">🎄 holidays</span>
-					<span class="service">🎈 parties</span>
-					<span class="service">🎓 grad</span>
-					<span class="service">💫 custom</span>
+					<a href="/gallery/birthday" class="service">birthday</a>
+					<a href="/gallery/holiday" class="service">holiday</a>
+					<a href="/gallery/party" class="service">party</a>
+					<a href="/gallery/graduation" class="service">graduation</a>
+					<a href="/gallery/custom" class="service">custom</a>
 				</div>
 			</div>
 			
 			<div class="card">
-				<form name="order" method="POST" data-netlify="true">
-					<h2>order a banner 🎨</h2>
+				<div class="pricing">
+					<div class="price">$15 – $25</div>
+					<p class="price-note">depending on size & complexity</p>
+				</div>
+			</div>
+			
+			<div class="card">
+				<form id="order" name="order" method="POST" data-netlify="true">
+					<h2>order a banner</h2>
 					
 					<label for="name">your name</label>
 					<input type="text" id="name" name="name" placeholder="name" required />
 					
 					<label for="email">email or phone</label>
-					<input type="text" id="email" name="email" placeholder="so i can reach you!" required />
+					<input type="text" id="email" name="email" placeholder="so i can reach you" required />
 					
-					<label for="message">tell me about your banner!</label>
-					<textarea id="message" name="message" placeholder="what's the occasion? what colors? what should it say? ✨" required></textarea>
+					<label for="message">tell me about your banner</label>
+					<textarea id="message" name="message" placeholder="what's the occasion? colors? what should it say?" required></textarea>
 					
-					<button type="submit">send request 💌</button>
+					<button type="submit">send request</button>
 					
-					<p class="venmo">payment via venmo after we confirm 💕</p>
+					<p class="venmo">payment via venmo after confirmation</p>
 				</form>
 			</div>
 			
-			<p class="footer">made with 💙 by kayli</p>
+			<p class="footer">made by kayli</p>
 		</div>
 	</body>
 </html>

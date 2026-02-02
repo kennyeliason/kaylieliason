@@ -1,0 +1,80 @@
+---
+
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+		<title>Custom Banners | Kayli's Banners</title>
+		<style>
+			* { margin: 0; padding: 0; box-sizing: border-box; }
+			body {
+				font-family: 'Outfit', sans-serif;
+				background: repeating-linear-gradient(90deg, #f8f9fa, #f8f9fa 20px, #f1f3f4 20px, #f1f3f4 40px);
+				min-height: 100vh;
+				padding: 2rem;
+			}
+			.container { max-width: 600px; margin: 0 auto; }
+			.back { 
+				display: inline-block;
+				color: #1a7f88; 
+				text-decoration: none; 
+				margin-bottom: 1.5rem;
+				font-weight: 500;
+			}
+			.back:hover { text-decoration: underline; }
+			h1 { font-size: 2rem; color: #0d5c63; margin-bottom: 0.5rem; }
+			.subtitle { color: #1a7f88; margin-bottom: 2rem; }
+			.gallery {
+				display: grid;
+				grid-template-columns: repeat(2, 1fr);
+				gap: 1rem;
+			}
+			.photo {
+				background: white;
+				border-radius: 1rem;
+				aspect-ratio: 1;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				color: #1a7f88;
+				font-size: 0.9rem;
+				box-shadow: 0 4px 20px rgba(13, 92, 99, 0.1);
+				border: 1px solid rgba(13, 92, 99, 0.08);
+			}
+			.cta {
+				display: block;
+				text-align: center;
+				background: linear-gradient(135deg, #0d5c63, #1a7f88);
+				color: white;
+				padding: 1rem;
+				border-radius: 0.75rem;
+				text-decoration: none;
+				font-weight: 600;
+				margin-top: 2rem;
+			}
+			.cta:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(13, 92, 99, 0.3); }
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<a href="/" class="back">← back</a>
+			<h1>custom banners</h1>
+			<p class="subtitle">$15 – $25 depending on size</p>
+			
+			<div class="gallery">
+				<div class="photo">photo coming soon</div>
+				<div class="photo">photo coming soon</div>
+				<div class="photo">photo coming soon</div>
+				<div class="photo">photo coming soon</div>
+			</div>
+			
+			<a href="/#order" class="cta">order a custom banner</a>
+		</div>
+	</body>
+</html>
