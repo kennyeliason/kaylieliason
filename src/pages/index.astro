@@ -60,24 +60,63 @@
 				font-weight: 500;
 				box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 			}
-			.cta {
+			form {
+				background: white;
+				padding: 2rem;
+				border-radius: 1rem;
+				box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+				text-align: left;
+			}
+			form h2 {
+				color: #7b1fa2;
+				margin-bottom: 1rem;
+				text-align: center;
+			}
+			label {
+				display: block;
+				margin-bottom: 0.5rem;
+				color: #333;
+				font-weight: 500;
+			}
+			input, textarea {
+				width: 100%;
+				padding: 0.75rem;
+				border: 2px solid #e0e0e0;
+				border-radius: 0.5rem;
+				margin-bottom: 1rem;
+				font-size: 1rem;
+				font-family: inherit;
+			}
+			input:focus, textarea:focus {
+				outline: none;
+				border-color: #9c27b0;
+			}
+			textarea {
+				min-height: 100px;
+				resize: vertical;
+			}
+			button {
+				width: 100%;
 				background: #7b1fa2;
 				color: white;
-				padding: 1rem 2rem;
-				border-radius: 2rem;
-				font-size: 1.2rem;
-				text-decoration: none;
-				display: inline-block;
-				box-shadow: 0 4px 15px rgba(123, 31, 162, 0.3);
-				transition: transform 0.2s, box-shadow 0.2s;
+				padding: 1rem;
+				border: none;
+				border-radius: 0.5rem;
+				font-size: 1.1rem;
+				cursor: pointer;
+				transition: background 0.2s;
 			}
-			.cta:hover {
-				transform: translateY(-2px);
-				box-shadow: 0 6px 20px rgba(123, 31, 162, 0.4);
+			button:hover {
+				background: #6a1b9a;
 			}
 			.emoji {
 				font-size: 4rem;
 				margin-bottom: 1rem;
+			}
+			.venmo {
+				margin-top: 1.5rem;
+				color: #666;
+				font-size: 0.9rem;
 			}
 		</style>
 	</head>
@@ -97,10 +136,22 @@
 				<span class="service">🎓 Graduation</span>
 				<span class="service">✨ Custom</span>
 			</div>
-			<p class="description">
-				<strong>Payment via Venmo</strong><br>
-				DM me to order!
-			</p>
+			
+			<form name="order" method="POST" data-netlify="true">
+				<h2>Order a Banner</h2>
+				<label for="name">Your Name</label>
+				<input type="text" id="name" name="name" required />
+				
+				<label for="email">Email or Phone</label>
+				<input type="text" id="email" name="email" required />
+				
+				<label for="message">What kind of banner do you need?</label>
+				<textarea id="message" name="message" placeholder="Tell me about your event, colors, and what you'd like the banner to say!" required></textarea>
+				
+				<button type="submit">Send Request 🎨</button>
+				
+				<p class="venmo">Payment via Venmo after we confirm your order!</p>
+			</form>
 		</div>
 	</body>
 </html>
