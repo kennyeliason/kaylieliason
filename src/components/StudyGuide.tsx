@@ -155,76 +155,21 @@ const questions = [
   { id: 82, unit: 'Unit 10', topic: 'Photosynthesis', q: 'The reactants of photosynthesis are...', a: 'Carbon dioxide and water', wrong: ['Glucose and oxygen', 'ATP and carbon dioxide', 'Oxygen and ATP'] },
   { id: 83, unit: 'Unit 10', topic: 'Cellular Respiration', q: 'Glycolysis occurs in the...', a: 'Cytoplasm', wrong: ['Nucleus', 'Chloroplast', 'Mitochondria'] },
 
-  // Unit 11 - Introduction to Genetics (Study Guide Questions 1-50)
+  // Unit 11 - Introduction to Genetics (Test Questions)
 
-  // The Work of Gregor Mendel (Q1-13)
-  { id: 1101, unit: 'Unit 11', topic: 'Gregor Mendel', q: 'The scientific study of inheritance is called...', a: 'Genetics', wrong: ['Biology', 'Ecology', 'Cytology'] },
-  { id: 1102, unit: 'Unit 11', topic: 'Gregor Mendel', q: 'What organism did Gregor Mendel use in his experiments?', a: 'Pea plants', wrong: ['Fruit flies', 'Mice', 'Corn plants'] },
-  { id: 1103, unit: 'Unit 11', topic: 'Gregor Mendel', q: 'During sexual reproduction, cells join in a process called...', a: 'Fertilization', wrong: ['Mitosis', 'Pollination', 'Germination'] },
-  { id: 1104, unit: 'Unit 11', topic: 'Gregor Mendel', q: 'Which of the following is one of the seven traits Mendel studied in pea plants?', a: 'Seed shape and seed color', wrong: ['Leaf size and root length', 'Stem width and petal count', 'Bark texture and branch angle'] },
-  { id: 1105, unit: 'Unit 11', topic: 'Gregor Mendel', q: 'F1 stands for the first ___ generation.', a: 'Filial', wrong: ['Fundamental', 'Final', 'Fertile'] },
-  { id: 1106, unit: 'Unit 11', topic: 'Gregor Mendel', q: 'Factors that are passed from parents to offspring are called...', a: 'Genes', wrong: ['Proteins', 'Chromosomes', 'Ribosomes'] },
-  { id: 1107, unit: 'Unit 11', topic: 'Gregor Mendel', q: 'Different forms of the same gene are called...', a: 'Alleles', wrong: ['Chromosomes', 'Gametes', 'Phenotypes'] },
-  { id: 1108, unit: 'Unit 11', topic: 'Gregor Mendel', q: "Mendel's second conclusion is known as the Principle of...", a: 'Segregation', wrong: ['Dominance', 'Independent Assortment', 'Incomplete Dominance'] },
-  { id: 1109, unit: 'Unit 11', topic: 'Gregor Mendel', q: 'To determine whether recessive alleles disappeared, Mendel allowed the F1 hybrids to...', a: 'Self-pollinate', wrong: ['Cross-pollinate with P generation', 'Undergo mitosis', 'Reproduce asexually'] },
-  { id: 1110, unit: 'Unit 11', topic: 'Gregor Mendel', q: 'During gamete formation, the alleles for each gene...', a: 'Segregate (separate) from each other', wrong: ['Fuse together permanently', 'Double in number', 'Mutate into new forms'] },
-  { id: 1111, unit: 'Unit 11', topic: 'Gregor Mendel', q: 'Capital letters represent the ___ allele.', a: 'Dominant', wrong: ['Recessive', 'Codominant', 'Incomplete'] },
-  { id: 1112, unit: 'Unit 11', topic: 'Gregor Mendel', q: 'Lowercase letters represent the ___ allele.', a: 'Recessive', wrong: ['Dominant', 'Codominant', 'Polygenic'] },
-  { id: 1113, unit: 'Unit 11', topic: 'Gregor Mendel', q: "In Mendel's experiments with pod color, the F2 generation contained ___ out of four green pods and ___ out of four yellow pods.", a: '3 green and 1 yellow', wrong: ['1 green and 3 yellow', '2 green and 2 yellow', '4 green and 0 yellow'] },
-
-  // Applying Mendel's Principles (Q14-22)
-  { id: 1114, unit: 'Unit 11', topic: "Mendel's Principles", q: 'The likelihood that an event will occur is called...', a: 'Probability', wrong: ['Genetics', 'Heredity', 'Segregation'] },
-  { id: 1115, unit: 'Unit 11', topic: "Mendel's Principles", q: 'What is the probability of flipping a coin and getting three heads in a row?', a: '1/8', wrong: ['1/2', '1/4', '1/6'] },
-  { id: 1116, unit: 'Unit 11', topic: "Mendel's Principles", q: "In Mendel's crosses, about ___ of the plants showed the dominant trait, and ___ showed the recessive trait.", a: '3/4 dominant, 1/4 recessive', wrong: ['1/2 dominant, 1/2 recessive', '2/3 dominant, 1/3 recessive', '1/4 dominant, 3/4 recessive'] },
-  { id: 1117, unit: 'Unit 11', topic: "Mendel's Principles", q: 'Organisms that have two identical alleles for a gene are called...', a: 'Homozygous', wrong: ['Heterozygous', 'Codominant', 'Polygenic'] },
-  { id: 1118, unit: 'Unit 11', topic: "Mendel's Principles", q: 'Organisms that have two different alleles for a gene are called...', a: 'Heterozygous', wrong: ['Homozygous', 'Dominant', 'Purebred'] },
-  { id: 1119, unit: 'Unit 11', topic: "Mendel's Principles", q: 'What is the probability that two heterozygous overo horses will produce a foal with the lethal homozygous recessive mutation (white syndrome)?', a: '25%', wrong: ['50%', '75%', '12.5%'] },
-  { id: 1120, unit: 'Unit 11', topic: "Mendel's Principles", q: 'The physical characteristics of an organism are called its...', a: 'Phenotype', wrong: ['Genotype', 'Karyotype', 'Alleles'] },
-  { id: 1121, unit: 'Unit 11', topic: "Mendel's Principles", q: 'The genetic makeup of an organism is called its...', a: 'Genotype', wrong: ['Phenotype', 'Genome', 'Karyotype'] },
-  { id: 1122, unit: 'Unit 11', topic: "Mendel's Principles", q: 'A diagram used to predict the outcome of a genetic cross is called a ___ square.', a: 'Punnett', wrong: ['Mendel', 'Darwin', 'Pedigree'] },
-
-  // Independent Assortment (Q23-27)
-  { id: 1123, unit: 'Unit 11', topic: 'Independent Assortment', q: "The genotypes of the parents in Mendel's two-factor cross were...", a: 'RRYY × rryy', wrong: ['RrYy × RrYy', 'RRyy × rrYY', 'Rryy × rrYy'] },
-  { id: 1124, unit: 'Unit 11', topic: 'Independent Assortment', q: 'What were the phenotypes of the F1 generation in the cross RRYY × rryy?', a: 'All round and yellow', wrong: ['All wrinkled and green', 'Half round, half wrinkled', '3/4 round and yellow'] },
-  { id: 1125, unit: 'Unit 11', topic: 'Independent Assortment', q: 'What ratio appeared in the F2 generation of a dihybrid cross?', a: '9:3:3:1', wrong: ['3:1', '1:2:1', '1:1:1:1'] },
-  { id: 1126, unit: 'Unit 11', topic: 'Independent Assortment', q: "Mendel's dihybrid cross experiment led to the Principle of...", a: 'Independent Assortment', wrong: ['Segregation', 'Dominance', 'Codominance'] },
-  { id: 1127, unit: 'Unit 11', topic: 'Independent Assortment', q: "Mendel's principles form the basis for the modern science of...", a: 'Genetics', wrong: ['Ecology', 'Taxonomy', 'Anatomy'] },
-
-  // Other Patterns of Inheritance (Q28-37)
-  { id: 1128, unit: 'Unit 11', topic: 'Other Inheritance', q: 'When one allele is not completely dominant over the other, it is called ___ dominance.', a: 'Incomplete', wrong: ['Complete', 'Co-', 'Polygenic'] },
-  { id: 1129, unit: 'Unit 11', topic: 'Other Inheritance', q: 'When a red Mirabilis flower is crossed with a white Mirabilis flower, the offspring are all...', a: 'Pink', wrong: ['Red', 'White', 'Half red and half white'] },
-  { id: 1130, unit: 'Unit 11', topic: 'Other Inheritance', q: 'When the phenotypes of both alleles are expressed equally, the pattern is called...', a: 'Codominance', wrong: ['Incomplete dominance', 'Polygenic inheritance', 'Multiple alleles'] },
-  { id: 1131, unit: 'Unit 11', topic: 'Other Inheritance', q: 'If a white chicken is crossed with a black chicken under codominance, the offspring have what color pattern?', a: 'Black and white (speckled/checkered)', wrong: ['Gray', 'All black', 'All white'] },
-  { id: 1132, unit: 'Unit 11', topic: 'Other Inheritance', q: 'The gene controlling ___ levels in humans is codominant.', a: 'Cholesterol', wrong: ['Insulin', 'Hemoglobin', 'Melanin'] },
-  { id: 1133, unit: 'Unit 11', topic: 'Other Inheritance', q: 'What is an example of a multiple allele trait in humans?', a: 'Blood type (ABO)', wrong: ['Height', 'Eye color', 'Skin color'] },
-  { id: 1134, unit: 'Unit 11', topic: 'Other Inheritance', q: 'The Himalayan rabbit has a mostly white body with black coloring on the ears, nose, tail, and feet due to...', a: 'Temperature-sensitive gene expression', wrong: ['Codominance', 'Polygenic inheritance', 'Random mutation'] },
-  { id: 1135, unit: 'Unit 11', topic: 'Other Inheritance', q: 'What is an example of a polygenic trait in humans?', a: 'Skin color', wrong: ['Blood type', "Widow's peak", "Hitchhiker's thumb"] },
-  { id: 1136, unit: 'Unit 11', topic: 'Other Inheritance', q: 'Chloroplasts in morning glory plants are inherited from the ___ cell.', a: 'Maternal (egg)', wrong: ['Paternal (sperm)', 'Both parents equally', 'Neither parent'] },
-  { id: 1137, unit: 'Unit 11', topic: 'Other Inheritance', q: 'Chemical modification of certain genes is called genetic...', a: 'Imprinting', wrong: ['Mutation', 'Recombination', 'Drift'] },
-
-  // Blood Type (Q38-40)
-  { id: 1138, unit: 'Unit 11', topic: 'Blood Type', q: 'What are the three alleles that determine human blood type?', a: 'IA, IB, and i', wrong: ['A, B, and C', 'IA, IB, and IC', 'A, B, and O'] },
-  { id: 1139, unit: 'Unit 11', topic: 'Blood Type', q: 'What blood type(s) can a person with Type A blood safely receive?', a: 'Type A and Type O', wrong: ['Only Type A', 'Type A, B, and O', 'Any blood type'] },
-  { id: 1140, unit: 'Unit 11', topic: 'Blood Type', q: 'Why is Type O blood referred to as the "universal donor"?', a: 'It has no A or B antigens, so it won\'t trigger an immune response', wrong: ['It has both A and B antigens', 'It is the most common blood type', 'It contains special antibodies'] },
-
-  // Genes and the Environment (Q41-42)
-  { id: 1141, unit: 'Unit 11', topic: 'Genes & Environment', q: 'The color of the buckeye butterfly is influenced by...', a: 'Temperature during development', wrong: ['The food it eats', 'Its age', 'Sunlight exposure as an adult'] },
-  { id: 1142, unit: 'Unit 11', topic: 'Genes & Environment', q: 'The western white butterfly shows pigment changes based on...', a: 'Seasonal temperature changes', wrong: ['Diet', 'Altitude', 'Predator presence'] },
-
-  // Pedigree Analysis (Q43-50)
-  { id: 1143, unit: 'Unit 11', topic: 'Pedigree', q: 'A pedigree is a diagram used to...', a: 'Track inheritance of traits through generations of a family', wrong: ['Predict the weather', 'Map DNA sequences', 'Classify organisms by species'] },
-  { id: 1144, unit: 'Unit 11', topic: 'Pedigree', q: 'In a pedigree, squares represent ___ and circles represent ___.', a: 'Males and females', wrong: ['Females and males', 'Dominant and recessive', 'Affected and unaffected'] },
-  { id: 1145, unit: 'Unit 11', topic: 'Pedigree', q: 'Shaded symbols in a pedigree usually indicate...', a: 'An individual who expresses the trait', wrong: ['An individual who is a carrier', 'A deceased individual', 'An individual with no data'] },
-  { id: 1146, unit: 'Unit 11', topic: 'Pedigree', q: 'If two unaffected parents have an affected child, the trait is most likely...', a: 'Autosomal recessive', wrong: ['Autosomal dominant', 'X-linked dominant', 'Y-linked'] },
-  { id: 1147, unit: 'Unit 11', topic: 'Pedigree', q: 'If a trait appears in every generation, it is likely...', a: 'Dominant', wrong: ['Recessive', 'X-linked', 'Polygenic'] },
-  { id: 1148, unit: 'Unit 11', topic: 'Pedigree', q: 'If a trait appears more often in males than females, it may be...', a: 'X-linked recessive', wrong: ['Autosomal dominant', 'Autosomal recessive', 'Y-linked dominant'] },
-  { id: 1149, unit: 'Unit 11', topic: 'Pedigree', q: 'If a mother is a carrier of an X-linked trait, what percentage of her sons are expected to show the trait?', a: '50%', wrong: ['25%', '100%', '0%'] },
-  { id: 1150, unit: 'Unit 11', topic: 'Pedigree', q: 'If both parents are heterozygous carriers for a recessive disorder, what is the probability their child will be affected?', a: '25%', wrong: ['50%', '75%', '0%'] },
-  { id: 1151, unit: 'Unit 11', topic: "Mendel's Principles", q: 'A couple are both heterozygous for a recessive disorder (Aa × Aa). What is the probability their child is unaffected and a non-carrier (AA)?', a: '25%', wrong: ['50%', '75%', '0%'] },
-  { id: 1152, unit: 'Unit 11', topic: "Mendel's Principles", q: 'A couple are both heterozygous for a recessive disorder (Aa × Aa). What is the probability their child is a carrier (Aa)?', a: '50%', wrong: ['25%', '75%', '0%'] },
-  { id: 1153, unit: 'Unit 11', topic: "Mendel's Principles", q: 'A couple are both heterozygous for a recessive disorder (Aa × Aa). What is the probability their child shows the dominant phenotype?', a: '75%', wrong: ['25%', '50%', '100%'] },
-  { id: 1154, unit: 'Unit 11', topic: "Mendel's Principles", q: 'A couple are both heterozygous for a recessive disorder (Aa × Aa). What is the probability their child is affected (aa)?', a: '25%', wrong: ['50%', '75%', '0%'] },
-  { id: 1155, unit: 'Unit 11', topic: "Mendel's Principles", q: 'Long tails (L) are dominant to short tails (l). Two dogs (Ll × Ll) produce 16 puppies. What is the genotype ratio?', a: '1 LL : 2 Ll : 1 ll', wrong: ['3 LL : 1 ll', '2 LL : 2 ll', '1 LL : 1 Ll : 2 ll'] },
+  { id: 1101, unit: 'Unit 11', topic: 'Punnett Squares', q: 'Two heterozygous guinea pigs (Bb × Bb) produce 40 offspring. How many white (bb) offspring would you expect?', a: '10', wrong: ['20', '30', '40'] },
+  { id: 1102, unit: 'Unit 11', topic: 'Punnett Squares', q: 'Black fur (B) is dominant to white fur (b). A heterozygous black mouse (Bb) is crossed with a homozygous recessive white mouse (bb). What is the probability of a bb (white) offspring?', a: '50%', wrong: ['25%', '75%', '100%'] },
+  { id: 1103, unit: 'Unit 11', topic: 'Punnett Squares', q: 'Black fur (B) is dominant to white fur (b). A heterozygous black mouse (Bb) is crossed with a homozygous recessive white mouse (bb). What is the probability of a Bb (black) offspring?', a: '50%', wrong: ['25%', '75%', '100%'] },
+  { id: 1104, unit: 'Unit 11', topic: 'Punnett Squares', q: 'Black fur (B) is dominant to white fur (b). A heterozygous black mouse (Bb) is crossed with a homozygous recessive white mouse (bb). What is the probability of a BB offspring?', a: '0%', wrong: ['25%', '50%', '75%'] },
+  { id: 1105, unit: 'Unit 11', topic: 'Dominance', q: "Mendel's Law of Dominance states that:", a: 'Dominant alleles are always expressed over recessive alleles', wrong: ['Dominant and recessive alleles are expressed randomly', 'Recessive alleles are always expressed over dominant alleles', 'Dominant and recessive alleles are always expressed equally'] },
+  { id: 1106, unit: 'Unit 11', topic: 'Polygenic Traits', q: 'A scientist studies human height and observes a wide range of variation within a population. Which explanation best accounts for this pattern?', a: 'Height is controlled by multiple genes and environmental factors', wrong: ['Height is controlled by one gene', 'Height is always dominant', 'Height is determined only by environment'] },
+  { id: 1107, unit: 'Unit 11', topic: 'Punnett Squares', q: 'Black fur (B) in guinea pigs is dominant over white fur (b). What is the probability of a black offspring in a cross of two heterozygous guinea pigs (Bb × Bb)?', a: '75%', wrong: ['25%', '50%', '100%'] },
+  { id: 1108, unit: 'Unit 11', topic: 'Heredity', q: 'What is the study of heredity called?', a: 'Genetics', wrong: ['Zoology', 'Biology', 'Botany'] },
+  { id: 1109, unit: 'Unit 11', topic: 'Genotype', q: 'Which of the following represents a recessive trait?', a: 'aa', wrong: ['AA', 'Aa', 'AaBb'] },
+  { id: 1110, unit: 'Unit 11', topic: 'Genotype', q: 'The genotype of an organism refers to:', a: 'Its genetic makeup', wrong: ['Its physical appearance', 'Its species', 'Its environment'] },
+  { id: 1111, unit: 'Unit 11', topic: 'Probability', q: 'A couple are both carriers for a recessive disorder (Aa × Aa). They already have one affected child. What is the probability their next child will also have the disorder?', a: '25%', wrong: ['50%', '75%', '0%'] },
+  { id: 1112, unit: 'Unit 11', topic: 'Punnett Squares', q: 'In a particular species of plant, purple is dominant over white. If a homozygous dominant plant (PP) is crossed with a homozygous recessive plant (pp), what is the probability that the offspring will be white?', a: '0%', wrong: ['25%', '50%', '100%'] },
+  { id: 1113, unit: 'Unit 11', topic: 'Heredity', q: 'What term describes the offspring of parents with different traits?', a: 'Heterozygotes', wrong: ['Diploids', 'Homozygotes', 'Mutants'] },
   { id: 1156, unit: 'Unit 11', topic: "Mendel's Principles", q: 'Long tails (L) are dominant to short tails (l). Two dogs (Ll × Ll) produce 16 puppies. What percentage are short-tailed?', a: '25%', wrong: ['50%', '75%', '0%'] },
   { id: 1157, unit: 'Unit 11', topic: "Mendel's Principles", q: 'Long tails (L) are dominant to short tails (l). Two dogs (Ll × Ll) produce 16 puppies. How many are expected to be short-tailed?', a: '4', wrong: ['8', '12', '2'] },
   { id: 1158, unit: 'Unit 11', topic: "Mendel's Principles", q: 'A heterozygous black mouse (Bb) is crossed with a homozygous recessive white mouse (bb). What percentage of offspring have a black phenotype?', a: '50%', wrong: ['25%', '75%', '100%'] },
