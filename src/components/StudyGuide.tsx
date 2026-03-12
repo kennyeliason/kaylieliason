@@ -206,10 +206,6 @@ const questions = [
   { id: 1159, unit: 'Unit 11', topic: "Mendel's Principles", q: 'A heterozygous black mouse (Bb) is crossed with a homozygous recessive white mouse (bb). What percentage of offspring are Bb?', a: '50%', wrong: ['25%', '75%', '0%'] },
   { id: 1160, unit: 'Unit 11', topic: "Mendel's Principles", q: 'A heterozygous black mouse (Bb) is crossed with a homozygous recessive white mouse (bb). What percentage of offspring have a white phenotype?', a: '50%', wrong: ['25%', '75%', '0%'] },
   { id: 1161, unit: 'Unit 11', topic: "Mendel's Principles", q: 'A heterozygous black mouse (Bb) is crossed with a homozygous recessive white mouse (bb). What percentage of offspring are BB?', a: '0%', wrong: ['25%', '50%', '75%'] },
-  { id: 1162, unit: 'Unit 11', topic: "Mendel's Principles", q: 'Orange tails (O) are dominant over non-orange (o). Two heterozygous guppies (Oo × Oo) produce 2,000 offspring. What percentage are expected to have orange tails?', a: '75%', wrong: ['25%', '50%', '100%'] },
-  { id: 1163, unit: 'Unit 11', topic: "Mendel's Principles", q: 'Orange tails (O) are dominant over non-orange (o). Two heterozygous guppies (Oo × Oo) produce 2,000 offspring. What percentage are expected to have non-orange tails?', a: '25%', wrong: ['50%', '75%', '0%'] },
-  { id: 1164, unit: 'Unit 11', topic: "Mendel's Principles", q: 'Can a non-orange guppy (oo) produce orange-tailed offspring if crossed with a heterozygous partner (Oo)?', a: 'Yes', wrong: ['No', 'Only if both parents are oo', 'Only if one parent is OO'] },
-  { id: 1165, unit: 'Unit 11', topic: "Mendel's Principles", q: 'Orange tails (O) are dominant over non-orange (o). Two heterozygous guppies (Oo × Oo). What percentage of offspring are heterozygous (Oo)?', a: '50%', wrong: ['25%', '75%', '0%'] },
   { id: 1166, unit: 'Unit 11', topic: "Mendel's Principles", q: 'Two heterozygous black guinea pigs (Bb × Bb) produce 40 offspring. How many white offspring would you expect?', a: '10', wrong: ['20', '30', '5'] },
 
   // Word Roots - Set 1
