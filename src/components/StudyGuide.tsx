@@ -8,6 +8,7 @@ const units = [
   { key: 'Unit 9', label: 'Unit 9: Cell Structure & Transport' },
   { key: 'Unit 10', label: 'Unit 10: Photosynthesis & Calvin Cycle' },
   { key: 'Unit 11', label: 'Unit 11: Introduction to Genetics' },
+  { key: 'Unit 12', label: 'Unit 12: DNA & Protein Synthesis' },
   { key: 'Roots', label: 'Word Roots' },
 ];
 
@@ -44,6 +45,14 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
     accent: '#3b82f6', accentLight: '#dbeafe',
     emojis: ['🧑‍🧑‍🧒‍🧒', '🧬', '🫛', '🧑‍🧑‍🧒‍🧒'],
     shadow: 'rgba(59,130,246,0.3)',
+  },
+  'Unit 12': {
+    primary: '#ef4444', primaryLight: '#f87171', primaryDark: '#dc2626',
+    gradient: 'linear-gradient(135deg, #ef4444, #f87171)',
+    bgGradient: 'linear-gradient(135deg, #fef2f2 0%, #fee2e2 50%, #fecaca 100%)',
+    accent: '#ef4444', accentLight: '#fee2e2',
+    emojis: ['🧬', '🔬', '🧪', '🔗'],
+    shadow: 'rgba(239,68,68,0.3)',
   },
   'Roots': {
     primary: '#f59e0b', primaryLight: '#fbbf24', primaryDark: '#d97706',
@@ -207,6 +216,84 @@ const questions = [
   { id: 1160, unit: 'Unit 11', topic: "Mendel's Principles", q: 'A heterozygous black mouse (Bb) is crossed with a homozygous recessive white mouse (bb). What percentage of offspring have a white phenotype?', a: '50%', wrong: ['25%', '75%', '0%'] },
   { id: 1161, unit: 'Unit 11', topic: "Mendel's Principles", q: 'A heterozygous black mouse (Bb) is crossed with a homozygous recessive white mouse (bb). What percentage of offspring are BB?', a: '0%', wrong: ['25%', '50%', '75%'] },
   { id: 1166, unit: 'Unit 11', topic: "Mendel's Principles", q: 'Two heterozygous black guinea pigs (Bb × Bb) produce 40 offspring. How many white offspring would you expect?', a: '10', wrong: ['20', '30', '5'] },
+
+  // Unit 12: DNA Replication & Protein Synthesis
+  // DNA Structure
+  { id: 1201, unit: 'Unit 12', topic: 'DNA Structure', q: 'What are the three parts of a nucleotide?', a: 'Sugar, phosphate group, nitrogenous base', wrong: ['Sugar, protein, lipid', 'Amino acid, phosphate, base', 'Ribose, enzyme, nitrogen'] },
+  { id: 1202, unit: 'Unit 12', topic: 'DNA Structure', q: 'What type of bond holds base pairs together in DNA?', a: 'Hydrogen bonds', wrong: ['Covalent bonds', 'Ionic bonds', 'Peptide bonds'] },
+  { id: 1203, unit: 'Unit 12', topic: 'DNA Structure', q: 'In DNA, adenine pairs with which base?', a: 'Thymine', wrong: ['Guanine', 'Cytosine', 'Uracil'] },
+  { id: 1204, unit: 'Unit 12', topic: 'DNA Structure', q: 'In DNA, cytosine pairs with which base?', a: 'Guanine', wrong: ['Adenine', 'Thymine', 'Uracil'] },
+  { id: 1205, unit: 'Unit 12', topic: 'DNA Structure', q: 'During which phase of the cell cycle does DNA replication occur?', a: 'S phase', wrong: ['G1 phase', 'G2 phase', 'M phase'] },
+
+  // Base Pairing - DNA
+  { id: 1206, unit: 'Unit 12', topic: 'Base Pairing', q: 'What is the complementary DNA strand for ATCG?', a: 'TAGC', wrong: ['UAGC', 'GCTA', 'CGAT'] },
+  { id: 1207, unit: 'Unit 12', topic: 'Base Pairing', q: 'What is the complementary DNA strand for GGCATA?', a: 'CCGTAT', wrong: ['CCGUAU', 'AATGCC', 'TATGCC'] },
+  { id: 1208, unit: 'Unit 12', topic: 'Base Pairing', q: 'What is the complementary DNA strand for TACGGT?', a: 'ATGCCA', wrong: ['AUGCCA', 'GTACCA', 'CATGGC'] },
+
+  // DNA Replication
+  { id: 1209, unit: 'Unit 12', topic: 'DNA Replication', q: 'Why is DNA replication called "semi-conservative"?', a: 'Each new DNA molecule has one original strand and one new strand', wrong: ['DNA is completely copied without changes', 'Both strands are newly synthesized', 'Only half the DNA is copied'] },
+  { id: 1210, unit: 'Unit 12', topic: 'DNA Replication', q: 'What would happen if DNA did not replicate before mitosis?', a: 'Daughter cells would only get half the DNA', wrong: ['Daughter cells would get double the DNA', 'Nothing would change', 'Cells would become cancerous immediately'] },
+  { id: 1211, unit: 'Unit 12', topic: 'DNA Replication', q: 'Why is accuracy important during DNA replication?', a: 'Errors can cause mutations that lead to diseases or cancer', wrong: ['It makes replication faster', 'It uses less energy', 'It prevents cell division'] },
+  { id: 1212, unit: 'Unit 12', topic: 'DNA Replication', q: 'What is the correct order of DNA replication steps?', a: 'Helicase unzips DNA → Primers attach → DNA polymerase adds nucleotides', wrong: ['DNA polymerase adds nucleotides → Helicase unzips → Primers attach', 'Primers attach → Helicase unzips → DNA polymerase adds nucleotides', 'DNA polymerase unzips → Primers detach → Helicase adds nucleotides'] },
+  { id: 1213, unit: 'Unit 12', topic: 'DNA Replication', q: 'What is the role of DNA polymerase?', a: 'Adds complementary nucleotides to build the new DNA strand', wrong: ['Unzips the DNA double helix', 'Holds the DNA strands apart', 'Creates primers for replication'] },
+  { id: 1214, unit: 'Unit 12', topic: 'DNA Replication', q: 'Why does DNA replication start at multiple origins in human cells?', a: 'To speed up replication since human DNA is very long', wrong: ['To create more mutations', 'Because helicase can only work once', 'To make the DNA shorter'] },
+  { id: 1215, unit: 'Unit 12', topic: 'DNA Replication', q: 'Which enzyme "unzips" the DNA double helix during replication?', a: 'Helicase', wrong: ['DNA polymerase', 'RNA polymerase', 'Ligase'] },
+
+  // Transcription
+  { id: 1216, unit: 'Unit 12', topic: 'Transcription', q: 'Where does transcription occur in a eukaryotic cell?', a: 'Nucleus', wrong: ['Ribosome', 'Cytoplasm', 'Mitochondria'] },
+  { id: 1217, unit: 'Unit 12', topic: 'Transcription', q: 'Which enzyme builds mRNA during transcription?', a: 'RNA polymerase', wrong: ['DNA polymerase', 'Helicase', 'Ligase'] },
+  { id: 1218, unit: 'Unit 12', topic: 'Transcription', q: 'Why can\'t DNA leave the nucleus?', a: 'It is too big and important to risk damage', wrong: ['It would dissolve in the cytoplasm', 'The nuclear membrane is too thick', 'Ribosomes would destroy it'] },
+  { id: 1219, unit: 'Unit 12', topic: 'Transcription', q: 'What is the mRNA sequence transcribed from DNA sequence TAC?', a: 'AUG', wrong: ['ATG', 'UAC', 'TAG'] },
+  { id: 1220, unit: 'Unit 12', topic: 'Transcription', q: 'What is the mRNA sequence transcribed from DNA sequence ATCG?', a: 'UAGC', wrong: ['TAGC', 'AUCG', 'GCTA'] },
+  { id: 1221, unit: 'Unit 12', topic: 'Transcription', q: 'What is the mRNA sequence transcribed from DNA sequence GGCATA?', a: 'CCGUAU', wrong: ['CCGTAT', 'GGCAUA', 'UAUGCC'] },
+  { id: 1222, unit: 'Unit 12', topic: 'Transcription', q: 'Why does RNA use uracil instead of thymine?', a: 'RNA is temporary and uracil is easier for the cell to make', wrong: ['Uracil is more stable than thymine', 'Thymine cannot bind to adenine', 'DNA already uses all the uracil'] },
+  { id: 1223, unit: 'Unit 12', topic: 'Transcription', q: 'What is the purpose of mRNA?', a: 'To carry genetic instructions from DNA to ribosomes', wrong: ['To store genetic information permanently', 'To break down proteins', 'To copy DNA during cell division'] },
+  { id: 1224, unit: 'Unit 12', topic: 'Transcription', q: 'How is mRNA different from DNA?', a: 'mRNA is single-stranded, uses ribose sugar, and has uracil instead of thymine', wrong: ['mRNA is double-stranded and longer than DNA', 'mRNA uses deoxyribose sugar and thymine', 'mRNA is permanent while DNA is temporary'] },
+
+  // Translation
+  { id: 1225, unit: 'Unit 12', topic: 'Translation', q: 'What is a codon?', a: 'A sequence of 3 mRNA bases that codes for one amino acid', wrong: ['A sequence of 3 amino acids', 'A single base in DNA', 'A type of protein'] },
+  { id: 1226, unit: 'Unit 12', topic: 'Translation', q: 'Where does translation occur?', a: 'Ribosome', wrong: ['Nucleus', 'Mitochondria', 'Golgi apparatus'] },
+  { id: 1227, unit: 'Unit 12', topic: 'Translation', q: 'What molecule brings amino acids to the ribosome during translation?', a: 'tRNA', wrong: ['mRNA', 'rRNA', 'DNA'] },
+  { id: 1228, unit: 'Unit 12', topic: 'Translation', q: 'How many bases make up one codon?', a: '3', wrong: ['1', '2', '4'] },
+  { id: 1229, unit: 'Unit 12', topic: 'Translation', q: 'What is the start codon?', a: 'AUG', wrong: ['UAA', 'UAG', 'UGA'] },
+  { id: 1230, unit: 'Unit 12', topic: 'Translation', q: 'Which of the following is a stop codon?', a: 'UAA', wrong: ['AUG', 'GUA', 'CGA'] },
+  { id: 1231, unit: 'Unit 12', topic: 'Translation', q: 'Which of the following is NOT a stop codon?', a: 'AUG', wrong: ['UAA', 'UAG', 'UGA'] },
+  { id: 1232, unit: 'Unit 12', topic: 'Translation', q: 'In the mRNA sequence AUG UUU GGC UAA, which codon signals the start?', a: 'AUG', wrong: ['UUU', 'GGC', 'UAA'] },
+  { id: 1233, unit: 'Unit 12', topic: 'Translation', q: 'In the mRNA sequence AUG UUU GGC UAA, which codon signals stop?', a: 'UAA', wrong: ['AUG', 'UUU', 'GGC'] },
+
+  // DNA to Protein Process
+  { id: 1234, unit: 'Unit 12', topic: 'DNA to Protein', q: 'Given DNA sequence TAC GGA TTT ACT, what is the mRNA?', a: 'AUG CCU AAA UGA', wrong: ['TAC GGA UUU ACU', 'AUG CCU TTT ACT', 'UAC GGU AAA UGA'] },
+  { id: 1235, unit: 'Unit 12', topic: 'DNA to Protein', q: 'In the mRNA sequence AUG CCU AAA UGA, which is the start codon?', a: 'AUG', wrong: ['CCU', 'AAA', 'UGA'] },
+  { id: 1236, unit: 'Unit 12', topic: 'DNA to Protein', q: 'In the mRNA sequence AUG CCU AAA UGA, which is the stop codon?', a: 'UGA', wrong: ['AUG', 'CCU', 'AAA'] },
+
+  // Protein Structure
+  { id: 1237, unit: 'Unit 12', topic: 'Protein Structure', q: 'What are proteins made of?', a: 'Amino acids', wrong: ['Nucleotides', 'Fatty acids', 'Glucose molecules'] },
+  { id: 1238, unit: 'Unit 12', topic: 'Protein Structure', q: 'How many different amino acids exist?', a: '20', wrong: ['4', '64', '100'] },
+  { id: 1239, unit: 'Unit 12', topic: 'Protein Structure', q: 'What determines the shape of a protein?', a: 'The sequence of amino acids', wrong: ['The temperature of the cell', 'The size of the ribosome', 'The amount of water present'] },
+  { id: 1240, unit: 'Unit 12', topic: 'Protein Structure', q: 'Why is protein shape important?', a: 'Shape determines function - wrong shape means the protein won\'t work', wrong: ['Shape makes proteins colorful', 'Shape helps proteins dissolve', 'Shape is only important for appearance'] },
+  { id: 1241, unit: 'Unit 12', topic: 'Protein Structure', q: 'Which level of protein structure refers to the sequence of amino acids?', a: 'Primary', wrong: ['Secondary', 'Tertiary', 'Quaternary'] },
+  { id: 1242, unit: 'Unit 12', topic: 'Protein Structure', q: 'Which level of protein structure involves alpha helices and beta sheets?', a: 'Secondary', wrong: ['Primary', 'Tertiary', 'Quaternary'] },
+  { id: 1243, unit: 'Unit 12', topic: 'Protein Structure', q: 'Which level of protein structure is the 3D folding of a single polypeptide chain?', a: 'Tertiary', wrong: ['Primary', 'Secondary', 'Quaternary'] },
+  { id: 1244, unit: 'Unit 12', topic: 'Protein Structure', q: 'Which level of protein structure involves multiple polypeptide chains together?', a: 'Quaternary', wrong: ['Primary', 'Secondary', 'Tertiary'] },
+
+  // Mutations
+  { id: 1245, unit: 'Unit 12', topic: 'Mutations', q: 'If a mutation changes TAC to TAG, what happens to the mRNA?', a: 'AUG changes to AUC', wrong: ['AUG changes to AUG', 'TAG changes to TAC', 'Nothing changes'] },
+  { id: 1246, unit: 'Unit 12', topic: 'Mutations', q: 'What happens if a protein folds incorrectly?', a: 'It won\'t function properly and could cause disease', wrong: ['It works better than normal', 'It becomes larger', 'Nothing happens'] },
+  { id: 1247, unit: 'Unit 12', topic: 'Mutations', q: 'If a cell can\'t produce RNA polymerase, which process stops?', a: 'Transcription', wrong: ['Replication', 'Translation', 'Mutation'] },
+  { id: 1248, unit: 'Unit 12', topic: 'Mutations', q: 'What happens during replication if helicase doesn\'t work?', a: 'DNA cannot unzip so replication stops', wrong: ['Replication speeds up', 'Only one strand is copied', 'The cell divides faster'] },
+  { id: 1249, unit: 'Unit 12', topic: 'Mutations', q: 'Why might a mutation NOT affect the protein produced?', a: 'Multiple codons can code for the same amino acid (silent mutation)', wrong: ['Mutations always change proteins', 'The DNA repairs itself immediately', 'Proteins ignore mutations'] },
+  { id: 1250, unit: 'Unit 12', topic: 'Mutations', q: 'What type of mutation occurs when a codon changes but codes for the same amino acid?', a: 'Silent mutation', wrong: ['Missense mutation', 'Nonsense mutation', 'Frameshift mutation'] },
+  { id: 1251, unit: 'Unit 12', topic: 'Mutations', q: 'What type of mutation creates an early stop codon?', a: 'Nonsense mutation', wrong: ['Silent mutation', 'Missense mutation', 'Beneficial mutation'] },
+  { id: 1252, unit: 'Unit 12', topic: 'Mutations', q: 'What would happen if a stop codon mutated into a regular codon?', a: 'The protein would be too long and likely nonfunctional', wrong: ['The protein would be shorter', 'Nothing would change', 'The protein would work better'] },
+
+  // Higher Level Concepts
+  { id: 1253, unit: 'Unit 12', topic: 'Concepts', q: 'What enzyme is used in DNA replication but NOT in transcription?', a: 'DNA polymerase', wrong: ['RNA polymerase', 'Helicase', 'Both use the same enzymes'] },
+  { id: 1254, unit: 'Unit 12', topic: 'Concepts', q: 'What is the purpose of DNA replication?', a: 'To copy DNA for cell division', wrong: ['To make proteins', 'To create mRNA', 'To break down nucleotides'] },
+  { id: 1255, unit: 'Unit 12', topic: 'Concepts', q: 'What is the purpose of transcription?', a: 'To make mRNA from DNA', wrong: ['To copy DNA', 'To make proteins', 'To break down DNA'] },
+  { id: 1256, unit: 'Unit 12', topic: 'Concepts', q: 'How does DNA control cell activities?', a: 'DNA → mRNA → protein, and proteins do all the cell\'s work', wrong: ['DNA directly performs cell functions', 'DNA breaks down into nutrients', 'DNA only stores information without affecting the cell'] },
+  { id: 1257, unit: 'Unit 12', topic: 'Concepts', q: 'Why are proteins called the "workers" of the cell?', a: 'They perform nearly all cell functions - enzymes, structure, transport, signaling', wrong: ['They are made of sugar', 'They store genetic information', 'They only provide energy'] },
+  { id: 1258, unit: 'Unit 12', topic: 'Concepts', q: 'Where does replication occur?', a: 'Nucleus', wrong: ['Ribosome', 'Cytoplasm', 'Cell membrane'] },
+  { id: 1259, unit: 'Unit 12', topic: 'Concepts', q: 'Which process occurs at the ribosome?', a: 'Translation', wrong: ['Transcription', 'Replication', 'Mutation'] },
 
   // Word Roots - Set 1
   { id: 250, unit: 'Roots', topic: 'Set 1', q: 'What does the prefix A- (AN-) mean?', a: 'Without, not', wrong: ['With, together', 'Before', 'Against'] },
