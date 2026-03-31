@@ -666,7 +666,7 @@ function generateCrossword(questions: typeof uniqueQuestions) {
   return {grid, across, down, placed};
 }
 
-type Mode = 'menu' | 'flashcards' | 'quiz' | 'learn' | 'match' | 'jeopardy' | 'speed' | 'millionaire' | 'review' | 'stats' | 'wheel' | 'bomb' | 'crossword' | 'practicetest' | 'challenge' | 'snake' | 'memory';
+type Mode = 'menu' | 'flashcards' | 'quiz' | 'learn' | 'match' | 'jeopardy' | 'speed' | 'millionaire' | 'review' | 'stats' | 'wheel' | 'bomb' | 'crossword' | 'practicetest' | 'challenge' | 'snake' | 'memory' | 'life';
 
 function WheelResult({ currentQ, wheelGuessedLetters, wheelWrongGuesses, wheelScore, currentIndex, totalQuestions, wheelNextQuestion, startMode, getWheelDisplay, styles }: any) {
   const isWrong = getWheelDisplay(currentQ.a, wheelGuessedLetters).includes('_') || wheelWrongGuesses >= 6;
@@ -857,6 +857,25 @@ export default function StudyGuide() {
   const [memoryMatches, setMemoryMatches] = useState(0);
   const [memoryMoves, setMemoryMoves] = useState(0);
   const [memoryLocked, setMemoryLocked] = useState(false);
+
+  // Bio Life game state
+  const [lifeLength, setLifeLength] = useState<number | null>(null);
+  const [lifeStats, setLifeStats] = useState({ money: 50, education: 50, happiness: 50, career: 50 });
+  const [lifeScenarioIndex, setLifeScenarioIndex] = useState(0);
+  const [lifeShowFeedback, setLifeShowFeedback] = useState<'correct' | 'wrong' | null>(null);
+  const [lifeChoices, setLifeChoices] = useState<string[]>([]);
+  const [lifeCorrect, setLifeCorrect] = useState(0);
+  const [lifeWrong, setLifeWrong] = useState(0);
+  const [lifeGameOver, setLifeGameOver] = useState(false);
+  const [lifeComplete, setLifeComplete] = useState(false);
+  const lifeScenarios = [
+    { stage: 'High School', emoji: '🎒', scenarios: ['Your biology teacher asks you a question in front of the whole class...', 'SAT prep test has a science section...', 'Science fair project judging...', 'AP Bio exam question...', "Your crush asks for help studying biology..."] },
+    { stage: 'College', emoji: '🎓', scenarios: ['Freshman bio midterm...', 'Research lab interview...', 'Study group needs someone to explain this concept...', 'Internship interview at a biotech company...', 'Senior thesis defense...', 'Med school application essay question...', 'MCAT biology section...'] },
+    { stage: 'Career', emoji: '💼', scenarios: ['Job interview for research position...', 'Your boss asks you to explain results to investors...', "Coworker needs help with their experiment...", 'Conference presentation Q&A...', 'Grant proposal review...', 'Promotion interview...', 'Consulting opportunity...'] },
+    { stage: 'Peak Life', emoji: '🌟', scenarios: ['TED talk invitation on your research...', 'Nobel committee reviewing your work...', 'Writing a textbook chapter...', 'Mentoring the next generation...', 'Documentary interview about your career...'] },
+  ];
+  const lifeSuccessMessages = ['Nailed it! Impressive!', 'Perfect! You really know your stuff!', 'Brilliant answer!', 'Exactly right! Gold star!', 'Outstanding!'];
+  const lifeFailMessages = ['Not quite... but you\'ll get it next time!', 'Oops! Review that topic.', 'Close, but not quite right.', 'That one was tricky!', 'Time to study more!'];
 
   // High scores state
   const [highScores, setHighScores] = useState<HighScores>({ speed: 0, millionaire: 0, bomb: 0, challenge: 0, snake: 0, memory: 999 });
@@ -1153,6 +1172,18 @@ export default function StudyGuide() {
         const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
         setMillionaireChoices(shuffle([q.a, ...wrong]));
       }
+    }
+
+    if (newMode === 'life') {
+      // Life game needs length selection first, don't start yet
+      setLifeLength(null);
+      setLifeStats({ money: 50, education: 50, happiness: 50, career: 50 });
+      setLifeScenarioIndex(0);
+      setLifeShowFeedback(null);
+      setLifeCorrect(0);
+      setLifeWrong(0);
+      setLifeGameOver(false);
+      setLifeComplete(false);
     }
     
     if (newMode === 'wheel') {
@@ -1891,6 +1922,10 @@ export default function StudyGuide() {
                 <div style={{...styles.menuTitle, color: '#fbbf24'}}>Jeopardy</div>
                 <div style={{...styles.menuDesc, color: '#93c5fd'}}>Pick points</div>
               </button>
+              <button className="menu-card-hover" onClick={() => startMode('life')} style={{...styles.menuCard, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', boxShadow: '0 4px 20px rgba(118,75,162,0.3)'}}>
+                <div style={{...styles.menuTitle, color: '#fef3c7'}}>Bio Life</div>
+                <div style={{...styles.menuDesc, color: '#e9d5ff'}}>Life simulator</div>
+              </button>
               <button className="menu-card-hover" onClick={() => startMode('wheel')} style={{...styles.menuCard, background: 'linear-gradient(135deg, #065f46 0%, #059669 100%)', boxShadow: '0 4px 20px rgba(5,150,105,0.3)'}}>
                 <div style={{...styles.menuTitle, color: '#d1fae5'}}>Wheel</div>
                 <div style={{...styles.menuDesc, color: '#a7f3d0'}}>Spell it out</div>
@@ -2396,6 +2431,247 @@ export default function StudyGuide() {
               High Score: ${highScores.millionaire.toLocaleString()} {highScores.millionaire > 0 && '👑'}
             </div>
             <button onClick={() => startMode('millionaire')} style={{...styles.primaryBtn, background: '#7c3aed'}}>Play Again</button>
+          </div>
+        )}
+
+        {/* Bio Life Game */}
+        {mode === 'life' && !lifeLength && (
+          <div>
+            <div style={{textAlign: 'center', marginBottom: '24px'}}>
+              <div style={{fontSize: '48px', marginBottom: '8px'}}>🎮</div>
+              <h2 style={{margin: '0 0 8px 0', color: theme.primary}}>Bio Life</h2>
+              <p style={{color: '#666', margin: 0}}>Your biology knowledge shapes your destiny!</p>
+            </div>
+            
+            <h3 style={{marginBottom: '12px', color: theme.primary}}>⏱️ Choose Your Life Length:</h3>
+            <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '16px'}}>
+              {[
+                { len: 10, label: 'Quick Life', emoji: '⚡', desc: '~5 min' },
+                { len: 15, label: 'Regular Life', emoji: '🎮', desc: '~10 min' },
+                { len: 25, label: 'Full Life', emoji: '🏆', desc: '~15 min' },
+              ].map(opt => (
+                <button
+                  key={opt.len}
+                  onClick={() => {
+                    setLifeLength(opt.len);
+                    const qs = shuffle(shuffledQuestions).slice(0, opt.len);
+                    setShuffledQuestions(qs);
+                    setLifeStats({ money: 50, education: 50, happiness: 50, career: 50 });
+                    setLifeScenarioIndex(0);
+                    setCurrentIndex(0);
+                    if (qs[0]) {
+                      const wrong = getWrongAnswers(qs[0].a, qs[0].topic, qs[0].wrong);
+                      setLifeChoices(shuffle([qs[0].a, ...wrong]));
+                    }
+                  }}
+                  style={{
+                    padding: '16px 8px', border: '2px solid #e5e7eb', borderRadius: '12px',
+                    background: 'white', cursor: 'pointer', textAlign: 'center', transition: 'all 0.2s'
+                  }}
+                >
+                  <div style={{fontSize: '28px'}}>{opt.emoji}</div>
+                  <div style={{fontSize: '13px', fontWeight: 'bold', color: theme.primary}}>{opt.label}</div>
+                  <div style={{fontSize: '11px', color: '#666'}}>{opt.desc}</div>
+                </button>
+              ))}
+            </div>
+            <button onClick={() => setMode('menu')} style={{...styles.secondaryBtn, width: '100%'}}>← Back</button>
+          </div>
+        )}
+
+        {mode === 'life' && lifeLength && !lifeComplete && !lifeGameOver && currentQ && (() => {
+          const stageIndex = Math.floor(lifeScenarioIndex / (lifeLength / 4));
+          const stage = lifeScenarios[Math.min(stageIndex, lifeScenarios.length - 1)];
+          const scenarioIdx = lifeScenarioIndex % stage.scenarios.length;
+          const scenario = stage.scenarios[scenarioIdx];
+          
+          const StatBar = ({ label, value, emoji, color }: { label: string; value: number; emoji: string; color: string }) => (
+            <div style={{ marginBottom: '6px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '2px' }}>
+                <span>{emoji} {label}</span>
+                <span>{value}%</span>
+              </div>
+              <div style={{ height: '6px', background: '#e5e7eb', borderRadius: '3px', overflow: 'hidden' }}>
+                <div style={{ width: `${value}%`, height: '100%', background: color, transition: 'width 0.5s ease', borderRadius: '3px' }} />
+              </div>
+            </div>
+          );
+          
+          return (
+            <div>
+              <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '12px', fontSize: '13px', color: '#666'}}>
+                <span>{stage.emoji} {stage.stage}</span>
+                <span>Question {lifeScenarioIndex + 1}/{lifeLength}</span>
+              </div>
+              
+              <div style={{ background: '#f9fafb', padding: '12px', borderRadius: '12px', marginBottom: '12px' }}>
+                <StatBar label="Money" value={lifeStats.money} emoji="💰" color="#22c55e" />
+                <StatBar label="Education" value={lifeStats.education} emoji="📚" color="#3b82f6" />
+                <StatBar label="Happiness" value={lifeStats.happiness} emoji="😊" color="#f59e0b" />
+                <StatBar label="Career" value={lifeStats.career} emoji="🏆" color="#8b5cf6" />
+              </div>
+              
+              <div style={{...styles.card, background: 'linear-gradient(135deg, #f0f4ff, #faf5ff)', border: '1px solid #e5e7eb'}}>
+                <p style={{fontStyle: 'italic', marginBottom: '8px', color: '#666', fontSize: '13px'}}>{scenario}</p>
+                <p style={{fontWeight: 'bold', color: '#1f2937', margin: 0}}>{currentQ.q}</p>
+              </div>
+              
+              <div style={{display: 'grid', gap: '8px', marginTop: '12px'}}>
+                {lifeChoices.map((choice, idx) => {
+                  let bg = 'white';
+                  let border = '2px solid #e5e7eb';
+                  if (lifeShowFeedback) {
+                    if (choice === currentQ.a) {
+                      bg = '#dcfce7';
+                      border = '2px solid #22c55e';
+                    } else if (lifeShowFeedback === 'wrong') {
+                      bg = '#fee2e2';
+                      border = '2px solid #ef4444';
+                    }
+                  }
+                  return (
+                    <button
+                      key={idx}
+                      onClick={() => {
+                        if (lifeShowFeedback) return;
+                        const isCorrect = choice === currentQ.a;
+                        setLifeShowFeedback(isCorrect ? 'correct' : 'wrong');
+                        recordAnswer(currentQ.id, isCorrect);
+                        
+                        if (isCorrect) {
+                          setLifeCorrect(prev => prev + 1);
+                          setLifeStats(prev => ({
+                            money: Math.min(100, prev.money + 8),
+                            education: Math.min(100, prev.education + 10),
+                            happiness: Math.min(100, prev.happiness + 5),
+                            career: Math.min(100, prev.career + 7)
+                          }));
+                        } else {
+                          setLifeWrong(prev => prev + 1);
+                          setLifeStats(prev => ({
+                            money: Math.max(0, prev.money - 10),
+                            education: Math.max(0, prev.education - 8),
+                            happiness: Math.max(0, prev.happiness - 5),
+                            career: Math.max(0, prev.career - 12)
+                          }));
+                        }
+                        
+                        setTimeout(() => {
+                          const newStats = isCorrect 
+                            ? { ...lifeStats, career: Math.min(100, lifeStats.career + 7) }
+                            : { ...lifeStats, career: Math.max(0, lifeStats.career - 12) };
+                          
+                          if (newStats.career <= 0 || newStats.money <= 0) {
+                            setLifeGameOver(true);
+                            return;
+                          }
+                          
+                          setLifeShowFeedback(null);
+                          
+                          if (lifeScenarioIndex + 1 >= lifeLength!) {
+                            setLifeComplete(true);
+                          } else {
+                            const nextIdx = lifeScenarioIndex + 1;
+                            setLifeScenarioIndex(nextIdx);
+                            setCurrentIndex(nextIdx);
+                            if (shuffledQuestions[nextIdx]) {
+                              const q = shuffledQuestions[nextIdx];
+                              const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+                              setLifeChoices(shuffle([q.a, ...wrong]));
+                            }
+                          }
+                        }, 1500);
+                      }}
+                      disabled={lifeShowFeedback !== null}
+                      style={{
+                        padding: '12px 16px', border, borderRadius: '12px', background: bg,
+                        cursor: lifeShowFeedback ? 'default' : 'pointer', textAlign: 'left', fontSize: '14px', transition: 'all 0.2s'
+                      }}
+                    >
+                      {choice}
+                    </button>
+                  );
+                })}
+              </div>
+              
+              {lifeShowFeedback && (
+                <div style={{
+                  marginTop: '12px', padding: '12px', borderRadius: '12px',
+                  background: lifeShowFeedback === 'correct' ? '#dcfce7' : '#fee2e2', textAlign: 'center'
+                }}>
+                  <p style={{fontWeight: 'bold', marginBottom: '4px', margin: 0}}>
+                    {lifeShowFeedback === 'correct' ? '✅ Correct!' : '❌ Wrong!'}
+                  </p>
+                  <p style={{fontSize: '13px', color: '#666', margin: 0}}>
+                    {lifeShowFeedback === 'correct' 
+                      ? lifeSuccessMessages[Math.floor(Math.random() * lifeSuccessMessages.length)]
+                      : lifeFailMessages[Math.floor(Math.random() * lifeFailMessages.length)]}
+                  </p>
+                </div>
+              )}
+            </div>
+          );
+        })()}
+
+        {mode === 'life' && lifeComplete && (() => {
+          const avg = (lifeStats.money + lifeStats.education + lifeStats.happiness + lifeStats.career) / 4;
+          const outcome = avg >= 85 ? { title: '🏆 Living Legend!', desc: 'Nobel Prize winner and inspiration to millions!', grade: 'S' }
+            : avg >= 70 ? { title: '🌟 Incredible Success!', desc: 'Award-winning career with great life balance!', grade: 'A' }
+            : avg >= 55 ? { title: '😊 Great Life!', desc: 'Successful career and comfortable living!', grade: 'B' }
+            : avg >= 40 ? { title: '🙂 Decent Life', desc: 'Some ups and downs, but you made it!', grade: 'C' }
+            : { title: '😅 Rough Journey', desc: 'Time to study more biology!', grade: 'D' };
+          
+          return (
+            <div style={{textAlign: 'center'}}>
+              <div style={{fontSize: '48px', marginBottom: '8px'}}>🎓</div>
+              <h2 style={{margin: '0 0 8px 0', color: theme.primary}}>{outcome.title}</h2>
+              <p style={{color: '#666', marginBottom: '16px'}}>{outcome.desc}</p>
+              <div style={{
+                display: 'inline-block', padding: '8px 24px',
+                background: `linear-gradient(135deg, ${theme.primary}, ${theme.primaryLight})`,
+                color: 'white', borderRadius: '20px', fontWeight: 'bold', fontSize: '24px', marginBottom: '16px'
+              }}>
+                Grade: {outcome.grade}
+              </div>
+              
+              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px'}}>
+                <div style={{textAlign: 'center', padding: '12px', background: '#dcfce7', borderRadius: '12px'}}>
+                  <div style={{fontSize: '24px', fontWeight: 'bold', color: '#22c55e'}}>{lifeCorrect}</div>
+                  <div style={{fontSize: '12px', color: '#666'}}>Correct</div>
+                </div>
+                <div style={{textAlign: 'center', padding: '12px', background: '#fee2e2', borderRadius: '12px'}}>
+                  <div style={{fontSize: '24px', fontWeight: 'bold', color: '#ef4444'}}>{lifeWrong}</div>
+                  <div style={{fontSize: '12px', color: '#666'}}>Wrong</div>
+                </div>
+              </div>
+              
+              <button onClick={() => startMode('life')} style={{...styles.primaryBtn, background: theme.gradient, marginRight: '8px'}}>Play Again</button>
+              <button onClick={() => setMode('menu')} style={styles.secondaryBtn}>Menu</button>
+            </div>
+          );
+        })()}
+
+        {mode === 'life' && lifeGameOver && (
+          <div style={{textAlign: 'center'}}>
+            <div style={{fontSize: '48px', marginBottom: '8px'}}>💀</div>
+            <h2 style={{margin: '0 0 8px 0', color: '#ef4444'}}>Game Over!</h2>
+            <p style={{color: '#666', marginBottom: '16px'}}>
+              {lifeStats.career <= 0 ? "Your career crashed..." : "You ran out of money..."} Time to study harder!
+            </p>
+            
+            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px'}}>
+              <div style={{textAlign: 'center', padding: '12px', background: '#dcfce7', borderRadius: '12px'}}>
+                <div style={{fontSize: '24px', fontWeight: 'bold', color: '#22c55e'}}>{lifeCorrect}</div>
+                <div style={{fontSize: '12px', color: '#666'}}>Correct</div>
+              </div>
+              <div style={{textAlign: 'center', padding: '12px', background: '#fee2e2', borderRadius: '12px'}}>
+                <div style={{fontSize: '24px', fontWeight: 'bold', color: '#ef4444'}}>{lifeWrong}</div>
+                <div style={{fontSize: '12px', color: '#666'}}>Wrong</div>
+              </div>
+            </div>
+            
+            <button onClick={() => startMode('life')} style={{...styles.primaryBtn, background: theme.gradient, marginRight: '8px'}}>Try Again</button>
+            <button onClick={() => setMode('menu')} style={styles.secondaryBtn}>Menu</button>
           </div>
         )}
 
