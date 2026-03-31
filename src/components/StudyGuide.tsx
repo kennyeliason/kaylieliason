@@ -858,56 +858,77 @@ export default function StudyGuide() {
   const [memoryMoves, setMemoryMoves] = useState(0);
   const [memoryLocked, setMemoryLocked] = useState(false);
 
-  // Bio Life game state - CHOICE-BASED LIFE SIMULATION
-  const [lifePhase, setLifePhase] = useState<'length' | 'question' | 'choice' | 'summary'>('length');
-  const [lifeLength, setLifeLength] = useState<number | null>(null);
-  const [lifeQuestionIndex, setLifeQuestionIndex] = useState(0);
+  // Bio Life game state - FULL GAME OF LIFE WITH MULTIPLAYER
+  type LifePlayer = {
+    name: string;
+    color: string;
+    emoji: string;
+    position: number;
+    money: number;
+    career: { title: string; salary: number; emoji: string } | null;
+    house: { name: string; value: number; emoji: string } | null;
+    education: string;
+    spouse: boolean;
+    kids: number;
+    cards: { type: string; emoji: string; text: string }[];
+    correctAnswers: number;
+  };
+  const [lifePhase, setLifePhase] = useState<'setup' | 'spin' | 'question' | 'choice' | 'event' | 'summary'>('setup');
+  const [lifePlayers, setLifePlayers] = useState<LifePlayer[]>([]);
+  const [lifeCurrentPlayer, setLifeCurrentPlayer] = useState(0);
+  const [lifeSpinValue, setLifeSpinValue] = useState(0);
+  const [lifeSpinning, setLifeSpinning] = useState(false);
   const [lifeChoices, setLifeChoices] = useState<string[]>([]);
   const [lifeShowFeedback, setLifeShowFeedback] = useState<'correct' | 'wrong' | null>(null);
-  const [lifeCorrect, setLifeCorrect] = useState(0);
-  const [lifeWrong, setLifeWrong] = useState(0);
-  const [lifeStory, setLifeStory] = useState<{stage: string, choice: string, emoji: string}[]>([]);
-  const [lifePendingChoices, setLifePendingChoices] = useState<{good: string, bad: string, goodEmoji: string, badEmoji: string} | null>(null);
+  const [lifePendingChoice, setLifePendingChoice] = useState<{type: string, options: {text: string, emoji: string, effect: any}[]} | null>(null);
+  const [lifeEvent, setLifeEvent] = useState<{text: string, emoji: string, effect: string} | null>(null);
+  const [lifeMultiplayer, setLifeMultiplayer] = useState(false);
+  const [lifePlayerCount, setLifePlayerCount] = useState(1);
+  const [lifePlayerNames, setLifePlayerNames] = useState<string[]>(['Player 1', 'Player 2', 'Player 3', 'Player 4']);
+  const lifeBoardSize = 20;
   
-  // Life stages with branching choices
-  const lifeStages = [
-    { stage: 'High School', question: 'You aced your biology test!', 
-      good: { text: 'Join the Science Olympiad team', emoji: '🔬' }, 
-      bad: { text: 'Skip studying to play video games', emoji: '🎮' } },
-    { stage: 'High School', question: 'College applications are due...',
-      good: { text: 'Apply to top universities', emoji: '🎓' },
-      bad: { text: 'Apply only to party schools', emoji: '🎉' } },
-    { stage: 'College', question: 'Time to pick a major!',
-      good: { text: 'Major in Biology/Pre-Med', emoji: '🧬' },
-      bad: { text: 'Major in Underwater Basket Weaving', emoji: '🧺' } },
-    { stage: 'College', question: 'Summer break options...',
-      good: { text: 'Research internship at a lab', emoji: '🔬' },
-      bad: { text: 'Sleep all summer', emoji: '😴' } },
-    { stage: 'College', question: 'Senior year decision...',
-      good: { text: 'Apply to medical school', emoji: '⚕️' },
-      bad: { text: 'Move back in with parents', emoji: '🏠' } },
-    { stage: 'Career', question: 'Job offers are coming in!',
-      good: { text: 'Accept position at research hospital', emoji: '🏥' },
-      bad: { text: 'Become a professional couch tester', emoji: '🛋️' } },
-    { stage: 'Career', question: 'Investment opportunity...',
-      good: { text: 'Invest in biotech startup', emoji: '📈' },
-      bad: { text: 'Spend it all on lottery tickets', emoji: '🎰' } },
-    { stage: 'Career', question: 'Work-life balance decision...',
-      good: { text: 'Lead groundbreaking research project', emoji: '🏆' },
-      bad: { text: 'Quit to become a reality TV star', emoji: '📺' } },
-    { stage: 'Family', question: 'Time to settle down!',
-      good: { text: 'Buy a nice house in the suburbs', emoji: '🏡' },
-      bad: { text: 'Live in a van down by the river', emoji: '🚐' } },
-    { stage: 'Family', question: 'Kids are asking about college...',
-      good: { text: 'Start a college fund', emoji: '💰' },
-      bad: { text: 'Tell them to figure it out themselves', emoji: '🤷' } },
-    { stage: 'Peak Life', question: 'Your legacy...',
-      good: { text: 'Win Nobel Prize in Medicine', emoji: '🏅' },
-      bad: { text: 'Get famous for viral fail video', emoji: '📱' } },
-    { stage: 'Peak Life', question: 'Retirement planning...',
-      good: { text: 'Retire wealthy with a foundation', emoji: '🌟' },
-      bad: { text: 'Retire with your cats', emoji: '🐱' } },
+  // Career cards
+  const lifeCareers = [
+    { title: 'Doctor', salary: 150000, emoji: '👨‍⚕️', requirement: 'correct' },
+    { title: 'Scientist', salary: 120000, emoji: '🔬', requirement: 'correct' },
+    { title: 'Professor', salary: 100000, emoji: '👩‍🏫', requirement: 'correct' },
+    { title: 'Nurse', salary: 80000, emoji: '👨‍⚕️', requirement: 'any' },
+    { title: 'Teacher', salary: 60000, emoji: '📚', requirement: 'any' },
+    { title: 'Fast Food Worker', salary: 30000, emoji: '🍔', requirement: 'any' },
   ];
+  
+  // House cards
+  const lifeHouses = [
+    { name: 'Mansion', value: 500000, emoji: '🏰', requirement: 'correct' },
+    { name: 'Nice Suburb House', value: 300000, emoji: '🏡', requirement: 'correct' },
+    { name: 'Condo', value: 150000, emoji: '🏢', requirement: 'any' },
+    { name: 'Apartment', value: 80000, emoji: '🏠', requirement: 'any' },
+    { name: 'Trailer', value: 30000, emoji: '🚐', requirement: 'any' },
+  ];
+  
+  // Life events at certain board positions
+  const lifeEvents: {[pos: number]: {text: string, emoji: string, effect: string, moneyChange?: number}} = {
+    3: { text: 'Graduate High School!', emoji: '🎓', effect: '+$5,000 gift', moneyChange: 5000 },
+    5: { text: 'Get Married!', emoji: '💒', effect: 'Spouse joins!', moneyChange: -10000 },
+    8: { text: 'Tax Refund!', emoji: '💵', effect: '+$10,000', moneyChange: 10000 },
+    10: { text: 'Have a Baby!', emoji: '👶', effect: '+1 Kid', moneyChange: -5000 },
+    12: { text: 'Win the Lottery!', emoji: '🎰', effect: '+$50,000', moneyChange: 50000 },
+    14: { text: 'Car Accident!', emoji: '🚗', effect: '-$15,000', moneyChange: -15000 },
+    16: { text: 'Promotion!', emoji: '📈', effect: 'Salary +20%' },
+    18: { text: 'Kids go to College', emoji: '🎒', effect: '-$20,000 per kid' },
+  };
+  
+  // Board space types
+  const lifeBoardSpaces = Array.from({length: lifeBoardSize}, (_, i) => {
+    if (i === 0) return { type: 'start', label: 'START', emoji: '🚀' };
+    if (i === 4) return { type: 'career', label: 'Career', emoji: '💼' };
+    if (i === 7) return { type: 'house', label: 'House', emoji: '🏠' };
+    if (i === 11) return { type: 'career', label: 'Career Change', emoji: '💼' };
+    if (i === 15) return { type: 'house', label: 'Upgrade House', emoji: '🏰' };
+    if (i === 19) return { type: 'retire', label: 'RETIRE', emoji: '🏖️' };
+    if (lifeEvents[i]) return { type: 'event', label: lifeEvents[i].text.split('!')[0], emoji: lifeEvents[i].emoji };
+    return { type: 'question', label: 'Bio Question', emoji: '🧬' };
+  });
 
   // High scores state
   const [highScores, setHighScores] = useState<HighScores>({ speed: 0, millionaire: 0, bomb: 0, challenge: 0, snake: 0, memory: 999 });
@@ -1207,15 +1228,17 @@ export default function StudyGuide() {
     }
 
     if (newMode === 'life') {
-      // Life game - choice-based simulation
-      setLifePhase('length');
-      setLifeLength(null);
-      setLifeQuestionIndex(0);
+      // Life game - full board game with multiplayer
+      setLifePhase('setup');
+      setLifePlayers([]);
+      setLifeCurrentPlayer(0);
+      setLifeSpinValue(0);
+      setLifeSpinning(false);
       setLifeShowFeedback(null);
-      setLifeCorrect(0);
-      setLifeWrong(0);
-      setLifeStory([]);
-      setLifePendingChoices(null);
+      setLifePendingChoice(null);
+      setLifeEvent(null);
+      setLifeMultiplayer(false);
+      setLifePlayerCount(1);
     }
     
     if (newMode === 'wheel') {
@@ -2466,81 +2489,305 @@ export default function StudyGuide() {
           </div>
         )}
 
-        {/* Bio Life Game - CHOICE-BASED */}
-        {mode === 'life' && lifePhase === 'length' && (
+        {/* Bio Life Game - FULL BOARD GAME WITH MULTIPLAYER */}
+        {mode === 'life' && lifePhase === 'setup' && (
           <div>
-            <div style={{textAlign: 'center', marginBottom: '24px'}}>
+            <div style={{textAlign: 'center', marginBottom: '20px'}}>
               <div style={{fontSize: '48px', marginBottom: '8px'}}>🎲</div>
               <h2 style={{margin: '0 0 8px 0', color: theme.primary}}>Bio Life</h2>
-              <p style={{color: '#666', margin: 0}}>Answer questions, make choices, build YOUR life!</p>
+              <p style={{color: '#666', margin: 0}}>The Game of Life... with Biology!</p>
             </div>
             
-            <h3 style={{marginBottom: '12px', color: theme.primary}}>⏱️ Choose Your Life Length:</h3>
-            <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '16px'}}>
-              {[
-                { len: 6, label: 'Quick Life', emoji: '⚡', desc: '6 choices' },
-                { len: 9, label: 'Regular Life', emoji: '🎮', desc: '9 choices' },
-                { len: 12, label: 'Full Life', emoji: '🏆', desc: '12 choices' },
-              ].map(opt => (
-                <button
-                  key={opt.len}
-                  onClick={() => {
-                    setLifeLength(opt.len);
-                    const qs = shuffle(shuffledQuestions).slice(0, opt.len);
-                    setShuffledQuestions(qs);
-                    setLifeQuestionIndex(0);
-                    setCurrentIndex(0);
-                    setLifeStory([]);
-                    setLifeCorrect(0);
-                    setLifeWrong(0);
-                    setLifePhase('question');
-                    if (qs[0]) {
-                      const wrong = getWrongAnswers(qs[0].a, qs[0].topic, qs[0].wrong);
-                      setLifeChoices(shuffle([qs[0].a, ...wrong]));
-                    }
-                  }}
-                  style={{
-                    padding: '16px 8px', border: '2px solid #e5e7eb', borderRadius: '12px',
-                    background: 'white', cursor: 'pointer', textAlign: 'center', transition: 'all 0.2s'
-                  }}
-                >
-                  <div style={{fontSize: '28px'}}>{opt.emoji}</div>
-                  <div style={{fontSize: '13px', fontWeight: 'bold', color: theme.primary}}>{opt.label}</div>
-                  <div style={{fontSize: '11px', color: '#666'}}>{opt.desc}</div>
-                </button>
-              ))}
+            {/* Single vs Multiplayer */}
+            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px'}}>
+              <button
+                onClick={() => { setLifeMultiplayer(false); setLifePlayerCount(1); }}
+                style={{
+                  padding: '16px', border: !lifeMultiplayer ? '3px solid ' + theme.primary : '2px solid #e5e7eb',
+                  borderRadius: '12px', background: !lifeMultiplayer ? theme.accentLight : 'white', cursor: 'pointer', textAlign: 'center'
+                }}
+              >
+                <div style={{fontSize: '28px'}}>🎮</div>
+                <div style={{fontWeight: 'bold', color: theme.primary}}>Solo</div>
+              </button>
+              <button
+                onClick={() => { setLifeMultiplayer(true); if (lifePlayerCount < 2) setLifePlayerCount(2); }}
+                style={{
+                  padding: '16px', border: lifeMultiplayer ? '3px solid ' + theme.primary : '2px solid #e5e7eb',
+                  borderRadius: '12px', background: lifeMultiplayer ? theme.accentLight : 'white', cursor: 'pointer', textAlign: 'center'
+                }}
+              >
+                <div style={{fontSize: '28px'}}>👥</div>
+                <div style={{fontWeight: 'bold', color: theme.primary}}>Multiplayer</div>
+              </button>
             </div>
-            <button onClick={() => setMode('menu')} style={{...styles.secondaryBtn, width: '100%'}}>← Back</button>
+            
+            {/* Player count (multiplayer only) */}
+            {lifeMultiplayer && (
+              <div style={{marginBottom: '16px'}}>
+                <h4 style={{margin: '0 0 8px 0', color: theme.primary}}>How many players?</h4>
+                <div style={{display: 'flex', gap: '8px'}}>
+                  {[2, 3, 4].map(n => (
+                    <button
+                      key={n}
+                      onClick={() => setLifePlayerCount(n)}
+                      style={{
+                        flex: 1, padding: '12px', border: lifePlayerCount === n ? '2px solid ' + theme.primary : '2px solid #e5e7eb',
+                        borderRadius: '8px', background: lifePlayerCount === n ? theme.accentLight : 'white', cursor: 'pointer',
+                        fontWeight: 'bold', fontSize: '18px'
+                      }}
+                    >
+                      {n}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {/* Player names (multiplayer only) */}
+            {lifeMultiplayer && (
+              <div style={{marginBottom: '16px'}}>
+                <h4 style={{margin: '0 0 8px 0', color: theme.primary}}>Player Names:</h4>
+                {Array.from({length: lifePlayerCount}).map((_, i) => (
+                  <input
+                    key={i}
+                    type="text"
+                    value={lifePlayerNames[i]}
+                    onChange={(e) => {
+                      const newNames = [...lifePlayerNames];
+                      newNames[i] = e.target.value;
+                      setLifePlayerNames(newNames);
+                    }}
+                    placeholder={`Player ${i + 1}`}
+                    style={{
+                      width: '100%', padding: '10px 12px', marginBottom: '8px', border: '2px solid #e5e7eb',
+                      borderRadius: '8px', fontSize: '14px'
+                    }}
+                  />
+                ))}
+              </div>
+            )}
+            
+            {/* Start button */}
+            <button
+              onClick={() => {
+                const colors = ['#ef4444', '#3b82f6', '#22c55e', '#f59e0b'];
+                const emojis = ['🚗', '🚙', '🚕', '🏎️'];
+                const players: LifePlayer[] = Array.from({length: lifePlayerCount}).map((_, i) => ({
+                  name: lifeMultiplayer ? lifePlayerNames[i] : 'You',
+                  color: colors[i],
+                  emoji: emojis[i],
+                  position: 0,
+                  money: 10000,
+                  career: null,
+                  house: null,
+                  education: 'High School',
+                  spouse: false,
+                  kids: 0,
+                  cards: [],
+                  correctAnswers: 0,
+                }));
+                setLifePlayers(players);
+                setLifeCurrentPlayer(0);
+                setLifePhase('spin');
+                // Prep questions
+                const qs = shuffle(shuffledQuestions);
+                setShuffledQuestions(qs);
+                setCurrentIndex(0);
+              }}
+              style={{
+                width: '100%', padding: '16px', background: theme.gradient,
+                color: 'white', border: 'none', borderRadius: '12px', fontSize: '18px', fontWeight: 'bold', cursor: 'pointer'
+              }}
+            >
+              🚀 Start Game!
+            </button>
+            <button onClick={() => setMode('menu')} style={{...styles.secondaryBtn, width: '100%', marginTop: '8px'}}>← Back</button>
           </div>
         )}
 
-        {mode === 'life' && lifePhase === 'question' && currentQ && (() => {
-          const stageData = lifeStages[Math.min(lifeQuestionIndex, lifeStages.length - 1)];
+        {mode === 'life' && lifePhase === 'spin' && lifePlayers.length > 0 && (() => {
+          const player = lifePlayers[lifeCurrentPlayer];
+          const allRetired = lifePlayers.every(p => p.position >= lifeBoardSize - 1);
+          
+          if (allRetired) {
+            setLifePhase('summary');
+            return null;
+          }
           
           return (
             <div>
-              <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '12px', fontSize: '13px', color: '#666'}}>
-                <span>📍 {stageData.stage}</span>
-                <span>Turn {lifeQuestionIndex + 1}/{lifeLength}</span>
+              {/* Current player indicator */}
+              <div style={{textAlign: 'center', marginBottom: '12px'}}>
+                <div style={{fontSize: '24px'}}>{player.emoji}</div>
+                <div style={{fontWeight: 'bold', color: player.color, fontSize: '18px'}}>{player.name}'s Turn</div>
+                <div style={{fontSize: '13px', color: '#666'}}>💰 ${player.money.toLocaleString()}</div>
               </div>
               
-              {/* Life story so far */}
-              {lifeStory.length > 0 && (
-                <div style={{background: '#f9fafb', padding: '8px 12px', borderRadius: '8px', marginBottom: '12px', fontSize: '12px'}}>
-                  <div style={{fontWeight: 'bold', marginBottom: '4px', color: theme.primary}}>Your Life So Far:</div>
-                  <div style={{display: 'flex', flexWrap: 'wrap', gap: '4px'}}>
-                    {lifeStory.map((s, i) => (
-                      <span key={i} title={s.choice} style={{background: 'white', padding: '2px 6px', borderRadius: '4px', border: '1px solid #e5e7eb'}}>
-                        {s.emoji}
-                      </span>
-                    ))}
+              {/* Mini Board */}
+              <div style={{background: '#f9fafb', padding: '12px', borderRadius: '12px', marginBottom: '12px', overflowX: 'auto'}}>
+                <div style={{display: 'flex', gap: '4px', minWidth: 'max-content'}}>
+                  {lifeBoardSpaces.map((space, i) => {
+                    const playersHere = lifePlayers.filter(p => p.position === i);
+                    return (
+                      <div key={i} style={{
+                        width: '36px', height: '44px', borderRadius: '6px', fontSize: '10px', textAlign: 'center',
+                        background: i === 0 ? '#22c55e' : i === lifeBoardSize - 1 ? '#f59e0b' : space.type === 'career' ? '#3b82f6' : space.type === 'house' ? '#8b5cf6' : space.type === 'event' ? '#ec4899' : '#e5e7eb',
+                        color: ['start', 'retire', 'career', 'house', 'event'].includes(space.type) ? 'white' : '#666',
+                        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+                        border: '1px solid rgba(0,0,0,0.1)', position: 'relative'
+                      }}>
+                        <span style={{fontSize: '14px'}}>{space.emoji}</span>
+                        {playersHere.length > 0 && (
+                          <div style={{position: 'absolute', bottom: '-2px', display: 'flex', gap: '1px'}}>
+                            {playersHere.map((p, pi) => <span key={pi} style={{fontSize: '10px'}}>{p.emoji}</span>)}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+              
+              {/* Player cards/stats */}
+              <div style={{display: 'flex', gap: '8px', marginBottom: '12px', flexWrap: 'wrap'}}>
+                {player.career && <div style={{background: '#dbeafe', padding: '4px 8px', borderRadius: '6px', fontSize: '12px'}}>💼 {player.career.title}</div>}
+                {player.house && <div style={{background: '#f3e8ff', padding: '4px 8px', borderRadius: '6px', fontSize: '12px'}}>🏠 {player.house.name}</div>}
+                {player.spouse && <div style={{background: '#fce7f3', padding: '4px 8px', borderRadius: '6px', fontSize: '12px'}}>💍 Married</div>}
+                {player.kids > 0 && <div style={{background: '#fef3c7', padding: '4px 8px', borderRadius: '6px', fontSize: '12px'}}>👶 {player.kids} kid{player.kids > 1 ? 's' : ''}</div>}
+              </div>
+              
+              {/* Spin wheel */}
+              <div style={{textAlign: 'center', marginBottom: '16px'}}>
+                <div style={{
+                  width: '120px', height: '120px', borderRadius: '50%', margin: '0 auto 12px',
+                  background: `conic-gradient(#ef4444 0deg 36deg, #f59e0b 36deg 72deg, #22c55e 72deg 108deg, #3b82f6 108deg 144deg, #8b5cf6 144deg 180deg, #ec4899 180deg 216deg, #ef4444 216deg 252deg, #f59e0b 252deg 288deg, #22c55e 288deg 324deg, #3b82f6 324deg 360deg)`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
+                  transform: lifeSpinning ? `rotate(${lifeSpinValue * 360}deg)` : 'none',
+                  transition: lifeSpinning ? 'transform 2s cubic-bezier(0.2, 0.8, 0.3, 1)' : 'none'
+                }}>
+                  <div style={{
+                    width: '50px', height: '50px', borderRadius: '50%', background: 'white',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '24px',
+                    boxShadow: '0 2px 10px rgba(0,0,0,0.2)'
+                  }}>
+                    {lifeSpinning ? '🎰' : lifeSpinValue || '?'}
                   </div>
                 </div>
+                
+                <button
+                  onClick={() => {
+                    if (lifeSpinning) return;
+                    setLifeSpinning(true);
+                    const spin = Math.floor(Math.random() * 10) + 1;
+                    setLifeSpinValue(spin);
+                    
+                    setTimeout(() => {
+                      setLifeSpinning(false);
+                      // Move player
+                      const newPos = Math.min(player.position + spin, lifeBoardSize - 1);
+                      const updatedPlayers = [...lifePlayers];
+                      updatedPlayers[lifeCurrentPlayer] = { ...player, position: newPos };
+                      setLifePlayers(updatedPlayers);
+                      
+                      // Check what space they landed on
+                      const space = lifeBoardSpaces[newPos];
+                      
+                      if (space.type === 'retire') {
+                        // Retirement! Calculate final bonus
+                        const bonus = player.career ? player.career.salary : 0;
+                        updatedPlayers[lifeCurrentPlayer].money += bonus;
+                        setLifePlayers(updatedPlayers);
+                        setLifeEvent({ text: '🎉 RETIREMENT! Final salary bonus!', emoji: '🏖️', effect: `+$${bonus.toLocaleString()}` });
+                        setLifePhase('event');
+                      } else if (space.type === 'event' && lifeEvents[newPos]) {
+                        const evt = lifeEvents[newPos];
+                        if (evt.moneyChange) {
+                          updatedPlayers[lifeCurrentPlayer].money += evt.moneyChange;
+                          if (evt.text.includes('Married')) updatedPlayers[lifeCurrentPlayer].spouse = true;
+                          if (evt.text.includes('Baby')) updatedPlayers[lifeCurrentPlayer].kids += 1;
+                          if (evt.text.includes('Promotion') && updatedPlayers[lifeCurrentPlayer].career) {
+                            updatedPlayers[lifeCurrentPlayer].career!.salary = Math.round(updatedPlayers[lifeCurrentPlayer].career!.salary * 1.2);
+                          }
+                          if (evt.text.includes('Kids go to College')) {
+                            updatedPlayers[lifeCurrentPlayer].money -= 20000 * updatedPlayers[lifeCurrentPlayer].kids;
+                          }
+                          setLifePlayers(updatedPlayers);
+                        }
+                        setLifeEvent({ text: evt.text, emoji: evt.emoji, effect: evt.effect });
+                        setLifePhase('event');
+                      } else if (space.type === 'career') {
+                        setLifePendingChoice({
+                          type: 'career',
+                          options: lifeCareers.map(c => ({ text: c.title, emoji: c.emoji, effect: { ...c } }))
+                        });
+                        setLifePhase('question');
+                        if (shuffledQuestions[currentIndex]) {
+                          const q = shuffledQuestions[currentIndex];
+                          const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+                          setLifeChoices(shuffle([q.a, ...wrong]));
+                        }
+                      } else if (space.type === 'house') {
+                        setLifePendingChoice({
+                          type: 'house',
+                          options: lifeHouses.map(h => ({ text: h.name, emoji: h.emoji, effect: { ...h } }))
+                        });
+                        setLifePhase('question');
+                        if (shuffledQuestions[currentIndex]) {
+                          const q = shuffledQuestions[currentIndex];
+                          const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+                          setLifeChoices(shuffle([q.a, ...wrong]));
+                        }
+                      } else {
+                        // Regular question space
+                        setLifePhase('question');
+                        if (shuffledQuestions[currentIndex]) {
+                          const q = shuffledQuestions[currentIndex];
+                          const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+                          setLifeChoices(shuffle([q.a, ...wrong]));
+                        }
+                      }
+                    }, 2000);
+                  }}
+                  disabled={lifeSpinning || player.position >= lifeBoardSize - 1}
+                  style={{
+                    padding: '14px 32px', background: lifeSpinning ? '#9ca3af' : theme.gradient,
+                    color: 'white', border: 'none', borderRadius: '12px', fontSize: '16px', fontWeight: 'bold', cursor: lifeSpinning ? 'default' : 'pointer'
+                  }}
+                >
+                  {lifeSpinning ? 'Spinning...' : '🎡 Spin!'}
+                </button>
+              </div>
+              
+              {/* All players scoreboard */}
+              {lifePlayers.length > 1 && (
+                <div style={{background: '#f9fafb', padding: '12px', borderRadius: '12px'}}>
+                  <div style={{fontWeight: 'bold', marginBottom: '8px', fontSize: '13px'}}>📊 Scoreboard</div>
+                  {lifePlayers.map((p, i) => (
+                    <div key={i} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '4px 0', borderBottom: i < lifePlayers.length - 1 ? '1px solid #e5e7eb' : 'none'}}>
+                      <span style={{color: p.color, fontWeight: i === lifeCurrentPlayer ? 'bold' : 'normal'}}>{p.emoji} {p.name}</span>
+                      <span style={{fontSize: '13px'}}>${p.money.toLocaleString()}</span>
+                    </div>
+                  ))}
+                </div>
               )}
+            </div>
+          );
+        })()}
+
+        {mode === 'life' && lifePhase === 'question' && lifePlayers.length > 0 && currentQ && (() => {
+          const player = lifePlayers[lifeCurrentPlayer];
+          
+          return (
+            <div>
+              <div style={{textAlign: 'center', marginBottom: '12px'}}>
+                <span style={{color: player.color, fontWeight: 'bold'}}>{player.emoji} {player.name}</span>
+                {lifePendingChoice && <span style={{color: '#666'}}> — {lifePendingChoice.type === 'career' ? '💼 Career Choice!' : '🏠 House Choice!'}</span>}
+              </div>
               
               <div style={{...styles.card, background: 'linear-gradient(135deg, #f0f4ff, #faf5ff)', border: '1px solid #e5e7eb'}}>
-                <p style={{fontStyle: 'italic', marginBottom: '8px', color: '#666', fontSize: '13px'}}>{stageData.question}</p>
-                <p style={{fontWeight: 'bold', color: '#1f2937', margin: 0, fontSize: '15px'}}>{currentQ.q}</p>
+                <div style={styles.topicLabel}>{currentQ.topic}</div>
+                <p style={{fontWeight: 'bold', color: '#1f2937', margin: 0}}>{currentQ.q}</p>
               </div>
               
               <div style={{display: 'grid', gap: '8px', marginTop: '12px'}}>
@@ -2565,23 +2812,25 @@ export default function StudyGuide() {
                         setLifeShowFeedback(isCorrect ? 'correct' : 'wrong');
                         recordAnswer(currentQ.id, isCorrect);
                         
+                        const updatedPlayers = [...lifePlayers];
                         if (isCorrect) {
-                          setLifeCorrect(prev => prev + 1);
-                        } else {
-                          setLifeWrong(prev => prev + 1);
+                          updatedPlayers[lifeCurrentPlayer].correctAnswers += 1;
+                          updatedPlayers[lifeCurrentPlayer].money += 5000;
                         }
+                        setLifePlayers(updatedPlayers);
                         
-                        // After feedback, show life choice
                         setTimeout(() => {
                           setLifeShowFeedback(null);
-                          const stage = lifeStages[Math.min(lifeQuestionIndex, lifeStages.length - 1)];
-                          setLifePendingChoices({
-                            good: stage.good.text,
-                            bad: stage.bad.text,
-                            goodEmoji: stage.good.emoji,
-                            badEmoji: stage.bad.emoji
-                          });
-                          setLifePhase('choice');
+                          setCurrentIndex(prev => prev + 1);
+                          
+                          if (lifePendingChoice) {
+                            setLifePhase('choice');
+                          } else {
+                            // Next player
+                            const nextPlayer = (lifeCurrentPlayer + 1) % lifePlayers.length;
+                            setLifeCurrentPlayer(nextPlayer);
+                            setLifePhase('spin');
+                          }
                         }, 1200);
                       }}
                       disabled={lifeShowFeedback !== null}
@@ -2602,7 +2851,7 @@ export default function StudyGuide() {
                   background: lifeShowFeedback === 'correct' ? '#dcfce7' : '#fee2e2', textAlign: 'center'
                 }}>
                   <p style={{fontWeight: 'bold', margin: 0}}>
-                    {lifeShowFeedback === 'correct' ? '✅ Correct! Now choose your path...' : '❌ Wrong! Limited options...'}
+                    {lifeShowFeedback === 'correct' ? '✅ Correct! +$5,000' : '❌ Wrong!'}
                   </p>
                 </div>
               )}
@@ -2610,151 +2859,167 @@ export default function StudyGuide() {
           );
         })()}
 
-        {mode === 'life' && lifePhase === 'choice' && lifePendingChoices && (() => {
-          const stageData = lifeStages[Math.min(lifeQuestionIndex, lifeStages.length - 1)];
-          const gotItRight = lifeCorrect > lifeStory.length; // Did they just get one right?
+        {mode === 'life' && lifePhase === 'choice' && lifePendingChoice && lifePlayers.length > 0 && (() => {
+          const player = lifePlayers[lifeCurrentPlayer];
+          const gotItRight = player.correctAnswers > (player.career ? 1 : 0) + (player.house ? 1 : 0);
+          const goodOptions = lifePendingChoice.options.filter((o: any) => o.effect.requirement === 'correct');
+          const anyOptions = lifePendingChoice.options.filter((o: any) => o.effect.requirement === 'any');
           
           return (
             <div>
               <div style={{textAlign: 'center', marginBottom: '16px'}}>
-                <div style={{fontSize: '36px', marginBottom: '8px'}}>🎯</div>
-                <h3 style={{margin: '0 0 8px 0', color: theme.primary}}>Choose Your Path!</h3>
-                <p style={{color: '#666', margin: 0, fontSize: '13px'}}>{stageData.stage} - {stageData.question}</p>
+                <div style={{fontSize: '36px', marginBottom: '8px'}}>{lifePendingChoice.type === 'career' ? '💼' : '🏠'}</div>
+                <h3 style={{margin: '0 0 8px 0', color: theme.primary}}>
+                  Choose Your {lifePendingChoice.type === 'career' ? 'Career' : 'House'}!
+                </h3>
+                {!gotItRight && <p style={{color: '#ef4444', fontSize: '13px', margin: 0}}>🔒 Premium options locked — answer correctly next time!</p>}
               </div>
               
-              <div style={{display: 'grid', gap: '12px'}}>
-                {/* Good choice - only available if answered correctly */}
-                <button
-                  onClick={() => {
-                    if (!gotItRight) return;
-                    setLifeStory(prev => [...prev, { stage: stageData.stage, choice: lifePendingChoices.good, emoji: lifePendingChoices.goodEmoji }]);
-                    setLifePendingChoices(null);
-                    
-                    const nextIdx = lifeQuestionIndex + 1;
-                    if (nextIdx >= lifeLength!) {
-                      setLifePhase('summary');
-                    } else {
-                      setLifeQuestionIndex(nextIdx);
-                      setCurrentIndex(nextIdx);
-                      if (shuffledQuestions[nextIdx]) {
-                        const q = shuffledQuestions[nextIdx];
-                        const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
-                        setLifeChoices(shuffle([q.a, ...wrong]));
+              <div style={{display: 'grid', gap: '8px'}}>
+                {/* Premium options (need correct answer) */}
+                {goodOptions.map((opt: any, i: number) => (
+                  <button
+                    key={i}
+                    onClick={() => {
+                      if (!gotItRight) return;
+                      const updatedPlayers = [...lifePlayers];
+                      if (lifePendingChoice.type === 'career') {
+                        updatedPlayers[lifeCurrentPlayer].career = { title: opt.text, salary: opt.effect.salary, emoji: opt.emoji };
+                      } else {
+                        updatedPlayers[lifeCurrentPlayer].house = { name: opt.text, value: opt.effect.value, emoji: opt.emoji };
+                        updatedPlayers[lifeCurrentPlayer].money -= opt.effect.value;
                       }
-                      setLifePhase('question');
-                    }
-                  }}
-                  disabled={!gotItRight}
-                  style={{
-                    padding: '20px', border: gotItRight ? '3px solid #22c55e' : '2px solid #d1d5db', borderRadius: '16px',
-                    background: gotItRight ? 'linear-gradient(135deg, #dcfce7, #bbf7d0)' : '#f3f4f6',
-                    cursor: gotItRight ? 'pointer' : 'not-allowed', textAlign: 'center', transition: 'all 0.2s',
-                    opacity: gotItRight ? 1 : 0.5
-                  }}
-                >
-                  <div style={{fontSize: '32px', marginBottom: '8px'}}>{lifePendingChoices.goodEmoji}</div>
-                  <div style={{fontWeight: 'bold', fontSize: '16px', color: gotItRight ? '#166534' : '#9ca3af'}}>{lifePendingChoices.good}</div>
-                  {!gotItRight && <div style={{fontSize: '11px', color: '#9ca3af', marginTop: '4px'}}>🔒 Answer correctly to unlock!</div>}
-                </button>
+                      setLifePlayers(updatedPlayers);
+                      setLifePendingChoice(null);
+                      const nextPlayer = (lifeCurrentPlayer + 1) % lifePlayers.length;
+                      setLifeCurrentPlayer(nextPlayer);
+                      setLifePhase('spin');
+                    }}
+                    disabled={!gotItRight}
+                    style={{
+                      padding: '14px', border: gotItRight ? '2px solid #22c55e' : '2px solid #d1d5db', borderRadius: '12px',
+                      background: gotItRight ? '#dcfce7' : '#f3f4f6', cursor: gotItRight ? 'pointer' : 'not-allowed',
+                      textAlign: 'left', opacity: gotItRight ? 1 : 0.5, display: 'flex', alignItems: 'center', gap: '12px'
+                    }}
+                  >
+                    <span style={{fontSize: '28px'}}>{opt.emoji}</span>
+                    <div>
+                      <div style={{fontWeight: 'bold'}}>{opt.text}</div>
+                      <div style={{fontSize: '12px', color: '#666'}}>
+                        {lifePendingChoice.type === 'career' ? `$${opt.effect.salary.toLocaleString()}/yr` : `$${opt.effect.value.toLocaleString()}`}
+                      </div>
+                    </div>
+                    {!gotItRight && <span style={{marginLeft: 'auto'}}>🔒</span>}
+                  </button>
+                ))}
                 
-                {/* Bad choice - always available */}
-                <button
-                  onClick={() => {
-                    setLifeStory(prev => [...prev, { stage: stageData.stage, choice: lifePendingChoices.bad, emoji: lifePendingChoices.badEmoji }]);
-                    setLifePendingChoices(null);
-                    
-                    const nextIdx = lifeQuestionIndex + 1;
-                    if (nextIdx >= lifeLength!) {
-                      setLifePhase('summary');
-                    } else {
-                      setLifeQuestionIndex(nextIdx);
-                      setCurrentIndex(nextIdx);
-                      if (shuffledQuestions[nextIdx]) {
-                        const q = shuffledQuestions[nextIdx];
-                        const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
-                        setLifeChoices(shuffle([q.a, ...wrong]));
+                {/* Basic options (always available) */}
+                {anyOptions.map((opt: any, i: number) => (
+                  <button
+                    key={i}
+                    onClick={() => {
+                      const updatedPlayers = [...lifePlayers];
+                      if (lifePendingChoice.type === 'career') {
+                        updatedPlayers[lifeCurrentPlayer].career = { title: opt.text, salary: opt.effect.salary, emoji: opt.emoji };
+                      } else {
+                        updatedPlayers[lifeCurrentPlayer].house = { name: opt.text, value: opt.effect.value, emoji: opt.emoji };
+                        updatedPlayers[lifeCurrentPlayer].money -= opt.effect.value;
                       }
-                      setLifePhase('question');
-                    }
-                  }}
-                  style={{
-                    padding: '20px', border: '2px solid #fca5a5', borderRadius: '16px',
-                    background: 'linear-gradient(135deg, #fee2e2, #fecaca)',
-                    cursor: 'pointer', textAlign: 'center', transition: 'all 0.2s'
-                  }}
-                >
-                  <div style={{fontSize: '32px', marginBottom: '8px'}}>{lifePendingChoices.badEmoji}</div>
-                  <div style={{fontWeight: 'bold', fontSize: '16px', color: '#991b1b'}}>{lifePendingChoices.bad}</div>
-                </button>
+                      setLifePlayers(updatedPlayers);
+                      setLifePendingChoice(null);
+                      const nextPlayer = (lifeCurrentPlayer + 1) % lifePlayers.length;
+                      setLifeCurrentPlayer(nextPlayer);
+                      setLifePhase('spin');
+                    }}
+                    style={{
+                      padding: '14px', border: '2px solid #e5e7eb', borderRadius: '12px',
+                      background: 'white', cursor: 'pointer', textAlign: 'left',
+                      display: 'flex', alignItems: 'center', gap: '12px'
+                    }}
+                  >
+                    <span style={{fontSize: '28px'}}>{opt.emoji}</span>
+                    <div>
+                      <div style={{fontWeight: 'bold'}}>{opt.text}</div>
+                      <div style={{fontSize: '12px', color: '#666'}}>
+                        {lifePendingChoice.type === 'career' ? `$${opt.effect.salary.toLocaleString()}/yr` : `$${opt.effect.value.toLocaleString()}`}
+                      </div>
+                    </div>
+                  </button>
+                ))}
               </div>
             </div>
           );
         })()}
 
-        {mode === 'life' && lifePhase === 'summary' && (() => {
-          const goodChoices = lifeStory.filter((s, i) => {
-            const stage = lifeStages[Math.min(i, lifeStages.length - 1)];
-            return s.choice === stage.good.text;
-          }).length;
-          const totalChoices = lifeStory.length;
-          const percentage = Math.round((goodChoices / totalChoices) * 100);
+        {mode === 'life' && lifePhase === 'event' && lifeEvent && lifePlayers.length > 0 && (
+          <div style={{textAlign: 'center'}}>
+            <div style={{fontSize: '64px', marginBottom: '16px'}}>{lifeEvent.emoji}</div>
+            <h2 style={{margin: '0 0 8px 0', color: theme.primary}}>{lifeEvent.text}</h2>
+            <p style={{fontSize: '18px', color: '#666', marginBottom: '24px'}}>{lifeEvent.effect}</p>
+            <button
+              onClick={() => {
+                setLifeEvent(null);
+                // Check if all players retired
+                const allRetired = lifePlayers.every(p => p.position >= lifeBoardSize - 1);
+                if (allRetired) {
+                  setLifePhase('summary');
+                } else {
+                  const nextPlayer = (lifeCurrentPlayer + 1) % lifePlayers.length;
+                  setLifeCurrentPlayer(nextPlayer);
+                  setLifePhase('spin');
+                }
+              }}
+              style={{padding: '14px 32px', background: theme.gradient, color: 'white', border: 'none', borderRadius: '12px', fontSize: '16px', fontWeight: 'bold', cursor: 'pointer'}}
+            >
+              Continue
+            </button>
+          </div>
+        )}
+
+        {mode === 'life' && lifePhase === 'summary' && lifePlayers.length > 0 && (() => {
+          // Calculate final scores
+          const rankedPlayers = [...lifePlayers].map(p => ({
+            ...p,
+            finalScore: p.money + (p.house?.value || 0) + (p.career?.salary || 0) * 5 + p.kids * 10000 + (p.spouse ? 20000 : 0)
+          })).sort((a, b) => b.finalScore - a.finalScore);
           
-          const outcome = percentage >= 80 ? { title: '🏆 Living Legend!', desc: 'Nobel Prize, dream job, amazing life!', emoji: '👑' }
-            : percentage >= 60 ? { title: '🌟 Great Success!', desc: 'Solid career and happy family!', emoji: '⭐' }
-            : percentage >= 40 ? { title: '😊 Decent Life', desc: 'Some wins, some losses. Not bad!', emoji: '👍' }
-            : { title: '😅 Rough Journey', desc: 'Well... at least you have your cats!', emoji: '🐱' };
+          const winner = rankedPlayers[0];
           
           return (
             <div>
               <div style={{textAlign: 'center', marginBottom: '20px'}}>
-                <div style={{fontSize: '48px', marginBottom: '8px'}}>{outcome.emoji}</div>
-                <h2 style={{margin: '0 0 8px 0', color: theme.primary}}>{outcome.title}</h2>
-                <p style={{color: '#666', marginBottom: '12px'}}>{outcome.desc}</p>
-                <div style={{
-                  display: 'inline-block', padding: '8px 20px',
-                  background: `linear-gradient(135deg, ${theme.primary}, ${theme.primaryLight})`,
-                  color: 'white', borderRadius: '20px', fontWeight: 'bold', fontSize: '18px'
-                }}>
-                  {goodChoices}/{totalChoices} Good Choices ({percentage}%)
-                </div>
+                <div style={{fontSize: '48px', marginBottom: '8px'}}>🏆</div>
+                <h2 style={{margin: '0 0 8px 0', color: theme.primary}}>
+                  {lifePlayers.length > 1 ? `${winner.name} Wins!` : 'Game Over!'}
+                </h2>
+                <div style={{fontSize: '24px', color: winner.color}}>{winner.emoji}</div>
               </div>
               
-              {/* Life Story Timeline */}
-              <div style={{background: '#f9fafb', padding: '16px', borderRadius: '12px', marginBottom: '16px'}}>
-                <h3 style={{margin: '0 0 12px 0', fontSize: '14px', color: theme.primary}}>📖 Your Life Story:</h3>
-                <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
-                  {lifeStory.map((s, i) => {
-                    const stage = lifeStages[Math.min(i, lifeStages.length - 1)];
-                    const isGood = s.choice === stage.good.text;
-                    return (
-                      <div key={i} style={{
-                        display: 'flex', alignItems: 'center', gap: '8px',
-                        padding: '8px 12px', borderRadius: '8px',
-                        background: isGood ? '#dcfce7' : '#fee2e2',
-                        border: `1px solid ${isGood ? '#86efac' : '#fca5a5'}`
-                      }}>
-                        <span style={{fontSize: '20px'}}>{s.emoji}</span>
-                        <div style={{flex: 1}}>
-                          <div style={{fontSize: '11px', color: '#666'}}>{s.stage}</div>
-                          <div style={{fontSize: '13px', fontWeight: '500'}}>{s.choice}</div>
-                        </div>
-                        <span>{isGood ? '✅' : '😬'}</span>
+              {/* Final standings */}
+              <div style={{marginBottom: '16px'}}>
+                {rankedPlayers.map((p, i) => (
+                  <div key={i} style={{
+                    display: 'flex', alignItems: 'center', gap: '12px', padding: '12px',
+                    background: i === 0 ? '#fef3c7' : '#f9fafb', borderRadius: '12px', marginBottom: '8px',
+                    border: i === 0 ? '2px solid #f59e0b' : '1px solid #e5e7eb'
+                  }}>
+                    <div style={{fontSize: '24px', fontWeight: 'bold', color: i === 0 ? '#f59e0b' : '#9ca3af', width: '30px'}}>#{i + 1}</div>
+                    <div style={{fontSize: '28px'}}>{p.emoji}</div>
+                    <div style={{flex: 1}}>
+                      <div style={{fontWeight: 'bold', color: p.color}}>{p.name}</div>
+                      <div style={{fontSize: '12px', color: '#666', display: 'flex', gap: '8px', flexWrap: 'wrap'}}>
+                        {p.career && <span>💼 {p.career.title}</span>}
+                        {p.house && <span>🏠 {p.house.name}</span>}
+                        {p.spouse && <span>💍</span>}
+                        {p.kids > 0 && <span>👶×{p.kids}</span>}
                       </div>
-                    );
-                  })}
-                </div>
-              </div>
-              
-              {/* Score */}
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px'}}>
-                <div style={{textAlign: 'center', padding: '12px', background: '#dcfce7', borderRadius: '12px'}}>
-                  <div style={{fontSize: '24px', fontWeight: 'bold', color: '#22c55e'}}>{lifeCorrect}</div>
-                  <div style={{fontSize: '12px', color: '#666'}}>Questions Right</div>
-                </div>
-                <div style={{textAlign: 'center', padding: '12px', background: '#fee2e2', borderRadius: '12px'}}>
-                  <div style={{fontSize: '24px', fontWeight: 'bold', color: '#ef4444'}}>{lifeWrong}</div>
-                  <div style={{fontSize: '12px', color: '#666'}}>Questions Wrong</div>
-                </div>
+                    </div>
+                    <div style={{textAlign: 'right'}}>
+                      <div style={{fontWeight: 'bold', fontSize: '16px'}}>${p.finalScore.toLocaleString()}</div>
+                      <div style={{fontSize: '11px', color: '#666'}}>Total Value</div>
+                    </div>
+                  </div>
+                ))}
               </div>
               
               <div style={{display: 'flex', gap: '8px'}}>
