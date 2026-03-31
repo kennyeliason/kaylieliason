@@ -881,26 +881,70 @@ export default function StudyGuide() {
   const [lifeMultiplayer, setLifeMultiplayer] = useState(false);
   const [lifePlayerCount, setLifePlayerCount] = useState(1);
   const [lifePlayerNames, setLifePlayerNames] = useState<string[]>(['Player 1', 'Player 2', 'Player 3', 'Player 4']);
+  const [lifeGameLength, setLifeGameLength] = useState<'fast' | 'regular' | 'long'>('regular');
   
-  // Board spaces - each space is a stop with a question + choice
-  const lifeBoardSpaces = [
-    { type: 'start', label: 'Start', emoji: '🚀', goodChoice: null, badChoice: null },
-    { type: 'choice', label: 'High School', emoji: '🎒', goodChoice: { text: 'Join Science Club', emoji: '🔬', money: 0 }, badChoice: { text: 'Skip Class', emoji: '😴', money: 0 } },
-    { type: 'choice', label: 'College Apps', emoji: '📝', goodChoice: { text: 'Apply to Top Schools', emoji: '🎓', money: -5000 }, badChoice: { text: 'Skip College', emoji: '🎮', money: 0 } },
-    { type: 'event', label: 'Graduation!', emoji: '🎓', event: { text: 'You graduated!', effect: '+$5,000 gift', money: 5000 } },
-    { type: 'career', label: 'First Job', emoji: '💼', goodChoice: { text: 'Research Scientist', emoji: '🔬', salary: 80000 }, badChoice: { text: 'Fast Food', emoji: '🍔', salary: 25000 } },
-    { type: 'choice', label: 'Dating', emoji: '💕', goodChoice: { text: 'Find True Love', emoji: '💍', money: -10000, spouse: true }, badChoice: { text: 'Stay Single', emoji: '🎭', money: 0 } },
-    { type: 'house', label: 'First Home', emoji: '🏠', goodChoice: { text: 'Nice House', emoji: '🏡', value: 200000 }, badChoice: { text: 'Tiny Apartment', emoji: '🏚️', value: 50000 } },
-    { type: 'event', label: 'Tax Refund!', emoji: '💵', event: { text: 'Tax refund!', effect: '+$10,000', money: 10000 } },
-    { type: 'choice', label: 'Family', emoji: '👨‍👩‍👧', goodChoice: { text: 'Have Kids', emoji: '👶', money: -15000, kids: 2 }, badChoice: { text: 'Get a Dog', emoji: '🐕', money: -2000 } },
-    { type: 'career', label: 'Promotion', emoji: '📈', goodChoice: { text: 'Director', emoji: '👔', salary: 150000 }, badChoice: { text: 'Stay Put', emoji: '📊', salary: 60000 } },
-    { type: 'event', label: 'Lottery!', emoji: '🎰', event: { text: 'You won!', effect: '+$25,000', money: 25000 } },
-    { type: 'house', label: 'Dream Home', emoji: '🏰', goodChoice: { text: 'Mansion', emoji: '🏰', value: 500000 }, badChoice: { text: 'Keep Current', emoji: '🏠', value: 0 } },
-    { type: 'choice', label: 'Mid-Life', emoji: '🎂', goodChoice: { text: 'Start a Business', emoji: '💼', money: 50000 }, badChoice: { text: 'Mid-Life Crisis Car', emoji: '🏎️', money: -30000 } },
-    { type: 'event', label: 'Kids College', emoji: '🎒', event: { text: 'College tuition!', effect: '-$20,000', money: -20000 } },
-    { type: 'career', label: 'Peak Career', emoji: '🏆', goodChoice: { text: 'CEO', emoji: '👑', salary: 300000 }, badChoice: { text: 'Early Retirement', emoji: '🏖️', salary: 0 } },
-    { type: 'retire', label: 'Retirement!', emoji: '🌅', goodChoice: null, badChoice: null },
-  ];
+  // Board spaces by game length
+  const lifeBoardOptions = {
+    fast: [ // 10 stops
+      { type: 'start', label: 'Start', emoji: '🚀', goodChoice: null, badChoice: null },
+      { type: 'choice', label: 'High School', emoji: '🎒', goodChoice: { text: 'Join Science Club', emoji: '🔬', money: 1000 }, badChoice: { text: 'Skip Class', emoji: '😴', money: -500 } },
+      { type: 'career', label: 'First Job', emoji: '💼', goodChoice: { text: 'Research Scientist', emoji: '🔬', salary: 80000 }, badChoice: { text: 'Fast Food', emoji: '🍔', salary: 25000 } },
+      { type: 'choice', label: 'Dating', emoji: '💕', goodChoice: { text: 'Find True Love', emoji: '💍', money: 5000, spouse: true }, badChoice: { text: 'Stay Single', emoji: '🎭', money: 0 } },
+      { type: 'house', label: 'First Home', emoji: '🏠', goodChoice: { text: 'Nice House', emoji: '🏡', value: 200000 }, badChoice: { text: 'Tiny Apartment', emoji: '🏚️', value: 50000 } },
+      { type: 'event', label: 'Bonus!', emoji: '💵', event: { text: 'Work bonus!', effect: '+$15,000', money: 15000 } },
+      { type: 'choice', label: 'Family', emoji: '👨‍👩‍👧', goodChoice: { text: 'Have Kids', emoji: '👶', money: 0, kids: 2 }, badChoice: { text: 'Get a Dog', emoji: '🐕', money: -2000 } },
+      { type: 'career', label: 'Promotion', emoji: '📈', goodChoice: { text: 'Director', emoji: '👔', salary: 150000 }, badChoice: { text: 'Stay Put', emoji: '📊', salary: 60000 } },
+      { type: 'event', label: 'Lottery!', emoji: '🎰', event: { text: 'You won!', effect: '+$25,000', money: 25000 } },
+      { type: 'retire', label: 'Retirement!', emoji: '🌅', goodChoice: null, badChoice: null },
+    ],
+    regular: [ // 16 stops
+      { type: 'start', label: 'Start', emoji: '🚀', goodChoice: null, badChoice: null },
+      { type: 'choice', label: 'High School', emoji: '🎒', goodChoice: { text: 'Join Science Club', emoji: '🔬', money: 1000 }, badChoice: { text: 'Skip Class', emoji: '😴', money: -500 } },
+      { type: 'choice', label: 'College Apps', emoji: '📝', goodChoice: { text: 'Apply to Top Schools', emoji: '🎓', money: -5000 }, badChoice: { text: 'Skip College', emoji: '🎮', money: 0 } },
+      { type: 'event', label: 'Graduation!', emoji: '🎓', event: { text: 'You graduated!', effect: '+$5,000 gift', money: 5000 } },
+      { type: 'career', label: 'First Job', emoji: '💼', goodChoice: { text: 'Research Scientist', emoji: '🔬', salary: 80000 }, badChoice: { text: 'Fast Food', emoji: '🍔', salary: 25000 } },
+      { type: 'choice', label: 'Dating', emoji: '💕', goodChoice: { text: 'Find True Love', emoji: '💍', money: 5000, spouse: true }, badChoice: { text: 'Stay Single', emoji: '🎭', money: 0 } },
+      { type: 'house', label: 'First Home', emoji: '🏠', goodChoice: { text: 'Nice House', emoji: '🏡', value: 200000 }, badChoice: { text: 'Tiny Apartment', emoji: '🏚️', value: 50000 } },
+      { type: 'event', label: 'Tax Refund!', emoji: '💵', event: { text: 'Tax refund!', effect: '+$10,000', money: 10000 } },
+      { type: 'choice', label: 'Family', emoji: '👨‍👩‍👧', goodChoice: { text: 'Have Kids', emoji: '👶', money: 0, kids: 2 }, badChoice: { text: 'Get a Dog', emoji: '🐕', money: -2000 } },
+      { type: 'career', label: 'Promotion', emoji: '📈', goodChoice: { text: 'Director', emoji: '👔', salary: 150000 }, badChoice: { text: 'Stay Put', emoji: '📊', salary: 60000 } },
+      { type: 'event', label: 'Lottery!', emoji: '🎰', event: { text: 'You won!', effect: '+$25,000', money: 25000 } },
+      { type: 'house', label: 'Dream Home', emoji: '🏰', goodChoice: { text: 'Mansion', emoji: '🏰', value: 500000 }, badChoice: { text: 'Keep Current', emoji: '🏠', value: 0 } },
+      { type: 'choice', label: 'Mid-Life', emoji: '🎂', goodChoice: { text: 'Start a Business', emoji: '💼', money: 50000 }, badChoice: { text: 'Mid-Life Crisis Car', emoji: '🏎️', money: -30000 } },
+      { type: 'event', label: 'Kids College', emoji: '🎒', event: { text: 'College tuition!', effect: '-$20,000', money: -20000 } },
+      { type: 'career', label: 'Peak Career', emoji: '🏆', goodChoice: { text: 'CEO', emoji: '👑', salary: 300000 }, badChoice: { text: 'Early Retirement', emoji: '🏖️', salary: 0 } },
+      { type: 'retire', label: 'Retirement!', emoji: '🌅', goodChoice: null, badChoice: null },
+    ],
+    long: [ // 25 stops
+      { type: 'start', label: 'Start', emoji: '🚀', goodChoice: null, badChoice: null },
+      { type: 'choice', label: 'Elementary', emoji: '📚', goodChoice: { text: 'Study Hard', emoji: '📖', money: 500 }, badChoice: { text: 'Goof Off', emoji: '🎪', money: 0 } },
+      { type: 'choice', label: 'Middle School', emoji: '🏫', goodChoice: { text: 'Join Sports', emoji: '⚽', money: 0 }, badChoice: { text: 'Play Video Games', emoji: '🎮', money: -200 } },
+      { type: 'choice', label: 'High School', emoji: '🎒', goodChoice: { text: 'Join Science Club', emoji: '🔬', money: 1000 }, badChoice: { text: 'Skip Class', emoji: '😴', money: -500 } },
+      { type: 'event', label: 'Prom!', emoji: '💃', event: { text: 'Best prom ever!', effect: '+$200', money: 200 } },
+      { type: 'choice', label: 'College Apps', emoji: '📝', goodChoice: { text: 'Apply to Top Schools', emoji: '🎓', money: -5000 }, badChoice: { text: 'Skip College', emoji: '🛋️', money: 0 } },
+      { type: 'choice', label: 'College Life', emoji: '🎓', goodChoice: { text: 'Dean\'s List', emoji: '⭐', money: 2000 }, badChoice: { text: 'Party Time', emoji: '🎉', money: -3000 } },
+      { type: 'event', label: 'Graduation!', emoji: '🎓', event: { text: 'You graduated!', effect: '+$5,000 gift', money: 5000 } },
+      { type: 'choice', label: 'Internship', emoji: '💻', goodChoice: { text: 'Dream Company', emoji: '🏢', money: 10000 }, badChoice: { text: 'Unpaid Intern', emoji: '😓', money: 0 } },
+      { type: 'career', label: 'First Job', emoji: '💼', goodChoice: { text: 'Research Scientist', emoji: '🔬', salary: 80000 }, badChoice: { text: 'Fast Food', emoji: '🍔', salary: 25000 } },
+      { type: 'choice', label: 'Dating', emoji: '💕', goodChoice: { text: 'Find True Love', emoji: '💍', money: 5000, spouse: true }, badChoice: { text: 'Stay Single', emoji: '🎭', money: 0 } },
+      { type: 'event', label: 'Wedding!', emoji: '💒', event: { text: 'Beautiful wedding!', effect: '-$15,000', money: -15000 } },
+      { type: 'house', label: 'First Home', emoji: '🏠', goodChoice: { text: 'Nice House', emoji: '🏡', value: 200000 }, badChoice: { text: 'Tiny Apartment', emoji: '🏚️', value: 50000 } },
+      { type: 'event', label: 'Tax Refund!', emoji: '💵', event: { text: 'Tax refund!', effect: '+$10,000', money: 10000 } },
+      { type: 'choice', label: 'Family', emoji: '👨‍👩‍👧', goodChoice: { text: 'Have Kids', emoji: '👶', money: 0, kids: 2 }, badChoice: { text: 'Get Pets', emoji: '🐕', money: -2000 } },
+      { type: 'event', label: 'Baby Shower!', emoji: '🍼', event: { text: 'Gifts galore!', effect: '+$3,000', money: 3000 } },
+      { type: 'career', label: 'Promotion', emoji: '📈', goodChoice: { text: 'Director', emoji: '👔', salary: 150000 }, badChoice: { text: 'Stay Put', emoji: '📊', salary: 60000 } },
+      { type: 'choice', label: 'Vacation', emoji: '✈️', goodChoice: { text: 'Dream Vacation', emoji: '🏝️', money: -8000 }, badChoice: { text: 'Staycation', emoji: '🏠', money: 0 } },
+      { type: 'event', label: 'Lottery!', emoji: '🎰', event: { text: 'You won!', effect: '+$25,000', money: 25000 } },
+      { type: 'house', label: 'Dream Home', emoji: '🏰', goodChoice: { text: 'Mansion', emoji: '🏰', value: 500000 }, badChoice: { text: 'Keep Current', emoji: '🏠', value: 0 } },
+      { type: 'choice', label: 'Mid-Life', emoji: '🎂', goodChoice: { text: 'Start a Business', emoji: '💼', money: 50000 }, badChoice: { text: 'Mid-Life Crisis Car', emoji: '🏎️', money: -30000 } },
+      { type: 'event', label: 'Kids Graduate!', emoji: '🎓', event: { text: 'So proud!', effect: '+$5,000', money: 5000 } },
+      { type: 'event', label: 'Kids College', emoji: '🎒', event: { text: 'College tuition!', effect: '-$20,000', money: -20000 } },
+      { type: 'career', label: 'Peak Career', emoji: '🏆', goodChoice: { text: 'CEO', emoji: '👑', salary: 300000 }, badChoice: { text: 'Early Retirement', emoji: '🏖️', salary: 0 } },
+      { type: 'retire', label: 'Retirement!', emoji: '🌅', goodChoice: null, badChoice: null },
+    ],
+  };
+  
+  const lifeBoardSpaces = lifeBoardOptions[lifeGameLength];
 
   // High scores state
   const [highScores, setHighScores] = useState<HighScores>({ speed: 0, millionaire: 0, bomb: 0, challenge: 0, snake: 0, memory: 999 });
@@ -2468,6 +2512,46 @@ export default function StudyGuide() {
               <p style={{color: '#666', margin: 0}}>The Game of Life... with Biology!</p>
             </div>
             
+            {/* Game Length */}
+            <div style={{marginBottom: '16px'}}>
+              <h4 style={{margin: '0 0 8px 0', color: theme.primary}}>Game Length:</h4>
+              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px'}}>
+                <button
+                  onClick={() => setLifeGameLength('fast')}
+                  style={{
+                    padding: '12px 8px', border: lifeGameLength === 'fast' ? '3px solid ' + theme.primary : '2px solid #e5e7eb',
+                    borderRadius: '10px', background: lifeGameLength === 'fast' ? theme.accentLight : 'white', cursor: 'pointer', textAlign: 'center'
+                  }}
+                >
+                  <div style={{fontSize: '20px'}}>⚡</div>
+                  <div style={{fontWeight: 'bold', color: theme.primary, fontSize: '14px'}}>Fast</div>
+                  <div style={{fontSize: '11px', color: '#666'}}>10 stops</div>
+                </button>
+                <button
+                  onClick={() => setLifeGameLength('regular')}
+                  style={{
+                    padding: '12px 8px', border: lifeGameLength === 'regular' ? '3px solid ' + theme.primary : '2px solid #e5e7eb',
+                    borderRadius: '10px', background: lifeGameLength === 'regular' ? theme.accentLight : 'white', cursor: 'pointer', textAlign: 'center'
+                  }}
+                >
+                  <div style={{fontSize: '20px'}}>🎯</div>
+                  <div style={{fontWeight: 'bold', color: theme.primary, fontSize: '14px'}}>Regular</div>
+                  <div style={{fontSize: '11px', color: '#666'}}>16 stops</div>
+                </button>
+                <button
+                  onClick={() => setLifeGameLength('long')}
+                  style={{
+                    padding: '12px 8px', border: lifeGameLength === 'long' ? '3px solid ' + theme.primary : '2px solid #e5e7eb',
+                    borderRadius: '10px', background: lifeGameLength === 'long' ? theme.accentLight : 'white', cursor: 'pointer', textAlign: 'center'
+                  }}
+                >
+                  <div style={{fontSize: '20px'}}>🏔️</div>
+                  <div style={{fontWeight: 'bold', color: theme.primary, fontSize: '14px'}}>Long</div>
+                  <div style={{fontSize: '11px', color: '#666'}}>25 stops</div>
+                </button>
+              </div>
+            </div>
+            
             {/* Single vs Multiplayer */}
             <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px'}}>
               <button
@@ -2578,7 +2662,7 @@ export default function StudyGuide() {
 
         {mode === 'life' && lifePhase === 'spin' && lifePlayers.length > 0 && (() => {
           const player = lifePlayers[lifeCurrentPlayer];
-          const allRetired = lifePlayers.every(p => p.position >= lifeBoardSize - 1);
+          const allRetired = lifePlayers.every(p => p.position >= lifeBoardSpaces.length - 1);
           
           if (allRetired) {
             setLifePhase('summary');
@@ -2586,7 +2670,7 @@ export default function StudyGuide() {
           }
 
           // Get the NEXT space (where they'll move to)
-          const nextPos = Math.min(player.position + 1, lifeBoardSize - 1);
+          const nextPos = Math.min(player.position + 1, lifeBoardSpaces.length - 1);
           const nextSpace = lifeBoardSpaces[nextPos];
           
           return (
@@ -2597,7 +2681,7 @@ export default function StudyGuide() {
                 <div style={{fontWeight: 'bold', color: player.color, fontSize: '18px'}}>{player.name}'s Turn</div>
                 <div style={{fontSize: '13px', color: '#666'}}>💰 ${player.money.toLocaleString()}</div>
                 <div style={{fontSize: '14px', color: '#374151', marginTop: '4px'}}>
-                  Stop {player.position + 1} of {lifeBoardSize}
+                  Stop {player.position + 1} of {lifeBoardSpaces.length}
                 </div>
               </div>
               
@@ -2610,7 +2694,7 @@ export default function StudyGuide() {
                     return (
                       <div key={i} style={{
                         width: '36px', height: '44px', borderRadius: '6px', fontSize: '10px', textAlign: 'center',
-                        background: i === 0 ? '#22c55e' : i === lifeBoardSize - 1 ? '#f59e0b' : space.type === 'career' ? '#3b82f6' : space.type === 'house' ? '#8b5cf6' : space.type === 'event' ? '#ec4899' : '#e5e7eb',
+                        background: i === 0 ? '#22c55e' : i === lifeBoardSpaces.length - 1 ? '#f59e0b' : space.type === 'career' ? '#3b82f6' : space.type === 'house' ? '#8b5cf6' : space.type === 'event' ? '#ec4899' : '#e5e7eb',
                         color: ['start', 'retire', 'career', 'house', 'event'].includes(space.type) ? 'white' : '#666',
                         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                         border: isNext ? '3px solid #fbbf24' : '1px solid rgba(0,0,0,0.1)', 
@@ -2650,7 +2734,7 @@ export default function StudyGuide() {
                 <button
                   onClick={() => {
                     // Move player forward 1 space
-                    const newPos = Math.min(player.position + 1, lifeBoardSize - 1);
+                    const newPos = Math.min(player.position + 1, lifeBoardSpaces.length - 1);
                     const updatedPlayers = [...lifePlayers];
                     updatedPlayers[lifeCurrentPlayer] = { ...player, position: newPos };
                     setLifePlayers(updatedPlayers);
@@ -2691,7 +2775,7 @@ export default function StudyGuide() {
                       setLifePhase('spin');
                     }
                   }}
-                  disabled={player.position >= lifeBoardSize - 1}
+                  disabled={player.position >= lifeBoardSpaces.length - 1}
                   style={{
                     padding: '16px 40px', background: theme.gradient,
                     color: 'white', border: 'none', borderRadius: '12px', fontSize: '18px', fontWeight: 'bold', cursor: 'pointer'
@@ -2902,7 +2986,7 @@ export default function StudyGuide() {
               onClick={() => {
                 setLifeEvent(null);
                 // Check if all players retired
-                const allRetired = lifePlayers.every(p => p.position >= lifeBoardSize - 1);
+                const allRetired = lifePlayers.every(p => p.position >= lifeBoardSpaces.length - 1);
                 if (allRetired) {
                   setLifePhase('summary');
                 } else {
