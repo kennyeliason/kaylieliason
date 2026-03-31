@@ -858,24 +858,56 @@ export default function StudyGuide() {
   const [memoryMoves, setMemoryMoves] = useState(0);
   const [memoryLocked, setMemoryLocked] = useState(false);
 
-  // Bio Life game state
+  // Bio Life game state - CHOICE-BASED LIFE SIMULATION
+  const [lifePhase, setLifePhase] = useState<'length' | 'question' | 'choice' | 'summary'>('length');
   const [lifeLength, setLifeLength] = useState<number | null>(null);
-  const [lifeStats, setLifeStats] = useState({ money: 50, education: 50, happiness: 50, career: 50 });
-  const [lifeScenarioIndex, setLifeScenarioIndex] = useState(0);
-  const [lifeShowFeedback, setLifeShowFeedback] = useState<'correct' | 'wrong' | null>(null);
+  const [lifeQuestionIndex, setLifeQuestionIndex] = useState(0);
   const [lifeChoices, setLifeChoices] = useState<string[]>([]);
+  const [lifeShowFeedback, setLifeShowFeedback] = useState<'correct' | 'wrong' | null>(null);
   const [lifeCorrect, setLifeCorrect] = useState(0);
   const [lifeWrong, setLifeWrong] = useState(0);
-  const [lifeGameOver, setLifeGameOver] = useState(false);
-  const [lifeComplete, setLifeComplete] = useState(false);
-  const lifeScenarios = [
-    { stage: 'High School', emoji: '🎒', scenarios: ['Your biology teacher asks you a question in front of the whole class...', 'SAT prep test has a science section...', 'Science fair project judging...', 'AP Bio exam question...', "Your crush asks for help studying biology..."] },
-    { stage: 'College', emoji: '🎓', scenarios: ['Freshman bio midterm...', 'Research lab interview...', 'Study group needs someone to explain this concept...', 'Internship interview at a biotech company...', 'Senior thesis defense...', 'Med school application essay question...', 'MCAT biology section...'] },
-    { stage: 'Career', emoji: '💼', scenarios: ['Job interview for research position...', 'Your boss asks you to explain results to investors...', "Coworker needs help with their experiment...", 'Conference presentation Q&A...', 'Grant proposal review...', 'Promotion interview...', 'Consulting opportunity...'] },
-    { stage: 'Peak Life', emoji: '🌟', scenarios: ['TED talk invitation on your research...', 'Nobel committee reviewing your work...', 'Writing a textbook chapter...', 'Mentoring the next generation...', 'Documentary interview about your career...'] },
+  const [lifeStory, setLifeStory] = useState<{stage: string, choice: string, emoji: string}[]>([]);
+  const [lifePendingChoices, setLifePendingChoices] = useState<{good: string, bad: string, goodEmoji: string, badEmoji: string} | null>(null);
+  
+  // Life stages with branching choices
+  const lifeStages = [
+    { stage: 'High School', question: 'You aced your biology test!', 
+      good: { text: 'Join the Science Olympiad team', emoji: '🔬' }, 
+      bad: { text: 'Skip studying to play video games', emoji: '🎮' } },
+    { stage: 'High School', question: 'College applications are due...',
+      good: { text: 'Apply to top universities', emoji: '🎓' },
+      bad: { text: 'Apply only to party schools', emoji: '🎉' } },
+    { stage: 'College', question: 'Time to pick a major!',
+      good: { text: 'Major in Biology/Pre-Med', emoji: '🧬' },
+      bad: { text: 'Major in Underwater Basket Weaving', emoji: '🧺' } },
+    { stage: 'College', question: 'Summer break options...',
+      good: { text: 'Research internship at a lab', emoji: '🔬' },
+      bad: { text: 'Sleep all summer', emoji: '😴' } },
+    { stage: 'College', question: 'Senior year decision...',
+      good: { text: 'Apply to medical school', emoji: '⚕️' },
+      bad: { text: 'Move back in with parents', emoji: '🏠' } },
+    { stage: 'Career', question: 'Job offers are coming in!',
+      good: { text: 'Accept position at research hospital', emoji: '🏥' },
+      bad: { text: 'Become a professional couch tester', emoji: '🛋️' } },
+    { stage: 'Career', question: 'Investment opportunity...',
+      good: { text: 'Invest in biotech startup', emoji: '📈' },
+      bad: { text: 'Spend it all on lottery tickets', emoji: '🎰' } },
+    { stage: 'Career', question: 'Work-life balance decision...',
+      good: { text: 'Lead groundbreaking research project', emoji: '🏆' },
+      bad: { text: 'Quit to become a reality TV star', emoji: '📺' } },
+    { stage: 'Family', question: 'Time to settle down!',
+      good: { text: 'Buy a nice house in the suburbs', emoji: '🏡' },
+      bad: { text: 'Live in a van down by the river', emoji: '🚐' } },
+    { stage: 'Family', question: 'Kids are asking about college...',
+      good: { text: 'Start a college fund', emoji: '💰' },
+      bad: { text: 'Tell them to figure it out themselves', emoji: '🤷' } },
+    { stage: 'Peak Life', question: 'Your legacy...',
+      good: { text: 'Win Nobel Prize in Medicine', emoji: '🏅' },
+      bad: { text: 'Get famous for viral fail video', emoji: '📱' } },
+    { stage: 'Peak Life', question: 'Retirement planning...',
+      good: { text: 'Retire wealthy with a foundation', emoji: '🌟' },
+      bad: { text: 'Retire with your cats', emoji: '🐱' } },
   ];
-  const lifeSuccessMessages = ['Nailed it! Impressive!', 'Perfect! You really know your stuff!', 'Brilliant answer!', 'Exactly right! Gold star!', 'Outstanding!'];
-  const lifeFailMessages = ['Not quite... but you\'ll get it next time!', 'Oops! Review that topic.', 'Close, but not quite right.', 'That one was tricky!', 'Time to study more!'];
 
   // High scores state
   const [highScores, setHighScores] = useState<HighScores>({ speed: 0, millionaire: 0, bomb: 0, challenge: 0, snake: 0, memory: 999 });
@@ -1175,15 +1207,15 @@ export default function StudyGuide() {
     }
 
     if (newMode === 'life') {
-      // Life game needs length selection first, don't start yet
+      // Life game - choice-based simulation
+      setLifePhase('length');
       setLifeLength(null);
-      setLifeStats({ money: 50, education: 50, happiness: 50, career: 50 });
-      setLifeScenarioIndex(0);
+      setLifeQuestionIndex(0);
       setLifeShowFeedback(null);
       setLifeCorrect(0);
       setLifeWrong(0);
-      setLifeGameOver(false);
-      setLifeComplete(false);
+      setLifeStory([]);
+      setLifePendingChoices(null);
     }
     
     if (newMode === 'wheel') {
@@ -2434,21 +2466,21 @@ export default function StudyGuide() {
           </div>
         )}
 
-        {/* Bio Life Game */}
-        {mode === 'life' && !lifeLength && (
+        {/* Bio Life Game - CHOICE-BASED */}
+        {mode === 'life' && lifePhase === 'length' && (
           <div>
             <div style={{textAlign: 'center', marginBottom: '24px'}}>
-              <div style={{fontSize: '48px', marginBottom: '8px'}}>🎮</div>
+              <div style={{fontSize: '48px', marginBottom: '8px'}}>🎲</div>
               <h2 style={{margin: '0 0 8px 0', color: theme.primary}}>Bio Life</h2>
-              <p style={{color: '#666', margin: 0}}>Your biology knowledge shapes your destiny!</p>
+              <p style={{color: '#666', margin: 0}}>Answer questions, make choices, build YOUR life!</p>
             </div>
             
             <h3 style={{marginBottom: '12px', color: theme.primary}}>⏱️ Choose Your Life Length:</h3>
             <div style={{display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '16px'}}>
               {[
-                { len: 10, label: 'Quick Life', emoji: '⚡', desc: '~5 min' },
-                { len: 15, label: 'Regular Life', emoji: '🎮', desc: '~10 min' },
-                { len: 25, label: 'Full Life', emoji: '🏆', desc: '~15 min' },
+                { len: 6, label: 'Quick Life', emoji: '⚡', desc: '6 choices' },
+                { len: 9, label: 'Regular Life', emoji: '🎮', desc: '9 choices' },
+                { len: 12, label: 'Full Life', emoji: '🏆', desc: '12 choices' },
               ].map(opt => (
                 <button
                   key={opt.len}
@@ -2456,9 +2488,12 @@ export default function StudyGuide() {
                     setLifeLength(opt.len);
                     const qs = shuffle(shuffledQuestions).slice(0, opt.len);
                     setShuffledQuestions(qs);
-                    setLifeStats({ money: 50, education: 50, happiness: 50, career: 50 });
-                    setLifeScenarioIndex(0);
+                    setLifeQuestionIndex(0);
                     setCurrentIndex(0);
+                    setLifeStory([]);
+                    setLifeCorrect(0);
+                    setLifeWrong(0);
+                    setLifePhase('question');
                     if (qs[0]) {
                       const wrong = getWrongAnswers(qs[0].a, qs[0].topic, qs[0].wrong);
                       setLifeChoices(shuffle([qs[0].a, ...wrong]));
@@ -2479,41 +2514,33 @@ export default function StudyGuide() {
           </div>
         )}
 
-        {mode === 'life' && lifeLength && !lifeComplete && !lifeGameOver && currentQ && (() => {
-          const stageIndex = Math.floor(lifeScenarioIndex / (lifeLength / 4));
-          const stage = lifeScenarios[Math.min(stageIndex, lifeScenarios.length - 1)];
-          const scenarioIdx = lifeScenarioIndex % stage.scenarios.length;
-          const scenario = stage.scenarios[scenarioIdx];
-          
-          const StatBar = ({ label, value, emoji, color }: { label: string; value: number; emoji: string; color: string }) => (
-            <div style={{ marginBottom: '6px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', marginBottom: '2px' }}>
-                <span>{emoji} {label}</span>
-                <span>{value}%</span>
-              </div>
-              <div style={{ height: '6px', background: '#e5e7eb', borderRadius: '3px', overflow: 'hidden' }}>
-                <div style={{ width: `${value}%`, height: '100%', background: color, transition: 'width 0.5s ease', borderRadius: '3px' }} />
-              </div>
-            </div>
-          );
+        {mode === 'life' && lifePhase === 'question' && currentQ && (() => {
+          const stageData = lifeStages[Math.min(lifeQuestionIndex, lifeStages.length - 1)];
           
           return (
             <div>
               <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '12px', fontSize: '13px', color: '#666'}}>
-                <span>{stage.emoji} {stage.stage}</span>
-                <span>Question {lifeScenarioIndex + 1}/{lifeLength}</span>
+                <span>📍 {stageData.stage}</span>
+                <span>Turn {lifeQuestionIndex + 1}/{lifeLength}</span>
               </div>
               
-              <div style={{ background: '#f9fafb', padding: '12px', borderRadius: '12px', marginBottom: '12px' }}>
-                <StatBar label="Money" value={lifeStats.money} emoji="💰" color="#22c55e" />
-                <StatBar label="Education" value={lifeStats.education} emoji="📚" color="#3b82f6" />
-                <StatBar label="Happiness" value={lifeStats.happiness} emoji="😊" color="#f59e0b" />
-                <StatBar label="Career" value={lifeStats.career} emoji="🏆" color="#8b5cf6" />
-              </div>
+              {/* Life story so far */}
+              {lifeStory.length > 0 && (
+                <div style={{background: '#f9fafb', padding: '8px 12px', borderRadius: '8px', marginBottom: '12px', fontSize: '12px'}}>
+                  <div style={{fontWeight: 'bold', marginBottom: '4px', color: theme.primary}}>Your Life So Far:</div>
+                  <div style={{display: 'flex', flexWrap: 'wrap', gap: '4px'}}>
+                    {lifeStory.map((s, i) => (
+                      <span key={i} title={s.choice} style={{background: 'white', padding: '2px 6px', borderRadius: '4px', border: '1px solid #e5e7eb'}}>
+                        {s.emoji}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
               
               <div style={{...styles.card, background: 'linear-gradient(135deg, #f0f4ff, #faf5ff)', border: '1px solid #e5e7eb'}}>
-                <p style={{fontStyle: 'italic', marginBottom: '8px', color: '#666', fontSize: '13px'}}>{scenario}</p>
-                <p style={{fontWeight: 'bold', color: '#1f2937', margin: 0}}>{currentQ.q}</p>
+                <p style={{fontStyle: 'italic', marginBottom: '8px', color: '#666', fontSize: '13px'}}>{stageData.question}</p>
+                <p style={{fontWeight: 'bold', color: '#1f2937', margin: 0, fontSize: '15px'}}>{currentQ.q}</p>
               </div>
               
               <div style={{display: 'grid', gap: '8px', marginTop: '12px'}}>
@@ -2540,47 +2567,22 @@ export default function StudyGuide() {
                         
                         if (isCorrect) {
                           setLifeCorrect(prev => prev + 1);
-                          setLifeStats(prev => ({
-                            money: Math.min(100, prev.money + 8),
-                            education: Math.min(100, prev.education + 10),
-                            happiness: Math.min(100, prev.happiness + 5),
-                            career: Math.min(100, prev.career + 7)
-                          }));
                         } else {
                           setLifeWrong(prev => prev + 1);
-                          setLifeStats(prev => ({
-                            money: Math.max(0, prev.money - 10),
-                            education: Math.max(0, prev.education - 8),
-                            happiness: Math.max(0, prev.happiness - 5),
-                            career: Math.max(0, prev.career - 12)
-                          }));
                         }
                         
+                        // After feedback, show life choice
                         setTimeout(() => {
-                          const newStats = isCorrect 
-                            ? { ...lifeStats, career: Math.min(100, lifeStats.career + 7) }
-                            : { ...lifeStats, career: Math.max(0, lifeStats.career - 12) };
-                          
-                          if (newStats.career <= 0 || newStats.money <= 0) {
-                            setLifeGameOver(true);
-                            return;
-                          }
-                          
                           setLifeShowFeedback(null);
-                          
-                          if (lifeScenarioIndex + 1 >= lifeLength!) {
-                            setLifeComplete(true);
-                          } else {
-                            const nextIdx = lifeScenarioIndex + 1;
-                            setLifeScenarioIndex(nextIdx);
-                            setCurrentIndex(nextIdx);
-                            if (shuffledQuestions[nextIdx]) {
-                              const q = shuffledQuestions[nextIdx];
-                              const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
-                              setLifeChoices(shuffle([q.a, ...wrong]));
-                            }
-                          }
-                        }, 1500);
+                          const stage = lifeStages[Math.min(lifeQuestionIndex, lifeStages.length - 1)];
+                          setLifePendingChoices({
+                            good: stage.good.text,
+                            bad: stage.bad.text,
+                            goodEmoji: stage.good.emoji,
+                            badEmoji: stage.bad.emoji
+                          });
+                          setLifePhase('choice');
+                        }, 1200);
                       }}
                       disabled={lifeShowFeedback !== null}
                       style={{
@@ -2599,13 +2601,8 @@ export default function StudyGuide() {
                   marginTop: '12px', padding: '12px', borderRadius: '12px',
                   background: lifeShowFeedback === 'correct' ? '#dcfce7' : '#fee2e2', textAlign: 'center'
                 }}>
-                  <p style={{fontWeight: 'bold', marginBottom: '4px', margin: 0}}>
-                    {lifeShowFeedback === 'correct' ? '✅ Correct!' : '❌ Wrong!'}
-                  </p>
-                  <p style={{fontSize: '13px', color: '#666', margin: 0}}>
-                    {lifeShowFeedback === 'correct' 
-                      ? lifeSuccessMessages[Math.floor(Math.random() * lifeSuccessMessages.length)]
-                      : lifeFailMessages[Math.floor(Math.random() * lifeFailMessages.length)]}
+                  <p style={{fontWeight: 'bold', margin: 0}}>
+                    {lifeShowFeedback === 'correct' ? '✅ Correct! Now choose your path...' : '❌ Wrong! Limited options...'}
                   </p>
                 </div>
               )}
@@ -2613,67 +2610,160 @@ export default function StudyGuide() {
           );
         })()}
 
-        {mode === 'life' && lifeComplete && (() => {
-          const avg = (lifeStats.money + lifeStats.education + lifeStats.happiness + lifeStats.career) / 4;
-          const outcome = avg >= 85 ? { title: '🏆 Living Legend!', desc: 'Nobel Prize winner and inspiration to millions!', grade: 'S' }
-            : avg >= 70 ? { title: '🌟 Incredible Success!', desc: 'Award-winning career with great life balance!', grade: 'A' }
-            : avg >= 55 ? { title: '😊 Great Life!', desc: 'Successful career and comfortable living!', grade: 'B' }
-            : avg >= 40 ? { title: '🙂 Decent Life', desc: 'Some ups and downs, but you made it!', grade: 'C' }
-            : { title: '😅 Rough Journey', desc: 'Time to study more biology!', grade: 'D' };
+        {mode === 'life' && lifePhase === 'choice' && lifePendingChoices && (() => {
+          const stageData = lifeStages[Math.min(lifeQuestionIndex, lifeStages.length - 1)];
+          const gotItRight = lifeCorrect > lifeStory.length; // Did they just get one right?
           
           return (
-            <div style={{textAlign: 'center'}}>
-              <div style={{fontSize: '48px', marginBottom: '8px'}}>🎓</div>
-              <h2 style={{margin: '0 0 8px 0', color: theme.primary}}>{outcome.title}</h2>
-              <p style={{color: '#666', marginBottom: '16px'}}>{outcome.desc}</p>
-              <div style={{
-                display: 'inline-block', padding: '8px 24px',
-                background: `linear-gradient(135deg, ${theme.primary}, ${theme.primaryLight})`,
-                color: 'white', borderRadius: '20px', fontWeight: 'bold', fontSize: '24px', marginBottom: '16px'
-              }}>
-                Grade: {outcome.grade}
+            <div>
+              <div style={{textAlign: 'center', marginBottom: '16px'}}>
+                <div style={{fontSize: '36px', marginBottom: '8px'}}>🎯</div>
+                <h3 style={{margin: '0 0 8px 0', color: theme.primary}}>Choose Your Path!</h3>
+                <p style={{color: '#666', margin: 0, fontSize: '13px'}}>{stageData.stage} - {stageData.question}</p>
               </div>
               
-              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px'}}>
-                <div style={{textAlign: 'center', padding: '12px', background: '#dcfce7', borderRadius: '12px'}}>
-                  <div style={{fontSize: '24px', fontWeight: 'bold', color: '#22c55e'}}>{lifeCorrect}</div>
-                  <div style={{fontSize: '12px', color: '#666'}}>Correct</div>
-                </div>
-                <div style={{textAlign: 'center', padding: '12px', background: '#fee2e2', borderRadius: '12px'}}>
-                  <div style={{fontSize: '24px', fontWeight: 'bold', color: '#ef4444'}}>{lifeWrong}</div>
-                  <div style={{fontSize: '12px', color: '#666'}}>Wrong</div>
-                </div>
+              <div style={{display: 'grid', gap: '12px'}}>
+                {/* Good choice - only available if answered correctly */}
+                <button
+                  onClick={() => {
+                    if (!gotItRight) return;
+                    setLifeStory(prev => [...prev, { stage: stageData.stage, choice: lifePendingChoices.good, emoji: lifePendingChoices.goodEmoji }]);
+                    setLifePendingChoices(null);
+                    
+                    const nextIdx = lifeQuestionIndex + 1;
+                    if (nextIdx >= lifeLength!) {
+                      setLifePhase('summary');
+                    } else {
+                      setLifeQuestionIndex(nextIdx);
+                      setCurrentIndex(nextIdx);
+                      if (shuffledQuestions[nextIdx]) {
+                        const q = shuffledQuestions[nextIdx];
+                        const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+                        setLifeChoices(shuffle([q.a, ...wrong]));
+                      }
+                      setLifePhase('question');
+                    }
+                  }}
+                  disabled={!gotItRight}
+                  style={{
+                    padding: '20px', border: gotItRight ? '3px solid #22c55e' : '2px solid #d1d5db', borderRadius: '16px',
+                    background: gotItRight ? 'linear-gradient(135deg, #dcfce7, #bbf7d0)' : '#f3f4f6',
+                    cursor: gotItRight ? 'pointer' : 'not-allowed', textAlign: 'center', transition: 'all 0.2s',
+                    opacity: gotItRight ? 1 : 0.5
+                  }}
+                >
+                  <div style={{fontSize: '32px', marginBottom: '8px'}}>{lifePendingChoices.goodEmoji}</div>
+                  <div style={{fontWeight: 'bold', fontSize: '16px', color: gotItRight ? '#166534' : '#9ca3af'}}>{lifePendingChoices.good}</div>
+                  {!gotItRight && <div style={{fontSize: '11px', color: '#9ca3af', marginTop: '4px'}}>🔒 Answer correctly to unlock!</div>}
+                </button>
+                
+                {/* Bad choice - always available */}
+                <button
+                  onClick={() => {
+                    setLifeStory(prev => [...prev, { stage: stageData.stage, choice: lifePendingChoices.bad, emoji: lifePendingChoices.badEmoji }]);
+                    setLifePendingChoices(null);
+                    
+                    const nextIdx = lifeQuestionIndex + 1;
+                    if (nextIdx >= lifeLength!) {
+                      setLifePhase('summary');
+                    } else {
+                      setLifeQuestionIndex(nextIdx);
+                      setCurrentIndex(nextIdx);
+                      if (shuffledQuestions[nextIdx]) {
+                        const q = shuffledQuestions[nextIdx];
+                        const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+                        setLifeChoices(shuffle([q.a, ...wrong]));
+                      }
+                      setLifePhase('question');
+                    }
+                  }}
+                  style={{
+                    padding: '20px', border: '2px solid #fca5a5', borderRadius: '16px',
+                    background: 'linear-gradient(135deg, #fee2e2, #fecaca)',
+                    cursor: 'pointer', textAlign: 'center', transition: 'all 0.2s'
+                  }}
+                >
+                  <div style={{fontSize: '32px', marginBottom: '8px'}}>{lifePendingChoices.badEmoji}</div>
+                  <div style={{fontWeight: 'bold', fontSize: '16px', color: '#991b1b'}}>{lifePendingChoices.bad}</div>
+                </button>
               </div>
-              
-              <button onClick={() => startMode('life')} style={{...styles.primaryBtn, background: theme.gradient, marginRight: '8px'}}>Play Again</button>
-              <button onClick={() => setMode('menu')} style={styles.secondaryBtn}>Menu</button>
             </div>
           );
         })()}
 
-        {mode === 'life' && lifeGameOver && (
-          <div style={{textAlign: 'center'}}>
-            <div style={{fontSize: '48px', marginBottom: '8px'}}>💀</div>
-            <h2 style={{margin: '0 0 8px 0', color: '#ef4444'}}>Game Over!</h2>
-            <p style={{color: '#666', marginBottom: '16px'}}>
-              {lifeStats.career <= 0 ? "Your career crashed..." : "You ran out of money..."} Time to study harder!
-            </p>
-            
-            <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px'}}>
-              <div style={{textAlign: 'center', padding: '12px', background: '#dcfce7', borderRadius: '12px'}}>
-                <div style={{fontSize: '24px', fontWeight: 'bold', color: '#22c55e'}}>{lifeCorrect}</div>
-                <div style={{fontSize: '12px', color: '#666'}}>Correct</div>
+        {mode === 'life' && lifePhase === 'summary' && (() => {
+          const goodChoices = lifeStory.filter((s, i) => {
+            const stage = lifeStages[Math.min(i, lifeStages.length - 1)];
+            return s.choice === stage.good.text;
+          }).length;
+          const totalChoices = lifeStory.length;
+          const percentage = Math.round((goodChoices / totalChoices) * 100);
+          
+          const outcome = percentage >= 80 ? { title: '🏆 Living Legend!', desc: 'Nobel Prize, dream job, amazing life!', emoji: '👑' }
+            : percentage >= 60 ? { title: '🌟 Great Success!', desc: 'Solid career and happy family!', emoji: '⭐' }
+            : percentage >= 40 ? { title: '😊 Decent Life', desc: 'Some wins, some losses. Not bad!', emoji: '👍' }
+            : { title: '😅 Rough Journey', desc: 'Well... at least you have your cats!', emoji: '🐱' };
+          
+          return (
+            <div>
+              <div style={{textAlign: 'center', marginBottom: '20px'}}>
+                <div style={{fontSize: '48px', marginBottom: '8px'}}>{outcome.emoji}</div>
+                <h2 style={{margin: '0 0 8px 0', color: theme.primary}}>{outcome.title}</h2>
+                <p style={{color: '#666', marginBottom: '12px'}}>{outcome.desc}</p>
+                <div style={{
+                  display: 'inline-block', padding: '8px 20px',
+                  background: `linear-gradient(135deg, ${theme.primary}, ${theme.primaryLight})`,
+                  color: 'white', borderRadius: '20px', fontWeight: 'bold', fontSize: '18px'
+                }}>
+                  {goodChoices}/{totalChoices} Good Choices ({percentage}%)
+                </div>
               </div>
-              <div style={{textAlign: 'center', padding: '12px', background: '#fee2e2', borderRadius: '12px'}}>
-                <div style={{fontSize: '24px', fontWeight: 'bold', color: '#ef4444'}}>{lifeWrong}</div>
-                <div style={{fontSize: '12px', color: '#666'}}>Wrong</div>
+              
+              {/* Life Story Timeline */}
+              <div style={{background: '#f9fafb', padding: '16px', borderRadius: '12px', marginBottom: '16px'}}>
+                <h3 style={{margin: '0 0 12px 0', fontSize: '14px', color: theme.primary}}>📖 Your Life Story:</h3>
+                <div style={{display: 'flex', flexDirection: 'column', gap: '8px'}}>
+                  {lifeStory.map((s, i) => {
+                    const stage = lifeStages[Math.min(i, lifeStages.length - 1)];
+                    const isGood = s.choice === stage.good.text;
+                    return (
+                      <div key={i} style={{
+                        display: 'flex', alignItems: 'center', gap: '8px',
+                        padding: '8px 12px', borderRadius: '8px',
+                        background: isGood ? '#dcfce7' : '#fee2e2',
+                        border: `1px solid ${isGood ? '#86efac' : '#fca5a5'}`
+                      }}>
+                        <span style={{fontSize: '20px'}}>{s.emoji}</span>
+                        <div style={{flex: 1}}>
+                          <div style={{fontSize: '11px', color: '#666'}}>{s.stage}</div>
+                          <div style={{fontSize: '13px', fontWeight: '500'}}>{s.choice}</div>
+                        </div>
+                        <span>{isGood ? '✅' : '😬'}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+              
+              {/* Score */}
+              <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px'}}>
+                <div style={{textAlign: 'center', padding: '12px', background: '#dcfce7', borderRadius: '12px'}}>
+                  <div style={{fontSize: '24px', fontWeight: 'bold', color: '#22c55e'}}>{lifeCorrect}</div>
+                  <div style={{fontSize: '12px', color: '#666'}}>Questions Right</div>
+                </div>
+                <div style={{textAlign: 'center', padding: '12px', background: '#fee2e2', borderRadius: '12px'}}>
+                  <div style={{fontSize: '24px', fontWeight: 'bold', color: '#ef4444'}}>{lifeWrong}</div>
+                  <div style={{fontSize: '12px', color: '#666'}}>Questions Wrong</div>
+                </div>
+              </div>
+              
+              <div style={{display: 'flex', gap: '8px'}}>
+                <button onClick={() => startMode('life')} style={{...styles.primaryBtn, background: theme.gradient, flex: 1}}>Play Again</button>
+                <button onClick={() => setMode('menu')} style={{...styles.secondaryBtn, flex: 1}}>Menu</button>
               </div>
             </div>
-            
-            <button onClick={() => startMode('life')} style={{...styles.primaryBtn, background: theme.gradient, marginRight: '8px'}}>Try Again</button>
-            <button onClick={() => setMode('menu')} style={styles.secondaryBtn}>Menu</button>
-          </div>
-        )}
+          );
+        })()}
 
         {/* Wheel of Fortune */}
         {mode === 'wheel' && currentQ && (
