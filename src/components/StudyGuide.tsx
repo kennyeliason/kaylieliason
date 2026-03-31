@@ -2744,12 +2744,24 @@ export default function StudyGuide() {
                     // Start question phase to earn the move
                     setLifePendingMove(true);
                     setLifeQuestionsCorrect(0);
-                    setLifePhase('question');
-                    if (shuffledQuestions[currentIndex]) {
-                      const q = shuffledQuestions[currentIndex];
+                    
+                    // Ensure we have questions - reshuffle if needed
+                    let questions = shuffledQuestions;
+                    let idx = currentIndex;
+                    if (!questions[idx]) {
+                      questions = shuffle([...unitQuestions]);
+                      setShuffledQuestions(questions);
+                      idx = 0;
+                      setCurrentIndex(0);
+                    }
+                    
+                    const q = questions[idx];
+                    if (q) {
                       const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
                       setLifeChoices(shuffle([q.a, ...wrong]));
                     }
+                    
+                    setLifePhase('question');
                   }}
                   disabled={player.position >= lifeBoardSpaces.length - 1}
                   style={{
@@ -2777,6 +2789,24 @@ export default function StudyGuide() {
           );
         })()}
 
+        {mode === 'life' && lifePhase === 'question' && lifePlayers.length > 0 && !currentQ && (
+          <div style={{textAlign: 'center', padding: '20px'}}>
+            <p>Loading questions...</p>
+            <button onClick={() => {
+              const qs = shuffle([...unitQuestions]);
+              setShuffledQuestions(qs);
+              setCurrentIndex(0);
+              const q = qs[0];
+              if (q) {
+                const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+                setLifeChoices(shuffle([q.a, ...wrong]));
+              }
+            }} style={{padding: '12px 24px', background: theme.gradient, color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer'}}>
+              Load Questions
+            </button>
+          </div>
+        )}
+        
         {mode === 'life' && lifePhase === 'question' && lifePlayers.length > 0 && currentQ && (() => {
           const player = lifePlayers[lifeCurrentPlayer];
           const nextPos = Math.min(player.position + 1, lifeBoardSpaces.length - 1);
