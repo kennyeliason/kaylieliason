@@ -2745,17 +2745,13 @@ export default function StudyGuide() {
                     setLifePendingMove(true);
                     setLifeQuestionsCorrect(0);
                     
-                    // Ensure we have questions - reshuffle if needed
-                    let questions = shuffledQuestions;
-                    let idx = currentIndex;
-                    if (!questions[idx]) {
-                      questions = shuffle([...unitQuestions]);
-                      setShuffledQuestions(questions);
-                      idx = 0;
-                      setCurrentIndex(0);
-                    }
+                    // Always use allQuestions for Bio Life to ensure we have questions
+                    const bioQuestions = allQuestions.filter(q => q.unit === 'Roots' || q.unit === 'Combining Forms' || q.unit === 'Suffixes');
+                    const questions = shuffle(bioQuestions.length > 0 ? bioQuestions : allQuestions);
+                    setShuffledQuestions(questions);
+                    setCurrentIndex(0);
                     
-                    const q = questions[idx];
+                    const q = questions[0];
                     if (q) {
                       const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
                       setLifeChoices(shuffle([q.a, ...wrong]));
