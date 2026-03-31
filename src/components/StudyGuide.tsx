@@ -882,6 +882,8 @@ export default function StudyGuide() {
   const [lifePlayerCount, setLifePlayerCount] = useState(1);
   const [lifePlayerNames, setLifePlayerNames] = useState<string[]>(['Player 1', 'Player 2', 'Player 3', 'Player 4']);
   const [lifeGameLength, setLifeGameLength] = useState<'fast' | 'regular' | 'long'>('regular');
+  const [lifeQuestionsCorrect, setLifeQuestionsCorrect] = useState(0); // Need 2 correct to move
+  const [lifePendingMove, setLifePendingMove] = useState(false); // Track if we're in question phase before moving
   
   // Board spaces by game length
   const lifeBoardOptions = {
@@ -2729,50 +2731,24 @@ export default function StudyGuide() {
                 <div style={{fontWeight: 'bold', color: '#78350f', fontSize: '16px'}}>{nextSpace.label}</div>
               </div>
               
-              {/* Move button */}
+              {/* Answer questions before moving */}
               <div style={{textAlign: 'center', marginBottom: '16px'}}>
+                <div style={{marginBottom: '12px', padding: '8px 16px', background: '#f0f9ff', borderRadius: '8px', display: 'inline-block'}}>
+                  <span style={{fontSize: '14px', color: '#0369a1'}}>
+                    Answer 2 questions correctly to move! ({lifeQuestionsCorrect}/2) ✅
+                  </span>
+                </div>
+                <br/>
                 <button
                   onClick={() => {
-                    // Move player forward 1 space
-                    const newPos = Math.min(player.position + 1, lifeBoardSpaces.length - 1);
-                    const updatedPlayers = [...lifePlayers];
-                    updatedPlayers[lifeCurrentPlayer] = { ...player, position: newPos };
-                    setLifePlayers(updatedPlayers);
-                    
-                    // Check what space they landed on
-                    const space = lifeBoardSpaces[newPos];
-                    
-                    if (space.type === 'retire') {
-                      // Retirement! Calculate final bonus
-                      const bonus = player.career ? player.career.salary : 0;
-                      updatedPlayers[lifeCurrentPlayer].money += bonus;
-                      setLifePlayers(updatedPlayers);
-                      setLifeEvent({ text: '🎉 RETIREMENT! Final salary bonus!', emoji: '🏖️', effect: `+$${bonus.toLocaleString()}` });
-                      setLifePhase('event');
-                    } else if (space.type === 'event' && space.event) {
-                      const evt = space.event;
-                      updatedPlayers[lifeCurrentPlayer].money += evt.money || 0;
-                      setLifePlayers(updatedPlayers);
-                      setLifeEvent({ text: evt.text, emoji: space.emoji, effect: evt.effect });
-                      setLifePhase('event');
-                    } else if (space.type === 'career' || space.type === 'house' || space.type === 'choice') {
-                      // Go to question - answer determines good vs bad choice
-                      setLifePendingChoice({
-                        type: space.type,
-                        goodChoice: space.goodChoice,
-                        badChoice: space.badChoice
-                      });
-                      setLifePhase('question');
-                      if (shuffledQuestions[currentIndex]) {
-                        const q = shuffledQuestions[currentIndex];
-                        const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
-                        setLifeChoices(shuffle([q.a, ...wrong]));
-                      }
-                    } else {
-                      // Start space or other - just go to next player
-                      const nextPlayer = (lifeCurrentPlayer + 1) % lifePlayers.length;
-                      setLifeCurrentPlayer(nextPlayer);
-                      setLifePhase('spin');
+                    // Start question phase to earn the move
+                    setLifePendingMove(true);
+                    setLifeQuestionsCorrect(0);
+                    setLifePhase('question');
+                    if (shuffledQuestions[currentIndex]) {
+                      const q = shuffledQuestions[currentIndex];
+                      const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+                      setLifeChoices(shuffle([q.a, ...wrong]));
                     }
                   }}
                   disabled={player.position >= lifeBoardSpaces.length - 1}
@@ -2781,7 +2757,7 @@ export default function StudyGuide() {
                     color: 'white', border: 'none', borderRadius: '12px', fontSize: '18px', fontWeight: 'bold', cursor: 'pointer'
                   }}
                 >
-                  ➡️ Move Forward
+                  📝 Answer Questions
                 </button>
               </div>
               
@@ -2803,12 +2779,23 @@ export default function StudyGuide() {
 
         {mode === 'life' && lifePhase === 'question' && lifePlayers.length > 0 && currentQ && (() => {
           const player = lifePlayers[lifeCurrentPlayer];
+          const nextPos = Math.min(player.position + 1, lifeBoardSpaces.length - 1);
+          const nextSpace = lifeBoardSpaces[nextPos];
           
           return (
             <div>
               <div style={{textAlign: 'center', marginBottom: '12px'}}>
                 <span style={{color: player.color, fontWeight: 'bold'}}>{player.emoji} {player.name}</span>
-                {lifePendingChoice && <span style={{color: '#666'}}> — {lifePendingChoice.type === 'career' ? '💼 Career Choice!' : '🏠 House Choice!'}</span>}
+                {lifePendingMove && (
+                  <div style={{marginTop: '8px', padding: '6px 12px', background: '#dbeafe', borderRadius: '8px', display: 'inline-block'}}>
+                    <span style={{fontSize: '13px', color: '#1e40af'}}>
+                      {lifeQuestionsCorrect}/2 correct to reach {nextSpace.emoji} {nextSpace.label}
+                    </span>
+                  </div>
+                )}
+                {lifePendingChoice && !lifePendingMove && (
+                  <span style={{color: '#666'}}> — {lifePendingChoice.type === 'career' ? '💼 Career Choice!' : lifePendingChoice.type === 'house' ? '🏠 House Choice!' : '🎯 Life Choice!'}</span>
+                )}
               </div>
               
               <div style={{...styles.card, background: 'linear-gradient(135deg, #f0f4ff, #faf5ff)', border: '1px solid #e5e7eb'}}>
@@ -2849,7 +2836,61 @@ export default function StudyGuide() {
                           setLifeShowFeedback(null);
                           setCurrentIndex(prev => prev + 1);
                           
-                          if (lifePendingChoice) {
+                          // If we're in "pending move" mode (need 2 correct to move)
+                          if (lifePendingMove) {
+                            const newCorrectCount = isCorrect ? lifeQuestionsCorrect + 1 : lifeQuestionsCorrect;
+                            setLifeQuestionsCorrect(newCorrectCount);
+                            
+                            if (newCorrectCount >= 2) {
+                              // Got 2 correct! Now move forward
+                              setLifePendingMove(false);
+                              setLifeQuestionsCorrect(0);
+                              
+                              // Move player forward 1 space
+                              const newPos = Math.min(player.position + 1, lifeBoardSpaces.length - 1);
+                              updatedPlayers[lifeCurrentPlayer] = { ...updatedPlayers[lifeCurrentPlayer], position: newPos };
+                              setLifePlayers(updatedPlayers);
+                              
+                              // Check what space they landed on
+                              const space = lifeBoardSpaces[newPos];
+                              
+                              if (space.type === 'retire') {
+                                const bonus = updatedPlayers[lifeCurrentPlayer].career ? updatedPlayers[lifeCurrentPlayer].career!.salary : 0;
+                                updatedPlayers[lifeCurrentPlayer].money += bonus;
+                                setLifePlayers(updatedPlayers);
+                                setLifeEvent({ text: '🎉 RETIREMENT! Final salary bonus!', emoji: '🏖️', effect: `+$${bonus.toLocaleString()}` });
+                                setLifePhase('event');
+                              } else if (space.type === 'event' && space.event) {
+                                const evt = space.event;
+                                updatedPlayers[lifeCurrentPlayer].money += evt.money || 0;
+                                setLifePlayers(updatedPlayers);
+                                setLifeEvent({ text: evt.text, emoji: space.emoji, effect: evt.effect });
+                                setLifePhase('event');
+                              } else if (space.type === 'career' || space.type === 'house' || space.type === 'choice') {
+                                // Go to choice phase
+                                setLifePendingChoice({
+                                  type: space.type,
+                                  goodChoice: space.goodChoice,
+                                  badChoice: space.badChoice
+                                });
+                                setLifeGotItRight(true); // They got 2 correct, so they get the good choice!
+                                setLifePhase('choice');
+                              } else {
+                                // Start space - next player
+                                const nextPlayer = (lifeCurrentPlayer + 1) % lifePlayers.length;
+                                setLifeCurrentPlayer(nextPlayer);
+                                setLifePhase('spin');
+                              }
+                            } else {
+                              // Not enough correct yet, keep asking questions
+                              if (shuffledQuestions[currentIndex + 1]) {
+                                const q = shuffledQuestions[currentIndex + 1];
+                                const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+                                setLifeChoices(shuffle([q.a, ...wrong]));
+                              }
+                            }
+                          } else if (lifePendingChoice) {
+                            // Old flow for choice-based questions
                             setLifePhase('choice');
                           } else {
                             // Next player
@@ -2877,7 +2918,7 @@ export default function StudyGuide() {
                   background: lifeShowFeedback === 'correct' ? '#dcfce7' : '#fee2e2', textAlign: 'center'
                 }}>
                   <p style={{fontWeight: 'bold', margin: 0}}>
-                    {lifeShowFeedback === 'correct' ? '✅ Correct! +$5,000' : '❌ Wrong!'}
+                    {lifeShowFeedback === 'correct' ? `✅ Correct! +$5,000 (${lifeQuestionsCorrect + 1}/2)` : '❌ Wrong! Try again...'}
                   </p>
                 </div>
               )}
