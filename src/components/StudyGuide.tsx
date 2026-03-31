@@ -858,7 +858,7 @@ export default function StudyGuide() {
   const [memoryMoves, setMemoryMoves] = useState(0);
   const [memoryLocked, setMemoryLocked] = useState(false);
 
-  // Bio Life game state - FULL GAME OF LIFE WITH MULTIPLAYER
+  // Bio Life game state - SIMPLIFIED BOARD GAME
   type LifePlayer = {
     name: string;
     color: string;
@@ -867,68 +867,40 @@ export default function StudyGuide() {
     money: number;
     career: { title: string; salary: number; emoji: string } | null;
     house: { name: string; value: number; emoji: string } | null;
-    education: string;
     spouse: boolean;
     kids: number;
-    cards: { type: string; emoji: string; text: string }[];
     correctAnswers: number;
   };
   const [lifePhase, setLifePhase] = useState<'setup' | 'spin' | 'question' | 'choice' | 'event' | 'summary'>('setup');
   const [lifePlayers, setLifePlayers] = useState<LifePlayer[]>([]);
   const [lifeCurrentPlayer, setLifeCurrentPlayer] = useState(0);
-  const [lifeSpinValue, setLifeSpinValue] = useState(0);
-  const [lifeSpinning, setLifeSpinning] = useState(false);
   const [lifeChoices, setLifeChoices] = useState<string[]>([]);
   const [lifeShowFeedback, setLifeShowFeedback] = useState<'correct' | 'wrong' | null>(null);
-  const [lifePendingChoice, setLifePendingChoice] = useState<{type: string, options: {text: string, emoji: string, effect: any}[]} | null>(null);
+  const [lifeGotItRight, setLifeGotItRight] = useState(false);
   const [lifeEvent, setLifeEvent] = useState<{text: string, emoji: string, effect: string} | null>(null);
   const [lifeMultiplayer, setLifeMultiplayer] = useState(false);
   const [lifePlayerCount, setLifePlayerCount] = useState(1);
   const [lifePlayerNames, setLifePlayerNames] = useState<string[]>(['Player 1', 'Player 2', 'Player 3', 'Player 4']);
-  const lifeBoardSize = 20;
   
-  // Career cards
-  const lifeCareers = [
-    { title: 'Doctor', salary: 150000, emoji: '👨‍⚕️', requirement: 'correct' },
-    { title: 'Scientist', salary: 120000, emoji: '🔬', requirement: 'correct' },
-    { title: 'Professor', salary: 100000, emoji: '👩‍🏫', requirement: 'correct' },
-    { title: 'Nurse', salary: 80000, emoji: '👨‍⚕️', requirement: 'any' },
-    { title: 'Teacher', salary: 60000, emoji: '📚', requirement: 'any' },
-    { title: 'Fast Food Worker', salary: 30000, emoji: '🍔', requirement: 'any' },
+  // Board spaces - each space is a stop with a question + choice
+  const lifeBoardSpaces = [
+    { type: 'start', label: 'Start', emoji: '🚀', goodChoice: null, badChoice: null },
+    { type: 'choice', label: 'High School', emoji: '🎒', goodChoice: { text: 'Join Science Club', emoji: '🔬', money: 0 }, badChoice: { text: 'Skip Class', emoji: '😴', money: 0 } },
+    { type: 'choice', label: 'College Apps', emoji: '📝', goodChoice: { text: 'Apply to Top Schools', emoji: '🎓', money: -5000 }, badChoice: { text: 'Skip College', emoji: '🎮', money: 0 } },
+    { type: 'event', label: 'Graduation!', emoji: '🎓', event: { text: 'You graduated!', effect: '+$5,000 gift', money: 5000 } },
+    { type: 'career', label: 'First Job', emoji: '💼', goodChoice: { text: 'Research Scientist', emoji: '🔬', salary: 80000 }, badChoice: { text: 'Fast Food', emoji: '🍔', salary: 25000 } },
+    { type: 'choice', label: 'Dating', emoji: '💕', goodChoice: { text: 'Find True Love', emoji: '💍', money: -10000, spouse: true }, badChoice: { text: 'Stay Single', emoji: '🎭', money: 0 } },
+    { type: 'house', label: 'First Home', emoji: '🏠', goodChoice: { text: 'Nice House', emoji: '🏡', value: 200000 }, badChoice: { text: 'Tiny Apartment', emoji: '🏚️', value: 50000 } },
+    { type: 'event', label: 'Tax Refund!', emoji: '💵', event: { text: 'Tax refund!', effect: '+$10,000', money: 10000 } },
+    { type: 'choice', label: 'Family', emoji: '👨‍👩‍👧', goodChoice: { text: 'Have Kids', emoji: '👶', money: -15000, kids: 2 }, badChoice: { text: 'Get a Dog', emoji: '🐕', money: -2000 } },
+    { type: 'career', label: 'Promotion', emoji: '📈', goodChoice: { text: 'Director', emoji: '👔', salary: 150000 }, badChoice: { text: 'Stay Put', emoji: '📊', salary: 60000 } },
+    { type: 'event', label: 'Lottery!', emoji: '🎰', event: { text: 'You won!', effect: '+$25,000', money: 25000 } },
+    { type: 'house', label: 'Dream Home', emoji: '🏰', goodChoice: { text: 'Mansion', emoji: '🏰', value: 500000 }, badChoice: { text: 'Keep Current', emoji: '🏠', value: 0 } },
+    { type: 'choice', label: 'Mid-Life', emoji: '🎂', goodChoice: { text: 'Start a Business', emoji: '💼', money: 50000 }, badChoice: { text: 'Mid-Life Crisis Car', emoji: '🏎️', money: -30000 } },
+    { type: 'event', label: 'Kids College', emoji: '🎒', event: { text: 'College tuition!', effect: '-$20,000', money: -20000 } },
+    { type: 'career', label: 'Peak Career', emoji: '🏆', goodChoice: { text: 'CEO', emoji: '👑', salary: 300000 }, badChoice: { text: 'Early Retirement', emoji: '🏖️', salary: 0 } },
+    { type: 'retire', label: 'Retirement!', emoji: '🌅', goodChoice: null, badChoice: null },
   ];
-  
-  // House cards
-  const lifeHouses = [
-    { name: 'Mansion', value: 500000, emoji: '🏰', requirement: 'correct' },
-    { name: 'Nice Suburb House', value: 300000, emoji: '🏡', requirement: 'correct' },
-    { name: 'Condo', value: 150000, emoji: '🏢', requirement: 'any' },
-    { name: 'Apartment', value: 80000, emoji: '🏠', requirement: 'any' },
-    { name: 'Trailer', value: 30000, emoji: '🚐', requirement: 'any' },
-  ];
-  
-  // Life events at certain board positions
-  const lifeEvents: {[pos: number]: {text: string, emoji: string, effect: string, moneyChange?: number}} = {
-    3: { text: 'Graduate High School!', emoji: '🎓', effect: '+$5,000 gift', moneyChange: 5000 },
-    5: { text: 'Get Married!', emoji: '💒', effect: 'Spouse joins!', moneyChange: -10000 },
-    8: { text: 'Tax Refund!', emoji: '💵', effect: '+$10,000', moneyChange: 10000 },
-    10: { text: 'Have a Baby!', emoji: '👶', effect: '+1 Kid', moneyChange: -5000 },
-    12: { text: 'Win the Lottery!', emoji: '🎰', effect: '+$50,000', moneyChange: 50000 },
-    14: { text: 'Car Accident!', emoji: '🚗', effect: '-$15,000', moneyChange: -15000 },
-    16: { text: 'Promotion!', emoji: '📈', effect: 'Salary +20%' },
-    18: { text: 'Kids go to College', emoji: '🎒', effect: '-$20,000 per kid' },
-  };
-  
-  // Board space types
-  const lifeBoardSpaces = Array.from({length: lifeBoardSize}, (_, i) => {
-    if (i === 0) return { type: 'start', label: 'START', emoji: '🚀' };
-    if (i === 4) return { type: 'career', label: 'Career', emoji: '💼' };
-    if (i === 7) return { type: 'house', label: 'House', emoji: '🏠' };
-    if (i === 11) return { type: 'career', label: 'Career Change', emoji: '💼' };
-    if (i === 15) return { type: 'house', label: 'Upgrade House', emoji: '🏰' };
-    if (i === 19) return { type: 'retire', label: 'RETIRE', emoji: '🏖️' };
-    if (lifeEvents[i]) return { type: 'event', label: lifeEvents[i].text.split('!')[0], emoji: lifeEvents[i].emoji };
-    return { type: 'question', label: 'Bio Question', emoji: '🧬' };
-  });
 
   // High scores state
   const [highScores, setHighScores] = useState<HighScores>({ speed: 0, millionaire: 0, bomb: 0, challenge: 0, snake: 0, memory: 999 });
@@ -1228,14 +1200,12 @@ export default function StudyGuide() {
     }
 
     if (newMode === 'life') {
-      // Life game - full board game with multiplayer
+      // Life game - simplified board game
       setLifePhase('setup');
       setLifePlayers([]);
       setLifeCurrentPlayer(0);
-      setLifeSpinValue(0);
-      setLifeSpinning(false);
       setLifeShowFeedback(null);
-      setLifePendingChoice(null);
+      setLifeGotItRight(false);
       setLifeEvent(null);
       setLifeMultiplayer(false);
       setLifePlayerCount(1);
@@ -2614,6 +2584,10 @@ export default function StudyGuide() {
             setLifePhase('summary');
             return null;
           }
+
+          // Get the NEXT space (where they'll move to)
+          const nextPos = Math.min(player.position + 1, lifeBoardSize - 1);
+          const nextSpace = lifeBoardSpaces[nextPos];
           
           return (
             <div>
@@ -2622,6 +2596,9 @@ export default function StudyGuide() {
                 <div style={{fontSize: '24px'}}>{player.emoji}</div>
                 <div style={{fontWeight: 'bold', color: player.color, fontSize: '18px'}}>{player.name}'s Turn</div>
                 <div style={{fontSize: '13px', color: '#666'}}>💰 ${player.money.toLocaleString()}</div>
+                <div style={{fontSize: '14px', color: '#374151', marginTop: '4px'}}>
+                  Stop {player.position + 1} of {lifeBoardSize}
+                </div>
               </div>
               
               {/* Mini Board */}
@@ -2629,13 +2606,17 @@ export default function StudyGuide() {
                 <div style={{display: 'flex', gap: '4px', minWidth: 'max-content'}}>
                   {lifeBoardSpaces.map((space, i) => {
                     const playersHere = lifePlayers.filter(p => p.position === i);
+                    const isNext = i === nextPos;
                     return (
                       <div key={i} style={{
                         width: '36px', height: '44px', borderRadius: '6px', fontSize: '10px', textAlign: 'center',
                         background: i === 0 ? '#22c55e' : i === lifeBoardSize - 1 ? '#f59e0b' : space.type === 'career' ? '#3b82f6' : space.type === 'house' ? '#8b5cf6' : space.type === 'event' ? '#ec4899' : '#e5e7eb',
                         color: ['start', 'retire', 'career', 'house', 'event'].includes(space.type) ? 'white' : '#666',
                         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-                        border: '1px solid rgba(0,0,0,0.1)', position: 'relative'
+                        border: isNext ? '3px solid #fbbf24' : '1px solid rgba(0,0,0,0.1)', 
+                        position: 'relative',
+                        transform: isNext ? 'scale(1.1)' : 'none',
+                        boxShadow: isNext ? '0 0 10px rgba(251, 191, 36, 0.5)' : 'none'
                       }}>
                         <span style={{fontSize: '14px'}}>{space.emoji}</span>
                         {playersHere.length > 0 && (
@@ -2657,105 +2638,66 @@ export default function StudyGuide() {
                 {player.kids > 0 && <div style={{background: '#fef3c7', padding: '4px 8px', borderRadius: '6px', fontSize: '12px'}}>👶 {player.kids} kid{player.kids > 1 ? 's' : ''}</div>}
               </div>
               
-              {/* Spin wheel */}
+              {/* Next stop preview */}
+              <div style={{background: 'linear-gradient(135deg, #fef3c7, #fde68a)', padding: '16px', borderRadius: '12px', marginBottom: '16px', textAlign: 'center'}}>
+                <div style={{fontSize: '12px', color: '#92400e', marginBottom: '4px'}}>Next Stop:</div>
+                <div style={{fontSize: '32px', marginBottom: '4px'}}>{nextSpace.emoji}</div>
+                <div style={{fontWeight: 'bold', color: '#78350f', fontSize: '16px'}}>{nextSpace.label}</div>
+              </div>
+              
+              {/* Move button */}
               <div style={{textAlign: 'center', marginBottom: '16px'}}>
-                <div style={{
-                  width: '120px', height: '120px', borderRadius: '50%', margin: '0 auto 12px',
-                  background: `conic-gradient(#ef4444 0deg 36deg, #f59e0b 36deg 72deg, #22c55e 72deg 108deg, #3b82f6 108deg 144deg, #8b5cf6 144deg 180deg, #ec4899 180deg 216deg, #ef4444 216deg 252deg, #f59e0b 252deg 288deg, #22c55e 288deg 324deg, #3b82f6 324deg 360deg)`,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 20px rgba(0,0,0,0.2)',
-                  transform: lifeSpinning ? `rotate(${lifeSpinValue * 360}deg)` : 'none',
-                  transition: lifeSpinning ? 'transform 2s cubic-bezier(0.2, 0.8, 0.3, 1)' : 'none'
-                }}>
-                  <div style={{
-                    width: '50px', height: '50px', borderRadius: '50%', background: 'white',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '24px',
-                    boxShadow: '0 2px 10px rgba(0,0,0,0.2)'
-                  }}>
-                    {lifeSpinning ? '🎰' : lifeSpinValue || '?'}
-                  </div>
-                </div>
-                
                 <button
                   onClick={() => {
-                    if (lifeSpinning) return;
-                    setLifeSpinning(true);
-                    const spin = Math.floor(Math.random() * 10) + 1;
-                    setLifeSpinValue(spin);
+                    // Move player forward 1 space
+                    const newPos = Math.min(player.position + 1, lifeBoardSize - 1);
+                    const updatedPlayers = [...lifePlayers];
+                    updatedPlayers[lifeCurrentPlayer] = { ...player, position: newPos };
+                    setLifePlayers(updatedPlayers);
                     
-                    setTimeout(() => {
-                      setLifeSpinning(false);
-                      // Move player
-                      const newPos = Math.min(player.position + spin, lifeBoardSize - 1);
-                      const updatedPlayers = [...lifePlayers];
-                      updatedPlayers[lifeCurrentPlayer] = { ...player, position: newPos };
+                    // Check what space they landed on
+                    const space = lifeBoardSpaces[newPos];
+                    
+                    if (space.type === 'retire') {
+                      // Retirement! Calculate final bonus
+                      const bonus = player.career ? player.career.salary : 0;
+                      updatedPlayers[lifeCurrentPlayer].money += bonus;
                       setLifePlayers(updatedPlayers);
-                      
-                      // Check what space they landed on
-                      const space = lifeBoardSpaces[newPos];
-                      
-                      if (space.type === 'retire') {
-                        // Retirement! Calculate final bonus
-                        const bonus = player.career ? player.career.salary : 0;
-                        updatedPlayers[lifeCurrentPlayer].money += bonus;
-                        setLifePlayers(updatedPlayers);
-                        setLifeEvent({ text: '🎉 RETIREMENT! Final salary bonus!', emoji: '🏖️', effect: `+$${bonus.toLocaleString()}` });
-                        setLifePhase('event');
-                      } else if (space.type === 'event' && lifeEvents[newPos]) {
-                        const evt = lifeEvents[newPos];
-                        if (evt.moneyChange) {
-                          updatedPlayers[lifeCurrentPlayer].money += evt.moneyChange;
-                          if (evt.text.includes('Married')) updatedPlayers[lifeCurrentPlayer].spouse = true;
-                          if (evt.text.includes('Baby')) updatedPlayers[lifeCurrentPlayer].kids += 1;
-                          if (evt.text.includes('Promotion') && updatedPlayers[lifeCurrentPlayer].career) {
-                            updatedPlayers[lifeCurrentPlayer].career!.salary = Math.round(updatedPlayers[lifeCurrentPlayer].career!.salary * 1.2);
-                          }
-                          if (evt.text.includes('Kids go to College')) {
-                            updatedPlayers[lifeCurrentPlayer].money -= 20000 * updatedPlayers[lifeCurrentPlayer].kids;
-                          }
-                          setLifePlayers(updatedPlayers);
-                        }
-                        setLifeEvent({ text: evt.text, emoji: evt.emoji, effect: evt.effect });
-                        setLifePhase('event');
-                      } else if (space.type === 'career') {
-                        setLifePendingChoice({
-                          type: 'career',
-                          options: lifeCareers.map(c => ({ text: c.title, emoji: c.emoji, effect: { ...c } }))
-                        });
-                        setLifePhase('question');
-                        if (shuffledQuestions[currentIndex]) {
-                          const q = shuffledQuestions[currentIndex];
-                          const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
-                          setLifeChoices(shuffle([q.a, ...wrong]));
-                        }
-                      } else if (space.type === 'house') {
-                        setLifePendingChoice({
-                          type: 'house',
-                          options: lifeHouses.map(h => ({ text: h.name, emoji: h.emoji, effect: { ...h } }))
-                        });
-                        setLifePhase('question');
-                        if (shuffledQuestions[currentIndex]) {
-                          const q = shuffledQuestions[currentIndex];
-                          const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
-                          setLifeChoices(shuffle([q.a, ...wrong]));
-                        }
-                      } else {
-                        // Regular question space
-                        setLifePhase('question');
-                        if (shuffledQuestions[currentIndex]) {
-                          const q = shuffledQuestions[currentIndex];
-                          const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
-                          setLifeChoices(shuffle([q.a, ...wrong]));
-                        }
+                      setLifeEvent({ text: '🎉 RETIREMENT! Final salary bonus!', emoji: '🏖️', effect: `+$${bonus.toLocaleString()}` });
+                      setLifePhase('event');
+                    } else if (space.type === 'event' && space.event) {
+                      const evt = space.event;
+                      updatedPlayers[lifeCurrentPlayer].money += evt.money || 0;
+                      setLifePlayers(updatedPlayers);
+                      setLifeEvent({ text: evt.text, emoji: space.emoji, effect: evt.effect });
+                      setLifePhase('event');
+                    } else if (space.type === 'career' || space.type === 'house' || space.type === 'choice') {
+                      // Go to question - answer determines good vs bad choice
+                      setLifePendingChoice({
+                        type: space.type,
+                        goodChoice: space.goodChoice,
+                        badChoice: space.badChoice
+                      });
+                      setLifePhase('question');
+                      if (shuffledQuestions[currentIndex]) {
+                        const q = shuffledQuestions[currentIndex];
+                        const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+                        setLifeChoices(shuffle([q.a, ...wrong]));
                       }
-                    }, 2000);
+                    } else {
+                      // Start space or other - just go to next player
+                      const nextPlayer = (lifeCurrentPlayer + 1) % lifePlayers.length;
+                      setLifeCurrentPlayer(nextPlayer);
+                      setLifePhase('spin');
+                    }
                   }}
-                  disabled={lifeSpinning || player.position >= lifeBoardSize - 1}
+                  disabled={player.position >= lifeBoardSize - 1}
                   style={{
-                    padding: '14px 32px', background: lifeSpinning ? '#9ca3af' : theme.gradient,
-                    color: 'white', border: 'none', borderRadius: '12px', fontSize: '16px', fontWeight: 'bold', cursor: lifeSpinning ? 'default' : 'pointer'
+                    padding: '16px 40px', background: theme.gradient,
+                    color: 'white', border: 'none', borderRadius: '12px', fontSize: '18px', fontWeight: 'bold', cursor: 'pointer'
                   }}
                 >
-                  {lifeSpinning ? 'Spinning...' : '🎡 Spin!'}
+                  ➡️ Move Forward
                 </button>
               </div>
               
