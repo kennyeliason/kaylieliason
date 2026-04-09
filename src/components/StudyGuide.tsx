@@ -1176,9 +1176,9 @@ export default function StudyGuide() {
       const jTopics = Array.from(new Set((selectedUnit === 'All' ? allQuestions : allQuestions.filter(q => q.unit === selectedUnit)).map(q => q.topic)));
       jTopics.forEach(topic => {
         const topicQs = shuffle(selectedUnit === 'All' ? allQuestions.filter(q => q.topic === topic) : allQuestions.filter(q => q.unit === selectedUnit && q.topic === topic));
-        board[topic] = [100, 200, 300, 400].map((points, i) => ({
-          points,
-          question: topicQs[i % topicQs.length],
+        board[topic] = topicQs.map((question, i) => ({
+          points: (i + 1) * 100,
+          question,
           answered: false,
           correct: null
         }));
@@ -2188,7 +2188,7 @@ export default function StudyGuide() {
               {topics.map(topic => (
                 <div key={topic} style={styles.jeopardyHeader}>{topic}</div>
               ))}
-              {[0, 1, 2, 3].map(row => (
+              {Array.from({ length: Math.max(0, ...topics.map(topic => jeopardyBoard[topic]?.length || 0)) }, (_, row) => (
                 topics.map(topic => {
                   const cell = jeopardyBoard[topic]?.[row];
                   return cell ? (
@@ -2196,7 +2196,7 @@ export default function StudyGuide() {
                       style={styles.jeopardyCell(cell.answered, cell.correct)}>
                       {cell.answered ? (cell.correct ? '✓' : '✗') : `$${cell.points}`}
                     </button>
-                  ) : null;
+                  ) : <div key={`${topic}-${row}-empty`} />;
                 })
               ))}
             </div>
