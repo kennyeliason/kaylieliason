@@ -252,6 +252,18 @@ const questions = [
   { id: 1231, unit: 'Unit 12', topic: 'DNA Replication', q: 'A drug blocks DNA replication, but transcription and translation continue temporarily. What will happen over time?', a: 'Cells cannot divide and will eventually die', wrong: ['Ribosomes will stop functioning immediately', 'Protein production increases permanently', 'Mutations will stop occurring'] },
   { id: 1232, unit: 'Unit 12', topic: 'Protein Synthesis', q: 'Arrange the steps from a gene on DNA to a protein.', a: 'DNA → mRNA → Ribosome → tRNA → Protein', wrong: [] },
   { id: 1233, unit: 'Unit 12', topic: 'DNA Structure', q: 'The sugar found in DNA is:', a: 'Deoxyribose', wrong: ['Glucose', 'Equal', 'Ribose'] },
+  { id: 1234, unit: 'Unit 12', topic: 'Base Pairing', q: 'If a DNA strand had the sequence TACGCATAT, the complementary strand would be:', a: 'ATGCGTATA', wrong: ['TACGCATAT', 'ATATGCGTA', 'AUGCGUAUA', 'None of the above'] },
+  { id: 1235, unit: 'Unit 12', topic: 'Core Processes', q: 'Producing two identical DNA copies', a: 'Replication', wrong: ['Translation', 'Transcription'] },
+  { id: 1236, unit: 'Unit 12', topic: 'Core Processes', q: 'Process where proteins are made from RNA', a: 'Translation', wrong: ['Replication', 'Transcription'] },
+  { id: 1237, unit: 'Unit 12', topic: 'Core Processes', q: 'Process where RNA is made from DNA', a: 'Transcription', wrong: ['Replication', 'Translation'] },
+  { id: 1238, unit: 'Unit 12', topic: 'DNA Function', q: 'DNA is called the “blueprint of life” because:', a: 'It contains the plans for building an organism', wrong: ['It is like a fingerprint', 'It can relay messages to other molecules', 'It has a blue color'] },
+  { id: 1239, unit: 'Unit 12', topic: 'Transcription', q: 'What happens in transcription?', a: 'Messenger RNA is made from DNA', wrong: ['Copies of DNA are made', 'Transfer RNA is made from messenger RNA', 'The cell uses information from messenger RNA to make proteins'] },
+  { id: 1240, unit: 'Unit 12', topic: 'Gene Expression', q: 'A cell has the gene for a protein, but the protein is never produced. What is the most likely explanation?', a: 'The gene is not being expressed', wrong: ['The DNA is missing', 'The ribosomes are too fast', 'The codons are incorrect'] },
+  { id: 1241, unit: 'Unit 12', topic: 'Mutations', q: 'Sickle cell anemia is caused by a single base substitution that changes one amino acid in hemoglobin. What type of mutation is this?', a: 'Missense mutation', wrong: ['Silent mutation', 'Frameshift mutation', 'Nonsense mutation'] },
+  { id: 1242, unit: 'Unit 12', topic: 'Base Pairing', q: 'Which is true?', a: 'Guanine bonds with cytosine', wrong: ['All of the above', 'Guanine bonds with thymine', 'Adenine bonds with cytosine'] },
+  { id: 1243, unit: 'Unit 12', topic: 'Mutations', q: 'A mutation changes one amino acid in a protein, altering its function. What type of mutation is this?', a: 'Missense', wrong: ['Nonsense', 'Frameshift', 'Silent'] },
+  { id: 1244, unit: 'Unit 12', topic: 'Protein Structure', q: '(Hot spot)', a: 'Tertiary structure', wrong: ['Primary structure', 'Secondary structure', 'Quaternary structure'] },
+  { id: 1245, unit: 'Unit 12', topic: 'DNA Structure', q: 'The DNA molecule is held together by:', a: 'Hydrogen bonds', wrong: ['Glucose', 'Magnetism', 'Glue'] },
 
   // Word Roots - Set 1
   { id: 250, unit: 'Roots', topic: 'Set 1', q: 'What does the prefix A- (AN-) mean?', a: 'Without, not', wrong: ['With, together', 'Before', 'Against'] },
