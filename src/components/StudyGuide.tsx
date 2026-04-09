@@ -242,6 +242,16 @@ const questions = [
   { id: 1221, unit: 'Unit 12', topic: 'DNA Replication', q: 'Each new strand of DNA made in replication has how much of the original strand within it?', a: '50%', wrong: ['25%', '0%', '100%'] },
   { id: 1222, unit: 'Unit 12', topic: 'Genetics', q: 'A segment of DNA which codes for a specific protein is called a', a: 'Gene', wrong: ['Amino acid', 'tRNA', 'Chromosome'] },
   { id: 1223, unit: 'Unit 12', topic: 'DNA Replication', q: 'The process by which DNA makes a copy of itself is called:', a: 'Replication', wrong: ['Translation', 'Synthesis', 'Transcription'] },
+  { id: 1224, unit: 'Unit 12', topic: 'DNA Replication', q: 'DNA replication occurs in the', a: 'Nucleus', wrong: ['Cytoplasm', 'Ribosome', 'Mitochondria'] },
+  { id: 1225, unit: 'Unit 12', topic: 'Translation', q: 'Protein synthesis (translation) occurs in the', a: 'Ribosome', wrong: ['Cytoplasm', 'Mitochondria', 'Nucleus'] },
+  { id: 1226, unit: 'Unit 12', topic: 'Mutations', q: 'A scientist observes that a protein is shorter than normal because translation stopped early. What most likely caused this?', a: 'Nonsense mutation', wrong: ['Missense mutation', 'Frameshift mutation', 'Silent mutation'] },
+  { id: 1227, unit: 'Unit 12', topic: 'DNA History', q: 'The discovery of the structure of DNA was…', a: 'Watson, Crick, Franklin and Wilkins', wrong: ['Berkely, Fry, Wilkins and Franklin', 'Lamarke, Darwin, and Rosalind Franklin'] },
+  { id: 1228, unit: 'Unit 12', topic: 'Protein Structure', q: 'Which level of protein structure is directly determined by the DNA sequence?', a: 'Primary', wrong: ['Tertiary', 'Secondary', 'Quaternary'] },
+  { id: 1229, unit: 'Unit 12', topic: 'Mutations', q: 'A mutation changes a DNA base, but the resulting protein is identical to the original. What is the MOST likely explanation?', a: 'The codon still coded for the same amino acid', wrong: ['The gene was not transcribed', 'The mutation caused a frameshift', 'A stop codon was introduced'] },
+  { id: 1230, unit: 'Unit 12', topic: 'Translation', q: 'A ribosome reads mRNA, but no tRNA molecules can deliver amino acids. What will happen?', a: 'The protein will not be assembled', wrong: ['DNA will be degraded', 'Replication will speed up', 'mRNA will not be produced'] },
+  { id: 1231, unit: 'Unit 12', topic: 'DNA Replication', q: 'A drug blocks DNA replication, but transcription and translation continue temporarily. What will happen over time?', a: 'Cells cannot divide and will eventually die', wrong: ['Ribosomes will stop functioning immediately', 'Protein production increases permanently', 'Mutations will stop occurring'] },
+  { id: 1232, unit: 'Unit 12', topic: 'Protein Synthesis', q: 'Arrange the steps from a gene on DNA to a protein.', a: 'DNA → mRNA → Ribosome → tRNA → Protein', wrong: [] },
+  { id: 1233, unit: 'Unit 12', topic: 'DNA Structure', q: 'The sugar found in DNA is:', a: 'Deoxyribose', wrong: ['Glucose', 'Equal', 'Ribose'] },
 
   // Word Roots - Set 1
   { id: 250, unit: 'Roots', topic: 'Set 1', q: 'What does the prefix A- (AN-) mean?', a: 'Without, not', wrong: ['With, together', 'Before', 'Against'] },
