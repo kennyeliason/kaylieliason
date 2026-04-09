@@ -8,7 +8,7 @@ const units = [
   { key: 'Unit 9', label: 'Unit 9: Cell Structure & Transport' },
   { key: 'Unit 10', label: 'Unit 10: Photosynthesis & Calvin Cycle' },
   { key: 'Unit 11', label: 'Unit 11: Introduction to Genetics' },
-  { key: 'Unit 12', label: 'Unit 12' },
+  { key: 'Unit 12', label: 'Unit 12: DNA, RNA, and protein synthesis' },
   { key: 'Roots', label: 'Word Roots' },
 ];
 
@@ -1863,7 +1863,7 @@ export default function StudyGuide() {
                     color: isActive ? 'white' : uTheme.primary,
                     boxShadow: isActive ? `0 4px 14px ${uTheme.shadow}` : '0 2px 8px rgba(0,0,0,0.04)',
                     transition: 'all 0.25s ease', backdropFilter: 'blur(8px)',
-                  }}>{u.key === 'All' ? '📚 All' : u.key === 'Unit 9' ? '🔬 Unit 9' : u.key === 'Unit 10' ? '🌱 Unit 10' : u.key === 'Unit 11' ? '🧑‍🧑‍🧒‍🧒 Unit 11' : u.key === 'Roots' ? '📖 Roots' : u.key}</button>
+                  }}>{u.key === 'All' ? '📚 All' : u.key === 'Unit 9' ? '🔬 Unit 9' : u.key === 'Unit 10' ? '🌱 Unit 10' : u.key === 'Unit 11' ? '🧑‍🧑‍🧒‍🧒 Unit 11' : u.key === 'Unit 12' ? '🧫 Unit 12' : u.key === 'Roots' ? '📖 Roots' : u.key}</button>
                 );
               })}
             </div>
