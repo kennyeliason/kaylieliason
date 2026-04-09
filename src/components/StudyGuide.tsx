@@ -218,6 +218,17 @@ const questions = [
   { id: 1161, unit: 'Unit 11', topic: "Mendel's Principles", q: 'A heterozygous black mouse (Bb) is crossed with a homozygous recessive white mouse (bb). What percentage of offspring are BB?', a: '0%', wrong: ['25%', '50%', '75%'] },
   { id: 1166, unit: 'Unit 11', topic: "Mendel's Principles", q: 'Two heterozygous black guinea pigs (Bb × Bb) produce 40 offspring. How many white offspring would you expect?', a: '10', wrong: ['20', '30', '5'] },
 
+  // Unit 12 - DNA, RNA, and Protein Synthesis
+  { id: 1201, unit: 'Unit 12', topic: 'DNA Structure', q: 'What is the long name for DNA?', a: 'Deoxyribonucleic acid', wrong: ['Deoxynucleic acid', 'Deoxoribonuclear acid', 'Denatured ribonucleic acid'] },
+  { id: 1202, unit: 'Unit 12', topic: 'Protein Structure', q: 'Protein function is determined by its', a: 'Structure', wrong: ['Size', 'Composition', 'Location'] },
+  { id: 1203, unit: 'Unit 12', topic: 'DNA Replication', q: 'What happens in DNA replication?', a: 'Copies of DNA are made', wrong: ['The cell uses information from messenger RNA to make proteins', 'Transfer RNA is made from messenger RNA', 'Messenger RNA is made from DNA'] },
+  { id: 1204, unit: 'Unit 12', topic: 'Base Pairing', q: 'During DNA replication, a DNA strand that has the bases CTAGGT produces a strand with the bases', a: 'GATCCA', wrong: ['AGCTTG', 'GAUCCA', 'TCGAAC'] },
+  { id: 1205, unit: 'Unit 12', topic: 'Protein Structure', q: 'The monomers of proteins are (or, proteins are made of)', a: 'Amino acids', wrong: ['Fatty acids', 'Nucleic acids', 'Monosaccharides'] },
+  { id: 1206, unit: 'Unit 12', topic: 'Protein Synthesis', q: 'Which of the following is involved in the production of proteins in your body?', a: 'All of the above', wrong: ['tRNA translates a codon sequence into an amino acid sequence', 'tRNA reads the three nucleotide code of mRNA', 'DNA strands separate and a complementary strand of mRNA is formed along one strand of the DNA'] },
+  { id: 1207, unit: 'Unit 12', topic: 'Base Pairing', q: 'Adenine always pairs with:', a: 'Thymine', wrong: ['Cytosine', 'Guanine', 'Ribose'] },
+  { id: 1208, unit: 'Unit 12', topic: 'Translation', q: 'How many nucleotides make up a codon?', a: '3', wrong: ['1', '2', '5'] },
+  { id: 1209, unit: 'Unit 12', topic: 'DNA Structure', q: 'The “rungs” of the DNA ladder are made of:', a: 'Base pairs', wrong: ['Phosphates and hydrogen', 'Glucose and sugars', 'Sugars and phosphates'] },
+  { id: 1210, unit: 'Unit 12', topic: 'Translation', q: 'What happens in translation?', a: 'The cell uses information from messenger RNA to make proteins', wrong: ['Copies of DNA are made', 'Transfer RNA is made from messenger RNA', 'Messenger RNA is made from DNA'] },
 
   // Word Roots - Set 1
   { id: 250, unit: 'Roots', topic: 'Set 1', q: 'What does the prefix A- (AN-) mean?', a: 'Without, not', wrong: ['With, together', 'Before', 'Against'] },
