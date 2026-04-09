@@ -640,7 +640,7 @@ function generateCrossword(questions: typeof uniqueQuestions) {
   return {grid, across, down, placed};
 }
 
-type Mode = 'menu' | 'flashcards' | 'quiz' | 'learn' | 'match' | 'jeopardy' | 'speed' | 'millionaire' | 'review' | 'stats' | 'wheel' | 'bomb' | 'crossword' | 'practicetest' | 'challenge' | 'snake' | 'memory' | 'life';
+type Mode = 'menu' | 'flashcards' | 'quiz' | 'learn' | 'match' | 'jeopardy' | 'speed' | 'millionaire' | 'review' | 'stats' | 'wheel' | 'bomb' | 'crossword' | 'practicetest' | 'challenge' | 'snake' | 'memory';
 
 function WheelResult({ currentQ, wheelGuessedLetters, wheelWrongGuesses, wheelScore, currentIndex, totalQuestions, wheelNextQuestion, startMode, getWheelDisplay, styles }: any) {
   const isWrong = getWheelDisplay(currentQ.a, wheelGuessedLetters).includes('_') || wheelWrongGuesses >= 6;
@@ -1219,18 +1219,6 @@ export default function StudyGuide() {
       }
     }
 
-    if (newMode === 'life') {
-      // Life game - simplified board game
-      setLifePhase('setup');
-      setLifePlayers([]);
-      setLifeCurrentPlayer(0);
-      setLifeShowFeedback(null);
-      setLifeGotItRight(false);
-      setLifeEvent(null);
-      setLifeMultiplayer(false);
-      setLifePlayerCount(1);
-    }
-    
     if (newMode === 'wheel') {
       // Filter to short answers only (3 words max or 25 chars)
       const shortAnswerQs = filtered.filter(q => {
@@ -1966,10 +1954,6 @@ export default function StudyGuide() {
               <button className="menu-card-hover" onClick={() => startMode('jeopardy')} style={{...styles.menuCard, background: 'linear-gradient(135deg, #1e3a5f 0%, #2563eb 100%)', boxShadow: '0 4px 20px rgba(37,99,235,0.3)'}}>
                 <div style={{...styles.menuTitle, color: '#fbbf24'}}>Jeopardy</div>
                 <div style={{...styles.menuDesc, color: '#93c5fd'}}>Pick points</div>
-              </button>
-              <button className="menu-card-hover" onClick={() => startMode('life')} style={{...styles.menuCard, background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', boxShadow: '0 4px 20px rgba(118,75,162,0.3)'}}>
-                <div style={{...styles.menuTitle, color: '#fef3c7'}}>Bio Life</div>
-                <div style={{...styles.menuDesc, color: '#e9d5ff'}}>Life simulator</div>
               </button>
               <button className="menu-card-hover" onClick={() => startMode('wheel')} style={{...styles.menuCard, background: 'linear-gradient(135deg, #065f46 0%, #059669 100%)', boxShadow: '0 4px 20px rgba(5,150,105,0.3)'}}>
                 <div style={{...styles.menuTitle, color: '#d1fae5'}}>Wheel</div>
