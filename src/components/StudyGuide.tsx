@@ -264,6 +264,18 @@ const questions = [
   { id: 1243, unit: 'Unit 12', topic: 'Mutations', q: 'A mutation changes one amino acid in a protein, altering its function. What type of mutation is this?', a: 'Missense', wrong: ['Nonsense', 'Frameshift', 'Silent'] },
   { id: 1244, unit: 'Unit 12', topic: 'Protein Structure', q: '(Hot spot)', a: 'Tertiary structure', wrong: ['Primary structure', 'Secondary structure', 'Quaternary structure'] },
   { id: 1245, unit: 'Unit 12', topic: 'DNA Structure', q: 'The DNA molecule is held together by:', a: 'Hydrogen bonds', wrong: ['Glucose', 'Magnetism', 'Glue'] },
+  { id: 1246, unit: 'Unit 12', topic: 'DNA Function', q: 'Why is DNA important?', a: 'It directs the production of proteins within organisms', wrong: ['It is the major component of cytoplasm', 'It directly increases the solubility of nutrients', 'It is a structural component of cell membranes'] },
+  { id: 1247, unit: 'Unit 12', topic: 'Mutations', q: 'A mutation deletes one nucleotide in the middle of a gene. What is the most likely result?', a: 'The entire reading frame shifts', wrong: ['The protein becomes longer', 'Only one amino acid is affected', 'The gene becomes silent'] },
+  { id: 1248, unit: 'Unit 12', topic: 'Translation', q: 'Using the genetic code chart, what amino acid corresponds to the mRNA codon C G C?', a: 'Arginine', wrong: ['Tyrosine', 'Stop', 'Threonine'] },
+  { id: 1249, unit: 'Unit 12', topic: 'Translation', q: 'Using the genetic code chart, what amino acid corresponds to the mRNA codon U A U?', a: 'Tyrosine', wrong: ['Arginine', 'Stop', 'Threonine'] },
+  { id: 1250, unit: 'Unit 12', topic: 'Translation', q: 'Using the genetic code chart, what amino acid corresponds to the mRNA codon U G A?', a: 'Stop', wrong: ['Arginine', 'Tyrosine', 'Threonine'] },
+  { id: 1251, unit: 'Unit 12', topic: 'Translation', q: 'Using the genetic code chart, what amino acid corresponds to the mRNA codon A C U?', a: 'Threonine', wrong: ['Arginine', 'Tyrosine', 'Stop'] },
+  { id: 1252, unit: 'Unit 12', topic: 'Genetics', q: 'A gene is:', a: 'A segment of DNA that codes for a protein', wrong: ['A molecule within DNA', 'A set of homologous chromosomes', 'A type of pants'] },
+  { id: 1253, unit: 'Unit 12', topic: 'DNA Structure', q: 'Which base is never found in DNA?', a: 'Uracil', wrong: ['Adenine', 'Cytosine', 'Thymine', 'Guanine'] },
+  { id: 1254, unit: 'Unit 12', topic: 'RNA', q: 'Unlike DNA, RNA contains:', a: 'Uracil', wrong: ['Phosphate groups', 'Thymine', 'Adenine'] },
+  { id: 1255, unit: 'Unit 12', topic: 'Translation', q: 'Why can one amino acid be specified by multiple codons?', a: 'There are 64 codons but only 20 amino acids', wrong: ['Some codons do not specify an amino acid', 'Some codons have the same sequence', 'AUG codes for methionine'] },
+  { id: 1256, unit: 'Unit 12', topic: 'Translation', q: 'Which contains the codon?', a: 'mRNA', wrong: ['DNA helicase', 'tRNA', 'DNA'] },
+  { id: 1257, unit: 'Unit 12', topic: 'DNA Function', q: 'DNA contains the code for:', a: 'Proteins', wrong: ['Lipids', 'Biomolecules', 'Ribosomes'] },
 
   // Word Roots - Set 1
   { id: 250, unit: 'Roots', topic: 'Set 1', q: 'What does the prefix A- (AN-) mean?', a: 'Without, not', wrong: ['With, together', 'Before', 'Against'] },
