@@ -101,22 +101,6 @@ const allQuestions = [
   { id: 213, unit: 'Unit 11', q: 'What organism did Mendel study?', a: 'Pea plants', wrong: ['Fruit flies', 'Mice', 'Bacteria'] },
   { id: 214, unit: 'Unit 11', q: 'A Punnett square cross of Aa x aa produces what genotype ratio?', a: '1:1 (Aa : aa)', wrong: ['3:1', '2:2', '1:2:1'] },
   { id: 215, unit: 'Unit 11', q: 'What is a carrier?', a: 'Someone heterozygous for a recessive trait (Aa) who doesn\'t show it', wrong: ['Someone who shows the dominant trait', 'Someone homozygous dominant', 'Someone with no alleles'] },
-  // Unit 12
-  { id: 1201, unit: 'Unit 12', q: 'What are the three parts of a nucleotide?', a: 'Sugar, phosphate group, nitrogenous base', wrong: ['Sugar, protein, lipid', 'Amino acid, phosphate, base', 'Ribose, enzyme, nitrogen'] },
-  { id: 1202, unit: 'Unit 12', q: 'What type of bond holds base pairs together in DNA?', a: 'Hydrogen bonds', wrong: ['Covalent bonds', 'Ionic bonds', 'Peptide bonds'] },
-  { id: 1203, unit: 'Unit 12', q: 'In DNA, adenine pairs with which base?', a: 'Thymine', wrong: ['Guanine', 'Cytosine', 'Uracil'] },
-  { id: 1205, unit: 'Unit 12', q: 'During which phase of the cell cycle does DNA replication occur?', a: 'S phase', wrong: ['G1 phase', 'G2 phase', 'M phase'] },
-  { id: 1209, unit: 'Unit 12', q: 'Why is DNA replication called "semi-conservative"?', a: 'Each new DNA molecule has one original strand and one new strand', wrong: ['DNA is completely copied without changes', 'Both strands are newly synthesized', 'Only half the DNA is copied'] },
-  { id: 1213, unit: 'Unit 12', q: 'What is the role of DNA polymerase?', a: 'Adds complementary nucleotides to build the new DNA strand', wrong: ['Unzips the DNA double helix', 'Holds the DNA strands apart', 'Creates primers for replication'] },
-  { id: 1215, unit: 'Unit 12', q: 'Which enzyme "unzips" the DNA double helix during replication?', a: 'Helicase', wrong: ['DNA polymerase', 'RNA polymerase', 'Ligase'] },
-  { id: 1216, unit: 'Unit 12', q: 'Where does transcription occur in a eukaryotic cell?', a: 'Nucleus', wrong: ['Ribosome', 'Cytoplasm', 'Mitochondria'] },
-  { id: 1217, unit: 'Unit 12', q: 'Which enzyme builds mRNA during transcription?', a: 'RNA polymerase', wrong: ['DNA polymerase', 'Helicase', 'Ligase'] },
-  { id: 1225, unit: 'Unit 12', q: 'What is a codon?', a: 'A sequence of 3 mRNA bases that codes for one amino acid', wrong: ['A sequence of 3 amino acids', 'A single base in DNA', 'A type of protein'] },
-  { id: 1226, unit: 'Unit 12', q: 'Where does translation occur?', a: 'Ribosome', wrong: ['Nucleus', 'Mitochondria', 'Golgi apparatus'] },
-  { id: 1227, unit: 'Unit 12', q: 'What molecule brings amino acids to the ribosome during translation?', a: 'tRNA', wrong: ['mRNA', 'rRNA', 'DNA'] },
-  { id: 1229, unit: 'Unit 12', q: 'What is the start codon?', a: 'AUG', wrong: ['UAA', 'UAG', 'UGA'] },
-  { id: 1237, unit: 'Unit 12', q: 'What are proteins made of?', a: 'Amino acids', wrong: ['Nucleotides', 'Fatty acids', 'Glucose molecules'] },
-  { id: 1256, unit: 'Unit 12', q: 'How does DNA control cell activities?', a: 'DNA → mRNA → protein, and proteins do all the cell\'s work', wrong: ['DNA directly performs cell functions', 'DNA breaks down into nutrients', 'DNA only stores information without affecting the cell'] },
 ];
 
 // Shuffle array helper
