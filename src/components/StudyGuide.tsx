@@ -281,49 +281,6 @@ const questions = [
   { id: 1249, unit: 'Unit 12', topic: 'DNA Function', q: 'DNA contains the code for:', a: 'Proteins', wrong: ['Lipids', 'Biomolecules', 'Ribosomes'] },
 
   // 🌎Unit 13 - Evolution & Natural Selection
-  { id: 1301, unit: '🌎Unit 13', topic: "Darwin's Theory", q: "What are the 5 major points of Darwin's theory?", a: 'Variation, overproduction, competition, adaptation, and descent with modification', wrong: ['Mutation, mitosis, meiosis, migration, and speciation', 'Cells, genes, DNA, proteins, and traits', 'Inheritance, dominance, codominance, meiosis, and fertilization'] },
-  { id: 1302, unit: '🌎Unit 13', topic: "Darwin's Theory", q: 'According to Darwin, what caused finches to have different beak shapes?', a: 'Different environments and food sources selected for different beak traits', wrong: ['They chose new beak types during their lifetime', 'All finches were created with random beaks that never changed', 'The beaks changed only because they exercised them'] },
-  { id: 1303, unit: '🌎Unit 13', topic: "Darwin's Theory", q: 'Which scientist said populations grow faster than resources, influencing Darwin?', a: 'Thomas Malthus', wrong: ['Charles Lyell', 'Gregor Mendel', 'Alfred Wegener'] },
-  { id: 1304, unit: '🌎Unit 13', topic: 'Evolution in Real Time', q: 'Why do viruses like SARS-CoV-2 produce variants so quickly?', a: 'They reproduce rapidly and mutate often', wrong: ['They never copy their genetic material', 'They only change when humans want them to', 'They are not affected by natural selection'] },
-  { id: 1305, unit: '🌎Unit 13', topic: 'Evolution in Real Time', q: 'What type of antibiotic is amoxicillin?', a: 'Penicillin-type antibiotic', wrong: ['Antiviral medicine', 'Pain reliever', 'Vaccine'] },
-  { id: 1306, unit: '🌎Unit 13', topic: 'Evolution in Real Time', q: 'Why do bacteria continue to evolve, and how does this relate to the large number of antibiotics available today?', a: 'Mutations and selection allow resistant bacteria to survive, so new antibiotics are needed', wrong: ['Bacteria stop changing once antibiotics are invented', 'Antibiotics cause bacteria to disappear forever', 'Bacteria only evolve in plants'] },
-  { id: 1307, unit: '🌎Unit 13', topic: 'Evidence of Evolution', q: 'What does similarity between structures in different organisms show?', a: 'They may share a common ancestor', wrong: ['They are completely unrelated', 'They live in different habitats', 'They are always the same species'] },
-  { id: 1308, unit: '🌎Unit 13', topic: 'Evidence of Evolution', q: 'What are similar structures in different organisms called when they come from common ancestry?', a: 'Homologous structures', wrong: ['Vestigial organs', 'Analogous mutations', 'Random traits'] },
-  { id: 1309, unit: '🌎Unit 13', topic: 'Evidence of Evolution', q: 'How does genetic (DNA) evidence support natural selection?', a: 'Similar DNA sequences can show relatedness and inherited changes over time', wrong: ['DNA proves all organisms are exactly the same', 'DNA prevents mutations from happening', 'DNA only matters in fossils'] },
-  { id: 1310, unit: '🌎Unit 13', topic: 'Population Genetics', q: 'You have 5 homozygous dominant cats (AA) and 5 heterozygous cats (Aa). What is the allele frequency of the recessive allele (a)?', a: '0.25', wrong: ['0.5', '0.75', '1.0'] },
-  { id: 1311, unit: '🌎Unit 13', topic: 'Population Genetics', q: 'What is a gene pool?', a: 'All the alleles in a population', wrong: ['All the cells in one organism', 'Only the dominant alleles in a species', 'A place where genes are stored outside the body'] },
-  { id: 1312, unit: '🌎Unit 13', topic: 'Population Genetics', q: 'Does natural selection act on genotypes or phenotypes?', a: 'Phenotypes, because selection acts on expressed traits', wrong: ['Only genotypes, because genes are invisible', 'Neither, because evolution is random', 'Only mutations, not traits'] },
-  { id: 1313, unit: '🌎Unit 13', topic: 'Natural Selection & Adaptation', q: 'Give an example of coevolution.', a: 'Flowers and pollinators evolving traits that benefit each other', wrong: ['A single species reproducing alone', 'A rock changing shape in wind', 'An organism choosing not to evolve'] },
-  { id: 1314, unit: '🌎Unit 13', topic: 'Natural Selection & Adaptation', q: 'Why did dark peppered moths have a higher survival rate during the Industrial Revolution?', a: 'They were better camouflaged on soot-darkened trees', wrong: ['They were naturally larger than all light moths', 'They could wash soot off the trees', 'They stopped predators from hunting'] },
-  { id: 1315, unit: '🌎Unit 13', topic: 'Natural Selection & Adaptation', q: 'What type of selection was seen in the peppered moth example?', a: 'Directional selection', wrong: ['Stabilizing selection', 'Disruptive selection', 'Artificial selection'] },
-  { id: 1316, unit: '🌎Unit 13', topic: 'Population Genetics', q: 'What are the 5 conditions required for genetic equilibrium (Hardy-Weinberg)?', a: 'No mutations, random mating, large population, no migration, and no natural selection', wrong: ['Rapid mutation, small population, migration, nonrandom mating, and selection', 'Only dominant traits, equal sex ratios, mitosis, homeostasis, and adaptation', 'No DNA, no alleles, no genes, no reproduction, and no change'] },
-  { id: 1317, unit: '🌎Unit 13', topic: 'Genetic Diversity', q: 'Which is better able to survive environmental change: a population with high or low genetic diversity?', a: 'High genetic diversity', wrong: ['Low genetic diversity', 'Neither one', 'Only populations with no mutations'] },
-  { id: 1318, unit: '🌎Unit 13', topic: 'Genetic Diversity', q: 'What are 3 causes of genetic diversity in a population?', a: 'Mutations, sexual reproduction, and gene flow', wrong: ['Mitosis, cloning, and dehydration', 'Homework, weather, and sunlight', 'Predation, extinction, and fossils'] },
-  { id: 1319, unit: '🌎Unit 13', topic: 'Genetic Diversity', q: 'Give an example of the founder effect.', a: 'A small group starts a new population with only some of the original alleles', wrong: ['A large population suddenly gets bigger', 'A mutation disappears immediately', 'All organisms in an area become identical overnight'] },
-  { id: 1320, unit: '🌎Unit 13', topic: 'Types of Natural Selection', q: 'Which type of natural selection favors one extreme phenotype and shifts the bell curve?', a: 'Directional selection', wrong: ['Stabilizing selection', 'Disruptive selection', 'Sexual reproduction'] },
-  { id: 1321, unit: '🌎Unit 13', topic: 'Types of Natural Selection', q: 'Which type of natural selection favors the average phenotype?', a: 'Stabilizing selection', wrong: ['Directional selection', 'Disruptive selection', 'Founder selection'] },
-  { id: 1322, unit: '🌎Unit 13', topic: 'Types of Natural Selection', q: 'Which type of natural selection favors both extremes of a trait?', a: 'Disruptive selection', wrong: ['Stabilizing selection', 'Directional selection', 'Artificial selection'] },
-  { id: 1323, unit: '🌎Unit 13', topic: 'Types of Natural Selection', q: 'Why do simple dominant/recessive traits (like earlobes) NOT form a normal bell curve?', a: 'They fall into distinct categories instead of a wide range of values', wrong: ['They always mutate too quickly', 'They are caused by environmental change only', 'They have no genetic basis'] },
-  { id: 1324, unit: '🌎Unit 13', topic: 'Speciation & Evolution', q: 'What are 4 types of isolation that can lead to speciation?', a: 'Behavioral, geographic, temporal, and reproductive isolation', wrong: ['Cellular, chemical, molecular, and chromosomal isolation', 'Predator, prey, climate, and fossil isolation', 'Dominant, recessive, codominant, and incomplete isolation'] },
-  { id: 1325, unit: '🌎Unit 13', topic: 'Speciation & Evolution', q: 'What is the difference between a prezygotic barrier and a postzygotic barrier?', a: 'Prezygotic barriers prevent fertilization, while postzygotic barriers act after fertilization', wrong: ['Prezygotic barriers happen after birth, while postzygotic barriers happen before mating', 'Prezygotic barriers only affect plants, while postzygotic barriers only affect animals', 'There is no difference between them'] },
-  { id: 1326, unit: '🌎Unit 13', topic: 'Speciation & Evolution', q: 'How is genetic drift different from natural selection?', a: 'Genetic drift changes allele frequencies by chance, while natural selection is nonrandom', wrong: ['Genetic drift always improves fitness, while natural selection does not', 'Natural selection is random, but genetic drift is planned', 'They are exactly the same process'] },
-  { id: 1327, unit: '🌎Unit 13', topic: 'Real-World Applications', q: 'Which population would likely have the most genetic diversity?', a: 'A large population with lots of gene flow', wrong: ['A tiny isolated population', 'A population founded by two individuals', 'A population with no mutations'] },
-  { id: 1328, unit: '🌎Unit 13', topic: 'Real-World Applications', q: 'Are all Great White Sharks part of the same gene pool?', a: 'No, only populations that interbreed share the same gene pool', wrong: ['Yes, because all sharks on Earth always interbreed', 'Yes, because they have the same common name', 'No, because gene pools only apply to plants'] },
-  { id: 1329, unit: '🌎Unit 13', topic: 'Real-World Applications', q: 'Give an example of how a farmer uses artificial selection and how it benefits them.', a: 'Breeding plants or animals with desired traits to improve yield or quality', wrong: ['Letting random predators choose the strongest crops', 'Avoiding all reproduction in farm organisms', 'Using fossils to grow new crops'] },
-  { id: 1330, unit: '🌎Unit 13', topic: "Darwin's Theory", q: 'How is overproduction of offspring connected to natural selection?', a: 'More offspring are born than can survive, creating competition', wrong: ['It guarantees every offspring will survive', 'It stops variation in a population', 'It prevents mutations'] },
-  { id: 1331, unit: '🌎Unit 13', topic: "Darwin's Theory", q: 'Why is variation within a population necessary for evolution to happen?', a: 'Natural selection needs different traits to favor some individuals over others', wrong: ['Variation stops inheritance', 'Variation means all organisms are identical', 'Evolution only happens when there is no variation'] },
-  { id: 1332, unit: '🌎Unit 13', topic: 'Natural Selection & Adaptation', q: 'What is the difference between an adaptation and an acquired trait?', a: 'An adaptation is inherited, while an acquired trait develops during life and is not inherited', wrong: ['An adaptation is always harmful, while an acquired trait is always helpful', 'They are the exact same thing', 'An acquired trait is coded directly into DNA before birth'] },
-  { id: 1333, unit: '🌎Unit 13', topic: 'Evidence of Evolution', q: 'Give one example of homologous structures and explain what they suggest about evolution.', a: 'The forelimbs of humans, whales, and bats suggest common ancestry', wrong: ['The wings of planes and birds suggest common ancestry', 'The shells of turtles and snails prove identical genes', 'The color of leaves proves animals evolved from plants'] },
-  { id: 1334, unit: '🌎Unit 13', topic: 'Evidence of Evolution', q: 'How can fossils provide evidence for common ancestry?', a: 'They show changes in organisms over time and reveal transitional forms', wrong: ['They prevent organisms from evolving', 'They only show where rocks formed', 'They prove all species appeared at once'] },
-  { id: 1335, unit: '🌎Unit 13', topic: 'Population Genetics', q: 'In Hardy-Weinberg equilibrium, what do p and q represent?', a: 'The frequencies of the dominant and recessive alleles', wrong: ['The number of chromosomes and genes', 'The age and size of a population', 'The speed of mutation and migration'] },
-  { id: 1336, unit: '🌎Unit 13', topic: 'Natural Selection & Adaptation', q: 'If a trait helps an organism survive but not reproduce, is it still likely to spread?', a: 'Not necessarily, because evolutionary success depends on reproduction too', wrong: ['Yes, survival always guarantees the trait spreads', 'No, survival never matters in evolution', 'Only if the trait is recessive'] },
-  { id: 1337, unit: '🌎Unit 13', topic: 'Genetic Diversity', q: 'How can mutation be both random and important to evolution?', a: 'Mutations happen randomly, but they create new variation that selection can act on', wrong: ['Mutations are planned by organisms to meet needs', 'Mutations always improve fitness', 'Mutations only happen in fossils'] },
-  { id: 1338, unit: '🌎Unit 13', topic: 'Evolution in Real Time', q: 'What is one real-life example of antibiotic resistance, and why is it considered evolution?', a: 'Bacteria like MRSA survive antibiotics and pass resistant traits to future generations', wrong: ['Humans become immune to antibiotics after one dose', 'Viruses turn directly into bacteria', 'Plants stop growing when sprayed'] },
-  { id: 1339, unit: '🌎Unit 13', topic: 'Genetic Diversity', q: 'Compare the bottleneck effect and the founder effect.', a: 'Both reduce genetic variation, but bottlenecks follow sharp population declines while founder effects start new populations', wrong: ['Both increase variation by adding new alleles from everywhere', 'Bottlenecks happen only in plants and founders only in animals', 'They are forms of natural selection, not drift'] },
-  { id: 1340, unit: '🌎Unit 13', topic: 'Population Genetics', q: 'Why does a small population usually experience genetic drift more strongly than a large population?', a: 'Chance events have a bigger impact on allele frequencies in small populations', wrong: ['Small populations never mutate', 'Large populations do not have alleles', 'Natural selection stops working in small populations'] },
-  { id: 1341, unit: '🌎Unit 13', topic: 'Speciation & Evolution', q: 'What is reproductive isolation, and why is it important in speciation?', a: 'It prevents populations from interbreeding, allowing them to become separate species', wrong: ['It forces all organisms to breed more often', 'It mixes all gene pools together', 'It only happens after extinction'] },
-  { id: 1342, unit: '🌎Unit 13', topic: 'Real-World Applications', q: 'How is artificial selection different from natural selection?', a: 'Humans choose which traits reproduce in artificial selection, while the environment does in natural selection', wrong: ['Artificial selection happens in nature and natural selection happens in labs', 'They both mean traits are selected completely by chance', 'Artificial selection cannot change traits over time'] },
-  { id: 1343, unit: '🌎Unit 13', topic: 'Natural Selection & Adaptation', q: 'If the environment changes suddenly, why might some individuals survive while others do not?', a: 'Some individuals already have traits that are better suited to the new conditions', wrong: ['All individuals change their genes immediately', 'Survival is always completely random', 'Only the oldest organisms survive'] },
 
   // Word Roots - Set 1
   { id: 250, unit: 'Roots', topic: 'Set 1', q: 'What does the prefix A- (AN-) mean?', a: 'Without, not', wrong: ['With, together', 'Before', 'Against'] },
@@ -536,15 +493,36 @@ function isTrueFalse(correct: string, wrong?: string[]): boolean {
   return tf.includes(correct) && (wrong || []).every(w => tf.includes(w));
 }
 
+function getWordCount(text: string): number {
+  return text.trim().split(/\s+/).filter(Boolean).length;
+}
+
+function getLengthScore(text: string): number {
+  return text.trim().length + getWordCount(text) * 8;
+}
+
+function balanceAnswerLengths(correctAnswer: string, answers: string[]): string[] {
+  if (answers.length <= 1) return answers;
+
+  const correctScore = getLengthScore(correctAnswer);
+  const sortedByCloseness = [...answers].sort((a, b) => {
+    const aDiff = Math.abs(getLengthScore(a) - correctScore);
+    const bDiff = Math.abs(getLengthScore(b) - correctScore);
+    return aDiff - bDiff;
+  });
+
+  return sortedByCloseness.slice(0, Math.min(3, sortedByCloseness.length));
+}
+
 function getWrongAnswers(correctAnswer: string, topic: string, questionWrong?: string[]): string[] {
   // True/False questions: only return True or False
   if (isTrueFalse(correctAnswer, questionWrong)) {
     return questionWrong || [correctAnswer === 'True' ? 'False' : 'True'];
   }
   
-  // Use curated wrong answers if available
+  // Use curated wrong answers if available, but prefer ones with similar length
   if (questionWrong && questionWrong.length >= 3) {
-    return shuffle(questionWrong).slice(0, 3);
+    return balanceAnswerLengths(correctAnswer, shuffle(questionWrong));
   }
   
   // Fallback to old method
@@ -561,13 +539,15 @@ function getWrongAnswers(correctAnswer: string, topic: string, questionWrong?: s
     return result;
   };
   
-  let pool = filterSimilar(topicAnswers);
+  let pool = balanceAnswerLengths(correctAnswer, filterSimilar(topicAnswers));
   if (pool.length < 3) {
     const otherAnswers = allAnswers.filter(a => !topicAnswers.includes(a));
-    pool = [...pool, ...filterSimilar(otherAnswers)];
+    const extraAnswers = balanceAnswerLengths(correctAnswer, filterSimilar(otherAnswers))
+      .filter(answer => !pool.includes(answer));
+    pool = [...pool, ...extraAnswers].slice(0, 3);
   }
   
-  return pool.sort(() => Math.random() - 0.5).slice(0, 3);
+  return shuffle(pool).slice(0, 3);
 }
 
 function shuffle<T>(arr: T[]): T[] {
