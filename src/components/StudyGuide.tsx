@@ -1034,6 +1034,13 @@ export default function StudyGuide() {
 
   const theme = unitThemes[selectedUnit] || unitThemes['All'];
 
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    document.body.style.background = theme.bgGradient;
+    document.documentElement.style.background = theme.bgGradient;
+    document.body.style.margin = '0';
+  }, [theme.bgGradient]);
+
   // Get missed questions (ones with more incorrect than correct, or never seen correctly)
   const getMissedQuestions = useCallback(() => {
     const base = selectedUnit === 'All' ? allQuestions : allQuestions.filter(q => q.unit === selectedUnit);
