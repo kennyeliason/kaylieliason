@@ -1803,9 +1803,8 @@ export default function StudyGuide() {
     if (!imageSrc) return choice;
 
     return (
-      <span style={{display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-start'}}>
-        <img src={imageSrc} alt={choice} style={{width: '100%', maxWidth: '420px', borderRadius: '12px', display: 'block'}} />
-        <span style={{fontSize: '13px', fontWeight: '700'}}>{choice}</span>
+      <span style={{display: 'flex', alignItems: 'flex-start'}}>
+        <img src={imageSrc} alt="Graph choice" style={{width: '100%', maxWidth: '420px', borderRadius: '12px', display: 'block'}} />
       </span>
     );
   };
