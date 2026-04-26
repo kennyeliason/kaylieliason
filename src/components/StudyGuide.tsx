@@ -294,12 +294,12 @@ const questions = [
   { id: 1311, unit: '🌎Unit 13', topic: 'Evolution', q: 'If allele frequencies change, the population is:', a: 'Evolving', wrong: ['Fixed', 'Dead', 'Stable'] },
   { id: 1312, unit: '🌎Unit 13', topic: 'Isolation', q: 'Postzygotic barriers result in:', a: 'Weak or infertile offspring', wrong: ['No evolution', 'No mating', 'No variation'] },
   { id: 1313, unit: '🌎Unit 13', topic: 'Selection', q: 'Disruptive selection favors:', a: 'Both extremes', wrong: ['One allele', 'No traits', 'Middle traits'] },
-  { id: 1314, unit: '🌎Unit 13', topic: 'Selection Graphs', q: 'A population of beetles exhibits variation in coloration from light to dark. Over multiple generations, stabilizing selection occurs.', a: '(Select the correct graph)', wrong: [] },
+  { id: 1314, unit: '🌎Unit 13', topic: 'Selection Graphs', q: 'A population of beetles exhibits variation in coloration from light to dark. Over multiple generations, stabilizing selection occurs.', a: 'Stabilizing selection graph', wrong: ['Disruptive selection graph', 'Directional selection graph', 'Natural selection graph', 'Genetic drift graph'] },
   { id: 1315, unit: '🌎Unit 13', topic: 'Population Genetics', q: 'A gene pool includes all:', a: 'Alleles in a population', wrong: ['Traits', 'Mutations', 'Chromosomes'] },
   { id: 1316, unit: '🌎Unit 13', topic: 'Darwin', q: 'Darwin published his ideas in:', a: 'Origin of Species', wrong: ['Evolution Theory', 'Life Forms', 'Natural Science'] },
   { id: 1317, unit: '🌎Unit 13', topic: 'Adaptation', q: 'Traits that increase survival are called:', a: 'Adaptations', wrong: ['Alleles', 'Phenotypes', 'Mutations'] },
   { id: 1318, unit: '🌎Unit 13', topic: 'Isolation', q: 'Prezygotic barriers occur:', a: 'Before fertilization', wrong: ['After fertilization', 'After birth', 'During mutation'] },
-  { id: 1319, unit: '🌎Unit 13', topic: 'Genetic Drift', q: 'A population of beetles exhibits variation in coloration from light to dark. Over multiple generations, genetic drift occurs.', a: '(Select the correct graph)', wrong: [] },
+  { id: 1319, unit: '🌎Unit 13', topic: 'Genetic Drift', q: 'A population of beetles exhibits variation in coloration from light to dark. Over multiple generations, genetic drift occurs.', a: 'Genetic drift graph', wrong: ['Disruptive selection graph', 'Directional selection graph', 'Natural selection graph', 'Stabilizing selection graph'] },
   { id: 1320, unit: '🌎Unit 13', topic: 'Selection', q: 'Stabilizing selection favors:', a: 'Average traits', wrong: ['Extremes', 'Rare traits', 'New traits'] },
   { id: 1321, unit: '🌎Unit 13', topic: 'Darwin', q: 'Charles Darwin is best known as a:', a: 'Naturalist', wrong: ['Chemist', 'Geologist', 'Physicist'] },
   { id: 1322, unit: '🌎Unit 13', topic: 'Scientists', q: 'Which scientist influenced Darwin with ideas about population growth?', a: 'Malthus', wrong: ['Lyell', 'Lamarck', 'Wallace'] },
@@ -316,13 +316,13 @@ const questions = [
   { id: 1333, unit: '🌎Unit 13', topic: 'Evidence', q: 'Fossils that resemble modern species suggest:', a: 'Evolution over time', wrong: ['Random extinction only', 'Sudden creation', 'Organisms never change'] },
   { id: 1334, unit: '🌎Unit 13', topic: 'Gene Flow', q: 'Gene flow occurs when:', a: 'Individuals move between populations', wrong: ['Alleles disappear', 'Genes mutate', 'Selection happens'] },
   { id: 1335, unit: '🌎Unit 13', topic: 'Genetic Drift', q: 'Genetic drift is:', a: 'Random change in allele frequency', wrong: ['Natural selection', 'Gene flow', 'Mutation only'] },
-  { id: 1336, unit: '🌎Unit 13', topic: 'Selection Graphs', q: 'A population of beetles exhibits variation in coloration from light to dark. Over multiple generations, disruptive selection occurs.', a: '(Select the correct graph)', wrong: [] },
+  { id: 1336, unit: '🌎Unit 13', topic: 'Selection Graphs', q: 'A population of beetles exhibits variation in coloration from light to dark. Over multiple generations, disruptive selection occurs.', a: 'Disruptive selection graph', wrong: ['Directional selection graph', 'Natural selection graph', 'Genetic drift graph', 'Stabilizing selection graph'] },
   { id: 1337, unit: '🌎Unit 13', topic: 'Scientists', q: 'The idea that Earth changes slowly over time came from:', a: 'Hutton & Lyell', wrong: ['Mendel', 'Lamarck', 'Darwin'] },
   { id: 1338, unit: '🌎Unit 13', topic: 'Isolation', q: 'Geographic isolation is caused by:', a: 'Physical barriers', wrong: ['Behavior', 'Genes', 'Time differences'] },
   { id: 1339, unit: '🌎Unit 13', topic: 'Genetic Drift', q: 'Genetic drift affects small populations more because:', a: 'Random events have bigger impact', wrong: ['They mutate more', 'They evolve faster', 'They reproduce less'] },
   { id: 1340, unit: '🌎Unit 13', topic: 'Darwin', q: 'Darwin traveled on the:', a: 'HMS Beagle', wrong: ['HMS Darwin', 'HMS Explorer', 'HMS Victory'] },
-  { id: 1341, unit: '🌎Unit 13', topic: 'Selection Graphs', q: 'A population of beetles exhibits variation in coloration from light to dark. Over multiple generations, directional selection occurs.', a: '(Select the correct graph)', wrong: [] },
-  { id: 1342, unit: '🌎Unit 13', topic: 'Selection Graphs', q: 'A population of beetles exhibits variation in coloration from light to dark. Over multiple generations, natural selection occurs.', a: '(Select the correct graph)', wrong: [] },
+  { id: 1341, unit: '🌎Unit 13', topic: 'Selection Graphs', q: 'A population of beetles exhibits variation in coloration from light to dark. Over multiple generations, directional selection occurs.', a: 'Directional selection graph', wrong: ['Disruptive selection graph', 'Natural selection graph', 'Genetic drift graph', 'Stabilizing selection graph'] },
+  { id: 1342, unit: '🌎Unit 13', topic: 'Selection Graphs', q: 'A population of beetles exhibits variation in coloration from light to dark. Over multiple generations, natural selection occurs.', a: 'Natural selection graph', wrong: ['Disruptive selection graph', 'Directional selection graph', 'Genetic drift graph', 'Stabilizing selection graph'] },
   { id: 1343, unit: '🌎Unit 13', topic: 'Isolation', q: 'Mechanical isolation occurs when:', a: 'Structures don’t match', wrong: ['Behavior changes', 'Timing differs', 'Genes mutate'] },
   { id: 1344, unit: '🌎Unit 13', topic: 'Selection', q: 'Match the Type of Selection:', a: 'Genetic Drift = random change in allele frequency; Disruptive = favors both extremes; Stabilizing = favors average traits; Directional = favors one extreme; Natural Selection = survival of the fittest', wrong: [] },
   { id: 1345, unit: '🌎Unit 13', topic: 'Hardy-Weinberg', q: 'Hardy-Weinberg equilibrium means:', a: 'No evolution occurs', wrong: ['Allele frequencies change', 'Evolution is happening', 'Mutation increases'] },
@@ -451,6 +451,14 @@ const questions = [
 ];
 
 const allQuestions = questions;
+const graphChoiceImages: {[key: string]: string} = {
+  'Disruptive selection graph': '/study-graphs/disruptive.jpg',
+  'Directional selection graph': '/study-graphs/directional.jpg',
+  'Natural selection graph': '/study-graphs/natural-selection.jpg',
+  'Genetic drift graph': '/study-graphs/genetic-drift.jpg',
+  'Stabilizing selection graph': '/study-graphs/stabilizing.jpg',
+};
+
 
 // Deep explanations for tricky questions (Learn mode)
 const explanations: {[id: number]: string} = {
@@ -1790,6 +1798,18 @@ export default function StudyGuide() {
   };
 
   const currentQ = shuffledQuestions[currentIndex];
+  const renderChoiceContent = (choice: string) => {
+    const imageSrc = graphChoiceImages[choice];
+    if (!imageSrc) return choice;
+
+    return (
+      <span style={{display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'flex-start'}}>
+        <img src={imageSrc} alt={choice} style={{width: '100%', maxWidth: '420px', borderRadius: '12px', display: 'block'}} />
+        <span style={{fontSize: '13px', fontWeight: '700'}}>{choice}</span>
+      </span>
+    );
+  };
+
   const isComplete = currentIndex >= shuffledQuestions.length - 1 && selectedAnswer;
   const learnComplete = mode === 'learn' && currentIndex >= shuffledQuestions.length - 1 && missedQuestions.length === 0 && showAnswer;
   const matchComplete = matchScore === matchPairs.length && matchPairs.length > 0;
@@ -2164,7 +2184,7 @@ export default function StudyGuide() {
             <div>
               {quizChoices.map((choice, i) => (
                 <button key={i} onClick={() => handleQuizAnswer(choice)} disabled={!!selectedAnswer}
-                  style={styles.choiceBtn(!!selectedAnswer, choice === currentQ.a, choice === selectedAnswer)}>{choice}</button>
+                  style={styles.choiceBtn(!!selectedAnswer, choice === currentQ.a, choice === selectedAnswer)}>{renderChoiceContent(choice)}</button>
               ))}
             </div>
             {selectedAnswer && <div style={{textAlign: 'center', marginTop: '16px'}}><button onClick={nextQuestion} style={styles.primaryBtn}>Next</button></div>}
@@ -2352,7 +2372,7 @@ export default function StudyGuide() {
               <div>
                 {jeopardyReviewChoices.map((choice, i) => (
                   <button key={i} onClick={() => handleJeopardyReviewAnswer(choice)} disabled={!!jeopardyReviewSelected}
-                    style={styles.choiceBtn(!!jeopardyReviewSelected, choice === current.question.a, choice === jeopardyReviewSelected)}>{choice}</button>
+                    style={styles.choiceBtn(!!jeopardyReviewSelected, choice === current.question.a, choice === jeopardyReviewSelected)}>{renderChoiceContent(choice)}</button>
                 ))}
               </div>
               {jeopardyReviewRevealed && (
@@ -2379,7 +2399,7 @@ export default function StudyGuide() {
             <div>
               {jeopardyChoices.map((choice, i) => (
                 <button key={i} onClick={() => handleJeopardyAnswer(choice)} disabled={!!jeopardySelected}
-                  style={styles.choiceBtn(!!jeopardySelected, choice === jeopardyQuestion.a, choice === jeopardySelected)}>{choice}</button>
+                  style={styles.choiceBtn(!!jeopardySelected, choice === jeopardyQuestion.a, choice === jeopardySelected)}>{renderChoiceContent(choice)}</button>
               ))}
             </div>
             {jeopardyRevealed && (
@@ -2432,7 +2452,7 @@ export default function StudyGuide() {
             <div>
               {quizChoices.map((choice, i) => (
                 <button key={i} onClick={() => handleSpeedAnswer(choice)}
-                  style={styles.choiceBtn(!!selectedAnswer, choice === currentQ.a, choice === selectedAnswer)}>{choice}</button>
+                  style={styles.choiceBtn(!!selectedAnswer, choice === currentQ.a, choice === selectedAnswer)}>{renderChoiceContent(choice)}</button>
               ))}
             </div>
           </div>
@@ -2513,7 +2533,7 @@ export default function StudyGuide() {
               <div>
                 {millionaireChoices.map((choice, i) => (
                   <button key={i} onClick={() => handleMillionaireAnswer(choice)} disabled={!!millionaireSelected}
-                    style={styles.choiceBtn(!!millionaireSelected, choice === currentQ.a, choice === millionaireSelected)}>{choice}</button>
+                    style={styles.choiceBtn(!!millionaireSelected, choice === currentQ.a, choice === millionaireSelected)}>{renderChoiceContent(choice)}</button>
                 ))}
               </div>
               {millionaireRevealed && !millionaireGameOver && millionaireSelected === currentQ.a && (
@@ -3320,7 +3340,7 @@ export default function StudyGuide() {
                         borderLeft: '4px solid transparent',
                         ...(!!selectedAnswer && choice === currentQ.a ? {borderLeftColor: '#22c55e'} : {}),
                         ...(!!selectedAnswer && choice === selectedAnswer && choice !== currentQ.a ? {borderLeftColor: '#dc2626'} : {}),
-                      }}>{choice}</button>
+                      }}>{renderChoiceContent(choice)}</button>
                   ))}
                 </div>
               </div>
@@ -3564,7 +3584,7 @@ export default function StudyGuide() {
                           onChange={() => setPracticeTestAnswers(prev => ({...prev, [idx]: choice}))}
                           style={{marginTop: '3px', width: '16px', height: '16px', accentColor: '#374151'}}
                         />
-                        <span style={{fontSize: '14px', color: '#374151'}}>{choice}</span>
+                        <span style={{fontSize: '14px', color: '#374151'}}>{renderChoiceContent(choice)}</span>
                       </label>
                     ))}
                   </div>
@@ -3658,7 +3678,7 @@ export default function StudyGuide() {
                       return (
                         <div key={ci} style={{display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 12px', marginBottom: '4px', borderRadius: '6px', background: bg}}>
                           <div style={{width: '16px', height: '16px', borderRadius: '50%', border: `2px solid ${isUserChoice ? '#374151' : '#d1d5db'}`, background: isUserChoice ? '#374151' : 'white'}} />
-                          <span style={{fontSize: '14px', color, fontWeight: isCorrectChoice ? '600' : '400'}}>{choice}</span>
+                          <span style={{fontSize: '14px', color, fontWeight: isCorrectChoice ? '600' : '400'}}>{renderChoiceContent(choice)}</span>
                           {isCorrectChoice && <span style={{marginLeft: 'auto', fontSize: '12px', color: '#059669'}}>✓ Correct</span>}
                           {isUserChoice && !isCorrect && <span style={{marginLeft: 'auto', fontSize: '12px', color: '#dc2626'}}>Your answer</span>}
                         </div>
