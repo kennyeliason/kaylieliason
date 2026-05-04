@@ -65,12 +65,12 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
     shadow: 'rgba(14,165,164,0.3)',
   },
   '🔭Unit 14': {
-    primary: '#e52b50', primaryLight: '#f0627c', primaryDark: '#c41e3a',
-    gradient: 'linear-gradient(135deg, #e52b50, #f0627c)',
-    bgGradient: 'linear-gradient(135deg, #fff1f5 0%, #ffe4eb 50%, #ffd6e2 100%)',
-    accent: '#e52b50', accentLight: '#ffe4eb',
+    primary: '#046307', primaryLight: '#0b8a0f', primaryDark: '#034b05',
+    gradient: 'linear-gradient(135deg, #046307, #0b8a0f)',
+    bgGradient: 'linear-gradient(135deg, #ecfdf3 0%, #d1fae5 50%, #bbf7d0 100%)',
+    accent: '#046307', accentLight: '#d1fae5',
     emojis: ['🔭', '🧬', '🧫', '🧪'],
-    shadow: 'rgba(229,43,80,0.3)',
+    shadow: 'rgba(4,99,7,0.3)',
   },
 
   'Roots': {
