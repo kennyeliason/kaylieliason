@@ -626,24 +626,15 @@ function balanceAnswerLengths(correctAnswer: string, answers: string[]): string[
     return aDiff - bDiff;
   });
 
-  return sortedByCloseness.slice(0, Math.min(3, sortedByCloseness.length));
+  return sortedByCloseness;
 }
 
-function getWrongAnswers(correctAnswer: string, topic: string, questionWrong?: string[]): string[] {
+function getWrongAnswers(correctAnswer: string, topic: string, unit: string, questionWrong?: string[]): string[] {
   // True/False questions: only return True or False
   if (isTrueFalse(correctAnswer, questionWrong)) {
     return questionWrong || [correctAnswer === 'True' ? 'False' : 'True'];
   }
-  
-  // Use curated wrong answers if available, but prefer ones with similar length
-  if (questionWrong && questionWrong.length >= 3) {
-    return balanceAnswerLengths(correctAnswer, shuffle(questionWrong));
-  }
-  
-  // Fallback to old method
-  const allAnswers = uniqueQuestions.map(q => q.a);
-  const topicAnswers = uniqueQuestions.filter(q => q.topic === topic).map(q => q.a);
-  
+
   const filterSimilar = (pool: string[]) => {
     const result: string[] = [];
     for (const answer of pool) {
@@ -653,16 +644,34 @@ function getWrongAnswers(correctAnswer: string, topic: string, questionWrong?: s
     }
     return result;
   };
-  
-  let pool = balanceAnswerLengths(correctAnswer, filterSimilar(topicAnswers));
-  if (pool.length < 3) {
-    const otherAnswers = allAnswers.filter(a => !topicAnswers.includes(a));
-    const extraAnswers = balanceAnswerLengths(correctAnswer, filterSimilar(otherAnswers))
-      .filter(answer => !pool.includes(answer));
-    pool = [...pool, ...extraAnswers].slice(0, 3);
+
+  const correctScore = getLengthScore(correctAnswer);
+  const sameTopicAnswers = uniqueQuestions.filter(q => q.topic === topic).map(q => q.a);
+  const sameUnitAnswers = uniqueQuestions.filter(q => q.unit === unit).map(q => q.a);
+  const allAnswers = uniqueQuestions.map(q => q.a);
+
+  const curatedWrong = questionWrong || [];
+  const candidatePools = [
+    curatedWrong,
+    sameTopicAnswers,
+    sameUnitAnswers,
+    allAnswers,
+  ];
+
+  const picked: string[] = [];
+  for (const pool of candidatePools) {
+    const ranked = balanceAnswerLengths(correctAnswer, filterSimilar(shuffle(pool)));
+    for (const answer of ranked) {
+      const answerScore = getLengthScore(answer);
+      const closeEnough = Math.abs(answerScore - correctScore) <= Math.max(18, correctScore * 0.45);
+      if (!closeEnough && picked.length < 2) continue;
+      if (picked.includes(answer)) continue;
+      picked.push(answer);
+      if (picked.length === 3) return shuffle(picked);
+    }
   }
-  
-  return shuffle(pool).slice(0, 3);
+
+  return shuffle(picked.slice(0, 3));
 }
 
 function shuffle<T>(arr: T[]): T[] {
@@ -1314,7 +1323,7 @@ export default function StudyGuide() {
 
     if ((newMode === 'quiz' || newMode === 'review') && shuffled.length > 0) {
       const q = shuffled[0];
-      const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+      const wrong = getWrongAnswers(q.a, q.topic, q.unit, q.wrong);
       setQuizChoices(shuffle([q.a, ...wrong]));
     }
     
@@ -1357,7 +1366,7 @@ export default function StudyGuide() {
       setSelectedAnswer(null);
       if (shuffled.length > 0) {
         const q = shuffled[0];
-        const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+        const wrong = getWrongAnswers(q.a, q.topic, q.unit, q.wrong);
         setQuizChoices(shuffle([q.a, ...wrong]));
       }
     }
@@ -1372,7 +1381,7 @@ export default function StudyGuide() {
       setMillionaireFinalPrize(0);
       if (shuffled.length > 0) {
         const q = shuffled[0];
-        const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+        const wrong = getWrongAnswers(q.a, q.topic, q.unit, q.wrong);
         setMillionaireChoices(shuffle([q.a, ...wrong]));
       }
     }
@@ -1403,7 +1412,7 @@ export default function StudyGuide() {
       setBombFlash('');
       if (shuffled.length > 0) {
         const q = shuffled[0];
-        const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+        const wrong = getWrongAnswers(q.a, q.topic, q.unit, q.wrong);
         setQuizChoices(shuffle([q.a, ...wrong]));
       }
     }
@@ -1429,7 +1438,7 @@ export default function StudyGuide() {
       // Prepare choices for each question
       const allChoices: {[key: number]: string[]} = {};
       shuffled.forEach((q, idx) => {
-        const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+        const wrong = getWrongAnswers(q.a, q.topic, q.unit, q.wrong);
         allChoices[idx] = shuffle([q.a, ...wrong]);
       });
       setQuizChoices([]); // Not used, using per-question choices
@@ -1447,7 +1456,7 @@ export default function StudyGuide() {
       setChallengeGameOver(false);
       if (shuffled.length > 0) {
         const q = shuffled[0];
-        const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+        const wrong = getWrongAnswers(q.a, q.topic, q.unit, q.wrong);
         setQuizChoices(shuffle([q.a, ...wrong]));
       }
     }
@@ -1465,7 +1474,7 @@ export default function StudyGuide() {
       setSnakeQuestionIndex(0);
       if (shuffled.length > 0) {
         const q = shuffled[0];
-        const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+        const wrong = getWrongAnswers(q.a, q.topic, q.unit, q.wrong);
         setQuizChoices(shuffle([q.a, ...wrong]));
       }
     }
@@ -1495,7 +1504,7 @@ export default function StudyGuide() {
       
       if (mode === 'quiz' || mode === 'review') {
         const q = shuffledQuestions[nextIdx];
-        const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+        const wrong = getWrongAnswers(q.a, q.topic, q.unit, q.wrong);
         setQuizChoices(shuffle([q.a, ...wrong]));
       }
     } else if (missedQuestions.length > 0 && mode === 'learn') {
@@ -1579,7 +1588,7 @@ export default function StudyGuide() {
     setJeopardyRevealed(false);
     setJeopardySelected(null);
     
-    const wrong = getWrongAnswers(cell.question.a, cell.question.topic, cell.question.wrong);
+    const wrong = getWrongAnswers(cell.question.a, cell.question.topic, cell.question.unit, cell.question.wrong);
     setJeopardyChoices(shuffle([cell.question.a, ...wrong]));
   };
 
@@ -1632,7 +1641,7 @@ export default function StudyGuide() {
     setJeopardyReviewSelected(null);
     setJeopardyReviewRevealed(false);
     const q = missed[0].question;
-    const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+    const wrong = getWrongAnswers(q.a, q.topic, q.unit, q.wrong);
     setJeopardyReviewChoices(shuffle([q.a, ...wrong]));
   };
 
@@ -1657,7 +1666,7 @@ export default function StudyGuide() {
     setJeopardyReviewSelected(null);
     setJeopardyReviewRevealed(false);
     const q = missed[nextIdx].question;
-    const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+    const wrong = getWrongAnswers(q.a, q.topic, q.unit, q.wrong);
     setJeopardyReviewChoices(shuffle([q.a, ...wrong]));
   };
 
@@ -1672,7 +1681,7 @@ export default function StudyGuide() {
     setShuffledQuestions(shuffled);
     if (shuffled.length > 0) {
       const q = shuffled[0];
-      const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+      const wrong = getWrongAnswers(q.a, q.topic, q.unit, q.wrong);
       setQuizChoices(shuffle([q.a, ...wrong]));
     }
   };
@@ -1689,7 +1698,7 @@ export default function StudyGuide() {
       setCurrentIndex(nextIdx);
       setSelectedAnswer(null);
       const q = shuffledQuestions[nextIdx];
-      const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+      const wrong = getWrongAnswers(q.a, q.topic, q.unit, q.wrong);
       setQuizChoices(shuffle([q.a, ...wrong]));
     }, 300);
   };
@@ -1734,7 +1743,7 @@ export default function StudyGuide() {
     setMillionaireRevealed(false);
     
     const q = shuffledQuestions[nextQIdx];
-    const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+    const wrong = getWrongAnswers(q.a, q.topic, q.unit, q.wrong);
     setMillionaireChoices(shuffle([q.a, ...wrong]));
   };
 
@@ -1836,7 +1845,7 @@ export default function StudyGuide() {
           setCurrentIndex(nextIdx);
           setSelectedAnswer(null);
           const q = shuffledQuestions[nextIdx];
-          const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+          const wrong = getWrongAnswers(q.a, q.topic, q.unit, q.wrong);
           setQuizChoices(shuffle([q.a, ...wrong]));
         }, 600);
       }
@@ -2880,7 +2889,7 @@ export default function StudyGuide() {
                     
                     const q = questions[0];
                     if (q) {
-                      const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+                      const wrong = getWrongAnswers(q.a, q.topic, q.unit, q.wrong);
                       setLifeChoices(shuffle([q.a, ...wrong]));
                     }
                     
@@ -2921,7 +2930,7 @@ export default function StudyGuide() {
               setCurrentIndex(0);
               const q = qs[0];
               if (q) {
-                const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+                const wrong = getWrongAnswers(q.a, q.topic, q.unit, q.wrong);
                 setLifeChoices(shuffle([q.a, ...wrong]));
               }
             }} style={{padding: '12px 24px', background: theme.gradient, color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer'}}>
@@ -3038,7 +3047,7 @@ export default function StudyGuide() {
                               // Not enough correct yet, keep asking questions
                               if (shuffledQuestions[currentIndex + 1]) {
                                 const q = shuffledQuestions[currentIndex + 1];
-                                const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+                                const wrong = getWrongAnswers(q.a, q.topic, q.unit, q.wrong);
                                 setLifeChoices(shuffle([q.a, ...wrong]));
                               }
                             }
@@ -3827,7 +3836,7 @@ export default function StudyGuide() {
                         setCurrentIndex(nextIdx);
                         setSelectedAnswer(null);
                         const nextQ = shuffledQuestions[nextIdx];
-                        const wrong = getWrongAnswers(nextQ.a, nextQ.topic, nextQ.wrong);
+                        const wrong = getWrongAnswers(nextQ.a, nextQ.topic, nextQ.unit, nextQ.wrong);
                         setQuizChoices(shuffle([nextQ.a, ...wrong]));
                       }
                     }, 1200);
@@ -3969,7 +3978,7 @@ export default function StudyGuide() {
                           const nextQ = (snakeQuestionIndex + 1) % shuffledQuestions.length;
                           setSnakeQuestionIndex(nextQ);
                           const q = shuffledQuestions[nextQ];
-                          const wrong = getWrongAnswers(q.a, q.topic, q.wrong);
+                          const wrong = getWrongAnswers(q.a, q.topic, q.unit, q.wrong);
                           setQuizChoices(shuffle([q.a, ...wrong]));
                           
                           setSnakeShowQuestion(false);
