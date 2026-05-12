@@ -360,7 +360,6 @@ const questions = [
   { id: 1463, unit: '🔭Unit 14', topic: 'Recombinant DNA', q: 'Which process is MOST associated with making insulin-producing bacteria?', a: 'Recombinant DNA technology', wrong: ['Photosynthesis', 'Osmosis', 'Natural selection'] },
   { id: 1464, unit: '🔭Unit 14', topic: 'Gel Electrophoresis', q: 'Gel electrophoresis separates DNA fragments based on:', a: 'Size', wrong: ['Shape', 'Density', 'Color'] },
   { id: 1465, unit: '🔭Unit 14', topic: 'DNA Technology', q: 'DNA technology mainly relies on the ability to:', a: 'Copy and manipulate DNA strands', wrong: ['Eliminate mutations', 'Destroy all DNA', 'Stop protein production'] },
-  { id: 1466, unit: '🔭Unit 14', topic: 'Biotechnology Basics', q: 'Biotechnology is best defined as:', a: 'The use of living organisms to solve problems or make products', wrong: ['The study of ecology', 'The process of cell division', 'The study of rocks and fossils'] },
   { id: 1467, unit: '🔭Unit 14', topic: 'Plasmids', q: 'Bacteria containing recombinant plasmids can:', a: 'Produce useful proteins', wrong: ['Eliminate all disease', 'Destroy chromosomes', 'Stop reproducing'] },
   { id: 1468, unit: '🔭Unit 14', topic: 'Biotechnology Basics', q: 'Which statement about biotechnology is TRUE?', a: 'Biotechnology can improve medicine and agriculture', wrong: ['Biotechnology only involves animals', 'Biotechnology cannot affect society', 'Biotechnology is completely new'] },
   { id: 1469, unit: '🔭Unit 14', topic: 'PCR', q: 'Which enzyme is important in PCR?', a: 'DNA polymerase', wrong: ['Amylase', 'Lipase', 'Catalase'] },
@@ -413,7 +412,6 @@ const questions = [
   { id: 1516, unit: '🔭Unit 14', topic: 'Epigenetics', q: 'Methyl groups attached to DNA often:', a: 'Stop transcription', wrong: ['Cause mutations immediately', 'Increase gene expression', 'Create proteins'] },
   { id: 1517, unit: '🔭Unit 14', topic: 'Selective Breeding', q: 'Selective breeding depends on:', a: 'Choosing organisms with desired traits to reproduce', wrong: ['Random mutations only', 'CRISPR technology', 'Natural disasters'] },
   { id: 1518, unit: '🔭Unit 14', topic: 'Human Genome Project', q: 'The Human Genome Project focused on:', a: 'Sequencing human DNA', wrong: ['Producing vaccines', 'Cloning humans', 'Creating designer babies'] },
-  { id: 1519, unit: '🔭Unit 14', topic: 'Biotechnology Basics', q: 'Biotechnology is best defined as:', a: 'The use of living organisms to solve problems or make products', wrong: ['The study of ecology', 'The process of cell division', 'The study of rocks and fossils'] },
   { id: 1520, unit: '🔭Unit 14', topic: 'Gel Electrophoresis', q: 'In gel electrophoresis, smaller DNA fragments:', a: 'Move farther through the gel', wrong: ['Float upward', 'Stay near the wells', 'Move slower'] },
   { id: 1521, unit: '🔭Unit 14', topic: 'Biotechnology Basics', q: 'Which statement best describes biotechnology?', a: 'The use of living organisms or biological systems to make products or solve problems', wrong: ['The study of only fossils and rocks', 'The process of destroying DNA', 'The study of weather patterns'] },
 
