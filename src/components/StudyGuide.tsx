@@ -890,6 +890,11 @@ export default function StudyGuide() {
   const [jeopardyQuestion, setJeopardyQuestion] = useState<typeof uniqueQuestions[0] | null>(null);
   const [jeopardyPoints, setJeopardyPoints] = useState(0);
   const [jeopardyScore, setJeopardyScore] = useState(0);
+  const [jeopardySetupMode, setJeopardySetupMode] = useState(false);
+  const [jeopardyPlayerCount, setJeopardyPlayerCount] = useState<1 | 2>(1);
+  const [jeopardyScores, setJeopardyScores] = useState<[number, number]>([0, 0]);
+  const [jeopardyCurrentTurn, setJeopardyCurrentTurn] = useState(0);
+  const [jeopardyQuestionPlayer, setJeopardyQuestionPlayer] = useState(0);
   const [jeopardyRevealed, setJeopardyRevealed] = useState(false);
   const [jeopardyChoices, setJeopardyChoices] = useState<string[]>([]);
   const [jeopardySelected, setJeopardySelected] = useState<string | null>(null);
@@ -1331,6 +1336,32 @@ export default function StudyGuide() {
     }
   }, [millionaireGameOver, millionaireFinalPrize, checkHighScore]);
 
+  const initializeJeopardyGame = (playerCount: 1 | 2) => {
+    const board: typeof jeopardyBoard = {};
+    const jTopics = Array.from(new Set((selectedUnit === 'All' ? allQuestions : allQuestions.filter(q => q.unit === selectedUnit)).map(q => q.topic)));
+    jTopics.forEach(topic => {
+      const topicQs = shuffle(selectedUnit === 'All' ? allQuestions.filter(q => q.topic === topic) : allQuestions.filter(q => q.unit === selectedUnit && q.topic === topic));
+      board[topic] = [100, 200, 300, 400].map((points, i) => ({
+        points,
+        question: topicQs[i % topicQs.length],
+        answered: false,
+        correct: null
+      }));
+    });
+    setJeopardyBoard(board);
+    setJeopardyPlayerCount(playerCount);
+    setJeopardyScores([0, 0]);
+    setJeopardyScore(0);
+    setJeopardyCurrentTurn(0);
+    setJeopardyQuestionPlayer(0);
+    setJeopardyQuestion(null);
+    setJeopardyRevealed(false);
+    setJeopardySelected(null);
+    setJeopardyComplete(false);
+    setJeopardyReviewMode(false);
+    setJeopardySetupMode(false);
+  };
+
   const startMode = (newMode: Mode) => {
     const explainIds = Object.keys(explanations).map(Number);
     const filtered = newMode === 'review' ? getMissedQuestions() : 
@@ -1362,23 +1393,17 @@ export default function StudyGuide() {
     }
     
     if (newMode === 'jeopardy') {
-      const board: typeof jeopardyBoard = {};
-      const jTopics = Array.from(new Set((selectedUnit === 'All' ? allQuestions : allQuestions.filter(q => q.unit === selectedUnit)).map(q => q.topic)));
-      jTopics.forEach(topic => {
-        const topicQs = shuffle(selectedUnit === 'All' ? allQuestions.filter(q => q.topic === topic) : allQuestions.filter(q => q.unit === selectedUnit && q.topic === topic));
-        board[topic] = [100, 200, 300, 400].map((points, i) => ({
-          points,
-          question: topicQs[i % topicQs.length],
-          answered: false,
-          correct: null
-        }));
-      });
-      setJeopardyBoard(board);
+      setJeopardyBoard({});
       setJeopardyScore(0);
+      setJeopardyScores([0, 0]);
+      setJeopardyCurrentTurn(0);
+      setJeopardyQuestionPlayer(0);
       setJeopardyQuestion(null);
       setJeopardyRevealed(false);
+      setJeopardySelected(null);
       setJeopardyComplete(false);
       setJeopardyReviewMode(false);
+      setJeopardySetupMode(true);
     }
     
     if (newMode === 'speed') {
@@ -1609,6 +1634,7 @@ export default function StudyGuide() {
     if (cell.answered) return;
     
     setJeopardyQuestion(cell.question);
+    setJeopardyQuestionPlayer(jeopardyCurrentTurn);
     setJeopardyPoints(cell.points);
     setJeopardyRevealed(false);
     setJeopardySelected(null);
@@ -1623,7 +1649,16 @@ export default function StudyGuide() {
     setJeopardyRevealed(true);
     
     const isCorrect = answer === jeopardyQuestion!.a;
-    if (isCorrect) setJeopardyScore(s => s + jeopardyPoints);
+    const scoreDelta = isCorrect ? jeopardyPoints : -jeopardyPoints;
+    setJeopardyScores(scores => {
+      const next: [number, number] = [...scores] as [number, number];
+      next[jeopardyQuestionPlayer] += scoreDelta;
+      setJeopardyScore(next[0]);
+      return next;
+    });
+    if (jeopardyPlayerCount === 2) {
+      setJeopardyCurrentTurn(jeopardyQuestionPlayer === 0 ? 1 : 0);
+    }
     recordAnswer(jeopardyQuestion!.id, isCorrect);
     
     setJeopardyBoard(board => {
@@ -2382,9 +2417,42 @@ export default function StudyGuide() {
         )}
 
         {/* Jeopardy */}
-        {mode === 'jeopardy' && !jeopardyQuestion && !jeopardyComplete && (
+        {mode === 'jeopardy' && jeopardySetupMode && (
+          <div style={styles.complete}>
+            <div style={{fontSize: '42px', marginBottom: '10px'}}>🎯</div>
+            <div style={{fontSize: '28px', fontWeight: '800', color: theme.primary, marginBottom: '8px'}}>Choose your Jeopardy mode</div>
+            <div style={{fontSize: '15px', color: '#6b7280', marginBottom: '24px'}}>Play solo or pass the device back and forth with a friend.</div>
+            <div style={{display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap'}}>
+              <button onClick={() => initializeJeopardyGame(1)} style={styles.primaryBtn}>1 Player</button>
+              <button onClick={() => initializeJeopardyGame(2)} style={{...styles.primaryBtn, background: '#2563eb'}}>2 Players</button>
+            </div>
+          </div>
+        )}
+
+        {mode === 'jeopardy' && !jeopardySetupMode && !jeopardyQuestion && !jeopardyComplete && (
           <div>
-            <div style={styles.progress}>Score: ${jeopardyScore}</div>
+            <div style={{display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '18px'}}>
+              {Array.from({ length: jeopardyPlayerCount }, (_, i) => {
+                const isActive = i === jeopardyCurrentTurn;
+                return (
+                  <div key={i} style={{
+                    minWidth: '120px',
+                    padding: '12px 16px',
+                    borderRadius: '18px',
+                    background: isActive ? theme.gradient : 'rgba(255,255,255,0.9)',
+                    color: isActive ? 'white' : '#374151',
+                    border: isActive ? 'none' : '2px solid #e5e7eb',
+                    boxShadow: isActive ? `0 6px 20px ${theme.shadow}` : '0 3px 12px rgba(0,0,0,0.05)',
+                    textAlign: 'center'
+                  }}>
+                    <div style={{fontSize: '12px', fontWeight: '800', opacity: isActive ? 0.9 : 0.7}}>{jeopardyPlayerCount === 1 ? 'Your Score' : `Player ${i + 1}`}</div>
+                    <div style={{fontSize: '26px', fontWeight: '900'}}>${jeopardyScores[i]}</div>
+                    {jeopardyPlayerCount === 2 && isActive && <div style={{fontSize: '11px', fontWeight: '700'}}>Your turn</div>}
+                  </div>
+                );
+              })}
+            </div>
+            <div style={styles.progress}>{jeopardyPlayerCount === 1 ? 'Answer correctly to add points. Wrong answers subtract points.' : `Player ${jeopardyCurrentTurn + 1}'s turn`}</div>
             <div className="jeopardy-board" style={styles.jeopardyBoard}>
               {topics.map(topic => (
                 <div key={topic} style={styles.jeopardyHeader}>{topic}</div>
@@ -2409,11 +2477,33 @@ export default function StudyGuide() {
           const totalCells = Object.values(jeopardyBoard).reduce((sum, cells) => sum + cells.length, 0);
           const correctCount = totalCells - missed.length;
           const maxScore = Object.values(jeopardyBoard).reduce((sum, cells) => sum + cells.reduce((s, c) => s + c.points, 0), 0);
+          const playerOneWon = jeopardyScores[0] > jeopardyScores[1];
+          const playerTwoWon = jeopardyScores[1] > jeopardyScores[0];
           return (
             <div style={{textAlign: 'center'}}>
               <div style={{fontSize: '48px', marginBottom: '8px'}}>🏆</div>
-              <div style={{fontSize: '28px', fontWeight: 'bold', color: theme.primary, marginBottom: '4px'}}>${jeopardyScore}</div>
-              <div style={{fontSize: '14px', color: '#6b7280', marginBottom: '24px'}}>out of ${maxScore} possible</div>
+              {jeopardyPlayerCount === 1 ? (
+                <>
+                  <div style={{fontSize: '28px', fontWeight: 'bold', color: theme.primary, marginBottom: '4px'}}>${jeopardyScores[0]}</div>
+                  <div style={{fontSize: '14px', color: '#6b7280', marginBottom: '24px'}}>out of ${maxScore} possible</div>
+                </>
+              ) : (
+                <>
+                  <div style={{fontSize: '28px', fontWeight: '800', color: theme.primary, marginBottom: '8px'}}>
+                    {playerOneWon ? 'Player 1 wins!' : playerTwoWon ? 'Player 2 wins!' : "It's a tie!"}
+                  </div>
+                  <div style={{display: 'flex', justifyContent: 'center', gap: '16px', marginBottom: '24px', flexWrap: 'wrap'}}>
+                    <div style={{background: '#f8fafc', borderRadius: '16px', padding: '14px 18px', minWidth: '120px'}}>
+                      <div style={{fontSize: '12px', color: '#6b7280', fontWeight: '700'}}>Player 1</div>
+                      <div style={{fontSize: '26px', fontWeight: '900', color: theme.primary}}>${jeopardyScores[0]}</div>
+                    </div>
+                    <div style={{background: '#f8fafc', borderRadius: '16px', padding: '14px 18px', minWidth: '120px'}}>
+                      <div style={{fontSize: '12px', color: '#6b7280', fontWeight: '700'}}>Player 2</div>
+                      <div style={{fontSize: '26px', fontWeight: '900', color: '#2563eb'}}>${jeopardyScores[1]}</div>
+                    </div>
+                  </div>
+                </>
+              )}
               <div style={{display: 'flex', justifyContent: 'center', gap: '32px', marginBottom: '24px'}}>
                 <div>
                   <div style={{fontSize: '24px', fontWeight: 'bold', color: '#059669'}}>{correctCount}</div>
@@ -2484,7 +2574,7 @@ export default function StudyGuide() {
 
         {mode === 'jeopardy' && jeopardyQuestion && (
           <div>
-            <div style={styles.progress}>${jeopardyPoints}</div>
+            <div style={styles.progress}>{jeopardyPlayerCount === 1 ? `$${jeopardyPoints}` : `Player ${jeopardyQuestionPlayer + 1} for $${jeopardyPoints}`}</div>
             <div style={styles.card}>
               <div style={styles.topicLabel}>{jeopardyQuestion.topic}</div>
               <div style={styles.question}>{jeopardyQuestion.q}</div>
@@ -2498,8 +2588,13 @@ export default function StudyGuide() {
             {jeopardyRevealed && (
               <div style={{textAlign: 'center', marginTop: '16px'}}>
                 <div style={{marginBottom: '16px', color: jeopardySelected === jeopardyQuestion.a ? '#059669' : '#dc2626', fontWeight: 'bold'}}>
-                  {jeopardySelected === jeopardyQuestion.a ? `+$${jeopardyPoints}` : 'Incorrect'}
+                  {jeopardySelected === jeopardyQuestion.a
+                    ? `${jeopardyPlayerCount === 1 ? 'You' : `Player ${jeopardyQuestionPlayer + 1}`} earned $${jeopardyPoints}`
+                    : `${jeopardyPlayerCount === 1 ? 'You lost' : `Player ${jeopardyQuestionPlayer + 1} lost`} $${jeopardyPoints}`}
                 </div>
+                {jeopardyPlayerCount === 2 && (
+                  <div style={{marginBottom: '16px', color: '#6b7280', fontWeight: '700'}}>Next up: Player {jeopardyCurrentTurn + 1}</div>
+                )}
                 <button onClick={() => setJeopardyQuestion(null)} style={styles.primaryBtn}>Back to Board</button>
               </div>
             )}
