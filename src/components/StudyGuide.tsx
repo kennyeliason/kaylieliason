@@ -373,7 +373,6 @@ const questions = [
   { id: 1478, unit: '🔭Unit 14', topic: 'Cloning', q: 'Somatic cell nuclear transfer involves:', a: 'Replacing an egg cell nucleus with a body cell nucleus', wrong: ['Cutting proteins', 'Creating gametes', 'Moving DNA into bacteria only'] },
   { id: 1479, unit: '🔭Unit 14', topic: 'Human Genome Project', q: 'Scientists discovered that only a small percentage of human DNA:', a: 'Codes for proteins', wrong: ['Mutates', 'Is inherited', 'Exists in chromosomes'] },
   { id: 1480, unit: '🔭Unit 14', topic: 'Restriction Enzymes', q: 'Restriction enzymes are used to:', a: 'Cut DNA at specific sequences', wrong: ['Translate RNA', 'Build proteins', 'Destroy cells'] },
-  { id: 1481, unit: '🔭Unit 14', topic: 'Cloning', q: 'Cloning produces:', a: 'Exact genetic copies', wrong: ['Haploid organisms', 'Genetically unique organisms', 'Mutated cells only'] },
   { id: 1482, unit: '🔭Unit 14', topic: 'Biotechnology Basics', q: 'Which of the following is an example of early biotechnology?', a: 'Bread making using yeast', wrong: ['CRISPR', 'Gel electrophoresis', 'PCR'] },
   { id: 1483, unit: '🔭Unit 14', topic: 'Biotechnology Impacts', q: 'Producing insulin for diabetics is a:', a: 'Advantage', wrong: ['Concern'] },
   { id: 1484, unit: '🔭Unit 14', topic: 'Biotechnology Impacts', q: 'Possible ethical issues with cloning are a:', a: 'Concern', wrong: ['Advantage'] },
