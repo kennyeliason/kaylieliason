@@ -384,7 +384,6 @@ const questions = [
   { id: 1489, unit: '🔭Unit 14', topic: 'Plasmids', q: 'Plasmids are commonly found in:', a: 'Bacteria', wrong: ['Plants', 'Viruses', 'Animals'] },
   { id: 1490, unit: '🔭Unit 14', topic: 'STRs', q: 'Short tandem repeats (STRs) are useful because they:', a: 'Vary greatly among individuals', wrong: ['Eliminate mutations', 'Are identical in everyone', 'Create proteins'] },
   { id: 1492, unit: '🔭Unit 14', topic: 'Epigenetics', q: 'Loosely packed chromatin is associated with:', a: 'Active genes', wrong: ['Cell death', 'Dead cells', 'Mutated chromosomes'] },
-  { id: 1493, unit: '🔭Unit 14', topic: 'Transgenic Organisms', q: 'A transgenic organism contains:', a: 'DNA from another species', wrong: ['No DNA', 'Extra chromosomes only', 'Only bacterial genes'] },
   { id: 1494, unit: '🔭Unit 14', topic: 'DNA Analysis', q: 'A DNA fingerprint is produced using:', a: 'Gel electrophoresis', wrong: ['Mitosis', 'Photosynthesis', 'DNA sequencing only'] },
   { id: 1495, unit: '🔭Unit 14', topic: 'Epigenetics', q: 'Epigenetics refers to:', a: 'Regulation of gene expression without changing DNA sequence', wrong: ['The destruction of genes', 'The study of fossils', 'Changes in DNA sequence'] },
   { id: 1496, unit: '🔭Unit 14', topic: 'Gene Editing', q: 'CRISPR-Cas9 allows scientists to:', a: 'Edit genes precisely', wrong: ['Prevent inheritance', 'Sequence proteins', 'Clone entire ecosystems'] },
