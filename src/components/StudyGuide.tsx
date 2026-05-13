@@ -400,7 +400,6 @@ const questions = [
   { id: 1507, unit: '🔭Unit 14', topic: 'Cloning', q: 'Dolly the sheep is famous because she:', a: 'Was cloned from an adult somatic cell', wrong: ['Produced insulin', 'Was the first transgenic mammal', 'Sequenced the human genome'] },
   { id: 1508, unit: '🔭Unit 14', topic: 'Biotechnology Organisms', q: 'Plasmids are most associated with:', a: 'Bacteria', wrong: ['Viruses', 'Humans'] },
   { id: 1509, unit: '🔭Unit 14', topic: 'Biotechnology Organisms', q: 'HIV is an example of a:', a: 'Virus', wrong: ['Bacteria', 'Human'] },
-  { id: 1510, unit: '🔭Unit 14', topic: 'Human Genome Project', q: 'The Human Genome Project focused on:', a: 'Humans', wrong: ['Bacteria', 'Viruses'] },
   { id: 1511, unit: '🔭Unit 14', topic: 'Recombinant DNA', q: 'Recombinant insulin is commonly produced using:', a: 'Bacteria', wrong: ['Viruses', 'Humans'] },
   { id: 1512, unit: '🔭Unit 14', topic: 'Biotechnology Organisms', q: 'A cold or flu is caused by:', a: 'Viruses', wrong: ['Bacteria', 'Humans'] },
   { id: 1513, unit: '🔭Unit 14', topic: 'DNA Analysis', q: 'STR analysis is commonly used to identify:', a: 'Humans', wrong: ['Bacteria', 'Viruses'] },
