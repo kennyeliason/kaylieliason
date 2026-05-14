@@ -839,7 +839,7 @@ function generateCrossword(questions: typeof uniqueQuestions) {
   return {grid, across, down, placed};
 }
 
-type Mode = 'menu' | 'flashcards' | 'quiz' | 'learn' | 'match' | 'jeopardy' | 'speed' | 'millionaire' | 'review' | 'stats' | 'wheel' | 'bomb' | 'crossword' | 'practicetest' | 'challenge' | 'snake' | 'memory';
+type Mode = 'menu' | 'flashcards' | 'quiz' | 'typingquiz' | 'learn' | 'match' | 'jeopardy' | 'speed' | 'millionaire' | 'review' | 'stats' | 'wheel' | 'bomb' | 'crossword' | 'practicetest' | 'challenge' | 'snake' | 'memory';
 
 function WheelResult({ currentQ, wheelGuessedLetters, wheelWrongGuesses, wheelScore, currentIndex, totalQuestions, wheelNextQuestion, startMode, getWheelDisplay, styles }: any) {
   const isWrong = getWheelDisplay(currentQ.a, wheelGuessedLetters).includes('_') || wheelWrongGuesses >= 6;
@@ -890,6 +890,7 @@ export default function StudyGuide() {
   const [missedQuestions, setMissedQuestions] = useState<typeof uniqueQuestions>([]);
   const [quizChoices, setQuizChoices] = useState<string[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [typingQuizInput, setTypingQuizInput] = useState('');
   const [stats, setStats] = useState<QuestionStats>({});
   const [savedCustomRootIds, setSavedCustomRootIds] = useState<number[]>([]);
   const [rootPlacementStarted, setRootPlacementStarted] = useState(false);
@@ -1466,6 +1467,7 @@ export default function StudyGuide() {
     setTotal(0);
     setMissedQuestions([]);
     setSelectedAnswer(null);
+    setTypingQuizInput('');
     setMode(newMode);
 
     if ((newMode === 'quiz' || newMode === 'review') && shuffled.length > 0) {
@@ -1642,6 +1644,7 @@ export default function StudyGuide() {
       setCurrentIndex(nextIdx);
       setShowAnswer(false);
       setSelectedAnswer(null);
+      setTypingQuizInput('');
       
       if (mode === 'quiz' || mode === 'review') {
         const q = shuffledQuestions[nextIdx];
@@ -1661,6 +1664,16 @@ export default function StudyGuide() {
     setSelectedAnswer(answer);
     setTotal(t => t + 1);
     const correct = answer === shuffledQuestions[currentIndex].a;
+    if (correct) setScore(s => s + 1);
+    recordAnswer(shuffledQuestions[currentIndex].id, correct);
+  };
+
+  const handleTypingQuizAnswer = () => {
+    if (selectedAnswer || !typingQuizInput.trim()) return;
+    const answer = typingQuizInput.trim();
+    setSelectedAnswer(answer);
+    setTotal(t => t + 1);
+    const correct = answer.toLowerCase() === shuffledQuestions[currentIndex].a.trim().toLowerCase();
     if (correct) setScore(s => s + 1);
     recordAnswer(shuffledQuestions[currentIndex].id, correct);
   };
@@ -2365,6 +2378,10 @@ export default function StudyGuide() {
                 <div style={styles.menuTitle}>Quiz</div>
                 <div style={styles.menuDesc}>Multiple choice</div>
               </button>
+              <button className="menu-card-hover" onClick={() => startMode('typingquiz')} style={{...styles.menuCard, boxShadow: `0 4px 20px ${theme.shadow}`}}>
+                <div style={styles.menuTitle}>Typing Quiz</div>
+                <div style={styles.menuDesc}>Type the answer</div>
+              </button>
               <button className="menu-card-hover" onClick={() => startMode('learn')} style={{...styles.menuCard, boxShadow: `0 4px 20px ${theme.shadow}`}}>
                 <div style={styles.menuTitle}>Learn</div>
                 <div style={styles.menuDesc}>Spaced repetition</div>
@@ -2511,7 +2528,40 @@ export default function StudyGuide() {
           </div>
         )}
 
-        {(mode === 'quiz' || mode === 'review') && isComplete && (
+        {mode === 'typingquiz' && currentQ && !isComplete && (
+          <div>
+            <div style={styles.progress}>
+              Question {currentIndex + 1} / {shuffledQuestions.length} • Score: {score}/{total}
+            </div>
+            <div style={styles.card}>
+              <div style={styles.topicLabel}>{currentQ.topic}</div>
+              <div style={styles.question}>{currentQ.q}</div>
+              <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '18px'}}>
+                <input
+                  value={typingQuizInput}
+                  onChange={(e) => setTypingQuizInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleTypingQuizAnswer();
+                  }}
+                  disabled={!!selectedAnswer}
+                  placeholder="Type your answer"
+                  style={{flex: '1 1 280px', minWidth: '240px', padding: '14px 16px', borderRadius: '14px', border: '2px solid rgba(0,0,0,0.08)', fontSize: '15px', outline: 'none'}}
+                />
+                <button onClick={handleTypingQuizAnswer} disabled={!typingQuizInput.trim() || !!selectedAnswer} style={{...styles.primaryBtn, opacity: typingQuizInput.trim() && !selectedAnswer ? 1 : 0.5}}>
+                  Submit
+                </button>
+              </div>
+              {selectedAnswer && (
+                <div style={{marginTop: '16px', fontSize: '15px', fontWeight: '700', color: selectedAnswer.toLowerCase() === currentQ.a.trim().toLowerCase() ? '#059669' : '#dc2626'}}>
+                  {selectedAnswer.toLowerCase() === currentQ.a.trim().toLowerCase() ? 'Correct ✓' : `Incorrect — ${currentQ.a}`}
+                </div>
+              )}
+            </div>
+            {selectedAnswer && <div style={{textAlign: 'center', marginTop: '16px'}}><button onClick={nextQuestion} style={styles.primaryBtn}>Next</button></div>}
+          </div>
+        )}
+
+        {(mode === 'quiz' || mode === 'review' || mode === 'typingquiz') && isComplete && (
           <div style={styles.complete}>
             <div style={styles.score}>{Math.round((score / total) * 100)}%</div>
             <div style={{color: '#6b7280', marginBottom: '24px'}}>{score} / {total} correct</div>
