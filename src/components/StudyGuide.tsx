@@ -559,6 +559,36 @@ const explanations: {[id: number]: string} = {
   1154: "Affected means homozygous recessive (aa). From Aa × Aa: only 1 out of 4 boxes in the Punnett square is aa. That's 25% or a 1-in-4 chance.",
 };
 const uniqueQuestions = allQuestions; // alias for compatibility
+const ROOTS_CUSTOM_TOPIC = '__custom_roots__';
+const ROOTS_CUSTOM_STORAGE_KEY = 'biology-study-custom-roots';
+
+function normalizeRootAnswer(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/\([^)]*\)/g, ' ')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\b(a|an|the|of|to|with|and)\b/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function getAcceptedRootAnswers(answer: string) {
+  const parts = answer
+    .split(/[,/]|\bor\b/gi)
+    .map(part => normalizeRootAnswer(part))
+    .filter(Boolean);
+  return Array.from(new Set([normalizeRootAnswer(answer), ...parts]));
+}
+
+function isRootAnswerCorrect(input: string, answer: string) {
+  const normalizedInput = normalizeRootAnswer(input);
+  if (!normalizedInput) return false;
+  return getAcceptedRootAnswers(answer).some(accepted =>
+    accepted === normalizedInput ||
+    accepted.includes(normalizedInput) ||
+    normalizedInput.includes(accepted)
+  );
+}
 
 // Millionaire prize ladder
 const MILLIONAIRE_PRIZES = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 32000, 64000, 125000, 250000, 500000, 1000000];
@@ -873,6 +903,14 @@ export default function StudyGuide() {
   const [quizChoices, setQuizChoices] = useState<string[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [stats, setStats] = useState<QuestionStats>({});
+  const [savedCustomRootIds, setSavedCustomRootIds] = useState<number[]>([]);
+  const [rootPlacementStarted, setRootPlacementStarted] = useState(false);
+  const [rootPlacementOrder, setRootPlacementOrder] = useState<typeof uniqueQuestions>([]);
+  const [rootPlacementIndex, setRootPlacementIndex] = useState(0);
+  const [rootPlacementInput, setRootPlacementInput] = useState('');
+  const [rootPlacementIncorrectIds, setRootPlacementIncorrectIds] = useState<number[]>([]);
+  const [rootPlacementFinished, setRootPlacementFinished] = useState(false);
+  const [rootPlacementFeedback, setRootPlacementFeedback] = useState<{ correct: boolean; answer: string } | null>(null);
   
   // Match game state
   const [matchPairs, setMatchPairs] = useState<{q: string, a: string, qMatched: boolean, aMatched: boolean}[]>([]);
@@ -1116,6 +1154,16 @@ export default function StudyGuide() {
   useEffect(() => {
     setStats(loadStats());
     setHighScores(loadHighScores());
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = JSON.parse(localStorage.getItem(ROOTS_CUSTOM_STORAGE_KEY) || '[]');
+        if (Array.isArray(saved)) {
+          setSavedCustomRootIds(saved);
+        }
+      } catch {
+        setSavedCustomRootIds([]);
+      }
+    }
   }, []);
 
   // Record answer (for tracking)
@@ -1155,15 +1203,65 @@ export default function StudyGuide() {
   }, [stats, selectedUnit]);
 
   const unitQuestions = selectedUnit === 'All' ? allQuestions : allQuestions.filter(q => q.unit === selectedUnit);
+  const rootQuestions = allQuestions.filter(q => q.unit === 'Roots');
+  const customRootQuestions = rootQuestions.filter(q => savedCustomRootIds.includes(q.id));
+  const currentRootPlacementQuestion = rootPlacementOrder[rootPlacementIndex] || null;
+  const isRootsCustomSelected = selectedUnit === 'Roots' && selectedTopic === ROOTS_CUSTOM_TOPIC;
+  const hasCustomRootsSaved = savedCustomRootIds.length > 0;
   const topics = Array.from(new Set(unitQuestions.map(q => q.topic)));
   const unitLabel = units.find(u => u.key === selectedUnit)?.label || selectedUnit;
 
   const getFilteredQuestions = useCallback(() => {
     const uq = selectedUnit === 'All' ? allQuestions : allQuestions.filter(q => q.unit === selectedUnit);
+    if (selectedUnit === 'Roots' && selectedTopic === ROOTS_CUSTOM_TOPIC) {
+      return uq.filter(q => savedCustomRootIds.includes(q.id));
+    }
     return selectedTopic 
       ? uq.filter(q => q.topic === selectedTopic)
       : uq;
-  }, [selectedTopic, selectedUnit]);
+  }, [selectedTopic, selectedUnit, savedCustomRootIds]);
+
+  const beginRootPlacementTest = useCallback(() => {
+    const shuffledRoots = shuffle(rootQuestions);
+    setRootPlacementOrder(shuffledRoots);
+    setRootPlacementIndex(0);
+    setRootPlacementInput('');
+    setRootPlacementIncorrectIds([]);
+    setRootPlacementFeedback(null);
+    setRootPlacementFinished(false);
+    setRootPlacementStarted(true);
+  }, [rootQuestions]);
+
+  const saveCustomRootSelection = useCallback((ids: number[]) => {
+    const next = [...ids].sort((a, b) => a - b);
+    setSavedCustomRootIds(next);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(ROOTS_CUSTOM_STORAGE_KEY, JSON.stringify(next));
+    }
+  }, []);
+
+  const submitRootPlacementAnswer = useCallback(() => {
+    if (!currentRootPlacementQuestion) return;
+    const isCorrect = isRootAnswerCorrect(rootPlacementInput, currentRootPlacementQuestion.a);
+    const nextIncorrectIds = isCorrect
+      ? rootPlacementIncorrectIds
+      : Array.from(new Set([...rootPlacementIncorrectIds, currentRootPlacementQuestion.id]));
+
+    setRootPlacementFeedback({ correct: isCorrect, answer: currentRootPlacementQuestion.a });
+    setRootPlacementIncorrectIds(nextIncorrectIds);
+    setRootPlacementInput('');
+
+    if (rootPlacementIndex >= rootPlacementOrder.length - 1) {
+      setRootPlacementFinished(true);
+      setRootPlacementStarted(false);
+      return;
+    }
+
+    setTimeout(() => {
+      setRootPlacementIndex(prev => prev + 1);
+      setRootPlacementFeedback(null);
+    }, 650);
+  }, [currentRootPlacementQuestion, rootPlacementIncorrectIds, rootPlacementIndex, rootPlacementInput, rootPlacementOrder.length]);
 
   // Check and update high score helper
   const checkHighScore = useCallback((game: keyof HighScores, score: number, lowerIsBetter = false) => {
@@ -1359,6 +1457,9 @@ export default function StudyGuide() {
   };
 
   const startMode = (newMode: Mode) => {
+    if (selectedUnit === 'Roots' && selectedTopic === ROOTS_CUSTOM_TOPIC && savedCustomRootIds.length === 0) {
+      return;
+    }
     const explainIds = Object.keys(explanations).map(Number);
     const filtered = newMode === 'review' ? getMissedQuestions() : 
       newMode === 'learn' ? getFilteredQuestions().filter(q => explainIds.includes(q.id)) :
@@ -2148,7 +2249,108 @@ export default function StudyGuide() {
                   {topic} ({unitQuestions.filter(q => q.topic === topic).length})
                 </button>
               ))}
+              {selectedUnit === 'Roots' && (
+                <button onClick={() => setSelectedTopic(ROOTS_CUSTOM_TOPIC)} style={styles.topicBtn(isRootsCustomSelected)}>
+                  Custom ({savedCustomRootIds.length})
+                </button>
+              )}
             </div>
+
+            {isRootsCustomSelected && (
+              <div style={{
+                background: 'rgba(255,255,255,0.88)',
+                border: `2px solid ${theme.primary}25`,
+                borderRadius: '20px',
+                padding: '18px',
+                marginBottom: '16px',
+                boxShadow: `0 10px 30px ${theme.shadow}`,
+                backdropFilter: 'blur(10px)'
+              }}>
+                {!rootPlacementStarted && !rootPlacementFinished && (
+                  <>
+                    <div style={{fontWeight: 800, color: theme.primaryDark, fontSize: '18px', marginBottom: '6px'}}>Begin the test to see which words you need more practice on</div>
+                    <div style={{fontSize: '14px', color: '#6b7280', marginBottom: '14px'}}>You’ll type the definition for all 100 roots. Correct words drop out. Missed words become your custom set.</div>
+                    <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap', alignItems: 'center'}}>
+                      <button onClick={beginRootPlacementTest} style={{...styles.primaryBtn, padding: '10px 16px'}}>Begin test</button>
+                      {hasCustomRootsSaved && <span style={{fontSize: '13px', color: '#6b7280'}}>Current custom list: {savedCustomRootIds.length} words</span>}
+                    </div>
+                  </>
+                )}
+
+                {rootPlacementStarted && currentRootPlacementQuestion && (
+                  <>
+                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '10px'}}>
+                      <div style={{fontWeight: 800, color: theme.primaryDark, fontSize: '18px'}}>Placement test</div>
+                      <div style={{fontSize: '13px', color: '#6b7280'}}>Word {rootPlacementIndex + 1} / {rootPlacementOrder.length} • Missed so far: {rootPlacementIncorrectIds.length}</div>
+                    </div>
+                    <div style={{fontSize: '12px', color: theme.primary, fontWeight: 700, marginBottom: '8px'}}>{currentRootPlacementQuestion.topic}</div>
+                    <div style={{fontSize: '22px', fontWeight: 800, color: '#374151', marginBottom: '8px'}}>{currentRootPlacementQuestion.q.replace('What does ', '').replace(' mean?', '')}</div>
+                    <div style={{fontSize: '14px', color: '#6b7280', marginBottom: '12px'}}>Type the definition:</div>
+                    <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap'}}>
+                      <input
+                        value={rootPlacementInput}
+                        onChange={(e) => setRootPlacementInput(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && rootPlacementInput.trim()) submitRootPlacementAnswer();
+                        }}
+                        autoFocus
+                        placeholder="Type the definition"
+                        style={{flex: '1 1 280px', minWidth: '240px', padding: '14px 16px', borderRadius: '14px', border: '2px solid rgba(0,0,0,0.08)', fontSize: '15px', outline: 'none'}}
+                      />
+                      <button onClick={submitRootPlacementAnswer} disabled={!rootPlacementInput.trim()} style={{...styles.primaryBtn, padding: '10px 18px', opacity: rootPlacementInput.trim() ? 1 : 0.5}}>Submit</button>
+                    </div>
+                    {rootPlacementFeedback && (
+                      <div style={{marginTop: '12px', fontSize: '14px', color: rootPlacementFeedback.correct ? '#059669' : '#dc2626', fontWeight: 700}}>
+                        {rootPlacementFeedback.correct ? 'Correct ✓' : `Not quite — answer: ${rootPlacementFeedback.answer}`}
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {rootPlacementFinished && (
+                  <>
+                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', flexWrap: 'wrap', marginBottom: '12px'}}>
+                      <div>
+                        <div style={{fontWeight: 800, color: theme.primaryDark, fontSize: '18px'}}>Custom roots ready</div>
+                        <div style={{fontSize: '14px', color: '#6b7280'}}>These are the words that stayed after the test.</div>
+                      </div>
+                      <div style={{display: 'flex', gap: '8px', flexWrap: 'wrap'}}>
+                        <button onClick={beginRootPlacementTest} style={{...styles.secondaryBtn, padding: '10px 14px'}}>Retake test</button>
+                        <button onClick={() => saveCustomRootSelection(rootPlacementIncorrectIds)} style={{...styles.primaryBtn, padding: '10px 16px'}}>Save</button>
+                      </div>
+                    </div>
+                    <div style={{fontSize: '13px', color: '#6b7280', marginBottom: '12px'}}>Custom set size: {rootPlacementIncorrectIds.length}</div>
+                    {rootPlacementIncorrectIds.length === 0 ? (
+                      <div style={{fontSize: '14px', color: '#059669', fontWeight: 700}}>Perfect score 🎉 You cleared all the roots, so your custom list is empty.</div>
+                    ) : (
+                      <div style={{display: 'grid', gap: '12px'}}>
+                        {topics.map(topic => {
+                          const topicWords = rootQuestions.filter(q => q.topic === topic && rootPlacementIncorrectIds.includes(q.id));
+                          if (topicWords.length === 0) return null;
+                          return (
+                            <div key={topic} style={{border: '1px solid rgba(0,0,0,0.08)', borderRadius: '16px', padding: '12px 14px', background: 'rgba(255,255,255,0.75)'}}>
+                              <div style={{fontWeight: 700, color: theme.primaryDark, marginBottom: '8px'}}>{topic}</div>
+                              <div style={{display: 'grid', gap: '8px'}}>
+                                {topicWords.map(q => (
+                                  <div key={q.id} style={{fontSize: '14px', color: '#374151'}}>
+                                    <strong>{q.q.replace('What does ', '').replace(' mean?', '')}</strong>
+                                    <div style={{fontSize: '13px', color: '#6b7280'}}>{q.a}</div>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {!hasCustomRootsSaved && !rootPlacementStarted && !rootPlacementFinished && (
+                  <div style={{marginTop: '12px', fontSize: '13px', color: '#b45309'}}>No custom words saved yet.</div>
+                )}
+              </div>
+            )}
             
             {/* Stats banner */}
             {missedCount > 0 && (
