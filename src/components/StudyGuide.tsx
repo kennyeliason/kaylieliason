@@ -572,22 +572,10 @@ function normalizeRootAnswer(value: string) {
     .trim();
 }
 
-function getAcceptedRootAnswers(answer: string) {
-  const parts = answer
-    .split(/[,/]|\bor\b/gi)
-    .map(part => normalizeRootAnswer(part))
-    .filter(Boolean);
-  return Array.from(new Set([normalizeRootAnswer(answer), ...parts]));
-}
-
 function isRootAnswerCorrect(input: string, answer: string) {
   const normalizedInput = normalizeRootAnswer(input);
   if (!normalizedInput) return false;
-  return getAcceptedRootAnswers(answer).some(accepted =>
-    accepted === normalizedInput ||
-    accepted.includes(normalizedInput) ||
-    normalizedInput.includes(accepted)
-  );
+  return normalizedInput === normalizeRootAnswer(answer);
 }
 
 // Millionaire prize ladder
