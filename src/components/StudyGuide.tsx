@@ -1223,6 +1223,12 @@ export default function StudyGuide() {
   const saveCustomRootSelection = useCallback((ids: number[]) => {
     const next = [...ids].sort((a, b) => a - b);
     setSavedCustomRootIds(next);
+    setRootPlacementStarted(false);
+    setRootPlacementFinished(false);
+    setRootPlacementOrder([]);
+    setRootPlacementIndex(0);
+    setRootPlacementInput('');
+    setRootPlacementFeedback(null);
     if (typeof window !== 'undefined') {
       localStorage.setItem(ROOTS_CUSTOM_STORAGE_KEY, JSON.stringify(next));
     }
