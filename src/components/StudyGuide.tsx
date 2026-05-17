@@ -532,6 +532,7 @@ const questions = [
 ];
 
 const allQuestions = questions;
+const allNonRootQuestions = allQuestions.filter(q => q.unit !== 'Roots');
 const graphChoiceImages: {[key: string]: string} = {
   'Disruptive selection graph': '/study-graphs/disruptive.jpg',
   'Directional selection graph': '/study-graphs/directional.jpg',
@@ -1183,7 +1184,7 @@ export default function StudyGuide() {
 
   // Get missed questions (ones with more incorrect than correct, or never seen correctly)
   const getMissedQuestions = useCallback(() => {
-    const base = selectedUnit === 'All' ? allQuestions : allQuestions.filter(q => q.unit === selectedUnit);
+    const base = selectedUnit === 'All' ? allNonRootQuestions : allQuestions.filter(q => q.unit === selectedUnit);
     return base.filter(q => {
       const s = stats[q.id];
       if (!s) return false;
@@ -1191,7 +1192,7 @@ export default function StudyGuide() {
     });
   }, [stats, selectedUnit]);
 
-  const unitQuestions = selectedUnit === 'All' ? allQuestions : allQuestions.filter(q => q.unit === selectedUnit);
+  const unitQuestions = selectedUnit === 'All' ? allNonRootQuestions : allQuestions.filter(q => q.unit === selectedUnit);
   const rootQuestions = allQuestions.filter(q => q.unit === 'Roots');
   const customRootQuestions = rootQuestions.filter(q => savedCustomRootIds.includes(q.id));
   const currentRootPlacementQuestion = rootPlacementOrder[rootPlacementIndex] || null;
@@ -1201,7 +1202,7 @@ export default function StudyGuide() {
   const unitLabel = units.find(u => u.key === selectedUnit)?.label || selectedUnit;
 
   const getFilteredQuestions = useCallback(() => {
-    const uq = selectedUnit === 'All' ? allQuestions : allQuestions.filter(q => q.unit === selectedUnit);
+    const uq = selectedUnit === 'All' ? allNonRootQuestions : allQuestions.filter(q => q.unit === selectedUnit);
     if (selectedUnit === 'Roots' && selectedTopic === ROOTS_CUSTOM_TOPIC) {
       return uq.filter(q => savedCustomRootIds.includes(q.id));
     }
@@ -1427,9 +1428,9 @@ export default function StudyGuide() {
 
   const initializeJeopardyGame = (playerCount: 1 | 2) => {
     const board: typeof jeopardyBoard = {};
-    const jTopics = Array.from(new Set((selectedUnit === 'All' ? allQuestions : allQuestions.filter(q => q.unit === selectedUnit)).map(q => q.topic)));
+    const jTopics = Array.from(new Set((selectedUnit === 'All' ? allNonRootQuestions : allQuestions.filter(q => q.unit === selectedUnit)).map(q => q.topic)));
     jTopics.forEach(topic => {
-      const topicQs = shuffle(selectedUnit === 'All' ? allQuestions.filter(q => q.topic === topic) : allQuestions.filter(q => q.unit === selectedUnit && q.topic === topic));
+      const topicQs = shuffle(selectedUnit === 'All' ? allNonRootQuestions.filter(q => q.topic === topic) : allQuestions.filter(q => q.unit === selectedUnit && q.topic === topic));
       board[topic] = [100, 200, 300, 400].map((points, i) => ({
         points,
         question: topicQs[i % topicQs.length],
