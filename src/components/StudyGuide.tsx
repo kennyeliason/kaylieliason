@@ -584,9 +584,26 @@ const MILLIONAIRE_PRIZES = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 3
 const MILLIONAIRE_SAFE = [4, 9];
 
 // Stats tracking
-type QuestionStats = { [questionId: number]: { correct: number; incorrect: number; lastSeen: number } };
+type QuestionStats = { [questionKey: string]: { correct: number; incorrect: number; lastSeen: number } };
 const STORAGE_KEY = 'biology-study-stats';
 const HIGHSCORE_KEY = 'biology-highscores';
+
+const getStatsScopeKey = (unitKey: string) => unitKey === 'All' ? 'all' : unitKey;
+const getQuestionStatsKey = (unitKey: string, questionId: number) => `${getStatsScopeKey(unitKey)}:${questionId}`;
+
+function migrateLegacyStats(stats: QuestionStats): QuestionStats {
+  const migrated: QuestionStats = {};
+  Object.entries(stats).forEach(([key, value]) => {
+    if (key.includes(':')) {
+      migrated[key] = value;
+      return;
+    }
+    const questionId = Number(key);
+    const question = questions.find(q => q.id === questionId);
+    if (question) migrated[getQuestionStatsKey(question.unit, questionId)] = value;
+  });
+  return migrated;
+}
 
 type HighScores = {
   speed: number;
@@ -601,7 +618,8 @@ function loadStats(): QuestionStats {
   if (typeof window === 'undefined') return {};
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : {};
+    const parsed = saved ? JSON.parse(saved) : {};
+    return migrateLegacyStats(parsed);
   } catch { return {}; }
 }
 
@@ -893,6 +911,7 @@ export default function StudyGuide() {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [typingQuizInput, setTypingQuizInput] = useState('');
   const [stats, setStats] = useState<QuestionStats>({});
+  const getQuestionStats = useCallback((questionId: number) => stats[getQuestionStatsKey(selectedUnit, questionId)] || null, [stats, selectedUnit]);
   const [savedCustomRootIds, setSavedCustomRootIds] = useState<number[]>([]);
   const [rootPlacementStarted, setRootPlacementStarted] = useState(false);
   const [rootPlacementOrder, setRootPlacementOrder] = useState<typeof uniqueQuestions>([]);
@@ -1159,10 +1178,11 @@ export default function StudyGuide() {
   // Record answer (for tracking)
   const recordAnswer = useCallback((questionId: number, correct: boolean) => {
     setStats(prev => {
-      const current = prev[questionId] || { correct: 0, incorrect: 0, lastSeen: 0 };
+      const statsKey = getQuestionStatsKey(selectedUnit, questionId);
+      const current = prev[statsKey] || { correct: 0, incorrect: 0, lastSeen: 0 };
       const updated = {
         ...prev,
-        [questionId]: {
+        [statsKey]: {
           correct: current.correct + (correct ? 1 : 0),
           incorrect: current.incorrect + (correct ? 0 : 1),
           lastSeen: Date.now()
@@ -1171,7 +1191,7 @@ export default function StudyGuide() {
       saveStats(updated);
       return updated;
     });
-  }, []);
+  }, [selectedUnit]);
 
   const theme = unitThemes[selectedUnit] || unitThemes['All'];
 
@@ -1186,11 +1206,11 @@ export default function StudyGuide() {
   const getMissedQuestions = useCallback(() => {
     const base = selectedUnit === 'All' ? allNonRootQuestions : allQuestions.filter(q => q.unit === selectedUnit);
     return base.filter(q => {
-      const s = stats[q.id];
+      const s = getQuestionStats(q.id);
       if (!s) return false;
       return s.incorrect > s.correct;
     });
-  }, [stats, selectedUnit]);
+  }, [getQuestionStats, selectedUnit]);
 
   const unitQuestions = selectedUnit === 'All' ? allNonRootQuestions : allQuestions.filter(q => q.unit === selectedUnit);
   const rootQuestions = allQuestions.filter(q => q.unit === 'Roots');
@@ -2058,7 +2078,7 @@ export default function StudyGuide() {
   ).map(group => {
     let correct = 0, incorrect = 0;
     group.questions.forEach(q => {
-      const s = stats[q.id];
+      const s = getQuestionStats(q.id);
       if (s) { correct += s.correct; incorrect += s.incorrect; }
     });
     return { label: group.label, correct, incorrect, total: correct + incorrect };
