@@ -2252,7 +2252,7 @@ export default function StudyGuide() {
               <button onClick={() => setSelectedTopic(null)} style={styles.topicBtn(!selectedTopic)}>
                 All ({unitQuestions.length})
               </button>
-              {topics.map(topic => (
+              {selectedUnit !== 'All' && topics.map(topic => (
                 <button key={topic} onClick={() => setSelectedTopic(topic)} style={styles.topicBtn(selectedTopic === topic)}>
                   {topic} ({unitQuestions.filter(q => q.topic === topic).length})
                 </button>
