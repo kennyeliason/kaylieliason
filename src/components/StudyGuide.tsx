@@ -2047,16 +2047,21 @@ export default function StudyGuide() {
   const learnComplete = mode === 'learn' && currentIndex >= shuffledQuestions.length - 1 && missedQuestions.length === 0 && showAnswer;
   const matchComplete = matchScore === matchPairs.length && matchPairs.length > 0;
   const missedCount = getMissedQuestions().length;
+  const currentQuestionLabel = currentQ ? (selectedUnit === 'All' ? currentQ.unit : currentQ.topic) : '';
 
   // Calculate stats
-  const topicStats = topics.map(topic => {
-    const topicQs = unitQuestions.filter(q => q.topic === topic);
+  const statsGroups = (selectedUnit === 'All'
+    ? units
+        .filter(u => u.key !== 'All' && u.key !== 'Roots')
+        .map(u => ({ label: u.label, questions: unitQuestions.filter(q => q.unit === u.key) }))
+    : topics.map(topic => ({ label: topic, questions: unitQuestions.filter(q => q.topic === topic) }))
+  ).map(group => {
     let correct = 0, incorrect = 0;
-    topicQs.forEach(q => {
+    group.questions.forEach(q => {
       const s = stats[q.id];
       if (s) { correct += s.correct; incorrect += s.incorrect; }
     });
-    return { topic, correct, incorrect, total: correct + incorrect };
+    return { label: group.label, correct, incorrect, total: correct + incorrect };
   });
 
   const styles = {
@@ -2444,8 +2449,8 @@ export default function StudyGuide() {
           <div>
             <div style={styles.card}>
               {(() => {
-                const totalCorrect = topicStats.reduce((sum, ts) => sum + ts.correct, 0);
-                const totalAll = topicStats.reduce((sum, ts) => sum + ts.total, 0);
+                const totalCorrect = statsGroups.reduce((sum, ts) => sum + ts.correct, 0);
+                const totalAll = statsGroups.reduce((sum, ts) => sum + ts.total, 0);
                 const totalPct = totalAll > 0 ? Math.round((totalCorrect / totalAll) * 100) : 0;
                 return (
                   <div style={{marginBottom: '24px', padding: '16px', borderRadius: '12px', background: theme.bgGradient, textAlign: 'center'}}>
@@ -2454,13 +2459,15 @@ export default function StudyGuide() {
                   </div>
                 );
               })()}
-              <h2 style={{fontSize: '20px', fontWeight: 'bold', color: theme.primaryDark, marginBottom: '24px'}}>Progress by Topic</h2>
-              {topicStats.map(ts => {
+              <h2 style={{fontSize: '20px', fontWeight: 'bold', color: theme.primaryDark, marginBottom: '24px'}}>
+                Progress by {selectedUnit === 'All' ? 'Unit' : 'Topic'}
+              </h2>
+              {statsGroups.map(ts => {
                 const pct = ts.total > 0 ? Math.round((ts.correct / ts.total) * 100) : 0;
                 return (
-                  <div key={ts.topic} style={{marginBottom: '16px'}}>
+                  <div key={ts.label} style={{marginBottom: '16px'}}>
                     <div style={{display: 'flex', justifyContent: 'space-between', fontSize: '14px'}}>
-                      <span style={{color: '#374151'}}>{ts.topic}</span>
+                      <span style={{color: '#374151'}}>{ts.label}</span>
                       <span style={{color: pct >= 70 ? '#059669' : pct >= 50 ? '#f59e0b' : '#dc2626'}}>{pct}% ({ts.correct}/{ts.total})</span>
                     </div>
                     <div style={styles.statBar}>
@@ -2494,7 +2501,7 @@ export default function StudyGuide() {
           <div>
             <div style={styles.progress}>{currentIndex + 1} / {shuffledQuestions.length}</div>
             <div style={{...styles.card, cursor: 'pointer'}} onClick={() => setShowAnswer(!showAnswer)}>
-              <div style={styles.topicLabel}>{currentQ.topic}</div>
+              <div style={styles.topicLabel}>{currentQuestionLabel}</div>
               <div style={styles.question}>{currentQ.q}</div>
               {showAnswer && <div style={styles.answer}>{currentQ.a}</div>}
               {!showAnswer && <div style={{color: '#d1d5db', fontSize: '13px', marginTop: '16px'}}>Tap to reveal</div>}
@@ -2516,7 +2523,7 @@ export default function StudyGuide() {
               Question {currentIndex + 1} / {shuffledQuestions.length} • Score: {score}/{total}
             </div>
             <div style={styles.card}>
-              <div style={styles.topicLabel}>{currentQ.topic}</div>
+              <div style={styles.topicLabel}>{currentQuestionLabel}</div>
               <div style={styles.question}>{currentQ.q}</div>
             </div>
             <div>
@@ -2535,7 +2542,7 @@ export default function StudyGuide() {
               Question {currentIndex + 1} / {shuffledQuestions.length} • Score: {score}/{total}
             </div>
             <div style={styles.card}>
-              <div style={styles.topicLabel}>{currentQ.topic}</div>
+              <div style={styles.topicLabel}>{currentQuestionLabel}</div>
               <div style={styles.question}>{currentQ.q}</div>
               <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '18px'}}>
                 <input
@@ -2585,7 +2592,7 @@ export default function StudyGuide() {
           <div>
             <div style={styles.progress}>{missedQuestions.length > 0 ? 'Reviewing • ' : ''}{currentIndex + 1} / {shuffledQuestions.length} • Mastered: {score}</div>
             <div style={styles.card}>
-              <div style={styles.topicLabel}>{currentQ.topic}</div>
+              <div style={styles.topicLabel}>{currentQuestionLabel}</div>
               <div style={styles.question}>{currentQ.q}</div>
               {showAnswer && (
                 <>
@@ -2958,7 +2965,7 @@ export default function StudyGuide() {
                 <button onClick={walkAway} style={{...styles.secondaryBtn, padding: '8px 16px', fontSize: '13px'}}>Walk Away</button>
               </div>
               <div style={styles.card}>
-                <div style={styles.topicLabel}>{currentQ.topic}</div>
+                <div style={styles.topicLabel}>{currentQuestionLabel}</div>
                 <div style={styles.question}>{currentQ.q}</div>
               </div>
               <div>
@@ -3324,7 +3331,7 @@ export default function StudyGuide() {
               </div>
               
               <div style={{...styles.card, background: 'linear-gradient(135deg, #f0f4ff, #faf5ff)', border: '1px solid #e5e7eb'}}>
-                <div style={styles.topicLabel}>{currentQ.topic}</div>
+                <div style={styles.topicLabel}>{currentQuestionLabel}</div>
                 <p style={{fontWeight: 'bold', color: '#1f2937', margin: 0}}>{currentQ.q}</p>
               </div>
               
@@ -3630,7 +3637,7 @@ export default function StudyGuide() {
             </div>
             
             <div style={styles.card}>
-              <div style={styles.topicLabel}>{currentQ.topic}</div>
+              <div style={styles.topicLabel}>{currentQuestionLabel}</div>
               <div style={styles.question}>{currentQ.q}</div>
               
               {/* Answer display with blanks */}
@@ -3758,7 +3765,7 @@ export default function StudyGuide() {
 
                 {/* Question */}
                 <div style={{...styles.card, borderLeft: `4px solid ${bombTime <= 10 ? '#dc2626' : '#f59e0b'}`, background: bombFlash === 'red' ? '#fef2f2' : bombFlash === 'green' ? '#f0fdf4' : 'white'}}>
-                  <div style={styles.topicLabel}>{currentQ.topic}</div>
+                  <div style={styles.topicLabel}>{currentQuestionLabel}</div>
                   <div style={styles.question}>{currentQ.q}</div>
                 </div>
 
@@ -4158,7 +4165,7 @@ export default function StudyGuide() {
             {/* Question */}
             <div style={styles.progress}>Question {currentIndex + 1} / {shuffledQuestions.length}</div>
             <div style={styles.card}>
-              <div style={styles.topicLabel}>{currentQ.topic}</div>
+              <div style={styles.topicLabel}>{currentQuestionLabel}</div>
               <div style={styles.question}>{currentQ.q}</div>
             </div>
             
