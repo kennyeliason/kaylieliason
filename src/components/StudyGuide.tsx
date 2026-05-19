@@ -5,6 +5,7 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 // Unit definitions
 const units = [
   { key: 'All', label: 'All Units' },
+  { key: 'Unit 8', label: '👩‍⚕️ Unit 8: Cell Division & Cancer' },
   { key: 'Unit 9', label: 'Unit 9: Cell Structure & Transport' },
   { key: 'Unit 10', label: 'Unit 10: Photosynthesis & Calvin Cycle' },
   { key: 'Unit 11', label: 'Unit 11: Introduction to Genetics' },
@@ -23,6 +24,14 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
     accent: '#ec4899', accentLight: '#fce7f3',
     emojis: ['📚', '🧬', '🔬', '🌱', '🧫', '☀️'],
     shadow: 'rgba(236,72,153,0.3)',
+  },
+  'Unit 8': {
+    primary: '#f97316', primaryLight: '#fb923c', primaryDark: '#ea580c',
+    gradient: 'linear-gradient(135deg, #f97316, #fb923c)',
+    bgGradient: 'linear-gradient(135deg, #fff7ed 0%, #ffedd5 50%, #fffbeb 100%)',
+    accent: '#f97316', accentLight: '#ffedd5',
+    emojis: ['👩‍⚕️', '🧡', '🧬', '🧫'],
+    shadow: 'rgba(249,115,22,0.3)',
   },
   'Unit 9': {
     primary: '#8b5cf6', primaryLight: '#a78bfa', primaryDark: '#7c3aed',
@@ -85,6 +94,42 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
 
 // Biology Cell Test Questions - organized by topic and unit
 const questions = [
+  // Unit 8 - Cell Division & Cancer
+  { id: 801, unit: 'Unit 8', topic: 'Cancer', q: 'Which molecule can damage DNA and contribute to cancer development?', a: 'carcinogen', wrong: ['water', 'oxygen', 'glucose'] },
+  { id: 802, unit: 'Unit 8', topic: 'Onion Cells', q: 'In onion root cells, interphase lasts about 15 hours and mitosis lasts about 80 minutes total. If each stage of mitosis takes the same amount of time, how many hours old is a cell that is just starting anaphase?', a: '15 hours 40 minutes', wrong: ['15 hours', '16 hours', '16 hours 20 minutes'] },
+  { id: 803, unit: 'Unit 8', topic: 'Cancer', q: 'What is a carcinogen?', a: 'A substance that promotes cancer formation', wrong: ['A type of chemotherapy drug', 'A tumor suppressor gene', 'A cancer cell'] },
+  { id: 804, unit: 'Unit 8', topic: 'Mitosis', q: 'During which phases of mitosis is the nuclear membrane absent?', a: 'Metaphase & Anaphase', wrong: ['Anaphase & Prophase', 'Prophase & Cytokinesis', 'Interphase & Telophase'] },
+  { id: 805, unit: 'Unit 8', topic: 'Mitosis', q: 'What is the role of spindle fibers during mitosis?', a: 'They pull sister chromatids apart', wrong: ['They replicate DNA', 'They form the nuclear envelope', 'They condense chromosomes'] },
+  { id: 806, unit: 'Unit 8', topic: 'Mitosis', q: 'In which phase of mitosis do chromosomes move away from one another to opposite poles of the spindle?', a: 'Anaphase', wrong: ['Prophase', 'Metaphase', 'Telophase'] },
+  { id: 807, unit: 'Unit 8', topic: 'Cancer', q: 'Which statement about cancer cells is true?', a: 'They can form tumors', wrong: ['They have a controlled rate of division', 'They undergo apoptosis', 'They respond to growth factors appropriately'] },
+  { id: 808, unit: 'Unit 8', topic: 'Onion Cells', q: 'View the onion cells image. 54.5% of the cells are in which phase of the cell cycle?', a: 'Interphase', wrong: ['Prophase', 'Telophase', 'Metaphase'] },
+  { id: 809, unit: 'Unit 8', topic: 'Chromosomes', q: 'These structures are found in the nucleus of dividing cells and appear X-shaped:', a: 'chromosomes', wrong: ['centrioles', 'spindles', 'gametes'] },
+  { id: 810, unit: 'Unit 8', topic: 'Cancer', q: 'Which of the following is a risk factor for cancer?', a: 'Exposure to UV radiation', wrong: ['Adequate sleep', 'Regular exercise', 'High-fiber diet'] },
+  { id: 811, unit: 'Unit 8', topic: 'Chromosomes', q: 'How many chromosomes are present in a sex cell (sperm or egg)?', a: '23', wrong: ['46', '92', '96'] },
+  { id: 812, unit: 'Unit 8', topic: 'Cell Division', q: 'What is the purpose of mitosis?', a: 'Growth and repair', wrong: ['Sexual reproduction', 'Genetic recombination', 'Production of gametes'] },
+  { id: 813, unit: 'Unit 8', topic: 'Onion Cells', q: 'View the onion cells image. What percentage of the cells are in telophase?', a: '9.09%', wrong: ['1.9%', '26.2%', '74.8%'] },
+  { id: 814, unit: 'Unit 8', topic: 'Mitosis', q: 'In which phase of mitosis does the nucleus dissolve and chromosomes condense and line up in the center of the cell?', a: 'Metaphase', wrong: ['Prophase', 'Anaphase', 'Telophase'] },
+  { id: 815, unit: 'Unit 8', topic: 'Cancer', q: 'Which of the following is NOT a type of cancer treatment?', a: 'Antibiotics', wrong: ['Chemotherapy', 'Radiation', 'Surgery'] },
+  { id: 816, unit: 'Unit 8', topic: 'Chromosomes', q: 'Structures found in the nucleus of dividing cells that appear X-shaped are called:', a: 'Chromosomes', wrong: ['Chromatin', 'Centrioles', 'Spindle fibers'] },
+  { id: 817, unit: 'Unit 8', topic: 'Cancer', q: 'What is the term for a tumor that does not invade surrounding tissues?', a: 'benign', wrong: ['malignant', 'metastatic', 'carcinogenic'] },
+  { id: 818, unit: 'Unit 8', topic: 'Cancer', q: 'Which lifestyle factor is NOT associated with an increased risk of cancer?', a: 'Physical activity', wrong: ['Smoking', 'Excessive sun exposure', 'Unhealthy diet'] },
+  { id: 819, unit: 'Unit 8', topic: 'Chromosomes', q: 'A chromosome is made of two identical:', a: 'Sister chromatids', wrong: ['Histones', 'DNA strands', 'Centromeres'] },
+  { id: 820, unit: 'Unit 8', topic: 'Mitosis', q: 'Describe the four main stages of mitosis.', a: 'Prophase, Metaphase, Anaphase, Telophase', wrong: ['Interphase, Prophase, Metaphase, Cytokinesis', 'Prophase, Anaphase, Metaphase, Telophase', 'Metaphase, Prophase, Anaphase, Telophase'] },
+  { id: 821, unit: 'Unit 8', topic: 'Mitosis', q: 'During which phase of mitosis do chromosomes align at the metaphase plate?', a: 'metaphase', wrong: ['anaphase', 'telophase', 'prophase'] },
+  { id: 822, unit: 'Unit 8', topic: 'Mitosis', q: 'What is the correct order of phases in mitosis?', a: 'Prophase, Metaphase, Anaphase, Telophase', wrong: ['Telophase, Anaphase, Metaphase, Prophase', 'Anaphase, Prophase, Metaphase, Telophase', 'Metaphase, Prophase, Telophase, Anaphase'] },
+  { id: 823, unit: 'Unit 8', topic: 'Cell Cycle', q: 'Which of the following is NOT a phase of mitosis?', a: 'Interphase', wrong: ['Anaphase', 'Prophase', 'Metaphase'] },
+  { id: 824, unit: 'Unit 8', topic: 'Mitosis', q: 'During which phase of mitosis do sister chromatids separate? Explain why this is important.', a: 'Anaphase, because it ensures each daughter cell receives an identical set of chromosomes.', wrong: ['Metaphase, because DNA is copied there.', 'Prophase, because the cell membrane disappears there.', 'Telophase, because the chromosomes are first made there.'] },
+  { id: 825, unit: 'Unit 8', topic: 'Cell Division', q: 'What is the role of centrioles during cell division in animal cells?', a: 'To form spindle fibers', wrong: ['To synthesize proteins', 'To replicate DNA', 'To condense chromosomes'] },
+  { id: 826, unit: 'Unit 8', topic: 'Cell Division', q: 'What is cytokinesis?', a: 'Division of the cytoplasm', wrong: ['Synthesis of DNA', 'Condensation of chromosomes', 'Division of the nucleus'] },
+  { id: 827, unit: 'Unit 8', topic: 'Chromosomes', q: 'Body cells that contain the full number of chromosomes (46 in humans) are called:', a: 'diploid', wrong: ['haploid', 'sex cells', 'gametes'] },
+  { id: 828, unit: 'Unit 8', topic: 'Cancer', q: 'In your opinion, how can individuals and communities work together to reduce the impact of cancer?', a: 'By reducing risk factors, getting screened, supporting research, and helping people access care early.', wrong: ['Cancer cannot be reduced at the community level.', 'Only doctors can reduce the impact of cancer.', 'The best approach is to ignore screening unless symptoms appear.'] },
+  { id: 829, unit: 'Unit 8', topic: 'Cell Cycle', q: 'Which of the following occurs during interphase?', a: 'DNA replication', wrong: ['Cell division', 'Chromosome alignment', 'Formation of spindle fibers'] },
+  { id: 830, unit: 'Unit 8', topic: 'Cancer', q: 'Explain the difference between benign and malignant tumors.', a: 'Benign tumors stay localized, while malignant tumors invade nearby tissue and can spread.', wrong: ['Benign tumors always spread faster than malignant tumors.', 'Malignant tumors are harmless, while benign tumors are cancerous.', 'There is no real difference between benign and malignant tumors.'] },
+  { id: 831, unit: 'Unit 8', topic: 'Cell Division', q: 'What is the result of mitosis in terms of chromosome number?', a: 'The chromosome number remains the same', wrong: ['The chromosome number is reduced by half', 'The chromosome number is halved', 'The chromosome number is doubled'] },
+  { id: 832, unit: 'Unit 8', topic: 'Cell Cycle', q: 'Cells spend most of their time in which phase?', a: 'Interphase', wrong: ['Prophase', 'Metaphase', 'Telophase'] },
+  { id: 833, unit: 'Unit 8', topic: 'Chromosomes', q: 'Chromosomes are composed of DNA wrapped around proteins called:', a: 'Histones', wrong: ['Enzymes', 'Ribosomes', 'Lipids'] },
+  { id: 834, unit: 'Unit 8', topic: 'Onion Cells', q: 'View the onion cells image. What percentage of the cells are in metaphase?', a: '13.6%', wrong: ['78.4%', '11.9%', '16.2%'] },
+
   // Cell Theory & Scientists
   { id: 1, unit: 'Unit 9', topic: 'Cell Theory', q: 'Which of the following is one of the three principles of the Cell Theory?', a: 'All cells arise from pre-existing cells', wrong: ['Cells can spontaneously generate from non-living matter', 'Only animal cells arise from other cells', 'Cells are created from proteins in the environment'] },
   { id: 28, unit: 'Unit 9', topic: 'Cell Theory', q: 'Which scientist is credited with first observing cells while studying cork?', a: 'Robert Hooke', wrong: ['Anton van Leeuwenhoek', 'Matthias Schleiden', 'Rudolf Virchow'] },
@@ -2269,7 +2314,7 @@ export default function StudyGuide() {
                     color: isActive ? 'white' : uTheme.primary,
                     boxShadow: isActive ? `0 4px 14px ${uTheme.shadow}` : '0 2px 8px rgba(0,0,0,0.04)',
                     transition: 'all 0.25s ease', backdropFilter: 'blur(8px)',
-                  }}>{u.key === 'All' ? '📚 All' : u.key === 'Unit 9' ? '🔬 Unit 9' : u.key === 'Unit 10' ? '🌱 Unit 10' : u.key === 'Unit 11' ? '🧑‍🧑‍🧒‍🧒 Unit 11' : u.key === 'Unit 12' ? '🧫 Unit 12' : u.key === '🌎Unit 13' ? '🌎 Unit 13' : u.key === 'Roots' ? '📖 Roots' : u.key}</button>
+                  }}>{u.key === 'All' ? '📚 All' : u.key === 'Unit 8' ? '👩‍⚕️ Unit 8' : u.key === 'Unit 9' ? '🔬 Unit 9' : u.key === 'Unit 10' ? '🌱 Unit 10' : u.key === 'Unit 11' ? '🧑‍🧑‍🧒‍🧒 Unit 11' : u.key === 'Unit 12' ? '🧫 Unit 12' : u.key === '🌎Unit 13' ? '🌎 Unit 13' : u.key === 'Roots' ? '📖 Roots' : u.key}</button>
                 );
               })}
             </div>
