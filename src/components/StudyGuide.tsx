@@ -12,6 +12,7 @@ const units = [
   { key: 'Unit 12', label: 'Unit 12: DNA, RNA, and protein synthesis' },
   { key: '🌎Unit 13', label: '🌎Unit 13: Evolution & Natural Selection' },
   { key: '🔭Unit 14', label: '🔭Unit 14: Biotechnology' },
+  { key: 'Unit 15', label: '👩‍🔬 Unit 15: Classification, Fossils & Phylogeny' },
   { key: 'Roots', label: 'Word Roots' },
 ];
 
@@ -80,6 +81,14 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
     accent: '#046307', accentLight: '#d1fae5',
     emojis: ['🔭', '🧬', '🧫', '🧪'],
     shadow: 'rgba(4,99,7,0.3)',
+  },
+  'Unit 15': {
+    primary: '#9a6b3f', primaryLight: '#bb8b62', primaryDark: '#7a502d',
+    gradient: 'linear-gradient(135deg, #9a6b3f, #c79b71)',
+    bgGradient: 'linear-gradient(135deg, #fbf4ea 0%, #efe1cf 50%, #f8ecdd 100%)',
+    accent: '#9a6b3f', accentLight: '#efe1cf',
+    emojis: ['👩‍🔬', '🤎', '🦴', '🧬', '🦠'],
+    shadow: 'rgba(154,107,63,0.28)',
   },
 
   'Roots': {
@@ -227,6 +236,38 @@ const questions = [
   { id: 81, unit: 'Unit 10', topic: 'Cellular Respiration', q: 'The first stage of cellular respiration is...', a: 'Glycolysis', wrong: ['Fermentation', 'Krebs cycle', 'Electron transport chain'] },
   { id: 82, unit: 'Unit 10', topic: 'Photosynthesis', q: 'The reactants of photosynthesis are...', a: 'Carbon dioxide and water', wrong: ['Glucose and oxygen', 'ATP and carbon dioxide', 'Oxygen and ATP'] },
   { id: 83, unit: 'Unit 10', topic: 'Cellular Respiration', q: 'Glycolysis occurs in the...', a: 'Cytoplasm', wrong: ['Nucleus', 'Chloroplast', 'Mitochondria'] },
+
+  // Unit 15 - Classification, Fossils & Phylogeny
+  { id: 1501, unit: 'Unit 15', topic: 'Classification', q: 'Why is classification helpful to scientists when they study organisms?', a: 'It organizes organisms and their traits into useful groups', wrong: ['It removes the need for scientific names', 'It proves all organisms are identical', 'It only helps with fossils'] },
+  { id: 1502, unit: 'Unit 15', topic: 'Taxonomy', q: 'What does taxonomy mean?', a: 'The science of classifying organisms', wrong: ['The study of rocks and fossils', 'The naming of only plants', 'The study of extinct animals only'] },
+  { id: 1503, unit: 'Unit 15', topic: 'Species', q: 'Which statement best describes organisms in the same species?', a: 'They can interbreed with one another', wrong: ['They always live in the same habitat', 'They all belong to the same kingdom only', 'They must be the same size'] },
+  { id: 1504, unit: 'Unit 15', topic: 'Classification', q: 'Why are larger classification groups harder to determine than species?', a: 'They are based on many similarities and differences between species', wrong: ['They only use fossil evidence', 'They are chosen randomly by scientists', 'They ignore organism traits'] },
+  { id: 1505, unit: 'Unit 15', topic: 'Linnaeus', q: 'How did Carolus Linnaeus improve the way organisms are classified?', a: 'He used a hierarchy of groups to show similarities between organisms', wrong: ['He grouped organisms only by color', 'He invented DNA testing', 'He classified organisms by habitat alone'] },
+  { id: 1506, unit: 'Unit 15', topic: 'Taxonomy', q: 'What is the correct taxonomic order from broadest to most specific?', a: 'Kingdom, Phylum, Class, Order, Family, Genus, Species', wrong: ['Kingdom, Class, Phylum, Family, Order, Genus, Species', 'Species, Genus, Family, Order, Class, Phylum, Kingdom', 'Domain, Species, Genus, Family, Order, Class, Phylum'] },
+  { id: 1507, unit: 'Unit 15', topic: 'Scientific Names', q: 'What problem did binomial nomenclature solve?', a: 'It prevented confusion caused by different common names for the same organism', wrong: ['It got rid of genus names', 'It replaced taxonomy with DNA only', 'It made organisms easier to draw'] },
+  { id: 1508, unit: 'Unit 15', topic: 'Scientific Names', q: 'Why was Latin chosen for scientific names?', a: 'Because it is a dead language and stays consistent over time', wrong: ['Because all scientists speak it daily', 'Because it changes quickly', 'Because only animals can be named in Latin'] },
+  { id: 1509, unit: 'Unit 15', topic: 'Scientific Names', q: 'A scientific name in binomial nomenclature includes a...', a: 'Genus and species name', wrong: ['Family and class name', 'Kingdom and species name', 'Domain and genus name'] },
+  { id: 1510, unit: 'Unit 15', topic: 'Classification', q: 'Why have classification systems changed over time?', a: 'New discoveries and genetic analysis revealed more about relationships between species', wrong: ['Scientists stopped studying organisms', 'Common names became more accurate', 'All organisms began changing kingdoms'] },
+  { id: 1511, unit: 'Unit 15', topic: 'Domains', q: 'What are the three domains used today?', a: 'Bacteria, Archaea, and Eukarya', wrong: ['Plants, Animals, and Fungi', 'Protista, Fungi, and Animalia', 'Bacteria, Fungi, and Plantae'] },
+  { id: 1512, unit: 'Unit 15', topic: 'Kingdoms', q: 'Which description matches kingdom Eubacteria?', a: 'Unicellular prokaryotes that are abundant on Earth and can act as decomposers or cause disease', wrong: ['Multicellular autotrophs with chloroplasts', 'Eukaryotes that live only in oceans', 'Prokaryotes found only in extreme heat'] },
+  { id: 1513, unit: 'Unit 15', topic: 'Kingdoms', q: 'Which description matches kingdom Archaebacteria?', a: 'Unicellular prokaryotes that live in extreme environments', wrong: ['Multicellular decomposers with cell walls of chitin', 'Eukaryotes that perform photosynthesis', 'Animals that survive in deserts only'] },
+  { id: 1514, unit: 'Unit 15', topic: 'Kingdoms', q: 'Why can archaebacteria live where many other organisms cannot?', a: 'They are adapted to extreme environments such as acidic, salty, or undersea vent conditions', wrong: ['They do not need water', 'They are the largest organisms on Earth', 'They can switch kingdoms when needed'] },
+  { id: 1515, unit: 'Unit 15', topic: 'Domains', q: 'What makes organisms in domain Eukarya different from organisms in Bacteria and Archaea?', a: 'They have a true nucleus and membrane-bound organelles', wrong: ['They are always multicellular', 'They are always autotrophs', 'They have no DNA'] },
+  { id: 1516, unit: 'Unit 15', topic: 'Kingdoms', q: 'What are the main characteristics of kingdom Fungi?', a: 'Mostly multicellular heterotrophic decomposers that break down matter', wrong: ['Unicellular autotrophs with chloroplasts', 'Prokaryotes that live in extreme heat', 'Multicellular animals with locomotion'] },
+  { id: 1517, unit: 'Unit 15', topic: 'Kingdoms', q: 'What are the main characteristics of kingdom Plantae?', a: 'Autotrophic organisms that perform photosynthesis and are generally stationary', wrong: ['Heterotrophic decomposers', 'Unicellular prokaryotes', 'Organisms that must eat other organisms'] },
+  { id: 1518, unit: 'Unit 15', topic: 'Kingdoms', q: 'What are the main characteristics of kingdom Animalia?', a: 'Multicellular heterotrophs that usually move by some form of locomotion', wrong: ['Unicellular autotrophs', 'Stationary photosynthetic organisms', 'Prokaryotic decomposers'] },
+  { id: 1519, unit: 'Unit 15', topic: 'Kingdoms', q: 'Why do scientists no longer fully accept “Protista” as one simple kingdom?', a: 'Because the organisms grouped there are too diverse to fit neatly into one kingdom', wrong: ['Because all protists are extinct', 'Because protists became bacteria', 'Because protists have no cells'] },
+  { id: 1520, unit: 'Unit 15', topic: 'Phylogeny', q: 'What does phylogeny study?', a: 'The evolutionary history and relationships among organisms', wrong: ['How cells divide during mitosis', 'How rocks are layered in Earth', 'How plants make glucose'] },
+  { id: 1521, unit: 'Unit 15', topic: 'Phylogeny', q: 'How does a cladogram show evolutionary relationships between organisms?', a: 'By grouping taxa based on shared derived characters and branching from common ancestors', wrong: ['By placing all organisms in one straight line', 'By ranking only living species by size', 'By showing food webs between species'] },
+  { id: 1522, unit: 'Unit 15', topic: 'Phylogeny', q: 'What is a derived character on a cladogram?', a: 'A trait that appears in newer groups and helps show evolutionary relationships', wrong: ['A trait found only in fossils', 'A random mutation with no pattern', 'A scientific name written in Latin'] },
+  { id: 1523, unit: 'Unit 15', topic: 'Phylogeny', q: 'What does a common ancestor or node represent on a cladogram?', a: 'The point where related groups diverged from a shared ancestor', wrong: ['The most modern species on the tree', 'A missing fossil layer', 'The oldest kingdom on Earth'] },
+  { id: 1524, unit: 'Unit 15', topic: 'Phylogeny', q: 'What is a clade?', a: 'A group made of an ancestor and all of its descendants', wrong: ['A group made of unrelated organisms', 'A fossil preserved in tar', 'A type of radioactive isotope'] },
+  { id: 1525, unit: 'Unit 15', topic: 'Fossils', q: 'Which list includes the four main fossil types from the notes?', a: 'Mold, cast, trace fossil, and preserved body part', wrong: ['Sediment, magma, mineral, and crystal', 'Clade, node, taxon, and kingdom', 'Carbon, nitrogen, oxygen, and hydrogen'] },
+  { id: 1526, unit: 'Unit 15', topic: 'Dating Fossils', q: 'How does relative dating help paleontologists estimate the age of a fossil?', a: 'It compares the fossil or rock layer to others to tell which is older or younger', wrong: ['It gives the exact age in years', 'It measures DNA mutation directly', 'It counts only the number of fossils nearby'] },
+  { id: 1527, unit: 'Unit 15', topic: 'Dating Fossils', q: 'What does the Law of Superposition tell scientists about rock layers?', a: 'Lower layers are older and upper layers are younger', wrong: ['Upper layers are always older', 'All rock layers formed at the same time', 'Only igneous rocks can contain fossils'] },
+  { id: 1528, unit: 'Unit 15', topic: 'Dating Fossils', q: 'How does radiometric dating estimate the age of a fossil?', a: 'By measuring radioactive isotopes and how much has decayed', wrong: ['By comparing body size to modern animals', 'By checking which kingdom it belongs to', 'By counting sediment grains around it'] },
+  { id: 1529, unit: 'Unit 15', topic: 'Dating Fossils', q: 'What is a half-life in radiometric dating?', a: 'The time it takes for half of a radioactive isotope to decay', wrong: ['The time for a fossil to completely decay', 'Half of an organism’s life span', 'The age of half the rock layer'] },
+  { id: 1530, unit: 'Unit 15', topic: 'Evolutionary Change', q: 'Which statement best explains the rate of evolutionary change described in the notes?', a: 'Species may change slowly or show punctuated equilibrium, especially after mass extinction events', wrong: ['Evolution always happens at one constant speed', 'Mass extinctions stop evolution permanently', 'Background extinction means evolution never occurs'] },
 
   // Unit 11 - Introduction to Genetics (Test Questions)
 
@@ -2314,7 +2355,7 @@ export default function StudyGuide() {
                     color: isActive ? 'white' : uTheme.primary,
                     boxShadow: isActive ? `0 4px 14px ${uTheme.shadow}` : '0 2px 8px rgba(0,0,0,0.04)',
                     transition: 'all 0.25s ease', backdropFilter: 'blur(8px)',
-                  }}>{u.key === 'All' ? '📚 All' : u.key === 'Unit 8' ? '👩‍⚕️ Unit 8' : u.key === 'Unit 9' ? '🔬 Unit 9' : u.key === 'Unit 10' ? '🌱 Unit 10' : u.key === 'Unit 11' ? '🧑‍🧑‍🧒‍🧒 Unit 11' : u.key === 'Unit 12' ? '🧫 Unit 12' : u.key === '🌎Unit 13' ? '🌎 Unit 13' : u.key === 'Roots' ? '📖 Roots' : u.key}</button>
+                  }}>{u.key === 'All' ? '📚 All' : u.key === 'Unit 8' ? '👩‍⚕️ Unit 8' : u.key === 'Unit 9' ? '🔬 Unit 9' : u.key === 'Unit 10' ? '🌱 Unit 10' : u.key === 'Unit 11' ? '🧑‍🧑‍🧒‍🧒 Unit 11' : u.key === 'Unit 12' ? '🧫 Unit 12' : u.key === '🌎Unit 13' ? '🌎 Unit 13' : u.key === '🔭Unit 14' ? '🔭 Unit 14' : u.key === 'Unit 15' ? '👩‍🔬 Unit 15' : u.key === 'Roots' ? '📖 Roots' : u.key}</button>
                 );
               })}
             </div>
