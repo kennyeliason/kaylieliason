@@ -731,6 +731,24 @@ function saveHighScores(scores: HighScores) {
   } catch { /* ignore */ }
 }
 
+function safeLocalStorageGet(key: string, fallback = ''): string {
+  if (typeof window === 'undefined') return fallback;
+  try {
+    return localStorage.getItem(key) ?? fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function safeLocalStorageSet(key: string, value: string) {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    // Ignore storage failures on locked-down/private browsers.
+  }
+}
+
 function isTooSimilar(a: string, b: string): boolean {
   const aLower = a.toLowerCase().trim();
   const bLower = b.toLowerCase().trim();
@@ -1045,10 +1063,7 @@ export default function StudyGuide() {
   // Leaderboard state
   const [leaderboard, setLeaderboard] = useState<{name: string, score: number, unit: string, ts: number}[]>([]);
   const [lbLoading, setLbLoading] = useState(false);
-  const [lbName, setLbName] = useState(() => {
-    if (typeof window === 'undefined') return '';
-    return localStorage.getItem('study-lb-name') || '';
-  });
+  const [lbName, setLbName] = useState(() => safeLocalStorageGet('study-lb-name'));
   const [lbSubmitted, setLbSubmitted] = useState(false);
   const [lbShowInput, setLbShowInput] = useState(false);
 
@@ -1065,7 +1080,7 @@ export default function StudyGuide() {
 
   const submitScore = async (score: number) => {
     if (!lbName.trim()) return;
-    localStorage.setItem('study-lb-name', lbName.trim());
+    safeLocalStorageSet('study-lb-name', lbName.trim());
     try {
       const unit = selectedUnit === 'All' ? 'all' : selectedUnit.replace(' ', '-').toLowerCase();
       await fetch('/.netlify/functions/leaderboard', {
