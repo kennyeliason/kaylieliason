@@ -1052,6 +1052,7 @@ export default function StudyGuide() {
   const [jeopardyReviewRevealed, setJeopardyReviewRevealed] = useState(false);
   const [jeopardyReviewChoices, setJeopardyReviewChoices] = useState<string[]>([]);
   const [jeopardyReviewCorrect, setJeopardyReviewCorrect] = useState(0);
+  const lastAllJeopardySignatureRef = useRef<string | null>(null);
   
   // Speed Round state
   const [speedTime, setSpeedTime] = useState(60);
@@ -1570,7 +1571,19 @@ export default function StudyGuide() {
 
   const initializeJeopardyGame = (playerCount: 1 | 2) => {
     const pointsScale = [100, 200, 300, 400, 500];
-    const board = shuffle(getJeopardyQuestions()).map((question, i) => ({
+    let jeopardyQuestions = getJeopardyQuestions();
+    if (selectedUnit === 'All') {
+      let nextSignature = jeopardyQuestions.map(q => q.id).sort((a, b) => a - b).join(',');
+      let tries = 0;
+      while (tries < 8 && nextSignature === lastAllJeopardySignatureRef.current) {
+        jeopardyQuestions = getJeopardyQuestions();
+        nextSignature = jeopardyQuestions.map(q => q.id).sort((a, b) => a - b).join(',');
+        tries += 1;
+      }
+      lastAllJeopardySignatureRef.current = nextSignature;
+    }
+
+    const board = shuffle(jeopardyQuestions).map((question, i) => ({
       points: pointsScale[i % pointsScale.length],
       question,
       answered: false,
@@ -2337,7 +2350,21 @@ export default function StudyGuide() {
       boxShadow: '0 3px 12px rgba(0,0,0,0.06)', opacity: matched ? 0.6 : 1,
       transition: 'all 0.2s ease', backdropFilter: 'blur(8px)',
     }),
-    jeopardyBoard: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '10px', marginBottom: '24px' },
+    jeopardyBoard: { display: 'flex', flexDirection: 'column' as const, gap: '12px', marginBottom: '24px' },
+    jeopardyRow: { display: 'grid', gridTemplateColumns: '110px repeat(auto-fit, minmax(130px, 1fr))', gap: '10px', alignItems: 'stretch' as const },
+    jeopardyRowLabel: {
+      background: theme.gradient,
+      color: 'white',
+      borderRadius: '16px',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      fontSize: '22px',
+      fontWeight: '900',
+      letterSpacing: '0.3px',
+      boxShadow: `0 6px 18px ${theme.shadow}`,
+      minHeight: '88px'
+    },
     jeopardyHeader: { background: theme.gradient, color: 'white', padding: '10px 4px', borderRadius: '12px', fontSize: '11px', fontWeight: '800', textAlign: 'center' as const, letterSpacing: '0.3px' },
     jeopardyCell: (answered: boolean, correct: boolean | null) => ({
       background: answered ? (correct ? '#ecfdf5' : '#fef2f2') : theme.gradient, 
@@ -2902,19 +2929,30 @@ export default function StudyGuide() {
                 : `Player ${jeopardyCurrentTurn + 1}'s turn: pick a card, then choose the matching question.`}
             </div>
             <div className="jeopardy-board" style={styles.jeopardyBoard}>
-              {jeopardyBoard.map((cell, index) => (
-                <button key={cell.question.id} onClick={() => handleJeopardySelect(index)}
-                  style={styles.jeopardyCell(cell.answered, cell.correct)}>
-                  <div style={{fontSize: '20px', fontWeight: '900'}}>
-                    {cell.answered ? (cell.correct ? '✓' : '✗') : `$${cell.points}`}
+              {[100, 200, 300, 400, 500].map(points => {
+                const rowCells = jeopardyBoard
+                  .map((cell, index) => ({ cell, index }))
+                  .filter(({ cell }) => cell.points === points);
+
+                return (
+                  <div key={points} style={styles.jeopardyRow}>
+                    <div style={styles.jeopardyRowLabel}>${points}</div>
+                    {rowCells.map(({ cell, index }) => (
+                      <button key={cell.question.id} onClick={() => handleJeopardySelect(index)}
+                        style={styles.jeopardyCell(cell.answered, cell.correct)}>
+                        <div style={{fontSize: '20px', fontWeight: '900'}}>
+                          {cell.answered ? (cell.correct ? '✓' : '✗') : `$${cell.points}`}
+                        </div>
+                        {!cell.answered && (
+                          <div style={{fontSize: '10px', opacity: 0.85, marginTop: '6px'}}>
+                            {selectedUnit === 'All' ? cell.question.unit : cell.question.topic}
+                          </div>
+                        )}
+                      </button>
+                    ))}
                   </div>
-                  {!cell.answered && (
-                    <div style={{fontSize: '10px', opacity: 0.85, marginTop: '6px'}}>
-                      {selectedUnit === 'All' ? cell.question.unit : cell.question.topic}
-                    </div>
-                  )}
-                </button>
-              ))}
+                );
+              })}
             </div>
           </div>
         )}
