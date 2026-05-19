@@ -2149,6 +2149,19 @@ export default function StudyGuide() {
     );
   };
 
+  const semesterExamUnits = new Set(['Unit 8', 'Unit 9', 'Unit 11', 'Unit 12', '🌎Unit 13']);
+  const isSemesterExamRelated = (question?: { unit: string }) => !!question && semesterExamUnits.has(question.unit);
+  const renderQuestionWithExamFlag = (question?: { q: string; unit: string }) => {
+    if (!question) return null;
+
+    return (
+      <>
+        {question.q}
+        {isSemesterExamRelated(question) && <span style={{ color: '#dc2626', fontWeight: 800 }}> *</span>}
+      </>
+    );
+  };
+
   const isComplete = currentIndex >= shuffledQuestions.length - 1 && selectedAnswer;
   const learnComplete = mode === 'learn' && currentIndex >= shuffledQuestions.length - 1 && missedQuestions.length === 0 && showAnswer;
   const matchComplete = matchScore === matchPairs.length && matchPairs.length > 0;
@@ -2338,6 +2351,9 @@ export default function StudyGuide() {
               {theme.emojis[0]} Biology Study Guide {theme.emojis[theme.emojis.length - 1]}
             </h1>
           </div>
+          <p style={{margin: '0 0 8px', color: '#dc2626', fontSize: '13px', fontWeight: 700}}>
+            Red * = related to questions on the semester exam study guide.
+          </p>
           <p style={styles.subtitle}>{unitLabel}</p>
         </div>
 
@@ -2589,7 +2605,7 @@ export default function StudyGuide() {
                 <h2 style={{fontSize: '20px', fontWeight: 'bold', color: '#dc2626', marginBottom: '16px'}}>Questions to Review ({missedCount})</h2>
                 {getMissedQuestions().slice(0, 10).map(q => (
                   <div key={q.id} style={{padding: '12px 0', borderBottom: '1px solid #f3f4f6', fontSize: '14px', color: '#374151'}}>
-                    {q.q}
+                    {renderQuestionWithExamFlag(q)}
                   </div>
                 ))}
                 {missedCount > 10 && <div style={{color: '#9ca3af', fontSize: '13px', marginTop: '12px'}}>...and {missedCount - 10} more</div>}
@@ -2608,7 +2624,7 @@ export default function StudyGuide() {
             <div style={styles.progress}>{currentIndex + 1} / {shuffledQuestions.length}</div>
             <div style={{...styles.card, cursor: 'pointer'}} onClick={() => setShowAnswer(!showAnswer)}>
               <div style={styles.topicLabel}>{currentQuestionLabel}</div>
-              <div style={styles.question}>{currentQ.q}</div>
+              <div style={styles.question}>{renderQuestionWithExamFlag(currentQ)}</div>
               {showAnswer && <div style={styles.answer}>{currentQ.a}</div>}
               {!showAnswer && <div style={{color: '#d1d5db', fontSize: '13px', marginTop: '16px'}}>Tap to reveal</div>}
             </div>
@@ -2630,7 +2646,7 @@ export default function StudyGuide() {
             </div>
             <div style={styles.card}>
               <div style={styles.topicLabel}>{currentQuestionLabel}</div>
-              <div style={styles.question}>{currentQ.q}</div>
+              <div style={styles.question}>{renderQuestionWithExamFlag(currentQ)}</div>
             </div>
             <div>
               {quizChoices.map((choice, i) => (
@@ -2649,7 +2665,7 @@ export default function StudyGuide() {
             </div>
             <div style={styles.card}>
               <div style={styles.topicLabel}>{currentQuestionLabel}</div>
-              <div style={styles.question}>{currentQ.q}</div>
+              <div style={styles.question}>{renderQuestionWithExamFlag(currentQ)}</div>
               <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '18px'}}>
                 <input
                   value={typingQuizInput}
@@ -2699,7 +2715,7 @@ export default function StudyGuide() {
             <div style={styles.progress}>{missedQuestions.length > 0 ? 'Reviewing • ' : ''}{currentIndex + 1} / {shuffledQuestions.length} • Mastered: {score}</div>
             <div style={styles.card}>
               <div style={styles.topicLabel}>{currentQuestionLabel}</div>
-              <div style={styles.question}>{currentQ.q}</div>
+              <div style={styles.question}>{renderQuestionWithExamFlag(currentQ)}</div>
               {showAnswer && (
                 <>
                   <div style={styles.answer}>{currentQ.a}</div>
@@ -2745,7 +2761,7 @@ export default function StudyGuide() {
                 <div style={{fontSize: '12px', color: theme.primary, fontWeight: '500', marginBottom: '8px'}}>Questions</div>
                 {matchPairs.map((pair, i) => (
                   <button key={i} onClick={() => handleMatchQ(pair.q)} style={styles.matchCard(selectedQ === pair.q, pair.qMatched)}>
-                    {pair.q}
+                    {renderQuestionWithExamFlag(pair)}
                   </button>
                 ))}
               </div>
@@ -2877,7 +2893,7 @@ export default function StudyGuide() {
                     {missed.map((m, i) => (
                       <div key={i} style={{background: '#fef2f2', borderRadius: '8px', padding: '12px', marginBottom: '8px', borderLeft: '3px solid #dc2626'}}>
                         <div style={{fontSize: '13px', color: '#dc2626', fontWeight: '600', marginBottom: '4px'}}>${m.points}</div>
-                        <div style={{fontSize: '14px', color: '#374151', marginBottom: '4px'}}>{m.question.q}</div>
+                        <div style={{fontSize: '14px', color: '#374151', marginBottom: '4px'}}>{renderQuestionWithExamFlag(m.question)}</div>
                         <div style={{fontSize: '13px', color: '#059669'}}>Answer: {m.question.a}</div>
                       </div>
                     ))}
@@ -2906,7 +2922,7 @@ export default function StudyGuide() {
               <div style={styles.progress}>Review: {jeopardyReviewIndex + 1} / {missed.length}</div>
               <div style={styles.card}>
                 <div style={styles.topicLabel}>{current.question.topic}</div>
-                <div style={styles.question}>{current.question.q}</div>
+                <div style={styles.question}>{renderQuestionWithExamFlag(current.question)}</div>
               </div>
               <div>
                 {jeopardyReviewChoices.map((choice, i) => (
@@ -2933,7 +2949,7 @@ export default function StudyGuide() {
             <div style={styles.progress}>{jeopardyPlayerCount === 1 ? `$${jeopardyPoints}` : `Player ${jeopardyQuestionPlayer + 1} for $${jeopardyPoints}`}</div>
             <div style={styles.card}>
               <div style={styles.topicLabel}>{jeopardyQuestion.topic}</div>
-              <div style={styles.question}>{jeopardyQuestion.q}</div>
+              <div style={styles.question}>{renderQuestionWithExamFlag(jeopardyQuestion)}</div>
             </div>
             <div>
               {jeopardyChoices.map((choice, i) => (
@@ -2991,7 +3007,7 @@ export default function StudyGuide() {
               <div style={{fontSize: '24px', fontWeight: 'bold', color: '#059669'}}>{speedScore} correct</div>
             </div>
             <div style={styles.card}>
-              <div style={styles.question}>{currentQ.q}</div>
+              <div style={styles.question}>{renderQuestionWithExamFlag(currentQ)}</div>
             </div>
             <div>
               {quizChoices.map((choice, i) => (
@@ -3072,7 +3088,7 @@ export default function StudyGuide() {
               </div>
               <div style={styles.card}>
                 <div style={styles.topicLabel}>{currentQuestionLabel}</div>
-                <div style={styles.question}>{currentQ.q}</div>
+                <div style={styles.question}>{renderQuestionWithExamFlag(currentQ)}</div>
               </div>
               <div>
                 {millionaireChoices.map((choice, i) => (
@@ -3438,7 +3454,7 @@ export default function StudyGuide() {
               
               <div style={{...styles.card, background: 'linear-gradient(135deg, #f0f4ff, #faf5ff)', border: '1px solid #e5e7eb'}}>
                 <div style={styles.topicLabel}>{currentQuestionLabel}</div>
-                <p style={{fontWeight: 'bold', color: '#1f2937', margin: 0}}>{currentQ.q}</p>
+                <p style={{fontWeight: 'bold', color: '#1f2937', margin: 0}}>{renderQuestionWithExamFlag(currentQ)}</p>
               </div>
               
               <div style={{display: 'grid', gap: '8px', marginTop: '12px'}}>
@@ -3744,7 +3760,7 @@ export default function StudyGuide() {
             
             <div style={styles.card}>
               <div style={styles.topicLabel}>{currentQuestionLabel}</div>
-              <div style={styles.question}>{currentQ.q}</div>
+              <div style={styles.question}>{renderQuestionWithExamFlag(currentQ)}</div>
               
               {/* Answer display with blanks */}
               <div style={{marginTop: '24px', textAlign: 'center'}}>
@@ -3872,7 +3888,7 @@ export default function StudyGuide() {
                 {/* Question */}
                 <div style={{...styles.card, borderLeft: `4px solid ${bombTime <= 10 ? '#dc2626' : '#f59e0b'}`, background: bombFlash === 'red' ? '#fef2f2' : bombFlash === 'green' ? '#f0fdf4' : 'white'}}>
                   <div style={styles.topicLabel}>{currentQuestionLabel}</div>
-                  <div style={styles.question}>{currentQ.q}</div>
+                  <div style={styles.question}>{renderQuestionWithExamFlag(currentQ)}</div>
                 </div>
 
                 {/* Answer choices */}
@@ -4113,7 +4129,7 @@ export default function StudyGuide() {
                     </div>
                     <div style={{flex: 1}}>
                       <div style={{fontSize: '12px', color: '#9ca3af', marginBottom: '4px'}}>2.5 points • Multiple Choice</div>
-                      <div style={{fontSize: '15px', color: '#374151', lineHeight: '1.5'}}>{q.q}</div>
+                      <div style={{fontSize: '15px', color: '#374151', lineHeight: '1.5'}}>{renderQuestionWithExamFlag(q)}</div>
                     </div>
                   </div>
                   
@@ -4206,7 +4222,7 @@ export default function StudyGuide() {
                       <div style={{fontSize: '12px', color: isCorrect ? '#10b981' : '#ef4444', fontWeight: '600', marginBottom: '4px'}}>
                         {isCorrect ? '2.5/2.5 points ✓' : '0/2.5 points ✗'}
                       </div>
-                      <div style={{fontSize: '15px', color: '#374151', lineHeight: '1.5'}}>{q.q}</div>
+                      <div style={{fontSize: '15px', color: '#374151', lineHeight: '1.5'}}>{renderQuestionWithExamFlag(q)}</div>
                     </div>
                   </div>
                   
@@ -4272,7 +4288,7 @@ export default function StudyGuide() {
             <div style={styles.progress}>Question {currentIndex + 1} / {shuffledQuestions.length}</div>
             <div style={styles.card}>
               <div style={styles.topicLabel}>{currentQuestionLabel}</div>
-              <div style={styles.question}>{currentQ.q}</div>
+              <div style={styles.question}>{renderQuestionWithExamFlag(currentQ)}</div>
             </div>
             
             {/* Choices */}
@@ -4428,7 +4444,7 @@ export default function StudyGuide() {
                   </span>
                 </div>
                 <div style={{fontSize: '16px', color: '#374151', marginBottom: '20px', lineHeight: '1.5'}}>
-                  {shuffledQuestions[snakeQuestionIndex].q}
+                  {renderQuestionWithExamFlag(shuffledQuestions[snakeQuestionIndex])}
                 </div>
                 <div>
                   {quizChoices.map((choice, i) => (
