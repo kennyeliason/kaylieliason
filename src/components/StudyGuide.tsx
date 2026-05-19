@@ -2199,7 +2199,7 @@ export default function StudyGuide() {
     },
     inner: { maxWidth: '900px', margin: '0 auto' },
     header: { textAlign: 'center' as const, marginBottom: '32px' },
-    title: { fontSize: '30px', fontWeight: '800', color: theme.primaryDark, marginBottom: '6px', letterSpacing: '-0.5px' },
+    title: { fontFamily: "'Luckiest Guy', cursive", fontSize: '26px', fontWeight: '400', color: theme.primaryDark, marginBottom: '6px', letterSpacing: '1px' },
     subtitle: { color: '#b0b5c0', fontSize: '14px', fontWeight: '500', letterSpacing: '0.5px' },
     topicFilter: { display: 'flex', flexWrap: 'wrap' as const, justifyContent: 'center', gap: '8px', marginBottom: '24px' },
     topicBtn: (active: boolean) => ({
