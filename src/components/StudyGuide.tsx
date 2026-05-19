@@ -2149,9 +2149,15 @@ export default function StudyGuide() {
     );
   };
 
-  const semesterExamUnits = new Set(['Unit 8', 'Unit 9', 'Unit 11', 'Unit 12', '🌎Unit 13']);
-  const isSemesterExamRelated = (question?: { unit: string }) => !!question && semesterExamUnits.has(question.unit);
-  const renderQuestionWithExamFlag = (question?: { q: string; unit: string }) => {
+  const semesterExamQuestionIds = new Set([
+    801, 803, 804, 805, 806, 807, 810, 812, 814, 815, 817, 818, 820, 821, 822, 823, 824, 825, 826, 828, 829, 830, 831, 832,
+    3, 5, 7, 8, 10, 11, 12, 16, 20, 21, 23, 25, 27, 29, 31, 32, 37, 43,
+    1101, 1102, 1103, 1104, 1105, 1106, 1107, 1108, 1109, 1110, 1111, 1112, 1114, 1115, 1116, 1117, 1118, 1119, 1120, 1121, 1122, 1123, 1124, 1125, 1126, 1129, 1130, 1131, 1133, 1134, 1135, 1137, 1138, 1139, 1140, 1141, 1142, 1143, 1156, 1157, 1158, 1159, 1160, 1161, 1166,
+    1201, 1203, 1204, 1205, 1206, 1207, 1208, 1209, 1210, 1211, 1213, 1214, 1217, 1218, 1219, 1220, 1221, 1222, 1223, 1224, 1226, 1227, 1228, 1229, 1230, 1231, 1232, 1233, 1234, 1235, 1236, 1237, 1238, 1240, 1241, 1242, 1243, 1244, 1245, 1246, 1247, 1248, 1249,
+    1302, 1304, 1308, 1309, 1311, 1315, 1316, 1317, 1320, 1321, 1322, 1323, 13231, 13233, 13234, 1324, 1325, 1328, 1333, 1335, 1339
+  ]);
+  const isSemesterExamRelated = (question?: { id: number }) => !!question && semesterExamQuestionIds.has(question.id);
+  const renderQuestionWithExamFlag = (question?: { id: number; q: string }) => {
     if (!question) return null;
 
     return (
@@ -2351,9 +2357,11 @@ export default function StudyGuide() {
               {theme.emojis[0]} Biology Study Guide {theme.emojis[theme.emojis.length - 1]}
             </h1>
           </div>
-          <p style={{margin: '0 0 8px', color: '#dc2626', fontSize: '13px', fontWeight: 700}}>
-            Red * = related to questions on the semester exam study guide.
-          </p>
+          <div style={{display: 'flex', justifyContent: 'center', margin: '0 0 8px'}}>
+            <div style={{background: '#fff1f2', color: '#dc2626', border: '1px solid #fecdd3', borderRadius: '999px', padding: '8px 14px', fontSize: '13px', fontWeight: 700, boxShadow: '0 2px 8px rgba(220,38,38,0.08)'}}>
+              * questions: related to semester exam study guide
+            </div>
+          </div>
           <p style={styles.subtitle}>{unitLabel}</p>
         </div>
 
