@@ -1895,8 +1895,8 @@ export default function StudyGuide() {
     setJeopardyRevealed(false);
     setJeopardySelected(null);
     
-    const wrong = getWrongJeopardyQuestions(cell.question);
-    setJeopardyChoices(shuffle([cell.question.q, ...wrong]));
+    const wrong = getWrongAnswers(cell.question.a, cell.question.topic, cell.question.unit, cell.question.wrong);
+    setJeopardyChoices(shuffle([cell.question.a, ...wrong]));
   };
 
   const handleJeopardyAnswer = (answer: string) => {
@@ -1904,7 +1904,7 @@ export default function StudyGuide() {
     setJeopardySelected(answer);
     setJeopardyRevealed(true);
     
-    const isCorrect = answer === jeopardyQuestion!.q;
+    const isCorrect = answer === jeopardyQuestion!.a;
     const scoreDelta = isCorrect ? jeopardyPoints : -jeopardyPoints;
     setJeopardyScores(scores => {
       const next: [number, number] = [...scores] as [number, number];
@@ -1951,8 +1951,8 @@ export default function StudyGuide() {
     setJeopardyReviewSelected(null);
     setJeopardyReviewRevealed(false);
     const q = missed[0].question;
-    const wrong = getWrongJeopardyQuestions(q);
-    setJeopardyReviewChoices(shuffle([q.q, ...wrong]));
+    const wrong = getWrongAnswers(q.a, q.topic, q.unit, q.wrong);
+    setJeopardyReviewChoices(shuffle([q.a, ...wrong]));
   };
 
   const handleJeopardyReviewAnswer = (answer: string) => {
@@ -1960,7 +1960,7 @@ export default function StudyGuide() {
     setJeopardyReviewSelected(answer);
     setJeopardyReviewRevealed(true);
     const missed = getJeopardyMissed();
-    if (answer === missed[jeopardyReviewIndex].question.q) {
+    if (answer === missed[jeopardyReviewIndex].question.a) {
       setJeopardyReviewCorrect(c => c + 1);
     }
   };
@@ -1976,8 +1976,8 @@ export default function StudyGuide() {
     setJeopardyReviewSelected(null);
     setJeopardyReviewRevealed(false);
     const q = missed[nextIdx].question;
-    const wrong = getWrongJeopardyQuestions(q);
-    setJeopardyReviewChoices(shuffle([q.q, ...wrong]));
+    const wrong = getWrongAnswers(q.a, q.topic, q.unit, q.wrong);
+    setJeopardyReviewChoices(shuffle([q.a, ...wrong]));
   };
 
   // Speed Round handlers
@@ -2925,8 +2925,8 @@ export default function StudyGuide() {
             </div>
             <div style={styles.progress}>
               {jeopardyPlayerCount === 1
-                ? 'Pick a card. The clue appears, then choose the matching question.'
-                : `Player ${jeopardyCurrentTurn + 1}'s turn: pick a card, then choose the matching question.`}
+                ? 'Pick a card. The question appears, then choose the answer.'
+                : `Player ${jeopardyCurrentTurn + 1}'s turn: pick a card, then choose the answer.`}
             </div>
             <div className="jeopardy-board" style={styles.jeopardyBoard}>
               {[100, 200, 300, 400, 500].map(points => {
@@ -3006,8 +3006,8 @@ export default function StudyGuide() {
                     {missed.map((m, i) => (
                       <div key={i} style={{background: '#fef2f2', borderRadius: '8px', padding: '12px', marginBottom: '8px', borderLeft: '3px solid #dc2626'}}>
                         <div style={{fontSize: '13px', color: '#dc2626', fontWeight: '600', marginBottom: '4px'}}>${m.points}</div>
-                        <div style={{fontSize: '13px', color: '#6b7280', marginBottom: '4px'}}>Clue: {m.question.a}</div>
-                        <div style={{fontSize: '14px', color: '#059669'}}>Question: {renderQuestionWithExamFlag(m.question)}</div>
+                        <div style={{fontSize: '14px', color: '#374151', marginBottom: '4px'}}>{renderQuestionWithExamFlag(m.question)}</div>
+                        <div style={{fontSize: '13px', color: '#059669'}}>Answer: {m.question.a}</div>
                       </div>
                     ))}
                   </div>
@@ -3035,18 +3035,19 @@ export default function StudyGuide() {
               <div style={styles.progress}>Review: {jeopardyReviewIndex + 1} / {missed.length}</div>
               <div style={styles.card}>
                 <div style={styles.topicLabel}>{selectedUnit === 'All' ? current.question.unit : current.question.topic}</div>
-                <div style={styles.answer}>Clue: {current.question.a}</div>
+                <div style={styles.question}>{renderQuestionWithExamFlag(current.question)}</div>
+                {renderQuestionSupportImage(current.question)}
               </div>
               <div>
                 {jeopardyReviewChoices.map((choice, i) => (
                   <button key={i} onClick={() => handleJeopardyReviewAnswer(choice)} disabled={!!jeopardyReviewSelected}
-                    style={styles.choiceBtn(!!jeopardyReviewSelected, choice === current.question.q, choice === jeopardyReviewSelected)}>{choice}</button>
+                    style={styles.choiceBtn(!!jeopardyReviewSelected, choice === current.question.a, choice === jeopardyReviewSelected)}>{renderChoiceContent(choice)}</button>
                 ))}
               </div>
               {jeopardyReviewRevealed && (
                 <div style={{textAlign: 'center', marginTop: '16px'}}>
-                  <div style={{marginBottom: '16px', color: jeopardyReviewSelected === current.question.q ? '#059669' : '#dc2626', fontWeight: 'bold'}}>
-                    {jeopardyReviewSelected === current.question.q ? 'Got it!' : `Correct question: ${current.question.q}`}
+                  <div style={{marginBottom: '16px', color: jeopardyReviewSelected === current.question.a ? '#059669' : '#dc2626', fontWeight: 'bold'}}>
+                    {jeopardyReviewSelected === current.question.a ? 'Got it!' : `Answer: ${current.question.a}`}
                   </div>
                   <button onClick={jeopardyReviewNext} style={styles.primaryBtn}>
                     {jeopardyReviewIndex + 1 >= missed.length ? 'Done' : 'Next'}
@@ -3062,23 +3063,24 @@ export default function StudyGuide() {
             <div style={styles.progress}>{jeopardyPlayerCount === 1 ? `$${jeopardyPoints}` : `Player ${jeopardyQuestionPlayer + 1} for $${jeopardyPoints}`}</div>
             <div style={styles.card}>
               <div style={styles.topicLabel}>{selectedUnit === 'All' ? jeopardyQuestion.unit : jeopardyQuestion.topic}</div>
-              <div style={styles.answer}>Clue: {jeopardyQuestion.a}</div>
+              <div style={styles.question}>{renderQuestionWithExamFlag(jeopardyQuestion)}</div>
+              {renderQuestionSupportImage(jeopardyQuestion)}
             </div>
             <div>
               {jeopardyChoices.map((choice, i) => (
                 <button key={i} onClick={() => handleJeopardyAnswer(choice)} disabled={!!jeopardySelected}
-                  style={styles.choiceBtn(!!jeopardySelected, choice === jeopardyQuestion.q, choice === jeopardySelected)}>{choice}</button>
+                  style={styles.choiceBtn(!!jeopardySelected, choice === jeopardyQuestion.a, choice === jeopardySelected)}>{renderChoiceContent(choice)}</button>
               ))}
             </div>
             {jeopardyRevealed && (
               <div style={{textAlign: 'center', marginTop: '16px'}}>
-                <div style={{marginBottom: '8px', color: jeopardySelected === jeopardyQuestion.q ? '#059669' : '#dc2626', fontWeight: 'bold'}}>
-                  {jeopardySelected === jeopardyQuestion.q
+                <div style={{marginBottom: '8px', color: jeopardySelected === jeopardyQuestion.a ? '#059669' : '#dc2626', fontWeight: 'bold'}}>
+                  {jeopardySelected === jeopardyQuestion.a
                     ? `${jeopardyPlayerCount === 1 ? 'You' : `Player ${jeopardyQuestionPlayer + 1}`} earned $${jeopardyPoints}`
                     : `${jeopardyPlayerCount === 1 ? 'You lost' : `Player ${jeopardyQuestionPlayer + 1} lost`} $${jeopardyPoints}`}
                 </div>
                 <div style={{marginBottom: '16px', color: '#374151', fontSize: '14px'}}>
-                  Correct question: {renderQuestionWithExamFlag(jeopardyQuestion)}
+                  Answer: {jeopardyQuestion.a}
                 </div>
                 {jeopardyPlayerCount === 2 && (
                   <div style={{marginBottom: '16px', color: '#6b7280', fontWeight: '700'}}>Next up: Player {jeopardyCurrentTurn + 1}</div>
