@@ -2175,6 +2175,41 @@ export default function StudyGuide() {
     );
   };
 
+  const questionSupportImages: {[key: number]: { src: string; alt: string; caption?: string }} = {
+    808: { src: '/study-images/onion-cell-cycle.svg', alt: 'Onion root tip cells in different phases of the cell cycle', caption: 'Use this onion cell image to count phases for the Unit 8 onion-cell questions.' },
+    813: { src: '/study-images/onion-cell-cycle.svg', alt: 'Onion root tip cells in different phases of the cell cycle', caption: 'Use this onion cell image to count phases for the Unit 8 onion-cell questions.' },
+    834: { src: '/study-images/onion-cell-cycle.svg', alt: 'Onion root tip cells in different phases of the cell cycle', caption: 'Use this onion cell image to count phases for the Unit 8 onion-cell questions.' },
+  };
+
+  const renderQuestionSupportImage = (question?: { id: number }) => {
+    if (!question) return null;
+    const supportImage = questionSupportImages[question.id];
+    if (!supportImage) return null;
+
+    return (
+      <div style={{marginTop: '18px'}}>
+        <img
+          src={supportImage.src}
+          alt={supportImage.alt}
+          style={{
+            width: '100%',
+            maxWidth: '760px',
+            borderRadius: '18px',
+            display: 'block',
+            margin: '0 auto',
+            boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
+            border: '1px solid rgba(180, 83, 9, 0.12)'
+          }}
+        />
+        {supportImage.caption && (
+          <div style={{marginTop: '10px', fontSize: '13px', color: '#92400e', textAlign: 'center'}}>
+            {supportImage.caption}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   const semesterExamQuestionIds = new Set([
     801, 803, 804, 805, 806, 807, 810, 812, 814, 815, 817, 818, 820, 821, 822, 823, 824, 825, 826, 828, 829, 830, 831, 832,
     3, 5, 7, 8, 10, 11, 12, 16, 20, 21, 23, 25, 27, 29, 31, 32, 37, 43,
@@ -2659,6 +2694,7 @@ export default function StudyGuide() {
             <div style={{...styles.card, cursor: 'pointer'}} onClick={() => setShowAnswer(!showAnswer)}>
               <div style={styles.topicLabel}>{currentQuestionLabel}</div>
               <div style={styles.question}>{renderQuestionWithExamFlag(currentQ)}</div>
+              {renderQuestionSupportImage(currentQ)}
               {showAnswer && <div style={styles.answer}>{currentQ.a}</div>}
               {!showAnswer && <div style={{color: '#d1d5db', fontSize: '13px', marginTop: '16px'}}>Tap to reveal</div>}
             </div>
@@ -2681,6 +2717,7 @@ export default function StudyGuide() {
             <div style={styles.card}>
               <div style={styles.topicLabel}>{currentQuestionLabel}</div>
               <div style={styles.question}>{renderQuestionWithExamFlag(currentQ)}</div>
+              {renderQuestionSupportImage(currentQ)}
             </div>
             <div>
               {quizChoices.map((choice, i) => (
@@ -2700,6 +2737,7 @@ export default function StudyGuide() {
             <div style={styles.card}>
               <div style={styles.topicLabel}>{currentQuestionLabel}</div>
               <div style={styles.question}>{renderQuestionWithExamFlag(currentQ)}</div>
+              {renderQuestionSupportImage(currentQ)}
               <div style={{display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '18px'}}>
                 <input
                   value={typingQuizInput}
@@ -3048,6 +3086,7 @@ export default function StudyGuide() {
             </div>
             <div style={styles.card}>
               <div style={styles.question}>{renderQuestionWithExamFlag(currentQ)}</div>
+              {renderQuestionSupportImage(currentQ)}
             </div>
             <div>
               {quizChoices.map((choice, i) => (
@@ -3129,6 +3168,7 @@ export default function StudyGuide() {
               <div style={styles.card}>
                 <div style={styles.topicLabel}>{currentQuestionLabel}</div>
                 <div style={styles.question}>{renderQuestionWithExamFlag(currentQ)}</div>
+                {renderQuestionSupportImage(currentQ)}
               </div>
               <div>
                 {millionaireChoices.map((choice, i) => (
@@ -3801,6 +3841,7 @@ export default function StudyGuide() {
             <div style={styles.card}>
               <div style={styles.topicLabel}>{currentQuestionLabel}</div>
               <div style={styles.question}>{renderQuestionWithExamFlag(currentQ)}</div>
+              {renderQuestionSupportImage(currentQ)}
               
               {/* Answer display with blanks */}
               <div style={{marginTop: '24px', textAlign: 'center'}}>
@@ -3929,6 +3970,7 @@ export default function StudyGuide() {
                 <div style={{...styles.card, borderLeft: `4px solid ${bombTime <= 10 ? '#dc2626' : '#f59e0b'}`, background: bombFlash === 'red' ? '#fef2f2' : bombFlash === 'green' ? '#f0fdf4' : 'white'}}>
                   <div style={styles.topicLabel}>{currentQuestionLabel}</div>
                   <div style={styles.question}>{renderQuestionWithExamFlag(currentQ)}</div>
+                  {renderQuestionSupportImage(currentQ)}
                 </div>
 
                 {/* Answer choices */}
@@ -4329,6 +4371,7 @@ export default function StudyGuide() {
             <div style={styles.card}>
               <div style={styles.topicLabel}>{currentQuestionLabel}</div>
               <div style={styles.question}>{renderQuestionWithExamFlag(currentQ)}</div>
+              {renderQuestionSupportImage(currentQ)}
             </div>
             
             {/* Choices */}
@@ -4486,6 +4529,7 @@ export default function StudyGuide() {
                 <div style={{fontSize: '16px', color: '#374151', marginBottom: '20px', lineHeight: '1.5'}}>
                   {renderQuestionWithExamFlag(shuffledQuestions[snakeQuestionIndex])}
                 </div>
+                {renderQuestionSupportImage(shuffledQuestions[snakeQuestionIndex])}
                 <div>
                   {quizChoices.map((choice, i) => (
                     <button
