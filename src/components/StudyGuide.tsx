@@ -1002,6 +1002,7 @@ function WheelResult({ currentQ, wheelGuessedLetters, wheelWrongGuesses, wheelSc
 }
 
 export default function StudyGuide() {
+  const NOTES_STORAGE_KEY = 'study-notes';
   const [mode, setMode] = useState<Mode>('menu');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
@@ -1067,6 +1068,9 @@ export default function StudyGuide() {
   const [lbName, setLbName] = useState(() => safeLocalStorageGet('study-lb-name'));
   const [lbSubmitted, setLbSubmitted] = useState(false);
   const [lbShowInput, setLbShowInput] = useState(false);
+  const [notesOpen, setNotesOpen] = useState(false);
+  const [notesText, setNotesText] = useState(() => safeLocalStorageGet(NOTES_STORAGE_KEY));
+  const [notesSaved, setNotesSaved] = useState(false);
 
   const fetchLeaderboard = useCallback(async () => {
     setLbLoading(true);
@@ -1093,6 +1097,12 @@ export default function StudyGuide() {
       fetchLeaderboard();
     } catch { /* silent */ }
   };
+
+  const saveNotes = useCallback(() => {
+    safeLocalStorageSet(NOTES_STORAGE_KEY, notesText);
+    setNotesSaved(true);
+    setTimeout(() => setNotesSaved(false), 1400);
+  }, [NOTES_STORAGE_KEY, notesText]);
   
   // Millionaire state
   const [millionaireLevel, setMillionaireLevel] = useState(0);
@@ -2399,6 +2409,49 @@ export default function StudyGuide() {
       height: '100%', width: `${pct}%`, background: good ? 'linear-gradient(90deg, #34d399, #10b981)' : 'linear-gradient(90deg, #fca5a5, #f87171)', 
       borderRadius: '50px', transition: 'width 0.4s ease',
     }),
+    notesBubble: {
+      position: 'fixed' as const,
+      top: '18px',
+      right: '18px',
+      zIndex: 40,
+      background: 'rgba(255,255,255,0.96)',
+      color: theme.primary,
+      border: `2px solid ${theme.primary}`,
+      borderRadius: '999px',
+      padding: '10px 16px',
+      fontSize: '14px',
+      fontWeight: '800',
+      cursor: 'pointer',
+      boxShadow: '0 10px 28px rgba(0,0,0,0.08)',
+      backdropFilter: 'blur(10px)',
+    },
+    notesPanel: {
+      position: 'fixed' as const,
+      top: '72px',
+      right: '18px',
+      zIndex: 41,
+      width: 'min(340px, calc(100vw - 36px))',
+      background: 'rgba(255,255,255,0.98)',
+      border: `2px solid ${theme.primary}`,
+      borderRadius: '22px',
+      boxShadow: '0 18px 40px rgba(0,0,0,0.12)',
+      padding: '16px',
+      backdropFilter: 'blur(12px)',
+    },
+    notesTextArea: {
+      width: '100%',
+      minHeight: '180px',
+      resize: 'vertical' as const,
+      borderRadius: '16px',
+      border: `2px solid ${theme.accentLight}`,
+      padding: '14px',
+      fontSize: '14px',
+      lineHeight: '1.5',
+      color: '#374151',
+      outline: 'none',
+      boxSizing: 'border-box' as const,
+      background: '#ffffff',
+    },
   };
 
   return (
@@ -2440,6 +2493,34 @@ export default function StudyGuide() {
         <div className="blob blob-2" />
         <div className="blob blob-3" />
       </div>
+      <button onClick={() => setNotesOpen(open => !open)} style={styles.notesBubble}>
+        {notesOpen ? 'Close Notes' : 'Notes'}
+      </button>
+      {notesOpen && (
+        <div style={styles.notesPanel}>
+          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px'}}>
+            <div style={{fontSize: '16px', fontWeight: '800', color: theme.primaryDark}}>Notes</div>
+            <div style={{fontSize: '12px', fontWeight: '700', color: notesSaved ? '#059669' : '#9ca3af'}}>
+              {notesSaved ? 'Saved' : 'Type anything'}
+            </div>
+          </div>
+          <textarea
+            value={notesText}
+            onChange={(e) => {
+              setNotesText(e.target.value);
+              setNotesSaved(false);
+            }}
+            placeholder="Type any notes you want here..."
+            style={styles.notesTextArea}
+          />
+          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px', gap: '10px'}}>
+            <div style={{fontSize: '12px', color: '#9ca3af'}}>{notesText.length} characters</div>
+            <button onClick={saveNotes} style={{...styles.primaryBtn, padding: '10px 24px', fontSize: '14px'}}>
+              Save
+            </button>
+          </div>
+        </div>
+      )}
       <div style={{...styles.inner, position: 'relative', zIndex: 1}}>
         <div style={styles.header}>
           <div style={{padding: '8px 0'}}>
