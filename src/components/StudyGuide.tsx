@@ -2351,7 +2351,8 @@ export default function StudyGuide() {
       transition: 'all 0.2s ease', backdropFilter: 'blur(8px)',
     }),
     jeopardyBoard: { display: 'flex', flexDirection: 'column' as const, gap: '14px', marginBottom: '24px' },
-    jeopardyRow: { display: 'grid', gridTemplateColumns: '78px repeat(auto-fit, minmax(132px, 1fr))', gap: '12px', alignItems: 'stretch' as const },
+    jeopardyRow: { display: 'grid', gridTemplateColumns: '78px 18px repeat(auto-fit, minmax(132px, 1fr))', gap: '12px', alignItems: 'stretch' as const },
+    jeopardyRowSpacer: { minHeight: '88px' },
     jeopardyRowLabel: {
       background: 'rgba(255,255,255,0.72)',
       color: theme.primary,
@@ -2939,6 +2940,7 @@ export default function StudyGuide() {
                 return (
                   <div key={points} style={styles.jeopardyRow}>
                     <div style={styles.jeopardyRowLabel}>${points}</div>
+                    <div aria-hidden="true" style={styles.jeopardyRowSpacer} />
                     {rowCells.map(({ cell, index }) => (
                       <button key={cell.question.id} onClick={() => handleJeopardySelect(index)}
                         style={styles.jeopardyCell(cell.answered, cell.correct)}>
