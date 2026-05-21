@@ -431,7 +431,7 @@ export default function EnglishSentencePractice() {
               : 'Choose the correct meaning for each word, then use the example sentence to lock it in.'}
           </p>
 
-          {activeTab === 'structure' ? (
+          {activeTab === 'structure' && (
             <div className="hint-grid">
               <div className="hint-card">
                 <strong>Simple</strong>
@@ -448,25 +448,6 @@ export default function EnglishSentencePractice() {
               <div className="hint-card">
                 <strong>Compound-Complex</strong>
                 <span>2 independent + 1 dependent clause</span>
-              </div>
-            </div>
-          ) : (
-            <div className="hint-grid">
-              <div className="hint-card">
-                <strong>Words Loaded</strong>
-                <span>{vocabEntries.length} words so far</span>
-              </div>
-              <div className="hint-card">
-                <strong>Quiz Style</strong>
-                <span>Pick the right definition</span>
-              </div>
-              <div className="hint-card">
-                <strong>Extra Help</strong>
-                <span>Each answer shows the example sentence</span>
-              </div>
-              <div className="hint-card">
-                <strong>Next Step</strong>
-                <span>Send the other 15 and I will add them too</span>
               </div>
             </div>
           )}
