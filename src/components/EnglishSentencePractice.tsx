@@ -150,6 +150,81 @@ const vocabEntries: VocabEntry[] = [
     definition: 'deadly; fatal',
     example: 'Because the fumes from the lethal gas were overpowering, many people collapsed.',
   },
+  {
+    word: 'licentious',
+    definition: 'morally unrestrained',
+    example: 'Like St. Augustine, many people desire to give up a licentious life, but not just yet.',
+  },
+  {
+    word: 'macabre',
+    definition: 'horrible; grim',
+    example: 'Dr. Jekyll\'s clean-cut features faded and were replaced by the macabre face of the hideous Mr. Hyde.',
+  },
+  {
+    word: 'mandarin',
+    definition: 'an influential person',
+    example: 'There were nine classes of mandarins in the Chinese Empire.',
+  },
+  {
+    word: 'martial',
+    definition: 'warlike; military',
+    example: 'After being defeated, the small country was ruled by martial law for several months.',
+  },
+  {
+    word: 'melee',
+    definition: 'a noisy, confused fight',
+    example: 'By the time the police arrived, the melee was over.',
+  },
+  {
+    word: 'mendicant',
+    definition: 'a beggar',
+    example: 'Although he was a mendicant, he begged not for himself but for the poor and hungry.',
+  },
+  {
+    word: 'mesmerize',
+    definition: 'to hypnotize',
+    example: 'The exquisite music and spinning dancers mesmerized the audience.',
+  },
+  {
+    word: 'minion',
+    definition: 'a fawning, servile follower',
+    example: 'Although only a minion who usually ran errands, on occasion he filled in for the "great one."',
+  },
+  {
+    word: 'mitigate',
+    definition: 'to make less severe; to become milder',
+    example: 'The death of the two recruits did not serve to mitigate the rigors of our basic training.',
+  },
+  {
+    word: 'modicum',
+    definition: 'a small amount',
+    example: 'A modicum of relief from the heat came in the form of a sudden shower.',
+  },
+  {
+    word: 'nadir',
+    definition: 'the lowest point',
+    example: 'Because of the violence and inhumanity, many thought that civilization had reached its nadir during this period.',
+  },
+  {
+    word: 'narcissistic',
+    definition: 'conceited; having excessive self-love and self-absorption',
+    example: 'The child star\'s narcissistic attitude kept her from having any friends.',
+  },
+  {
+    word: 'nefarious',
+    definition: 'very wicked',
+    example: 'One of the most nefarious characters of the Old West was Billy the Kid.',
+  },
+  {
+    word: 'nemesis',
+    definition: 'someone or something a person cannot conquer; a hated enemy',
+    example: 'Do you know the name of Sherlock Holmes\' nemesis?',
+  },
+  {
+    word: 'neophyte',
+    definition: 'a beginner',
+    example: 'Although only a neophyte, she outshone the more seasoned performers.',
+  },
 ];
 
 const coordinatingConjunctions = ['and', 'but', 'so', 'or'];
