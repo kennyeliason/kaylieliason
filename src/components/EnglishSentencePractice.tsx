@@ -1,11 +1,25 @@
 import { useState } from 'react';
 
 type SentenceType = 'Simple' | 'Compound' | 'Complex' | 'Compound-Complex';
+type PracticeTab = 'structure' | 'vocab';
 
 type Question = {
   sentence: string;
   answer: SentenceType;
   explanation: string;
+};
+
+type VocabEntry = {
+  word: string;
+  definition: string;
+  example: string;
+};
+
+type VocabQuestion = {
+  word: string;
+  definition: string;
+  example: string;
+  options: string[];
 };
 
 const sentenceTypes: SentenceType[] = ['Simple', 'Compound', 'Complex', 'Compound-Complex'];
@@ -58,6 +72,84 @@ const subordinateStarters = [
   'Because the power went out',
   'If the lights flicker',
   'Although the hallway was noisy',
+];
+
+const vocabEntries: VocabEntry[] = [
+  {
+    word: 'jaded',
+    definition: 'worn out; dulled, as from overindulgence',
+    example: 'Even the sun did not cheer our jaded spirits as we trudged through the snow.',
+  },
+  {
+    word: 'jargon',
+    definition: 'vocabulary distinctive to a particular group of people',
+    example: 'While the jargon of the musicians first amused Sara, she later became irritated with its constant use.',
+  },
+  {
+    word: 'judicious',
+    definition: 'showing sound judgment',
+    example: 'A judicious manager should treat everyone the same way and not show favoritism.',
+  },
+  {
+    word: 'kindred',
+    definition: 'related by birth; of like nature',
+    example: 'The boy and his dog were kindred spirits who spent the day running and jumping in the woods.',
+  },
+  {
+    word: 'knead',
+    definition: 'to work dough or clay into a uniform mixture',
+    example: 'It is easier to knead bread dough with an electric mixer than by hand.',
+  },
+  {
+    word: 'lacerate',
+    definition: 'to tear flesh jaggedly',
+    example: 'Harsh criticism can cut into one\'s pride just as easily as a sharp knife can lacerate the skin.',
+  },
+  {
+    word: 'lackadaisical',
+    definition: 'uninterested; listless',
+    example: 'The workers, usually lackadaisical by late afternoon, suddenly moved with great energy.',
+  },
+  {
+    word: 'lackey',
+    definition: 'a slavish follower',
+    example: 'I will not deal with a lackey; I\'ll talk to the boss or no one.',
+  },
+  {
+    word: 'laggard',
+    definition: 'a slow person, especially one who falls behind',
+    example: 'If you continue to be such a laggard, you\'ll never get out of school.',
+  },
+  {
+    word: 'lament',
+    definition: 'to mourn',
+    example: 'Thousands of devoted fans lamented the death of the popular singer.',
+  },
+  {
+    word: 'lampoon',
+    definition: 'a written satire used to ridicule or attack someone',
+    example: 'The lampoon he wrote in the school newspaper angered the football coach and the principal.',
+  },
+  {
+    word: 'languish',
+    definition: 'to become weak or feeble',
+    example: 'When one becomes depressed, it is easy to languish and lose all hope.',
+  },
+  {
+    word: 'lateral',
+    definition: 'to the side',
+    example: 'The quarterback made a lateral pass to the fullback.',
+  },
+  {
+    word: 'lax',
+    definition: 'careless or negligent',
+    example: 'Don\'t become too lax in your studies, or you\'ll fail.',
+  },
+  {
+    word: 'lethal',
+    definition: 'deadly; fatal',
+    example: 'Because the fumes from the lethal gas were overpowering, many people collapsed.',
+  },
 ];
 
 const coordinatingConjunctions = ['and', 'but', 'so', 'or'];
@@ -138,18 +230,47 @@ function buildDeck() {
   return shuffle(freshQuestions);
 }
 
+function buildVocabDeck() {
+  return shuffle(vocabEntries).map((entry) => {
+    const wrongOptions = shuffle(
+      vocabEntries
+        .filter((candidate) => candidate.word !== entry.word)
+        .map((candidate) => candidate.definition),
+    ).slice(0, 3);
+
+    return {
+      word: entry.word,
+      definition: entry.definition,
+      example: entry.example,
+      options: shuffle([entry.definition, ...wrongOptions]),
+    };
+  });
+}
+
 export default function EnglishSentencePractice() {
+  const [activeTab, setActiveTab] = useState<PracticeTab>('structure');
   const [deck, setDeck] = useState(() => buildDeck());
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<SentenceType | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [streak, setStreak] = useState(0);
+  const [vocabDeck, setVocabDeck] = useState(() => buildVocabDeck());
+  const [vocabIndex, setVocabIndex] = useState(0);
+  const [vocabSelected, setVocabSelected] = useState<string | null>(null);
+  const [vocabCorrectCount, setVocabCorrectCount] = useState(0);
+  const [vocabStreak, setVocabStreak] = useState(0);
 
   const current = deck[index];
   const isDone = index >= deck.length;
   const isCorrect = selected === current?.answer;
   const answered = selected !== null;
   const progress = deck.length === 0 ? 0 : Math.round((index / deck.length) * 100);
+
+  const currentVocab = vocabDeck[vocabIndex];
+  const vocabDone = vocabIndex >= vocabDeck.length;
+  const vocabIsCorrect = vocabSelected === currentVocab?.definition;
+  const vocabAnswered = vocabSelected !== null;
+  const vocabProgress = vocabDeck.length === 0 ? 0 : Math.round((vocabIndex / vocabDeck.length) * 100);
 
   function handleAnswer(choice: SentenceType) {
     if (answered || !current) return;
@@ -176,6 +297,31 @@ export default function EnglishSentencePractice() {
     setStreak(0);
   }
 
+  function handleVocabAnswer(choice: string) {
+    if (vocabAnswered || !currentVocab) return;
+    setVocabSelected(choice);
+    if (choice === currentVocab.definition) {
+      setVocabCorrectCount((count) => count + 1);
+      setVocabStreak((count) => count + 1);
+      return;
+    }
+    setVocabStreak(0);
+  }
+
+  function nextVocabQuestion() {
+    if (!vocabAnswered) return;
+    setVocabSelected(null);
+    setVocabIndex((value) => value + 1);
+  }
+
+  function restartVocab() {
+    setVocabDeck(buildVocabDeck());
+    setVocabIndex(0);
+    setVocabSelected(null);
+    setVocabCorrectCount(0);
+    setVocabStreak(0);
+  }
+
   return (
     <div className="english-app">
       <div className="glow glow-a" />
@@ -183,95 +329,201 @@ export default function EnglishSentencePractice() {
 
       <main className="shell">
         <section className="hero">
-          <div className="eyebrow">English Practice</div>
-          <h1>Sentence Type Trainer</h1>
+          <div className="tab-row">
+            <button
+              className={activeTab === 'structure' ? 'tab-bubble active' : 'tab-bubble'}
+              onClick={() => setActiveTab('structure')}
+            >
+              Sentence Structure
+            </button>
+            <button
+              className={activeTab === 'vocab' ? 'tab-bubble active' : 'tab-bubble'}
+              onClick={() => setActiveTab('vocab')}
+            >
+              Vocab Words
+            </button>
+          </div>
+
+          <div className="eyebrow">
+            {activeTab === 'structure' ? 'Sentence Structure' : 'Vocab Words'}
+          </div>
+          <h1>
+            {activeTab === 'structure' ? 'Sentence Structure Trainer' : 'Vocab Words Trainer'}
+          </h1>
           <p className="hero-copy">
-            Read each sentence and choose whether it is simple, compound, complex, or
-            compound-complex.
+            {activeTab === 'structure'
+              ? 'Read each sentence and choose whether it is simple, compound, complex, or compound-complex.'
+              : 'Choose the correct meaning for each word, then use the example sentence to lock it in.'}
           </p>
 
-          <div className="hint-grid">
-            <div className="hint-card">
-              <strong>Simple</strong>
-              <span>1 independent clause</span>
-            </div>
-            <div className="hint-card">
-              <strong>Compound</strong>
-              <span>2 independent clauses</span>
-            </div>
-            <div className="hint-card">
-              <strong>Complex</strong>
-              <span>1 independent + 1 dependent clause</span>
-            </div>
-            <div className="hint-card">
-              <strong>Compound-Complex</strong>
-              <span>2 independent + 1 dependent clause</span>
-            </div>
-          </div>
-        </section>
-
-        <section className="board">
-          <div className="stats">
-            <div className="stat-chip">Score: {correctCount}/{deck.length}</div>
-            <div className="stat-chip">Streak: {streak}</div>
-            <div className="stat-chip">Progress: {progress}%</div>
-          </div>
-
-          <div className="progress-track" aria-hidden="true">
-            <div className="progress-fill" style={{ width: `${progress}%` }} />
-          </div>
-
-          {isDone ? (
-            <div className="result-card">
-              <p className="result-label">Finished</p>
-              <h2>You got {correctCount} out of {deck.length}</h2>
-              <p className="result-copy">
-                {correctCount === deck.length
-                  ? 'Perfect. You crushed it.'
-                  : correctCount >= deck.length * 0.8
-                    ? 'Nice work. You are in solid shape.'
-                    : 'Run it again once or twice and the patterns will start to stick.'}
-              </p>
-              <button className="primary-btn" onClick={restart}>Try Again</button>
+          {activeTab === 'structure' ? (
+            <div className="hint-grid">
+              <div className="hint-card">
+                <strong>Simple</strong>
+                <span>1 independent clause</span>
+              </div>
+              <div className="hint-card">
+                <strong>Compound</strong>
+                <span>2 independent clauses</span>
+              </div>
+              <div className="hint-card">
+                <strong>Complex</strong>
+                <span>1 independent + 1 dependent clause</span>
+              </div>
+              <div className="hint-card">
+                <strong>Compound-Complex</strong>
+                <span>2 independent + 1 dependent clause</span>
+              </div>
             </div>
           ) : (
-            <div className="question-card">
-              <div className="question-topline">Question {index + 1} of {deck.length}</div>
-              <p className="sentence">{current.sentence}</p>
-
-              <div className="answer-grid">
-                {sentenceTypes.map((type) => {
-                  let className = 'answer-btn';
-                  if (answered && type === current.answer) className += ' correct';
-                  if (answered && selected === type && type !== current.answer) className += ' wrong';
-
-                  return (
-                    <button
-                      key={type}
-                      className={className}
-                      onClick={() => handleAnswer(type)}
-                      disabled={answered}
-                    >
-                      {type}
-                    </button>
-                  );
-                })}
+            <div className="hint-grid">
+              <div className="hint-card">
+                <strong>Words Loaded</strong>
+                <span>{vocabEntries.length} words so far</span>
               </div>
-
-              {answered && (
-                <div className={isCorrect ? 'feedback success' : 'feedback error'}>
-                  <p className="feedback-title">
-                    {isCorrect ? 'Correct' : `Not quite. The answer is ${current.answer}.`}
-                  </p>
-                  <p className="feedback-copy">{current.explanation}</p>
-                  <button className="primary-btn" onClick={nextQuestion}>
-                    {index === deck.length - 1 ? 'See Score' : 'Next Sentence'}
-                  </button>
-                </div>
-              )}
+              <div className="hint-card">
+                <strong>Quiz Style</strong>
+                <span>Pick the right definition</span>
+              </div>
+              <div className="hint-card">
+                <strong>Extra Help</strong>
+                <span>Each answer shows the example sentence</span>
+              </div>
+              <div className="hint-card">
+                <strong>Next Step</strong>
+                <span>Send the other 15 and I will add them too</span>
+              </div>
             </div>
           )}
         </section>
+
+        {activeTab === 'structure' ? (
+          <section className="board">
+            <div className="stats">
+              <div className="stat-chip">Score: {correctCount}/{deck.length}</div>
+              <div className="stat-chip">Streak: {streak}</div>
+              <div className="stat-chip">Progress: {progress}%</div>
+            </div>
+
+            <div className="progress-track" aria-hidden="true">
+              <div className="progress-fill" style={{ width: `${progress}%` }} />
+            </div>
+
+            {isDone ? (
+              <div className="result-card">
+                <p className="result-label">Finished</p>
+                <h2>You got {correctCount} out of {deck.length}</h2>
+                <p className="result-copy">
+                  {correctCount === deck.length
+                    ? 'Perfect. You crushed it.'
+                    : correctCount >= deck.length * 0.8
+                      ? 'Nice work. You are in solid shape.'
+                      : 'Run it again once or twice and the patterns will start to stick.'}
+                </p>
+                <button className="primary-btn" onClick={restart}>Try Again</button>
+              </div>
+            ) : (
+              <div className="question-card">
+                <div className="question-topline">Question {index + 1} of {deck.length}</div>
+                <p className="sentence">{current.sentence}</p>
+
+                <div className="answer-grid">
+                  {sentenceTypes.map((type) => {
+                    let className = 'answer-btn';
+                    if (answered && type === current.answer) className += ' correct';
+                    if (answered && selected === type && type !== current.answer) className += ' wrong';
+
+                    return (
+                      <button
+                        key={type}
+                        className={className}
+                        onClick={() => handleAnswer(type)}
+                        disabled={answered}
+                      >
+                        {type}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {answered && (
+                  <div className={isCorrect ? 'feedback success' : 'feedback error'}>
+                    <p className="feedback-title">
+                      {isCorrect ? 'Correct' : `Not quite. The answer is ${current.answer}.`}
+                    </p>
+                    <p className="feedback-copy">{current.explanation}</p>
+                    <button className="primary-btn" onClick={nextQuestion}>
+                      {index === deck.length - 1 ? 'See Score' : 'Next Sentence'}
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </section>
+        ) : (
+          <section className="board">
+            <div className="stats">
+              <div className="stat-chip">Score: {vocabCorrectCount}/{vocabDeck.length}</div>
+              <div className="stat-chip">Streak: {vocabStreak}</div>
+              <div className="stat-chip">Progress: {vocabProgress}%</div>
+            </div>
+
+            <div className="progress-track" aria-hidden="true">
+              <div className="progress-fill" style={{ width: `${vocabProgress}%` }} />
+            </div>
+
+            {vocabDone ? (
+              <div className="result-card">
+                <p className="result-label">Finished</p>
+                <h2>You got {vocabCorrectCount} out of {vocabDeck.length}</h2>
+                <p className="result-copy">
+                  {vocabCorrectCount === vocabDeck.length
+                    ? 'Perfect. You know these words cold.'
+                    : vocabCorrectCount >= vocabDeck.length * 0.8
+                      ? 'Nice work. One more round and these should stick.'
+                      : 'Run it again and pay extra attention to the example sentences.'}
+                </p>
+                <button className="primary-btn" onClick={restartVocab}>Try Again</button>
+              </div>
+            ) : (
+              <div className="question-card">
+                <div className="question-topline">Word {vocabIndex + 1} of {vocabDeck.length}</div>
+                <p className="sentence vocab-word">{currentVocab.word}</p>
+
+                <div className="answer-grid">
+                  {currentVocab.options.map((option) => {
+                    let className = 'answer-btn';
+                    if (vocabAnswered && option === currentVocab.definition) className += ' correct';
+                    if (vocabAnswered && vocabSelected === option && option !== currentVocab.definition) className += ' wrong';
+
+                    return (
+                      <button
+                        key={option}
+                        className={className}
+                        onClick={() => handleVocabAnswer(option)}
+                        disabled={vocabAnswered}
+                      >
+                        {option}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {vocabAnswered && (
+                  <div className={vocabIsCorrect ? 'feedback success' : 'feedback error'}>
+                    <p className="feedback-title">
+                      {vocabIsCorrect ? 'Correct' : `Not quite. ${currentVocab.word} means ${currentVocab.definition}.`}
+                    </p>
+                    <p className="feedback-copy"><strong>Example:</strong> {currentVocab.example}</p>
+                    <button className="primary-btn" onClick={nextVocabQuestion}>
+                      {vocabIndex === vocabDeck.length - 1 ? 'See Score' : 'Next Word'}
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </section>
+        )}
       </main>
 
       <style>{`
@@ -329,6 +581,36 @@ export default function EnglishSentencePractice() {
         .hero {
           text-align: center;
           margin-bottom: 1.5rem;
+        }
+
+        .tab-row {
+          display: flex;
+          justify-content: center;
+          gap: 0.75rem;
+          margin-bottom: 1rem;
+          flex-wrap: wrap;
+        }
+
+        .tab-bubble {
+          border: 1px solid rgba(167, 103, 57, 0.18);
+          background: rgba(255, 255, 255, 0.72);
+          color: #9b4d1f;
+          padding: 0.8rem 1.15rem;
+          border-radius: 999px;
+          font: inherit;
+          font-weight: 800;
+          cursor: pointer;
+          transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
+        }
+
+        .tab-bubble:hover {
+          transform: translateY(-1px);
+        }
+
+        .tab-bubble.active {
+          background: linear-gradient(135deg, #ff9d6c 0%, #ffbf7d 100%);
+          color: #fffaf3;
+          box-shadow: 0 12px 24px rgba(155, 77, 31, 0.2);
         }
 
         .eyebrow {
@@ -456,6 +738,10 @@ export default function EnglishSentencePractice() {
           color: #3c2c1c;
         }
 
+        .vocab-word {
+          text-transform: lowercase;
+        }
+
         .answer-grid {
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -480,6 +766,7 @@ export default function EnglishSentencePractice() {
           font-size: 1rem;
           color: #7c2d12;
           box-shadow: inset 0 -4px 0 rgba(234, 88, 12, 0.08);
+          text-align: left;
         }
 
         .answer-btn:hover:enabled,
