@@ -101,6 +101,19 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
   },
 };
 
+const quickNotes: {[key: string]: string[]} = {
+  'Unit 8': [
+    'PMAT = Prophase, Metaphase, Anaphase, Telophase. That is the mitosis order every time.',
+    'Interphase is when the cell grows and copies its DNA. Cells spend most of their time there.',
+    'Benign tumors stay in one place. Malignant tumors invade nearby tissue and can spread.'
+  ],
+  'Unit 9': [
+    'Passive transport moves from high to low concentration and does not use ATP.',
+    'Active transport moves from low to high concentration and does use ATP.',
+    'Hypotonic = cell swells, hypertonic = cell shrinks, isotonic = stays about the same.'
+  ]
+};
+
 // Biology Cell Test Questions - organized by topic and unit
 const questions = [
   // Unit 8 - Cell Division & Cancer
@@ -2548,6 +2561,37 @@ export default function StudyGuide() {
                 );
               })}
             </div>
+            {quickNotes[selectedUnit] && (
+              <div style={{
+                background: 'rgba(255,255,255,0.9)',
+                border: `2px solid ${theme.primary}22`,
+                borderRadius: '22px',
+                padding: '18px 20px',
+                marginBottom: '16px',
+                boxShadow: `0 10px 30px ${theme.shadow}`,
+                backdropFilter: 'blur(10px)'
+              }}>
+                <div style={{fontSize: '12px', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', color: theme.primary, marginBottom: '8px'}}>
+                  Super Important Quick Notes
+                </div>
+                <div style={{display: 'grid', gap: '10px'}}>
+                  {quickNotes[selectedUnit].map((note, index) => (
+                    <div key={index} style={{
+                      background: 'rgba(255,255,255,0.88)',
+                      border: '1px solid rgba(0,0,0,0.06)',
+                      borderRadius: '16px',
+                      padding: '12px 14px',
+                      color: '#374151',
+                      fontSize: '14px',
+                      lineHeight: 1.5,
+                      fontWeight: 600
+                    }}>
+                      {index + 1}. {note}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
             <div style={styles.topicFilter}>
               <button onClick={() => setSelectedTopic(null)} style={styles.topicBtn(!selectedTopic)}>
                 All ({unitQuestions.length})
