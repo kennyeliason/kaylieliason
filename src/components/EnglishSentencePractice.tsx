@@ -9,129 +9,62 @@ type Question = {
 };
 
 const sentenceTypes: SentenceType[] = ['Simple', 'Compound', 'Complex', 'Compound-Complex'];
+const QUESTION_COUNT = 24;
+const QUESTIONS_PER_TYPE = QUESTION_COUNT / sentenceTypes.length;
 
-const questions: Question[] = [
-  {
-    sentence: 'The dog barked loudly.',
-    answer: 'Simple',
-    explanation: 'One independent clause only.',
-  },
-  {
-    sentence: 'I finished my homework, and I cleaned my room.',
-    answer: 'Compound',
-    explanation: 'Two independent clauses joined by a comma and a coordinating conjunction.',
-  },
-  {
-    sentence: 'Because the rain started early, the game was canceled.',
-    answer: 'Complex',
-    explanation: 'One dependent clause plus one independent clause.',
-  },
-  {
-    sentence: 'Although I was tired, I studied for the quiz, and I passed it.',
-    answer: 'Compound-Complex',
-    explanation: 'It has a dependent clause and two independent clauses.',
-  },
-  {
-    sentence: 'My little brother built a fort in the living room.',
-    answer: 'Simple',
-    explanation: 'This is a single complete thought.',
-  },
-  {
-    sentence: 'The bell rang, but the teacher kept talking.',
-    answer: 'Compound',
-    explanation: 'Two independent clauses joined by a comma and but.',
-  },
-  {
-    sentence: 'When the movie ended, everyone stood up.',
-    answer: 'Complex',
-    explanation: 'The sentence starts with a dependent clause followed by an independent clause.',
-  },
-  {
-    sentence: 'If you call me later, I will answer, and we can study together.',
-    answer: 'Compound-Complex',
-    explanation: 'There is one dependent clause and two independent clauses.',
-  },
-  {
-    sentence: 'The cookies smelled amazing.',
-    answer: 'Simple',
-    explanation: 'Only one independent clause appears here.',
-  },
-  {
-    sentence: 'I wanted to go outside, so I put on my shoes.',
-    answer: 'Compound',
-    explanation: 'Two independent clauses joined by so.',
-  },
-  {
-    sentence: 'Since the library was closed, we studied at home.',
-    answer: 'Complex',
-    explanation: 'It has one dependent clause and one independent clause.',
-  },
-  {
-    sentence: 'After we ate dinner, Dad washed the dishes, and I dried them.',
-    answer: 'Compound-Complex',
-    explanation: 'One dependent clause plus two independent clauses.',
-  },
-  {
-    sentence: 'Our team practiced after school.',
-    answer: 'Simple',
-    explanation: 'It contains one subject-predicate pair that stands alone.',
-  },
-  {
-    sentence: 'Mia read the chapter, and Noah took notes.',
-    answer: 'Compound',
-    explanation: 'Both sides could stand alone as sentences.',
-  },
-  {
-    sentence: 'Even though the test was hard, she stayed calm.',
-    answer: 'Complex',
-    explanation: 'The opening clause cannot stand alone, but the second clause can.',
-  },
-  {
-    sentence: 'While the baby slept, Mom folded laundry, and Dad made lunch.',
-    answer: 'Compound-Complex',
-    explanation: 'It includes one dependent clause and two independent clauses.',
-  },
-  {
-    sentence: 'The sun disappeared behind the mountains.',
-    answer: 'Simple',
-    explanation: 'Just one independent clause.',
-  },
-  {
-    sentence: 'We could leave now, or we could wait until sunset.',
-    answer: 'Compound',
-    explanation: 'Two independent clauses are joined by or.',
-  },
-  {
-    sentence: 'Before the concert began, we found our seats.',
-    answer: 'Complex',
-    explanation: 'Before the concert began is dependent; we found our seats is independent.',
-  },
-  {
-    sentence: 'Because the power went out, we lit candles, and we played cards.',
-    answer: 'Compound-Complex',
-    explanation: 'One dependent clause and two independent clauses are present.',
-  },
-  {
-    sentence: 'The class laughed at the joke.',
-    answer: 'Simple',
-    explanation: 'One complete thought.',
-  },
-  {
-    sentence: 'Jaden packed snacks, and Ava filled the water bottles.',
-    answer: 'Compound',
-    explanation: 'These are two independent clauses joined correctly.',
-  },
-  {
-    sentence: 'Unless you hurry, you will miss the bus.',
-    answer: 'Complex',
-    explanation: 'Unless you hurry is dependent; the rest is independent.',
-  },
-  {
-    sentence: 'When the timer beeped, I took the cookies out, and my sister set them on the rack.',
-    answer: 'Compound-Complex',
-    explanation: 'There is one dependent clause and two independent clauses.',
-  },
+const independentClauses = [
+  { start: 'The dog barked loudly.', mid: 'the dog barked loudly' },
+  { start: 'My little brother built a fort in the living room.', mid: 'my little brother built a fort in the living room' },
+  { start: 'The bell rang at exactly noon.', mid: 'the bell rang at exactly noon' },
+  { start: 'The class laughed at the joke.', mid: 'the class laughed at the joke' },
+  { start: 'Dad washed the dishes after dinner.', mid: 'Dad washed the dishes after dinner' },
+  { start: 'Mom packed snacks for the road trip.', mid: 'Mom packed snacks for the road trip' },
+  { start: 'The sun disappeared behind the mountains.', mid: 'the sun disappeared behind the mountains' },
+  { start: 'The teacher answered the question.', mid: 'the teacher answered the question' },
+  { start: 'Mia read the chapter carefully.', mid: 'Mia read the chapter carefully' },
+  { start: 'Noah took notes in the margin.', mid: 'Noah took notes in the margin' },
+  { start: 'Jaden packed the water bottles.', mid: 'Jaden packed the water bottles' },
+  { start: 'Ava filled the cooler with ice.', mid: 'Ava filled the cooler with ice' },
+  { start: 'Kayli practiced her vocabulary words.', mid: 'Kayli practiced her vocabulary words' },
+  { start: 'Our team practiced after school.', mid: 'our team practiced after school' },
+  { start: 'The cookies smelled amazing.', mid: 'the cookies smelled amazing' },
+  { start: 'The students lined up quietly.', mid: 'the students lined up quietly' },
+  { start: 'The players ran onto the field.', mid: 'the players ran onto the field' },
+  { start: 'The kids played cards by the window.', mid: 'the kids played cards by the window' },
+  { start: 'The leaves drifted across the yard.', mid: 'the leaves drifted across the yard' },
+  { start: 'The candles flickered in the dark.', mid: 'the candles flickered in the dark' },
+  { start: 'We found our seats before sunset.', mid: 'we found our seats before sunset' },
+  { start: 'I put on my shoes by the door.', mid: 'I put on my shoes by the door' },
+  { start: 'She stayed calm during the test.', mid: 'she stayed calm during the test' },
+  { start: 'They studied at home after practice.', mid: 'they studied at home after practice' },
+  { start: 'We lit candles during the storm.', mid: 'we lit candles during the storm' },
+  { start: 'I dried the plates on the rack.', mid: 'I dried the plates on the rack' },
+  { start: 'The bus arrived right on time.', mid: 'the bus arrived right on time' },
+  { start: 'The library opened early this morning.', mid: 'the library opened early this morning' },
 ];
+
+const subordinateStarters = [
+  'Because the rain started early',
+  'Although I was tired',
+  'When the movie ended',
+  'If you call me later',
+  'Since the library was closed',
+  'After we ate dinner',
+  'Even though the test was hard',
+  'While the baby slept',
+  'Before the concert began',
+  'Unless you hurry',
+  'When the timer beeped',
+  'Because the power went out',
+  'If the lights flicker',
+  'Although the hallway was noisy',
+];
+
+const coordinatingConjunctions = ['and', 'but', 'so', 'or'];
+
+function pick<T>(items: T[]) {
+  return items[Math.floor(Math.random() * items.length)];
+}
 
 function shuffle<T>(items: T[]) {
   const copy = [...items];
@@ -142,8 +75,71 @@ function shuffle<T>(items: T[]) {
   return copy;
 }
 
+function makeIndependentClause() {
+  return pick(independentClauses);
+}
+
+function makeSimpleQuestion(): Question {
+  const clause = makeIndependentClause();
+  return {
+    sentence: clause.start,
+    answer: 'Simple',
+    explanation: 'One independent clause only.',
+  };
+}
+
+function makeCompoundQuestion(): Question {
+  const firstClause = makeIndependentClause();
+  let secondClause = makeIndependentClause();
+  while (secondClause.start === firstClause.start) {
+    secondClause = makeIndependentClause();
+  }
+
+  return {
+    sentence: `${firstClause.start.slice(0, -1)}, ${pick(coordinatingConjunctions)} ${secondClause.mid}.`,
+    answer: 'Compound',
+    explanation: 'Two independent clauses joined by a comma and a coordinating conjunction.',
+  };
+}
+
+function makeComplexQuestion(): Question {
+  const clause = makeIndependentClause();
+  return {
+    sentence: `${pick(subordinateStarters)}, ${clause.mid}.`,
+    answer: 'Complex',
+    explanation: 'One dependent clause plus one independent clause.',
+  };
+}
+
+function makeCompoundComplexQuestion(): Question {
+  const firstClause = makeIndependentClause();
+  let secondClause = makeIndependentClause();
+  while (secondClause.start === firstClause.start) {
+    secondClause = makeIndependentClause();
+  }
+
+  return {
+    sentence: `${pick(subordinateStarters)}, ${firstClause.mid}, ${pick(coordinatingConjunctions)} ${secondClause.mid}.`,
+    answer: 'Compound-Complex',
+    explanation: 'It has one dependent clause and two independent clauses.',
+  };
+}
+
+function buildDeck() {
+  const freshQuestions: Question[] = [];
+
+  for (let i = 0; i < QUESTIONS_PER_TYPE; i += 1) {
+    freshQuestions.push(makeSimpleQuestion());
+    freshQuestions.push(makeCompoundQuestion());
+    freshQuestions.push(makeComplexQuestion());
+    freshQuestions.push(makeCompoundComplexQuestion());
+  }
+
+  return shuffle(freshQuestions);
+}
+
 export default function EnglishSentencePractice() {
-  const [deck, setDeck] = useState(() => shuffle(questions));
+  const [deck, setDeck] = useState(() => buildDeck());
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<SentenceType | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
@@ -173,7 +169,7 @@ export default function EnglishSentencePractice() {
   }
 
   function restart() {
-    setDeck(shuffle(questions));
+    setDeck(buildDeck());
     setIndex(0);
     setSelected(null);
     setCorrectCount(0);
@@ -216,7 +212,7 @@ export default function EnglishSentencePractice() {
 
         <section className="board">
           <div className="stats">
-            <div className="stat-chip">Score: {correctCount}/{questions.length}</div>
+            <div className="stat-chip">Score: {correctCount}/{deck.length}</div>
             <div className="stat-chip">Streak: {streak}</div>
             <div className="stat-chip">Progress: {progress}%</div>
           </div>
@@ -228,11 +224,11 @@ export default function EnglishSentencePractice() {
           {isDone ? (
             <div className="result-card">
               <p className="result-label">Finished</p>
-              <h2>You got {correctCount} out of {questions.length}</h2>
+              <h2>You got {correctCount} out of {deck.length}</h2>
               <p className="result-copy">
-                {correctCount === questions.length
+                {correctCount === deck.length
                   ? 'Perfect. You crushed it.'
-                  : correctCount >= questions.length * 0.8
+                  : correctCount >= deck.length * 0.8
                     ? 'Nice work. You are in solid shape.'
                     : 'Run it again once or twice and the patterns will start to stick.'}
               </p>
