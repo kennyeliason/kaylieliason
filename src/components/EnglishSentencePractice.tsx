@@ -26,52 +26,64 @@ const sentenceTypes: SentenceType[] = ['Simple', 'Compound', 'Complex', 'Compoun
 const QUESTION_COUNT = 24;
 const QUESTIONS_PER_TYPE = QUESTION_COUNT / sentenceTypes.length;
 
-const independentClauses = [
-  { start: 'The dog barked loudly.', mid: 'the dog barked loudly' },
-  { start: 'My little brother built a fort in the living room.', mid: 'my little brother built a fort in the living room' },
-  { start: 'The bell rang at exactly noon.', mid: 'the bell rang at exactly noon' },
-  { start: 'The class laughed at the joke.', mid: 'the class laughed at the joke' },
-  { start: 'Dad washed the dishes after dinner.', mid: 'Dad washed the dishes after dinner' },
-  { start: 'Mom packed snacks for the road trip.', mid: 'Mom packed snacks for the road trip' },
-  { start: 'The sun disappeared behind the mountains.', mid: 'the sun disappeared behind the mountains' },
-  { start: 'The teacher answered the question.', mid: 'the teacher answered the question' },
-  { start: 'Mia read the chapter carefully.', mid: 'Mia read the chapter carefully' },
-  { start: 'Noah took notes in the margin.', mid: 'Noah took notes in the margin' },
-  { start: 'Jaden packed the water bottles.', mid: 'Jaden packed the water bottles' },
-  { start: 'Ava filled the cooler with ice.', mid: 'Ava filled the cooler with ice' },
-  { start: 'Kayli practiced her vocabulary words.', mid: 'Kayli practiced her vocabulary words' },
-  { start: 'Our team practiced after school.', mid: 'our team practiced after school' },
-  { start: 'The cookies smelled amazing.', mid: 'the cookies smelled amazing' },
-  { start: 'The students lined up quietly.', mid: 'the students lined up quietly' },
-  { start: 'The players ran onto the field.', mid: 'the players ran onto the field' },
-  { start: 'The kids played cards by the window.', mid: 'the kids played cards by the window' },
-  { start: 'The leaves drifted across the yard.', mid: 'the leaves drifted across the yard' },
-  { start: 'The candles flickered in the dark.', mid: 'the candles flickered in the dark' },
-  { start: 'We found our seats before sunset.', mid: 'we found our seats before sunset' },
-  { start: 'I put on my shoes by the door.', mid: 'I put on my shoes by the door' },
-  { start: 'She stayed calm during the test.', mid: 'she stayed calm during the test' },
-  { start: 'They studied at home after practice.', mid: 'they studied at home after practice' },
-  { start: 'We lit candles during the storm.', mid: 'we lit candles during the storm' },
-  { start: 'I dried the plates on the rack.', mid: 'I dried the plates on the rack' },
-  { start: 'The bus arrived right on time.', mid: 'the bus arrived right on time' },
-  { start: 'The library opened early this morning.', mid: 'the library opened early this morning' },
+const simpleQuestions: Question[] = [
+  { sentence: 'The dog barked at the mail carrier.', answer: 'Simple', explanation: 'One independent clause only.' },
+  { sentence: 'Kayli reviewed her notes before class.', answer: 'Simple', explanation: 'One independent clause only.' },
+  { sentence: 'The bus arrived right on time.', answer: 'Simple', explanation: 'One independent clause only.' },
+  { sentence: 'My little brother built a fort in the living room.', answer: 'Simple', explanation: 'One independent clause only.' },
+  { sentence: 'The cookies smelled amazing.', answer: 'Simple', explanation: 'One independent clause only.' },
+  { sentence: 'We found our seats before sunset.', answer: 'Simple', explanation: 'One independent clause only.' },
+  { sentence: 'The players ran onto the field.', answer: 'Simple', explanation: 'One independent clause only.' },
+  { sentence: 'Mia read the chapter carefully.', answer: 'Simple', explanation: 'One independent clause only.' },
+  { sentence: 'The library opened early this morning.', answer: 'Simple', explanation: 'One independent clause only.' },
+  { sentence: 'The candles flickered in the dark.', answer: 'Simple', explanation: 'One independent clause only.' },
+  { sentence: 'Our team practiced after school.', answer: 'Simple', explanation: 'One independent clause only.' },
+  { sentence: 'The students lined up quietly.', answer: 'Simple', explanation: 'One independent clause only.' },
 ];
 
-const subordinateStarters = [
-  'Because the rain started early',
-  'Although I was tired',
-  'When the movie ended',
-  'If you call me later',
-  'Since the library was closed',
-  'After we ate dinner',
-  'Even though the test was hard',
-  'While the baby slept',
-  'Before the concert began',
-  'Unless you hurry',
-  'When the timer beeped',
-  'Because the power went out',
-  'If the lights flicker',
-  'Although the hallway was noisy',
+const compoundQuestions: Question[] = [
+  { sentence: 'The bell rang, and everyone hurried to class.', answer: 'Compound', explanation: 'Two independent clauses joined by a comma and a coordinating conjunction.' },
+  { sentence: 'I studied for the test, but I still felt nervous.', answer: 'Compound', explanation: 'Two independent clauses joined by a comma and a coordinating conjunction.' },
+  { sentence: 'Mom packed snacks, and Dad filled the cooler.', answer: 'Compound', explanation: 'Two independent clauses joined by a comma and a coordinating conjunction.' },
+  { sentence: 'The sun set behind the mountains, and the sky turned orange.', answer: 'Compound', explanation: 'Two independent clauses joined by a comma and a coordinating conjunction.' },
+  { sentence: 'Noah finished his homework, so he turned on the game.', answer: 'Compound', explanation: 'Two independent clauses joined by a comma and a coordinating conjunction.' },
+  { sentence: 'The rain stopped, but the sidewalk stayed wet.', answer: 'Compound', explanation: 'Two independent clauses joined by a comma and a coordinating conjunction.' },
+  { sentence: 'The teacher asked a question, and the class answered together.', answer: 'Compound', explanation: 'Two independent clauses joined by a comma and a coordinating conjunction.' },
+  { sentence: 'We could leave now, or we could wait for the rest of the group.', answer: 'Compound', explanation: 'Two independent clauses joined by a comma and a coordinating conjunction.' },
+  { sentence: 'The movie ended, and everyone clapped.', answer: 'Compound', explanation: 'Two independent clauses joined by a comma and a coordinating conjunction.' },
+  { sentence: 'Ava brought the drinks, and Jaden carried the chairs.', answer: 'Compound', explanation: 'Two independent clauses joined by a comma and a coordinating conjunction.' },
+  { sentence: 'The hallway was noisy, but she stayed focused.', answer: 'Compound', explanation: 'Two independent clauses joined by a comma and a coordinating conjunction.' },
+  { sentence: 'I set an alarm, so I would not miss the bus.', answer: 'Compound', explanation: 'Two independent clauses joined by a comma and a coordinating conjunction.' },
+];
+
+const complexQuestions: Question[] = [
+  { sentence: 'Because the rain started early, the game was delayed.', answer: 'Complex', explanation: 'One dependent clause plus one independent clause.' },
+  { sentence: 'Although I was tired, I finished my homework.', answer: 'Complex', explanation: 'One dependent clause plus one independent clause.' },
+  { sentence: 'When the movie ended, we walked to the car.', answer: 'Complex', explanation: 'One dependent clause plus one independent clause.' },
+  { sentence: 'If you call me later, I will explain the assignment.', answer: 'Complex', explanation: 'One dependent clause plus one independent clause.' },
+  { sentence: 'Since the library was closed, we studied at home.', answer: 'Complex', explanation: 'One dependent clause plus one independent clause.' },
+  { sentence: 'After we ate dinner, Dad washed the dishes.', answer: 'Complex', explanation: 'One dependent clause plus one independent clause.' },
+  { sentence: 'Even though the test was hard, she stayed calm.', answer: 'Complex', explanation: 'One dependent clause plus one independent clause.' },
+  { sentence: 'While the baby slept, Mom folded the laundry.', answer: 'Complex', explanation: 'One dependent clause plus one independent clause.' },
+  { sentence: 'Before the concert began, we found our seats.', answer: 'Complex', explanation: 'One dependent clause plus one independent clause.' },
+  { sentence: 'Unless you hurry, the bus will leave without us.', answer: 'Complex', explanation: 'One dependent clause plus one independent clause.' },
+  { sentence: 'When the timer beeped, the cookies were ready.', answer: 'Complex', explanation: 'One dependent clause plus one independent clause.' },
+  { sentence: 'Because the power went out, we lit candles in the kitchen.', answer: 'Complex', explanation: 'One dependent clause plus one independent clause.' },
+];
+
+const compoundComplexQuestions: Question[] = [
+  { sentence: 'Because the rain started early, the game was delayed, and the fans opened their umbrellas.', answer: 'Compound-Complex', explanation: 'It has one dependent clause and two independent clauses.' },
+  { sentence: 'Although I was tired, I finished my homework, and I packed my bag for tomorrow.', answer: 'Compound-Complex', explanation: 'It has one dependent clause and two independent clauses.' },
+  { sentence: 'When the movie ended, we walked to the car, but Dad went back for his jacket.', answer: 'Compound-Complex', explanation: 'It has one dependent clause and two independent clauses.' },
+  { sentence: 'If you call me later, I will explain the assignment, and I will send you my notes.', answer: 'Compound-Complex', explanation: 'It has one dependent clause and two independent clauses.' },
+  { sentence: 'Since the library was closed, we studied at home, and we met online to compare answers.', answer: 'Compound-Complex', explanation: 'It has one dependent clause and two independent clauses.' },
+  { sentence: 'After we ate dinner, Dad washed the dishes, and Mom packed tomorrow\'s lunches.', answer: 'Compound-Complex', explanation: 'It has one dependent clause and two independent clauses.' },
+  { sentence: 'Even though the test was hard, she stayed calm, and she finished on time.', answer: 'Compound-Complex', explanation: 'It has one dependent clause and two independent clauses.' },
+  { sentence: 'While the baby slept, Mom folded the laundry, and I cleaned the kitchen table.', answer: 'Compound-Complex', explanation: 'It has one dependent clause and two independent clauses.' },
+  { sentence: 'Before the concert began, we found our seats, and we bought drinks for the show.', answer: 'Compound-Complex', explanation: 'It has one dependent clause and two independent clauses.' },
+  { sentence: 'Unless you hurry, the bus will leave without us, and we will miss first period.', answer: 'Compound-Complex', explanation: 'It has one dependent clause and two independent clauses.' },
+  { sentence: 'When the timer beeped, the cookies were ready, and the whole kitchen smelled amazing.', answer: 'Compound-Complex', explanation: 'It has one dependent clause and two independent clauses.' },
+  { sentence: 'Because the power went out, we lit candles in the kitchen, and we played cards by the window.', answer: 'Compound-Complex', explanation: 'It has one dependent clause and two independent clauses.' },
 ];
 
 const vocabEntries: VocabEntry[] = [
@@ -227,12 +239,6 @@ const vocabEntries: VocabEntry[] = [
   },
 ];
 
-const coordinatingConjunctions = ['and', 'but', 'so', 'or'];
-
-function pick<T>(items: T[]) {
-  return items[Math.floor(Math.random() * items.length)];
-}
-
 function shuffle<T>(items: T[]) {
   const copy = [...items];
   for (let i = copy.length - 1; i > 0; i -= 1) {
@@ -242,67 +248,17 @@ function shuffle<T>(items: T[]) {
   return copy;
 }
 
-function makeIndependentClause() {
-  return pick(independentClauses);
-}
-
-function makeSimpleQuestion(): Question {
-  const clause = makeIndependentClause();
-  return {
-    sentence: clause.start,
-    answer: 'Simple',
-    explanation: 'One independent clause only.',
-  };
-}
-
-function makeCompoundQuestion(): Question {
-  const firstClause = makeIndependentClause();
-  let secondClause = makeIndependentClause();
-  while (secondClause.start === firstClause.start) {
-    secondClause = makeIndependentClause();
-  }
-
-  return {
-    sentence: `${firstClause.start.slice(0, -1)}, ${pick(coordinatingConjunctions)} ${secondClause.mid}.`,
-    answer: 'Compound',
-    explanation: 'Two independent clauses joined by a comma and a coordinating conjunction.',
-  };
-}
-
-function makeComplexQuestion(): Question {
-  const clause = makeIndependentClause();
-  return {
-    sentence: `${pick(subordinateStarters)}, ${clause.mid}.`,
-    answer: 'Complex',
-    explanation: 'One dependent clause plus one independent clause.',
-  };
-}
-
-function makeCompoundComplexQuestion(): Question {
-  const firstClause = makeIndependentClause();
-  let secondClause = makeIndependentClause();
-  while (secondClause.start === firstClause.start) {
-    secondClause = makeIndependentClause();
-  }
-
-  return {
-    sentence: `${pick(subordinateStarters)}, ${firstClause.mid}, ${pick(coordinatingConjunctions)} ${secondClause.mid}.`,
-    answer: 'Compound-Complex',
-    explanation: 'It has one dependent clause and two independent clauses.',
-  };
+function takeRandom<T>(items: T[], count: number) {
+  return shuffle(items).slice(0, count);
 }
 
 function buildDeck() {
-  const freshQuestions: Question[] = [];
-
-  for (let i = 0; i < QUESTIONS_PER_TYPE; i += 1) {
-    freshQuestions.push(makeSimpleQuestion());
-    freshQuestions.push(makeCompoundQuestion());
-    freshQuestions.push(makeComplexQuestion());
-    freshQuestions.push(makeCompoundComplexQuestion());
-  }
-
-  return shuffle(freshQuestions);
+  return shuffle([
+    ...takeRandom(simpleQuestions, QUESTIONS_PER_TYPE),
+    ...takeRandom(compoundQuestions, QUESTIONS_PER_TYPE),
+    ...takeRandom(complexQuestions, QUESTIONS_PER_TYPE),
+    ...takeRandom(compoundComplexQuestions, QUESTIONS_PER_TYPE),
+  ]);
 }
 
 function buildVocabDeck() {
