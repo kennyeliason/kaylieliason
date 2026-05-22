@@ -1,7 +1,8 @@
 import { useState } from 'react';
 
 type SentenceType = 'Simple' | 'Compound' | 'Complex' | 'Compound-Complex';
-type PracticeTab = 'structure' | 'vocab';
+type FigurativeType = 'Simile' | 'Metaphor' | 'Personification' | 'Hyperbole' | 'Idiom';
+type PracticeTab = 'structure' | 'figurative' | 'vocab';
 
 type Question = {
   sentence: string;
@@ -22,9 +23,18 @@ type VocabQuestion = {
   options: string[];
 };
 
+type FigurativeQuestion = {
+  sentence: string;
+  answer: FigurativeType;
+  explanation: string;
+};
+
 const sentenceTypes: SentenceType[] = ['Simple', 'Compound', 'Complex', 'Compound-Complex'];
+const figurativeTypes: FigurativeType[] = ['Simile', 'Metaphor', 'Personification', 'Hyperbole', 'Idiom'];
 const QUESTION_COUNT = 24;
 const QUESTIONS_PER_TYPE = QUESTION_COUNT / sentenceTypes.length;
+const FIGURATIVE_QUESTION_COUNT = 20;
+const FIGURATIVE_PER_TYPE = FIGURATIVE_QUESTION_COUNT / figurativeTypes.length;
 
 const simpleQuestions: Question[] = [
   { sentence: 'The dog barked at the mail carrier.', answer: 'Simple', explanation: 'One independent clause only.' },
@@ -84,6 +94,29 @@ const compoundComplexQuestions: Question[] = [
   { sentence: 'Unless you hurry, the bus will leave without us, and we will miss first period.', answer: 'Compound-Complex', explanation: 'It has one dependent clause and two independent clauses.' },
   { sentence: 'When the timer beeped, the cookies were ready, and the whole kitchen smelled amazing.', answer: 'Compound-Complex', explanation: 'It has one dependent clause and two independent clauses.' },
   { sentence: 'Because the power went out, we lit candles in the kitchen, and we played cards by the window.', answer: 'Compound-Complex', explanation: 'It has one dependent clause and two independent clauses.' },
+];
+
+const figurativeQuestions: FigurativeQuestion[] = [
+  { sentence: 'Her smile was as bright as the sun.', answer: 'Simile', explanation: 'This is a simile because it compares two unlike things using "as."' },
+  { sentence: 'The classroom was a zoo after lunch.', answer: 'Metaphor', explanation: 'This is a metaphor because it directly says one thing is another.' },
+  { sentence: 'The wind whispered through the trees.', answer: 'Personification', explanation: 'This is personification because the wind is given a human action.' },
+  { sentence: 'I have told you a million times to clean your room.', answer: 'Hyperbole', explanation: 'This is hyperbole because it uses obvious exaggeration.' },
+  { sentence: 'After the surprise quiz, Kayli said it was a piece of cake.', answer: 'Idiom', explanation: 'This is an idiom because the phrase means something other than its literal words.' },
+  { sentence: 'He ran like lightning to catch the bus.', answer: 'Simile', explanation: 'This is a simile because it compares his speed to lightning using "like."' },
+  { sentence: 'Time is a thief that steals our weekends.', answer: 'Metaphor', explanation: 'This is a metaphor because it says time is a thief without using "like" or "as."' },
+  { sentence: 'The alarm clock screamed at 6:00 a.m.', answer: 'Personification', explanation: 'This is personification because the alarm clock is described as if it can scream.' },
+  { sentence: 'This backpack weighs a ton.', answer: 'Hyperbole', explanation: 'This is hyperbole because the speaker exaggerates the backpack\'s weight.' },
+  { sentence: 'When the project finally worked, we were on cloud nine.', answer: 'Idiom', explanation: 'This is an idiom because "on cloud nine" means very happy, not literally in the sky.' },
+  { sentence: 'The lake was as smooth as glass.', answer: 'Simile', explanation: 'This is a simile because it compares the lake to glass using "as."' },
+  { sentence: 'My little brother is a tornado when he cleans his room.', answer: 'Metaphor', explanation: 'This is a metaphor because it directly compares him to a tornado.' },
+  { sentence: 'The moon followed us home.', answer: 'Personification', explanation: 'This is personification because the moon is given the human ability to follow.' },
+  { sentence: 'I waited forever for the bell to ring.', answer: 'Hyperbole', explanation: 'This is hyperbole because "forever" is an exaggeration.' },
+  { sentence: 'Before the game, our coach told us to keep our eyes peeled.', answer: 'Idiom', explanation: 'This is an idiom because it means to watch carefully, not literally peel your eyes.' },
+  { sentence: 'The baby slept like a rock.', answer: 'Simile', explanation: 'This is a simile because it uses "like" to make a comparison.' },
+  { sentence: 'Her voice was music to the audience.', answer: 'Metaphor', explanation: 'This is a metaphor because it directly compares her voice to music.' },
+  { sentence: 'The old floorboards groaned under our feet.', answer: 'Personification', explanation: 'This is personification because the floorboards are given a human-like action.' },
+  { sentence: 'I am starving to death after practice.', answer: 'Hyperbole', explanation: 'This is hyperbole because the speaker exaggerates how hungry they feel.' },
+  { sentence: 'When the teacher changed the deadline, the whole class breathed a sigh of relief.', answer: 'Idiom', explanation: 'This is an idiom because the phrase means everyone felt relieved.' },
 ];
 
 const vocabEntries: VocabEntry[] = [
@@ -278,6 +311,20 @@ function buildVocabDeck() {
   });
 }
 
+function buildFigurativeDeck() {
+  const grouped = figurativeTypes.flatMap((type) =>
+    takeRandom(
+      figurativeQuestions.filter((question) => question.answer === type),
+      FIGURATIVE_PER_TYPE,
+    ),
+  );
+
+  return shuffle(grouped).map((entry) => ({
+    ...entry,
+    options: shuffle(figurativeTypes),
+  }));
+}
+
 export default function EnglishSentencePractice() {
   const [activeTab, setActiveTab] = useState<PracticeTab>('structure');
   const [deck, setDeck] = useState(() => buildDeck());
@@ -290,6 +337,11 @@ export default function EnglishSentencePractice() {
   const [vocabSelected, setVocabSelected] = useState<string | null>(null);
   const [vocabCorrectCount, setVocabCorrectCount] = useState(0);
   const [vocabStreak, setVocabStreak] = useState(0);
+  const [figurativeDeck, setFigurativeDeck] = useState(() => buildFigurativeDeck());
+  const [figurativeIndex, setFigurativeIndex] = useState(0);
+  const [figurativeSelected, setFigurativeSelected] = useState<FigurativeType | null>(null);
+  const [figurativeCorrectCount, setFigurativeCorrectCount] = useState(0);
+  const [figurativeStreak, setFigurativeStreak] = useState(0);
 
   const current = deck[index];
   const isDone = index >= deck.length;
@@ -302,6 +354,11 @@ export default function EnglishSentencePractice() {
   const vocabIsCorrect = vocabSelected === currentVocab?.definition;
   const vocabAnswered = vocabSelected !== null;
   const vocabProgress = vocabDeck.length === 0 ? 0 : Math.round((vocabIndex / vocabDeck.length) * 100);
+  const currentFigurative = figurativeDeck[figurativeIndex];
+  const figurativeDone = figurativeIndex >= figurativeDeck.length;
+  const figurativeIsCorrect = figurativeSelected === currentFigurative?.answer;
+  const figurativeAnswered = figurativeSelected !== null;
+  const figurativeProgress = figurativeDeck.length === 0 ? 0 : Math.round((figurativeIndex / figurativeDeck.length) * 100);
 
   function handleAnswer(choice: SentenceType) {
     if (answered || !current) return;
@@ -326,6 +383,31 @@ export default function EnglishSentencePractice() {
     setSelected(null);
     setCorrectCount(0);
     setStreak(0);
+  }
+
+  function handleFigurativeAnswer(choice: FigurativeType) {
+    if (figurativeAnswered || !currentFigurative) return;
+    setFigurativeSelected(choice);
+    if (choice === currentFigurative.answer) {
+      setFigurativeCorrectCount((count) => count + 1);
+      setFigurativeStreak((count) => count + 1);
+      return;
+    }
+    setFigurativeStreak(0);
+  }
+
+  function nextFigurativeQuestion() {
+    if (!figurativeAnswered) return;
+    setFigurativeSelected(null);
+    setFigurativeIndex((value) => value + 1);
+  }
+
+  function restartFigurative() {
+    setFigurativeDeck(buildFigurativeDeck());
+    setFigurativeIndex(0);
+    setFigurativeSelected(null);
+    setFigurativeCorrectCount(0);
+    setFigurativeStreak(0);
   }
 
   function handleVocabAnswer(choice: string) {
@@ -368,6 +450,12 @@ export default function EnglishSentencePractice() {
               Sentence Structure
             </button>
             <button
+              className={activeTab === 'figurative' ? 'tab-bubble active' : 'tab-bubble'}
+              onClick={() => setActiveTab('figurative')}
+            >
+              Figurative Language
+            </button>
+            <button
               className={activeTab === 'vocab' ? 'tab-bubble active' : 'tab-bubble'}
               onClick={() => setActiveTab('vocab')}
             >
@@ -376,15 +464,25 @@ export default function EnglishSentencePractice() {
           </div>
 
           <div className="eyebrow">
-            {activeTab === 'structure' ? 'Sentence Structure' : 'Vocab Words'}
+            {activeTab === 'structure'
+              ? 'Sentence Structure'
+              : activeTab === 'figurative'
+                ? 'Figurative Language'
+                : 'Vocab Words'}
           </div>
           <h1>
-            {activeTab === 'structure' ? 'Sentence Structure Trainer' : 'Vocab Words Trainer'}
+            {activeTab === 'structure'
+              ? 'Sentence Structure Trainer'
+              : activeTab === 'figurative'
+                ? 'Figurative Language Trainer'
+                : 'Vocab Words Trainer'}
           </h1>
           <p className="hero-copy">
             {activeTab === 'structure'
               ? 'Read each sentence and choose whether it is simple, compound, complex, or compound-complex.'
-              : 'Choose the correct meaning for each word, then use the example sentence to lock it in.'}
+              : activeTab === 'figurative'
+                ? 'Read each sentence and choose which type of figurative language it uses.'
+                : 'Choose the correct meaning for each word, then use the example sentence to lock it in.'}
           </p>
 
           {activeTab === 'structure' && (
@@ -404,6 +502,31 @@ export default function EnglishSentencePractice() {
               <div className="hint-card">
                 <strong>Compound-Complex</strong>
                 <span>2 independent + 1 dependent clause</span>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'figurative' && (
+            <div className="hint-grid">
+              <div className="hint-card">
+                <strong>Simile</strong>
+                <span>Comparison using like or as</span>
+              </div>
+              <div className="hint-card">
+                <strong>Metaphor</strong>
+                <span>Direct comparison without like or as</span>
+              </div>
+              <div className="hint-card">
+                <strong>Personification</strong>
+                <span>Gives human traits to nonhuman things</span>
+              </div>
+              <div className="hint-card">
+                <strong>Hyperbole</strong>
+                <span>Extreme exaggeration</span>
+              </div>
+              <div className="hint-card hint-card-wide">
+                <strong>Idiom</strong>
+                <span>A phrase that means something different from the literal words</span>
               </div>
             </div>
           )}
@@ -466,6 +589,69 @@ export default function EnglishSentencePractice() {
                     <p className="feedback-copy">{current.explanation}</p>
                     <button className="primary-btn" onClick={nextQuestion}>
                       {index === deck.length - 1 ? 'See Score' : 'Next Sentence'}
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </section>
+        ) : activeTab === 'figurative' ? (
+          <section className="board">
+            <div className="stats">
+              <div className="stat-chip">Score: {figurativeCorrectCount}/{figurativeDeck.length}</div>
+              <div className="stat-chip">Streak: {figurativeStreak}</div>
+              <div className="stat-chip">Progress: {figurativeProgress}%</div>
+            </div>
+
+            <div className="progress-track" aria-hidden="true">
+              <div className="progress-fill" style={{ width: `${figurativeProgress}%` }} />
+            </div>
+
+            {figurativeDone ? (
+              <div className="result-card">
+                <p className="result-label">Finished</p>
+                <h2>You got {figurativeCorrectCount} out of {figurativeDeck.length}</h2>
+                <p className="result-copy">
+                  {figurativeCorrectCount === figurativeDeck.length
+                    ? 'Perfect. You spotted every one.'
+                    : figurativeCorrectCount >= figurativeDeck.length * 0.8
+                      ? 'Nice work. You are catching the patterns.'
+                      : 'Run it again and focus on the clue words in each sentence.'}
+                </p>
+                <button className="primary-btn" onClick={restartFigurative}>Try Again</button>
+              </div>
+            ) : (
+              <div className="question-card">
+                <div className="question-topline">Question {figurativeIndex + 1} of {figurativeDeck.length}</div>
+                <p className="sentence">{currentFigurative.sentence}</p>
+
+                <div className="answer-grid answer-grid-figurative">
+                  {currentFigurative.options.map((type) => {
+                    let className = 'answer-btn';
+                    if (figurativeAnswered && type === currentFigurative.answer) className += ' correct';
+                    if (figurativeAnswered && figurativeSelected === type && type !== currentFigurative.answer) className += ' wrong';
+
+                    return (
+                      <button
+                        key={type}
+                        className={className}
+                        onClick={() => handleFigurativeAnswer(type)}
+                        disabled={figurativeAnswered}
+                      >
+                        {type}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {figurativeAnswered && (
+                  <div className={figurativeIsCorrect ? 'feedback success' : 'feedback error'}>
+                    <p className="feedback-title">
+                      {figurativeIsCorrect ? 'Correct' : `Not quite. The answer is ${currentFigurative.answer}.`}
+                    </p>
+                    <p className="feedback-copy">{currentFigurative.explanation}</p>
+                    <button className="primary-btn" onClick={nextFigurativeQuestion}>
+                      {figurativeIndex === figurativeDeck.length - 1 ? 'See Score' : 'Next Sentence'}
                     </button>
                   </div>
                 )}
@@ -680,6 +866,10 @@ export default function EnglishSentencePractice() {
           text-align: left;
         }
 
+        .hint-card-wide {
+          grid-column: 1 / -1;
+        }
+
         .hint-card strong {
           font-size: 1rem;
           color: #7c2d12;
@@ -758,6 +948,10 @@ export default function EnglishSentencePractice() {
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 0.8rem;
+        }
+
+        .answer-grid-figurative {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
         }
 
         .answer-btn,
@@ -851,7 +1045,8 @@ export default function EnglishSentencePractice() {
           }
 
           .hint-grid,
-          .answer-grid {
+          .answer-grid,
+          .answer-grid-figurative {
             grid-template-columns: 1fr;
           }
 
