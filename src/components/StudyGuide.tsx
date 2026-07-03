@@ -4,16 +4,25 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 
 // Unit definitions
 const units = [
-  { key: 'All', label: 'All Units' },
-  { key: 'Unit 8', label: '👩‍⚕️ Unit 8: Cell Division & Cancer' },
-  { key: 'Unit 9', label: 'Unit 9: Cell Structure & Transport' },
-  { key: 'Unit 10', label: 'Unit 10: Photosynthesis & Calvin Cycle' },
-  { key: 'Unit 11', label: 'Unit 11: Introduction to Genetics' },
-  { key: 'Unit 12', label: 'Unit 12: DNA, RNA, and protein synthesis' },
-  { key: '🌎Unit 13', label: '🌎Unit 13: Evolution & Natural Selection' },
-  { key: '🔭Unit 14', label: '🔭Unit 14: Biotechnology' },
-  { key: 'Unit 15', label: '👩‍🔬 Unit 15: Classification, Fossils & Phylogeny' },
-  { key: 'Roots', label: 'Word Roots' },
+  { key: 'All', label: 'All Units', shortLabel: '📚 All' },
+  { key: 'Semester 1', label: 'Semester 1: Units 1-7', shortLabel: '🗂️ Sem 1' },
+  { key: 'Unit 1', label: '🧪 Unit 1: Scientific Method & Experimental Design', shortLabel: '🧪 Unit 1' },
+  { key: 'Unit 2', label: '💧 Unit 2: Chemistry of Life', shortLabel: '💧 Unit 2' },
+  { key: 'Unit 3', label: '🌍 Unit 3: Ecology Foundations', shortLabel: '🌍 Unit 3' },
+  { key: 'Unit 4', label: '🌿 Unit 4: Biomes & Aquatic Ecosystems', shortLabel: '🌿 Unit 4' },
+  { key: 'Unit 5', label: '🦌 Unit 5: Populations', shortLabel: '🦌 Unit 5' },
+  { key: 'Unit 6', label: '🤝 Unit 6: Interactions in Ecosystems', shortLabel: '🤝 Unit 6' },
+  { key: 'Unit 7', label: '🦋 Unit 7: Biodiversity & Human Impact', shortLabel: '🦋 Unit 7' },
+  { key: 'Semester 2', label: 'Semester 2: Units 8-15', shortLabel: '🗂️ Sem 2' },
+  { key: 'Unit 8', label: '👩‍⚕️ Unit 8: Cell Division & Cancer', shortLabel: '👩‍⚕️ Unit 8' },
+  { key: 'Unit 9', label: '🔬 Unit 9: Cell Structure & Transport', shortLabel: '🔬 Unit 9' },
+  { key: 'Unit 10', label: '🌱 Unit 10: Photosynthesis & Calvin Cycle', shortLabel: '🌱 Unit 10' },
+  { key: 'Unit 11', label: '🧑‍🧑‍🧒‍🧒 Unit 11: Introduction to Genetics', shortLabel: '🧑‍🧑‍🧒‍🧒 Unit 11' },
+  { key: 'Unit 12', label: '🧫 Unit 12: DNA, RNA, and Protein Synthesis', shortLabel: '🧫 Unit 12' },
+  { key: '🌎Unit 13', label: '🌎Unit 13: Evolution & Natural Selection', shortLabel: '🌎 Unit 13' },
+  { key: '🔭Unit 14', label: '🔭Unit 14: Biotechnology', shortLabel: '🔭 Unit 14' },
+  { key: 'Unit 15', label: '👩‍🔬 Unit 15: Classification, Fossils & Phylogeny', shortLabel: '👩‍🔬 Unit 15' },
+  { key: 'Roots', label: 'Word Roots', shortLabel: '📖 Roots' },
 ];
 
 // Theme colors per unit
@@ -25,6 +34,78 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
     accent: '#ec4899', accentLight: '#fce7f3',
     emojis: ['📚', '🧬', '🔬', '🌱', '🧫', '☀️'],
     shadow: 'rgba(236,72,153,0.3)',
+  },
+  'Semester 1': {
+    primary: '#0f766e', primaryLight: '#14b8a6', primaryDark: '#115e59',
+    gradient: 'linear-gradient(135deg, #0f766e, #14b8a6)',
+    bgGradient: 'linear-gradient(135deg, #ecfeff 0%, #ccfbf1 50%, #f0fdfa 100%)',
+    accent: '#14b8a6', accentLight: '#ccfbf1',
+    emojis: ['🗂️', '🧪', '🌍', '🦋'],
+    shadow: 'rgba(15,118,110,0.28)',
+  },
+  'Unit 1': {
+    primary: '#2563eb', primaryLight: '#60a5fa', primaryDark: '#1d4ed8',
+    gradient: 'linear-gradient(135deg, #2563eb, #60a5fa)',
+    bgGradient: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #f0f9ff 100%)',
+    accent: '#2563eb', accentLight: '#dbeafe',
+    emojis: ['🧪', '📊', '🔍', '📈'],
+    shadow: 'rgba(37,99,235,0.28)',
+  },
+  'Unit 2': {
+    primary: '#0891b2', primaryLight: '#22d3ee', primaryDark: '#0e7490',
+    gradient: 'linear-gradient(135deg, #0891b2, #22d3ee)',
+    bgGradient: 'linear-gradient(135deg, #ecfeff 0%, #cffafe 50%, #f0fdfa 100%)',
+    accent: '#0891b2', accentLight: '#cffafe',
+    emojis: ['💧', '⚗️', '🧬', '🔗'],
+    shadow: 'rgba(8,145,178,0.28)',
+  },
+  'Unit 3': {
+    primary: '#16a34a', primaryLight: '#4ade80', primaryDark: '#15803d',
+    gradient: 'linear-gradient(135deg, #16a34a, #4ade80)',
+    bgGradient: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #ecfccb 100%)',
+    accent: '#16a34a', accentLight: '#dcfce7',
+    emojis: ['🌍', '🌞', '🌱', '🍄'],
+    shadow: 'rgba(22,163,74,0.28)',
+  },
+  'Unit 4': {
+    primary: '#65a30d', primaryLight: '#84cc16', primaryDark: '#4d7c0f',
+    gradient: 'linear-gradient(135deg, #65a30d, #84cc16)',
+    bgGradient: 'linear-gradient(135deg, #f7fee7 0%, #ecfccb 50%, #fefce8 100%)',
+    accent: '#65a30d', accentLight: '#ecfccb',
+    emojis: ['🌿', '🐠', '🏜️', '🌧️'],
+    shadow: 'rgba(101,163,13,0.28)',
+  },
+  'Unit 5': {
+    primary: '#d97706', primaryLight: '#f59e0b', primaryDark: '#b45309',
+    gradient: 'linear-gradient(135deg, #d97706, #f59e0b)',
+    bgGradient: 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 50%, #fff7ed 100%)',
+    accent: '#d97706', accentLight: '#fef3c7',
+    emojis: ['🦌', '📈', '🌾', '🐇'],
+    shadow: 'rgba(217,119,6,0.28)',
+  },
+  'Unit 6': {
+    primary: '#7c3aed', primaryLight: '#a78bfa', primaryDark: '#6d28d9',
+    gradient: 'linear-gradient(135deg, #7c3aed, #a78bfa)',
+    bgGradient: 'linear-gradient(135deg, #f5f3ff 0%, #ede9fe 50%, #faf5ff 100%)',
+    accent: '#7c3aed', accentLight: '#ede9fe',
+    emojis: ['🤝', '🐝', '🌲', '🪱'],
+    shadow: 'rgba(124,58,237,0.28)',
+  },
+  'Unit 7': {
+    primary: '#db2777', primaryLight: '#f472b6', primaryDark: '#be185d',
+    gradient: 'linear-gradient(135deg, #db2777, #f472b6)',
+    bgGradient: 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #fff1f2 100%)',
+    accent: '#db2777', accentLight: '#fce7f3',
+    emojis: ['🦋', '🌎', '🚫', '🧯'],
+    shadow: 'rgba(219,39,119,0.28)',
+  },
+  'Semester 2': {
+    primary: '#b45309', primaryLight: '#f59e0b', primaryDark: '#92400e',
+    gradient: 'linear-gradient(135deg, #b45309, #f59e0b)',
+    bgGradient: 'linear-gradient(135deg, #fff7ed 0%, #ffedd5 50%, #fef3c7 100%)',
+    accent: '#b45309', accentLight: '#ffedd5',
+    emojis: ['🗂️', '🧬', '🔬', '👩‍🔬'],
+    shadow: 'rgba(180,83,9,0.28)',
   },
   'Unit 8': {
     primary: '#f97316', primaryLight: '#fb923c', primaryDark: '#ea580c',
@@ -101,8 +182,281 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
   },
 };
 
+const semesterUnitMap: {[key: string]: string[]} = {
+  'Semester 1': ['Unit 1', 'Unit 2', 'Unit 3', 'Unit 4', 'Unit 5', 'Unit 6', 'Unit 7'],
+  'Semester 2': ['Unit 8', 'Unit 9', 'Unit 10', 'Unit 11', 'Unit 12', '🌎Unit 13', '🔭Unit 14', 'Unit 15'],
+};
+
+const makeQuestion = (id: number, unit: string, topic: string, q: string, a: string, wrong: string[]) => ({
+  id,
+  unit,
+  topic,
+  q,
+  a,
+  wrong,
+});
+
 // Biology Cell Test Questions - organized by topic and unit
 const questions = [
+  // Unit 1 - Scientific Method & Experimental Design
+  makeQuestion(10001, 'Unit 1', 'Scientific Method', 'What is the independent variable in an experiment?', 'The factor the scientist changes on purpose', ['The data being measured', 'The factors kept the same', 'A conclusion drawn from the results']),
+  makeQuestion(10002, 'Unit 1', 'Scientific Method', 'What is the dependent variable?', 'The data that responds to the change', ['The factor held constant', 'The group without treatment', 'The question being asked']),
+  makeQuestion(10003, 'Unit 1', 'Scientific Method', 'Why are controlled variables important in an experiment?', 'They help make sure only one factor is being tested', ['They make graphs look better', 'They increase the independent variable', 'They replace the control group']),
+  makeQuestion(10004, 'Unit 1', 'Scientific Method', 'A student tests whether fertilizer affects plant height. What is the dependent variable?', 'Plant height', ['Type of fertilizer', 'Amount of sunlight', 'Soil type']),
+  makeQuestion(10005, 'Unit 1', 'Scientific Method', 'A hypothesis should be best described as a...', 'Testable explanation or prediction', ['Random guess with no evidence', 'Final proof', 'List of materials']),
+  makeQuestion(10006, 'Unit 1', 'Scientific Method', 'How is a scientific theory different from a hypothesis?', 'A theory is supported by lots of evidence over time', ['A theory is just a wild guess', 'A hypothesis is always proven true', 'A theory cannot be tested']),
+  makeQuestion(10007, 'Unit 1', 'Scientific Method', 'What is the purpose of a control group?', 'It provides a comparison for the treatment group', ['It changes the dependent variable', 'It receives every treatment', 'It proves the hypothesis automatically']),
+  makeQuestion(10008, 'Unit 1', 'Data & Graphs', 'Which graph is best for showing change over time?', 'Line graph', ['Pie chart', 'Drawing', 'Punnett square']),
+  makeQuestion(10009, 'Unit 1', 'Data & Graphs', 'Which graph is usually best for comparing categories?', 'Bar graph', ['Line graph', 'Scatter plot only', 'Number sentence']),
+  makeQuestion(10010, 'Unit 1', 'Data & Graphs', 'What should go on the x-axis of a graph in most experiments?', 'The independent variable', ['The title', 'The dependent variable only', 'The conclusion']),
+  makeQuestion(10011, 'Unit 1', 'Data & Graphs', 'What should go on the y-axis of a graph in most experiments?', 'The dependent variable', ['The control group name', 'The hypothesis', 'The lab partner']),
+  makeQuestion(10012, 'Unit 1', 'Variables', 'If a student changes the amount of water given to plants, what is the independent variable?', 'Amount of water', ['Plant growth', 'Type of ruler used', 'Height data']),
+  makeQuestion(10013, 'Unit 1', 'Variables', 'If the amount of sunlight, soil, and pot size stay the same, they are...', 'Controlled variables', ['Dependent variables', 'Independent variables', 'Experimental errors']),
+  makeQuestion(10014, 'Unit 1', 'Reasoning', 'Which statement is an observation rather than an inference?', 'The liquid turned blue', ['The liquid contains starch', 'The plant is unhealthy because it lacks minerals', 'The animal is scared']),
+  makeQuestion(10015, 'Unit 1', 'Reasoning', 'What is an inference?', 'A conclusion based on observations and prior knowledge', ['A direct measurement', 'A random opinion', 'A variable that is controlled']),
+  makeQuestion(10016, 'Unit 1', 'Measurement', 'Which is a quantitative observation?', 'The plant grew 4 cm in one week', ['The plant looks healthy', 'The solution is cloudy', 'The frog is active']),
+  makeQuestion(10017, 'Unit 1', 'Measurement', 'Which is a qualitative observation?', 'The leaf is dark green', ['The leaf is 6 cm long', 'The mass is 22 g', 'The temperature is 31 C']),
+  makeQuestion(10018, 'Unit 1', 'Experimental Design', 'Why do scientists repeat trials?', 'To make results more reliable', ['To change the hypothesis', 'To guarantee the expected answer', 'To remove the dependent variable']),
+  makeQuestion(10019, 'Unit 1', 'Experimental Design', 'Why does a larger sample size usually improve an investigation?', 'It reduces the effect of random variation', ['It eliminates the need for data', 'It proves the conclusion is correct', 'It makes the independent variable stronger']),
+  makeQuestion(10020, 'Unit 1', 'Experimental Design', 'What could cause enzyme activity to decrease at high temperatures?', 'The enzyme changes shape and loses function', ['The enzyme makes extra ATP', 'The substrate disappears instantly', 'The pH becomes neutral every time']),
+  makeQuestion(10021, 'Unit 1', 'Scientific Method', 'Which step usually comes after analyzing data?', 'Drawing a conclusion', ['Choosing a topic', 'Listing materials first', 'Changing all variables']),
+  makeQuestion(10022, 'Unit 1', 'Scientific Method', 'What is the first step in many scientific investigations?', 'Ask a question or identify a problem', ['Write the conclusion', 'Make a graph', 'Publish the textbook']),
+  makeQuestion(10023, 'Unit 1', 'Experimental Design', 'If two groups differ in more than one major way, the experiment is weak because...', 'It is hard to tell which factor caused the results', ['The dependent variable becomes the same', 'The control group disappears', 'The hypothesis becomes a theory']),
+  makeQuestion(10024, 'Unit 1', 'Measurement', 'What tool is most appropriate for measuring liquid volume?', 'Graduated cylinder', ['Meter stick', 'Balance', 'Thermometer']),
+  makeQuestion(10025, 'Unit 1', 'Measurement', 'What tool is most appropriate for measuring mass?', 'Balance', ['Ruler', 'Beaker', 'Microscope']),
+  makeQuestion(10026, 'Unit 1', 'Measurement', 'What does accuracy describe?', 'How close a measurement is to the true value', ['How many trials are done', 'How close repeated values are to one another', 'How colorful the graph is']),
+  makeQuestion(10027, 'Unit 1', 'Measurement', 'What does precision describe?', 'How close repeated measurements are to each other', ['How close a value is to the accepted value', 'How large the sample size is', 'How many variables are controlled']),
+  makeQuestion(10028, 'Unit 1', 'Experimental Design', 'What is a placebo used for in some experiments?', 'To compare against the effect of a treatment', ['To increase the dose', 'To raise the independent variable', 'To make data more precise automatically']),
+  makeQuestion(10029, 'Unit 1', 'Scientific Method', 'Why is peer review useful in science?', 'It helps other scientists check methods and conclusions', ['It guarantees every claim is true', 'It removes the need for evidence', 'It allows opinions to replace data']),
+  makeQuestion(10030, 'Unit 1', 'Data & Graphs', 'If data points rise as the x-values rise, the graph shows a...', 'Positive relationship', ['Negative relationship', 'No pattern at all', 'Control variable']),
+  makeQuestion(10031, 'Unit 1', 'Data & Graphs', 'A scatter plot is especially useful for showing...', 'The relationship between two measured variables', ['Only parts of a cell', 'Taxonomic ranks', 'DNA sequences']),
+  makeQuestion(10032, 'Unit 1', 'Experimental Design', 'What makes an experiment valid?', 'It tests one main variable while keeping others controlled', ['It always supports the hypothesis', 'It uses the most colorful graph', 'It has no control group']),
+  makeQuestion(10033, 'Unit 1', 'Scientific Method', 'If evidence does not support a hypothesis, a scientist should...', 'Revise the hypothesis and keep investigating', ['Change the data', 'Ignore the results', 'Claim the hypothesis is true anyway']),
+  makeQuestion(10034, 'Unit 1', 'Reasoning', 'What is the best definition of bias in an investigation?', 'A factor that unfairly influences results or interpretation', ['A repeated trial', 'A balanced experiment', 'A type of graph']),
+  makeQuestion(10035, 'Unit 1', 'Scientific Method', 'Why is it important that experiments are reproducible?', 'Other scientists should be able to get similar results using the same methods', ['So the independent variable changes every time', 'So a control group is not needed', 'So conclusions never have to be questioned']),
+
+  // Unit 2 - Chemistry of Life
+  makeQuestion(20001, 'Unit 2', 'Atoms & Molecules', 'What is the difference between an element and a compound?', 'An element has one type of atom, while a compound has atoms of different elements bonded together', ['An element is always larger than a compound', 'A compound has only one atom', 'Elements are made of compounds']),
+  makeQuestion(20002, 'Unit 2', 'Atoms & Molecules', 'What are the three main subatomic particles?', 'Protons, neutrons, and electrons', ['Atoms, cells, and molecules', 'Genes, proteins, and lipids', 'Ions, enzymes, and isotopes']),
+  makeQuestion(20003, 'Unit 2', 'Atoms & Molecules', 'Which subatomic particle has a positive charge?', 'Proton', ['Electron', 'Neutron', 'Isotope']),
+  makeQuestion(20004, 'Unit 2', 'Bonds', 'Compare ionic and covalent bonds.', 'Ionic bonds involve electron transfer, while covalent bonds involve electron sharing', ['Both always share electrons equally', 'Ionic bonds only happen in water', 'Covalent bonds form ions by transfer']),
+  makeQuestion(20005, 'Unit 2', 'Water Properties', 'Why is water considered a polar molecule?', 'It has uneven charge distribution across the molecule', ['It is made only of oxygen', 'It cannot form bonds', 'It has no electrons']),
+  makeQuestion(20006, 'Unit 2', 'Water Properties', 'How do cohesion and adhesion help water move up a plant stem?', 'Cohesion keeps water molecules together and adhesion helps them cling to surfaces', ['They break water apart into atoms', 'They stop capillary action', 'They cause water to evaporate immediately']),
+  makeQuestion(20007, 'Unit 2', 'Water Properties', 'What causes surface tension in water?', 'Hydrogen bonding between water molecules', ['Ionic bonding in salt', 'The absence of oxygen', 'Carbon chains in lipids']),
+  makeQuestion(20008, 'Unit 2', 'Water Properties', 'Why is water a good solvent?', 'Its polarity allows it to dissolve many charged or polar substances', ['It has no bonds', 'It only dissolves lipids', 'It never changes temperature']),
+  makeQuestion(20009, 'Unit 2', 'pH', 'What pH value is considered neutral?', '7', ['0', '1', '14']),
+  makeQuestion(20010, 'Unit 2', 'pH', 'A solution with a pH of 3 is...', 'Acidic', ['Basic', 'Neutral', 'Nonpolar']),
+  makeQuestion(20011, 'Unit 2', 'pH', 'A solution with a pH of 11 is...', 'Basic', ['Acidic', 'Neutral', 'Enzymatic']),
+  makeQuestion(20012, 'Unit 2', 'Macromolecules', 'Which macromolecule provides quick energy for cells?', 'Carbohydrates', ['Lipids', 'Proteins', 'Nucleic acids']),
+  makeQuestion(20013, 'Unit 2', 'Macromolecules', 'What are the building blocks of proteins?', 'Amino acids', ['Fatty acids', 'Nucleotides', 'Monosaccharides']),
+  makeQuestion(20014, 'Unit 2', 'Macromolecules', 'What are the monomers of nucleic acids?', 'Nucleotides', ['Amino acids', 'Glycerol molecules', 'Glucose only']),
+  makeQuestion(20015, 'Unit 2', 'Macromolecules', 'Lipids are especially useful for long-term energy storage because they...', 'Store large amounts of energy in their bonds', ['Dissolve easily in water', 'Are made of amino acids', 'Form chromosomes directly']),
+  makeQuestion(20016, 'Unit 2', 'Macromolecules', 'Which macromolecule contains genetic instructions?', 'Nucleic acids', ['Carbohydrates', 'Lipids', 'Water']),
+  makeQuestion(20017, 'Unit 2', 'Macromolecules', 'What are the two main parts of many lipids?', 'Glycerol and fatty acids', ['Glucose and fructose', 'Nucleotides and sugars', 'Protons and electrons']),
+  makeQuestion(20018, 'Unit 2', 'Enzymes', 'What is the main job of an enzyme?', 'To speed up chemical reactions', ['To store DNA', 'To dissolve every substance', 'To make acids stronger']),
+  makeQuestion(20019, 'Unit 2', 'Enzymes', 'Why does an enzyme stop working at high temperatures?', 'Its shape changes so the active site no longer fits the substrate', ['It becomes an ion', 'It turns into a lipid', 'It loses all atoms']),
+  makeQuestion(20020, 'Unit 2', 'Enzymes', 'What is the active site of an enzyme?', 'The region where the substrate binds', ['The pH of the enzyme', 'The place where DNA is stored', 'The lipid tail']),
+  makeQuestion(20021, 'Unit 2', 'Enzymes', 'What is a substrate?', 'The reactant an enzyme acts on', ['The product that leaves the nucleus', 'A type of lipid', 'A negatively charged atom']),
+  makeQuestion(20022, 'Unit 2', 'Enzymes', 'What happens to an enzyme after a reaction?', 'It can usually be used again', ['It is always destroyed', 'It turns into a carbohydrate', 'It becomes part of the product']),
+  makeQuestion(20023, 'Unit 2', 'Chemical Reactions', 'Reactants are best defined as...', 'The starting materials in a reaction', ['The final materials in a reaction', 'Only substances with carbon', 'Only acidic molecules']),
+  makeQuestion(20024, 'Unit 2', 'Chemical Reactions', 'Products are best defined as...', 'The substances formed by a reaction', ['The starting substances', 'The variables in an experiment', 'The catalysts']),
+  makeQuestion(20025, 'Unit 2', 'Atoms & Molecules', 'What is an ion?', 'An atom or molecule with a charge', ['A neutral atom with no electrons', 'A large organic polymer', 'A type of enzyme']),
+  makeQuestion(20026, 'Unit 2', 'Atoms & Molecules', 'What makes carbon especially useful in living things?', 'It can form four covalent bonds and build complex molecules', ['It has no electrons', 'It only bonds with oxygen', 'It cannot form chains']),
+  makeQuestion(20027, 'Unit 2', 'Water Properties', 'Why does ice float on liquid water?', 'Ice is less dense than liquid water', ['Ice has no hydrogen bonds', 'Ice is more acidic', 'Ice contains less oxygen']),
+  makeQuestion(20028, 'Unit 2', 'Macromolecules', 'Starch and glycogen are examples of...', 'Carbohydrates', ['Proteins', 'Lipids', 'Nucleic acids']),
+  makeQuestion(20029, 'Unit 2', 'Macromolecules', 'Enzymes are usually a type of...', 'Protein', ['Lipid', 'Carbohydrate', 'Mineral']),
+  makeQuestion(20030, 'Unit 2', 'Macromolecules', 'Which macromolecule is a major part of cell membranes?', 'Lipids', ['Nucleic acids', 'Neutrons', 'Starches only']),
+  makeQuestion(20031, 'Unit 2', 'Homeostasis', 'Why do buffers matter in living systems?', 'They help resist sudden changes in pH', ['They create ATP directly', 'They stop water from moving', 'They make every solution neutral']),
+  makeQuestion(20032, 'Unit 2', 'Macromolecules', 'Which test is commonly used to detect starch?', 'Iodine test', ['Biuret test', 'Benedict test for proteins', 'Litmus test for oxygen']),
+  makeQuestion(20033, 'Unit 2', 'Macromolecules', 'Which test is commonly used to detect proteins?', 'Biuret test', ['Iodine test', 'pH strip only', 'Sudan III test for starch']),
+  makeQuestion(20034, 'Unit 2', 'Macromolecules', 'DNA and RNA are both examples of...', 'Nucleic acids', ['Lipids', 'Simple sugars', 'Water molecules']),
+  makeQuestion(20035, 'Unit 2', 'Enzymes', 'What usually happens to reaction rate when substrate concentration rises and enzymes are still available?', 'The reaction rate increases', ['The reaction always stops', 'The pH becomes neutral', 'The enzyme turns into a substrate']),
+
+  // Unit 3 - Ecology Foundations
+  makeQuestion(30001, 'Unit 3', 'Levels of Organization', 'Put these in order from smallest to largest: organism, population, ecosystem, biome, biosphere.', 'Organism, population, ecosystem, biome, biosphere', ['Population, organism, biome, ecosystem, biosphere', 'Organism, ecosystem, population, biome, biosphere', 'Biome, ecosystem, population, organism, biosphere']),
+  makeQuestion(30002, 'Unit 3', 'Ecology Basics', 'What is ecology?', 'The study of interactions between organisms and their environment', ['The study of rocks only', 'The study of cell division', 'The study of heredity only']),
+  makeQuestion(30003, 'Unit 3', 'Ecology Basics', 'Identify biotic and abiotic factors in a coral reef.', 'Biotic are living things like fish and coral; abiotic are nonliving factors like water, light, and temperature', ['Biotic are rocks and abiotic are fish', 'Both are living things only', 'Abiotic factors are only predators']),
+  makeQuestion(30004, 'Unit 3', 'Ecology Basics', 'What is a habitat?', 'The place where an organism lives', ['The role an organism plays', 'A food chain only', 'The climate of Earth']),
+  makeQuestion(30005, 'Unit 3', 'Ecology Basics', 'What is a niche?', 'The role an organism plays in its ecosystem', ['The number of organisms in one area', 'A nonliving factor', 'A kind of biome']),
+  makeQuestion(30006, 'Unit 3', 'Energy Flow', 'Where does most energy in ecosystems come from?', 'The sun', ['Soil minerals', 'Decomposers', 'The moon']),
+  makeQuestion(30007, 'Unit 3', 'Energy Flow', 'What do producers do?', 'Make food using sunlight or chemical energy', ['Eat other organisms', 'Break down all rocks', 'Always hunt prey']),
+  makeQuestion(30008, 'Unit 3', 'Energy Flow', 'Consumers get energy by...', 'Eating other organisms', ['Making glucose from sunlight', 'Breaking apart atoms', 'Producing oxygen only']),
+  makeQuestion(30009, 'Unit 3', 'Energy Flow', 'Decomposers are important because they...', 'Recycle nutrients back into ecosystems', ['Create new sunlight', 'Stop all decay', 'Eliminate all bacteria']),
+  makeQuestion(30010, 'Unit 3', 'Energy Flow', 'What happens to energy as it moves up an energy pyramid?', 'Less usable energy is available at higher levels', ['Energy increases at each level', 'Energy stays exactly the same', 'Energy turns into matter completely']),
+  makeQuestion(30011, 'Unit 3', 'Food Webs', 'A simple food chain shows...', 'One path of energy flow', ['Every relationship in an ecosystem', 'Only decomposers', 'Only abiotic factors']),
+  makeQuestion(30012, 'Unit 3', 'Food Webs', 'A food web differs from a food chain because it...', 'Shows many connected feeding relationships', ['Shows only producers', 'Includes no energy transfer', 'Can only have four organisms']),
+  makeQuestion(30013, 'Unit 3', 'Cycles', 'How does carbon enter living organisms?', 'Producers take in carbon dioxide during photosynthesis', ['It appears spontaneously in animals', 'Only decomposers make carbon', 'It enters by osmosis only']),
+  makeQuestion(30014, 'Unit 3', 'Cycles', 'Which process returns carbon dioxide to the atmosphere from organisms?', 'Cellular respiration', ['Photosynthesis', 'Evaporation', 'Nitrogen fixation']),
+  makeQuestion(30015, 'Unit 3', 'Cycles', 'What is the main purpose of the water cycle?', 'To move water through evaporation, condensation, and precipitation', ['To create ATP in cells', 'To form chromosomes', 'To stop runoff']),
+  makeQuestion(30016, 'Unit 3', 'Cycles', 'Nitrogen fixation makes nitrogen available to living things by...', 'Converting nitrogen gas into usable compounds', ['Removing all nitrogen from soil', 'Turning oxygen into nitrogen', 'Making proteins without atoms']),
+  makeQuestion(30017, 'Unit 3', 'Photosynthesis', 'What is the overall purpose of photosynthesis?', 'To make glucose using light energy', ['To release energy from glucose', 'To make ATP in mitochondria only', 'To break DNA apart']),
+  makeQuestion(30018, 'Unit 3', 'Cellular Respiration', 'What is the overall purpose of cellular respiration?', 'To release energy from food for ATP production', ['To make sunlight', 'To create new species', 'To pump water in plants']),
+  makeQuestion(30019, 'Unit 3', 'Ecology Basics', 'A population is...', 'Members of the same species living in one area', ['All species in one area', 'One individual organism', 'All abiotic factors in a biome']),
+  makeQuestion(30020, 'Unit 3', 'Ecology Basics', 'A community includes...', 'All the different populations living together in one area', ['Only one species', 'Only abiotic factors', 'All biomes on Earth']),
+  makeQuestion(30021, 'Unit 3', 'Ecology Basics', 'An ecosystem includes...', 'Living organisms plus the nonliving environment', ['Only producers and consumers', 'Only climate', 'Only organisms of one species']),
+  makeQuestion(30022, 'Unit 3', 'Biomes', 'Which biome has the greatest biodiversity and why?', 'Tropical rainforest because it is warm, wet, and productive year-round', ['Tundra because it is cold and dry', 'Desert because it has little rainfall', 'Taiga because it has frozen soil']),
+  makeQuestion(30023, 'Unit 3', 'Biomes', 'How does Earth’s tilt create seasons?', 'It changes the angle and intensity of sunlight hitting Earth', ['It changes the amount of oxygen in air', 'It makes Earth farther from the sun each winter only', 'It stops rotation']),
+  makeQuestion(30024, 'Unit 3', 'Energy Flow', 'Which trophic level is made of herbivores?', 'Primary consumers', ['Producers', 'Secondary consumers', 'Decomposers only']),
+  makeQuestion(30025, 'Unit 3', 'Energy Flow', 'What do arrows in a food web show?', 'The direction of energy transfer', ['The age of organisms', 'The size of populations', 'Only predator movement']),
+  makeQuestion(30026, 'Unit 3', 'Homeostasis', 'Why does available water matter to ecosystems?', 'Organisms need it for survival and chemical processes', ['It replaces sunlight in every food web', 'It eliminates competition', 'It prevents all disease']),
+  makeQuestion(30027, 'Unit 3', 'Cycles', 'What role do decomposers play in the carbon cycle?', 'They return carbon to soil and atmosphere as they break down matter', ['They stop respiration', 'They remove carbon permanently', 'They turn carbon only into oxygen']),
+  makeQuestion(30028, 'Unit 3', 'Energy Flow', 'Why are there fewer top predators than producers in most ecosystems?', 'Less energy is available at higher trophic levels', ['Predators do not need energy', 'Producers eat predators', 'Predators photosynthesize']),
+  makeQuestion(30029, 'Unit 3', 'Biomes', 'Which biome is known for permafrost?', 'Tundra', ['Savanna', 'Temperate rainforest', 'Estuary']),
+  makeQuestion(30030, 'Unit 3', 'Biomes', 'Which biome is dominated by coniferous trees and long cold winters?', 'Taiga', ['Desert', 'Tropical rainforest', 'Grassland']),
+  makeQuestion(30031, 'Unit 3', 'Food Webs', 'If a predator is removed from a food web, a likely short-term result is...', 'Its prey population may increase', ['All producers disappear instantly', 'Decomposers stop functioning', 'The sun provides less energy']),
+  makeQuestion(30032, 'Unit 3', 'Cycles', 'What process adds water vapor to the air from plant leaves?', 'Transpiration', ['Condensation', 'Precipitation', 'Runoff']),
+  makeQuestion(30033, 'Unit 3', 'Cycles', 'What process forms clouds?', 'Condensation', ['Runoff', 'Transpiration', 'Respiration']),
+  makeQuestion(30034, 'Unit 3', 'Interactions', 'What is a limiting factor?', 'A factor that restricts the growth, size, or distribution of a population', ['A factor that always increases biodiversity', 'A kind of producer', 'A graphing mistake']),
+  makeQuestion(30035, 'Unit 3', 'Ecology Basics', 'Why are both biotic and abiotic factors needed to describe an ecosystem?', 'Living things and nonliving conditions both shape how the system works', ['Only abiotic factors matter', 'Only producers matter', 'Ecosystems do not include the environment']),
+
+  // Unit 4 - Biomes & Aquatic Ecosystems
+  makeQuestion(40001, 'Unit 4', 'Aquatic Ecosystems', 'Why are estuaries important ecosystems?', 'They provide rich nursery habitats and filter pollutants', ['They contain only freshwater species', 'They have no producers', 'They prevent nutrient cycling']),
+  makeQuestion(40002, 'Unit 4', 'Aquatic Ecosystems', 'What is an estuary?', 'A place where freshwater mixes with saltwater', ['A frozen grassland', 'A forest with conifers', 'A mountain biome']),
+  makeQuestion(40003, 'Unit 4', 'Biomes', 'Climate in a biome is mostly determined by...', 'Temperature and precipitation', ['Animal size and age', 'DNA and chromosomes', 'Only soil color']),
+  makeQuestion(40004, 'Unit 4', 'Biomes', 'What biome is characterized by very low rainfall?', 'Desert', ['Tropical rainforest', 'Taiga', 'Temperate deciduous forest']),
+  makeQuestion(40005, 'Unit 4', 'Biomes', 'What biome has warm temperatures, seasonal rainfall, and scattered trees?', 'Savanna', ['Tundra', 'Marine biome', 'Boreal forest']),
+  makeQuestion(40006, 'Unit 4', 'Biomes', 'Which biome is dominated by grasses and often has fertile soil?', 'Temperate grassland', ['Tundra', 'Estuary', 'Coral reef']),
+  makeQuestion(40007, 'Unit 4', 'Biomes', 'What biome has four seasons and broadleaf trees that lose leaves?', 'Temperate deciduous forest', ['Desert', 'Tundra', 'Savanna']),
+  makeQuestion(40008, 'Unit 4', 'Biomes', 'Which biome is warm and wet year-round?', 'Tropical rainforest', ['Taiga', 'Temperate grassland', 'Desert']),
+  makeQuestion(40009, 'Unit 4', 'Biomes', 'What aquatic ecosystem has the highest salinity?', 'Marine ocean water', ['Pond water', 'River water', 'Wetland soil']),
+  makeQuestion(40010, 'Unit 4', 'Aquatic Ecosystems', 'Freshwater ecosystems include...', 'Lakes, rivers, ponds, and wetlands', ['Only oceans', 'Only estuaries', 'Only coral reefs']),
+  makeQuestion(40011, 'Unit 4', 'Aquatic Ecosystems', 'What is the difference between lentic and lotic freshwater systems?', 'Lentic water is still and lotic water flows', ['Lentic is salty and lotic is fresh', 'Lentic is deep ocean and lotic is desert', 'There is no difference']),
+  makeQuestion(40012, 'Unit 4', 'Aquatic Ecosystems', 'Why do wetlands matter?', 'They filter water and provide habitat', ['They remove all biodiversity', 'They have no decomposers', 'They only exist in oceans']),
+  makeQuestion(40013, 'Unit 4', 'Aquatic Ecosystems', 'Coral reefs are usually found in...', 'Warm, shallow, sunlit marine water', ['Dark deep freshwater lakes', 'Cold dry deserts', 'Permafrost zones']),
+  makeQuestion(40014, 'Unit 4', 'Aquatic Ecosystems', 'What mainly limits life in the deep ocean?', 'Very little light', ['Too much grass', 'Too much sunlight', 'Low nitrogen only']),
+  makeQuestion(40015, 'Unit 4', 'Biomes', 'Which biome has the shortest growing season?', 'Tundra', ['Savanna', 'Temperate forest', 'Estuary']),
+  makeQuestion(40016, 'Unit 4', 'Biomes', 'Permafrost is...', 'Permanently frozen soil', ['A marine producer', 'A desert rainfall pattern', 'A kind of predator']),
+  makeQuestion(40017, 'Unit 4', 'Aquatic Ecosystems', 'Phytoplankton are important because they...', 'Act as major aquatic producers', ['Are top predators', 'Always decompose rock', 'Remove oxygen from all water']),
+  makeQuestion(40018, 'Unit 4', 'Aquatic Ecosystems', 'What happens to temperature in many lakes as depth increases?', 'It often decreases', ['It always becomes boiling', 'It stays identical everywhere', 'It turns salty']),
+  makeQuestion(40019, 'Unit 4', 'Biomes', 'Why do tropical rainforests have high biodiversity?', 'Warm temperatures and abundant rainfall support many niches', ['They have permafrost', 'They receive very little sunlight', 'They have no decomposers']),
+  makeQuestion(40020, 'Unit 4', 'Biomes', 'Adaptations in desert plants often include...', 'Water storage and reduced leaf surface area', ['Large thin leaves for water loss', 'No roots at all', 'Dependence on freezing conditions']),
+  makeQuestion(40021, 'Unit 4', 'Biomes', 'Taiga organisms are adapted for...', 'Cold winters and conifer-dominated forests', ['Warm salty marshes', 'Extremely low ocean pressure', 'Constant tropical heat']),
+  makeQuestion(40022, 'Unit 4', 'Aquatic Ecosystems', 'Why is dissolved oxygen important in water?', 'Aquatic organisms need it for respiration', ['It makes every organism photosynthesize', 'It prevents currents', 'It replaces nitrogen completely']),
+  makeQuestion(40023, 'Unit 4', 'Aquatic Ecosystems', 'What is a watershed?', 'An area of land that drains into a body of water', ['A single fish population', 'A kind of coral', 'An underwater volcano only']),
+  makeQuestion(40024, 'Unit 4', 'Aquatic Ecosystems', 'Runoff carrying fertilizer into lakes can cause...', 'Eutrophication', ['Permafrost', 'Speciation', 'Genetic drift']),
+  makeQuestion(40025, 'Unit 4', 'Aquatic Ecosystems', 'Eutrophication often leads to...', 'Algal blooms and low oxygen levels', ['More salinity in deserts', 'Better air quality only', 'Faster DNA replication']),
+  makeQuestion(40026, 'Unit 4', 'Biomes', 'Which biome often experiences frequent fires that some plants are adapted to survive?', 'Grassland or savanna', ['Deep ocean', 'Tundra only', 'Estuary only']),
+  makeQuestion(40027, 'Unit 4', 'Biomes', 'Why do deciduous trees drop leaves in colder seasons?', 'To conserve water and survive winter conditions', ['To increase photosynthesis in darkness', 'To absorb more salt', 'To become producers later']),
+  makeQuestion(40028, 'Unit 4', 'Aquatic Ecosystems', 'Intertidal zones are unique because they...', 'Are exposed to air at low tide and covered at high tide', ['Contain only freshwater', 'Never change conditions', 'Lack producers']),
+  makeQuestion(40029, 'Unit 4', 'Aquatic Ecosystems', 'Mangrove ecosystems are valuable because they...', 'Protect coasts and provide habitat for many species', ['Exist only in frozen climates', 'Remove all nutrients from water', 'Support only one species']),
+  makeQuestion(40030, 'Unit 4', 'Biomes', 'What abiotic factor most directly separates desert from rainforest biomes?', 'Precipitation', ['DNA sequence', 'Type of predator only', 'Number of chromosomes']),
+  makeQuestion(40031, 'Unit 4', 'Biomes', 'If a biome has moderate rainfall, rich soil, and mostly grasses, it is likely a...', 'Temperate grassland', ['Tundra', 'Coral reef', 'Marine abyss']),
+  makeQuestion(40032, 'Unit 4', 'Aquatic Ecosystems', 'Why are shoreline habitats often highly productive?', 'They receive light and nutrients that support many producers', ['They have no consumers', 'They block all decomposition', 'They never change temperature']),
+  makeQuestion(40033, 'Unit 4', 'Aquatic Ecosystems', 'What best describes salinity?', 'The amount of dissolved salts in water', ['The temperature of water', 'The speed of a river', 'The depth of a lake']),
+  makeQuestion(40034, 'Unit 4', 'Biomes', 'Which biome would likely support cacti and nocturnal animals?', 'Desert', ['Taiga', 'Tropical rainforest', 'Wetland']),
+  makeQuestion(40035, 'Unit 4', 'Aquatic Ecosystems', 'Why are aquatic ecosystems often grouped by light availability, depth, and salinity?', 'Those factors strongly shape which organisms can live there', ['They are unimportant compared with color', 'Only fish size matters', 'Aquatic ecosystems do not depend on abiotic conditions']),
+
+  // Unit 5 - Populations
+  makeQuestion(50001, 'Unit 5', 'Population Growth', 'Calculate density: 200 deer in 10 km².', '20 deer per km²', ['2 deer per km²', '2000 deer per km²', '0.5 deer per km²']),
+  makeQuestion(50002, 'Unit 5', 'Population Basics', 'Population density tells you...', 'How many individuals live in a given area', ['How many species are in a biome', 'How much sunlight is available', 'How large each organism is']),
+  makeQuestion(50003, 'Unit 5', 'Population Growth', 'What kind of growth includes carrying capacity?', 'Logistic growth', ['Exponential growth', 'Cellular growth', 'Random growth']),
+  makeQuestion(50004, 'Unit 5', 'Population Growth', 'What does exponential growth look like on a graph?', 'A J-shaped curve', ['An S-shaped curve', 'A flat line always', 'A circle']),
+  makeQuestion(50005, 'Unit 5', 'Population Growth', 'What does logistic growth look like on a graph?', 'An S-shaped curve', ['A J-shaped curve', 'A triangle', 'A straight line downward only']),
+  makeQuestion(50006, 'Unit 5', 'Population Growth', 'Carrying capacity is...', 'The largest population size an environment can sustainably support', ['The number of predators only', 'The birth rate of a species', 'The mass of one organism']),
+  makeQuestion(50007, 'Unit 5', 'Population Methods', 'Why use mark-recapture instead of quadrats?', 'It works better for mobile animals', ['It only works for plants', 'It measures abiotic factors only', 'It is used only in oceans']),
+  makeQuestion(50008, 'Unit 5', 'Population Methods', 'Quadrat sampling is best for estimating populations of...', 'Plants or slow-moving organisms', ['Birds in flight', 'Large predators', 'Migrating whales']),
+  makeQuestion(50009, 'Unit 5', 'Limiting Factors', 'Provide one density-dependent limiting factor.', 'Competition, disease, or predation', ['Hurricane', 'Wildfire caused by lightning', 'Drought only']),
+  makeQuestion(50010, 'Unit 5', 'Limiting Factors', 'Provide one density-independent limiting factor.', 'Drought, flood, wildfire, or storm', ['Competition for mates', 'Disease spread', 'Crowding']),
+  makeQuestion(50011, 'Unit 5', 'Population Growth', 'Birth rate affects population size by...', 'Increasing it when more individuals are born', ['Always decreasing it', 'Changing only genotype', 'Removing carrying capacity']),
+  makeQuestion(50012, 'Unit 5', 'Population Growth', 'Death rate affects population size by...', 'Reducing it when more individuals die', ['Always increasing it', 'Making density irrelevant', 'Stopping emigration']),
+  makeQuestion(50013, 'Unit 5', 'Population Growth', 'Immigration means...', 'Individuals move into a population', ['Individuals move out of a population', 'Birth rate drops', 'Predators are removed']),
+  makeQuestion(50014, 'Unit 5', 'Population Growth', 'Emigration means...', 'Individuals move out of a population', ['Individuals move into a population', 'Organisms evolve instantly', 'Density doubles']),
+  makeQuestion(50015, 'Unit 5', 'Population Patterns', 'What is clumped dispersion?', 'Individuals live in groups or patches', ['Individuals are evenly spaced', 'Individuals are randomly absent', 'Every species shares one habitat']),
+  makeQuestion(50016, 'Unit 5', 'Population Patterns', 'What is uniform dispersion?', 'Individuals are spaced evenly', ['Individuals are crowded randomly', 'Individuals only migrate', 'Individuals never compete']),
+  makeQuestion(50017, 'Unit 5', 'Population Patterns', 'A random dispersion pattern is most likely when...', 'Resources are fairly even and organisms neither attract nor strongly repel each other', ['Territory is strict', 'Organisms always live in herds', 'Predators remove all prey']),
+  makeQuestion(50018, 'Unit 5', 'Demography', 'What is age structure?', 'The distribution of individuals among age groups', ['The average mass of a species', 'The rainfall of a biome', 'The mutation rate of DNA']),
+  makeQuestion(50019, 'Unit 5', 'Population Growth', 'A population below carrying capacity with abundant resources will most likely...', 'Grow', ['Immediately go extinct', 'Stop reproducing forever', 'Become a community']),
+  makeQuestion(50020, 'Unit 5', 'Limiting Factors', 'Why is disease usually density-dependent?', 'It spreads more easily when individuals live close together', ['It only affects small populations', 'It depends on salinity', 'It occurs only in deserts']),
+  makeQuestion(50021, 'Unit 5', 'Population Methods', 'What assumption is important in mark-recapture studies?', 'Marked individuals mix back into the population normally', ['Marks should attract predators', 'No animals can move', 'The population must be a plant population']),
+  makeQuestion(50022, 'Unit 5', 'Carrying Capacity', 'If a population exceeds carrying capacity, a likely outcome is...', 'Population decline due to limited resources', ['Unlimited growth forever', 'No competition', 'Removal of all abiotic factors']),
+  makeQuestion(50023, 'Unit 5', 'Resource Use', 'Competition within the same species is called...', 'Intraspecific competition', ['Interspecific competition', 'Predation', 'Succession']),
+  makeQuestion(50024, 'Unit 5', 'Resource Use', 'Competition between different species is called...', 'Interspecific competition', ['Intraspecific competition', 'Mutualism', 'Commensalism']),
+  makeQuestion(50025, 'Unit 5', 'Population Growth', 'What usually happens to a population when resources become scarce?', 'Growth slows or declines', ['Growth speeds up forever', 'Mutation stops', 'Birth rate always rises']),
+  makeQuestion(50026, 'Unit 5', 'Population Basics', 'Why do ecologists study population size over time?', 'To understand trends and predict future changes', ['To identify organelles', 'To classify kingdoms only', 'To measure pH only']),
+  makeQuestion(50027, 'Unit 5', 'Population Growth', 'Which population would likely grow fastest?', 'One with high birth rate and immigration', ['One with high death rate and emigration', 'One at zero reproduction', 'One with no resources']),
+  makeQuestion(50028, 'Unit 5', 'Limiting Factors', 'A late freeze that kills many plants is best classified as...', 'Density-independent', ['Density-dependent', 'Biotic only', 'Carrying capacity itself']),
+  makeQuestion(50029, 'Unit 5', 'Population Methods', 'Why are repeated population surveys valuable?', 'They show how a population changes over time', ['They eliminate all sampling error completely', 'They replace the need for estimates', 'They stop migration']),
+  makeQuestion(50030, 'Unit 5', 'Population Growth', 'If births plus immigration are greater than deaths plus emigration, the population will...', 'Increase', ['Decrease', 'Stay zero', 'Become a biome']),
+  makeQuestion(50031, 'Unit 5', 'Population Growth', 'If deaths plus emigration are greater than births plus immigration, the population will...', 'Decrease', ['Increase', 'Become logistic automatically', 'Turn into a community']),
+  makeQuestion(50032, 'Unit 5', 'Carrying Capacity', 'Why can carrying capacity change over time?', 'Resources and environmental conditions can change', ['It is fixed forever', 'It depends only on mutations', 'It is always equal to birth rate']),
+  makeQuestion(50033, 'Unit 5', 'Population Patterns', 'Territorial animals often show which dispersion pattern?', 'Uniform dispersion', ['Clumped dispersion', 'Random dispersion only', 'No dispersion']),
+  makeQuestion(50034, 'Unit 5', 'Population Basics', 'A population crash is most likely when...', 'Resources drop sharply or limiting factors intensify', ['Competition disappears', 'Birth rate always rises', 'Abiotic factors stop matter cycling']),
+  makeQuestion(50035, 'Unit 5', 'Population Growth', 'Why is carrying capacity important for realistic population models?', 'Real ecosystems have limited resources', ['Populations always grow exponentially forever', 'Organisms do not compete', 'Predators never affect prey']),
+
+  // Unit 6 - Interactions in Ecosystems
+  makeQuestion(60001, 'Unit 6', 'Species Interactions', 'What is a niche?', 'The role an organism plays and how it uses resources', ['The place it physically lives only', 'Its chromosome number', 'A measure of population size']),
+  makeQuestion(60002, 'Unit 6', 'Species Interactions', 'What happens when two species try to occupy the same niche?', 'Competition increases and one may outcompete the other', ['Both automatically become one species', 'Neither is affected', 'They always form mutualism']),
+  makeQuestion(60003, 'Unit 6', 'Competition', 'The competitive exclusion principle states that...', 'Two species cannot occupy the same niche indefinitely', ['All organisms must compete equally', 'Predators always win', 'Competition stops evolution']),
+  makeQuestion(60004, 'Unit 6', 'Symbiosis', 'Give an example of mutualism.', 'Both species benefit, like bees pollinating flowers', ['One benefits and one is harmed', 'Both are harmed equally', 'One benefits and one is unaffected']),
+  makeQuestion(60005, 'Unit 6', 'Succession', 'Compare primary and secondary succession.', 'Primary starts without soil; secondary begins where soil remains after disturbance', ['Primary is always faster than secondary because soil is deeper', 'Secondary never involves plants', 'They are the same process exactly']),
+  makeQuestion(60006, 'Unit 6', 'Species Interactions', 'Predation is a relationship in which...', 'One organism hunts and eats another', ['Both organisms benefit', 'One organism makes food for both', 'No energy is transferred']),
+  makeQuestion(60007, 'Unit 6', 'Symbiosis', 'Parasitism is a relationship in which...', 'One organism benefits and the other is harmed', ['Both benefit', 'Neither is affected', 'One organism eats dead matter only']),
+  makeQuestion(60008, 'Unit 6', 'Symbiosis', 'Commensalism is a relationship in which...', 'One organism benefits and the other is neither helped nor harmed', ['Both organisms are harmed', 'Both benefit equally', 'One always dies']),
+  makeQuestion(60009, 'Unit 6', 'Competition', 'Why does competition happen?', 'Organisms need the same limited resources', ['There is too much energy in the ecosystem', 'Abiotic factors disappear', 'Every species has the same niche by design']),
+  makeQuestion(60010, 'Unit 6', 'Succession', 'What pioneer species often begin primary succession?', 'Lichens and mosses', ['Large trees', 'Top predators', 'Mammals only']),
+  makeQuestion(60011, 'Unit 6', 'Succession', 'Why are pioneer species important?', 'They help create soil and conditions for other species', ['They eliminate all biodiversity', 'They stop decomposition', 'They are always parasites']),
+  makeQuestion(60012, 'Unit 6', 'Succession', 'A wildfire that leaves soil behind would usually be followed by...', 'Secondary succession', ['Primary succession', 'No succession', 'Speciation only']),
+  makeQuestion(60013, 'Unit 6', 'Symbiosis', 'Lichen is often used as an example of...', 'Mutualism', ['Parasitism', 'Predation', 'Competition']),
+  makeQuestion(60014, 'Unit 6', 'Food Webs', 'What is a keystone species?', 'A species with a large effect on ecosystem structure relative to its abundance', ['The most common producer', 'Any invasive species', 'A species with the most chromosomes']),
+  makeQuestion(60015, 'Unit 6', 'Food Webs', 'What can happen if a keystone predator is removed?', 'A trophic cascade may disrupt the ecosystem', ['Nothing changes', 'All producers immediately disappear', 'Primary succession begins automatically']),
+  makeQuestion(60016, 'Unit 6', 'Species Interactions', 'Resource partitioning helps species coexist by...', 'Using resources in different ways, places, or times', ['Giving both species the exact same niche', 'Removing all competition', 'Ending predation completely']),
+  makeQuestion(60017, 'Unit 6', 'Behavior', 'Nocturnal and diurnal feeding patterns can reduce...', 'Competition', ['Photosynthesis', 'Decomposition', 'Mutation']),
+  makeQuestion(60018, 'Unit 6', 'Species Interactions', 'A barnacle on a whale is often used as an example of...', 'Commensalism', ['Mutualism', 'Parasitism', 'Predation']),
+  makeQuestion(60019, 'Unit 6', 'Species Interactions', 'A tick feeding on a dog is an example of...', 'Parasitism', ['Mutualism', 'Commensalism', 'Secondary succession']),
+  makeQuestion(60020, 'Unit 6', 'Species Interactions', 'A hawk eating a mouse is an example of...', 'Predation', ['Commensalism', 'Mutualism', 'Competition within one species only']),
+  makeQuestion(60021, 'Unit 6', 'Ecological Roles', 'Why do decomposers matter to species interactions?', 'They return nutrients that other organisms need', ['They remove all matter from ecosystems', 'They replace producers', 'They stop food webs from forming']),
+  makeQuestion(60022, 'Unit 6', 'Succession', 'Climax community is a term for...', 'A relatively stable community at a later stage of succession', ['The first organism on bare rock', 'An abiotic limiting factor', 'A temporary food chain']),
+  makeQuestion(60023, 'Unit 6', 'Symbiosis', 'Clownfish and sea anemones are commonly described as...', 'Mutualism', ['Predation', 'Parasitism', 'Competition']),
+  makeQuestion(60024, 'Unit 6', 'Competition', 'What is one likely result when two species compete for exactly the same food source?', 'One may decline or shift its niche', ['Both always grow faster', 'The food source increases automatically', 'They become producers']),
+  makeQuestion(60025, 'Unit 6', 'Predator-Prey', 'Predator and prey populations often...', 'Influence each other in cycles over time', ['Stay exactly constant', 'Never affect each other', 'Always go extinct together immediately']),
+  makeQuestion(60026, 'Unit 6', 'Symbiosis', 'Which relationship benefits both organisms?', 'Mutualism', ['Parasitism', 'Commensalism', 'Predation']),
+  makeQuestion(60027, 'Unit 6', 'Species Interactions', 'Why is niche overlap important?', 'It helps predict how strongly species may compete', ['It tells exact population density', 'It measures pH directly', 'It replaces food webs']),
+  makeQuestion(60028, 'Unit 6', 'Succession', 'Primary succession is usually slower than secondary succession because...', 'Soil must first be formed', ['It always starts with trees', 'It has more predators', 'There is too much nitrogen']),
+  makeQuestion(60029, 'Unit 6', 'Food Webs', 'Why can invasive predators be disruptive?', 'Native prey may have no defenses against them', ['They always become producers', 'They increase every species equally', 'They remove abiotic factors']),
+  makeQuestion(60030, 'Unit 6', 'Symbiosis', 'What best distinguishes parasitism from predation?', 'Parasites usually live on or in a host and harm it over time without immediately killing it', ['Predators never harm prey', 'Parasites always help hosts', 'Predation involves no energy transfer']),
+  makeQuestion(60031, 'Unit 6', 'Competition', 'What is intraspecific competition?', 'Competition among members of the same species', ['Competition between different species', 'A symbiotic relationship', 'A type of succession']),
+  makeQuestion(60032, 'Unit 6', 'Competition', 'What is interspecific competition?', 'Competition between different species', ['Competition within one species', 'A producer-only interaction', 'A nitrogen cycle step']),
+  makeQuestion(60033, 'Unit 6', 'Species Interactions', 'Why is biodiversity often linked to ecosystem stability?', 'More species can provide backup ecological roles and complex interactions', ['Because all species use the same niche', 'Because diversity removes competition', 'Because stable ecosystems have no disturbances']),
+  makeQuestion(60034, 'Unit 6', 'Succession', 'After a volcanic eruption creates new bare rock, the first stage is usually...', 'Primary succession', ['Secondary succession', 'Logistic growth', 'Artificial selection']),
+  makeQuestion(60035, 'Unit 6', 'Ecological Roles', 'Why do ecologists study interactions instead of species alone?', 'Relationships among species strongly shape survival, energy flow, and community structure', ['Species never affect each other', 'Only abiotic factors matter', 'Interactions apply only in forests']),
+
+  // Unit 7 - Biodiversity & Human Impact
+  makeQuestion(70001, 'Unit 7', 'Biodiversity', 'Why is biodiversity important?', 'It increases ecosystem resilience and supports many ecological functions', ['It always lowers stability', 'It removes variation', 'It stops evolution']),
+  makeQuestion(70002, 'Unit 7', 'Human Impact', 'How can an invasive species change an ecosystem?', 'It can outcompete native species and alter food webs', ['It always increases native biodiversity', 'It becomes a producer automatically', 'It reduces every abiotic factor to zero']),
+  makeQuestion(70003, 'Unit 7', 'Pollution', 'Why do top predators have the highest toxin levels?', 'Biomagnification causes toxins to build up at higher trophic levels', ['Predators produce toxins themselves from sunlight', 'They drink less water', 'They never excrete waste']),
+  makeQuestion(70004, 'Unit 7', 'Biodiversity', 'Species richness refers to...', 'The number of different species in an area', ['The number of individuals of one species only', 'The amount of rainfall', 'The age of the habitat']),
+  makeQuestion(70005, 'Unit 7', 'Biodiversity', 'Genetic diversity means...', 'Variation in genes within a population or species', ['The number of biomes on Earth', 'The amount of pollution in water', 'Only the number of predators']),
+  makeQuestion(70006, 'Unit 7', 'Conservation', 'Why does habitat loss threaten biodiversity?', 'Species lose the space and resources they need to survive', ['It always increases carrying capacity', 'It creates new species immediately', 'It removes abiotic factors from Earth']),
+  makeQuestion(70007, 'Unit 7', 'Conservation', 'Habitat fragmentation is harmful because it...', 'Breaks habitats into isolated pieces that can limit movement and gene flow', ['Always increases biodiversity', 'Creates more continuous habitat', 'Stops edge effects']),
+  makeQuestion(70008, 'Unit 7', 'Pollution', 'What is biomagnification?', 'An increase in toxin concentration at higher trophic levels', ['A decrease in biodiversity from overhunting only', 'A type of succession', 'The movement of water vapor into clouds']),
+  makeQuestion(70009, 'Unit 7', 'Pollution', 'What is bioaccumulation?', 'The buildup of toxins in one organism over time', ['The spread of toxins across species levels only', 'The formation of soil', 'A kind of mutualism']),
+  makeQuestion(70010, 'Unit 7', 'Conservation', 'What is one goal of a wildlife corridor?', 'To connect separated habitats so organisms can move and breed', ['To increase habitat fragmentation', 'To trap invasive species only', 'To lower biodiversity']),
+  makeQuestion(70011, 'Unit 7', 'Human Impact', 'Overharvesting can cause...', 'Population decline faster than the species can recover', ['Guaranteed speciation', 'Immediate logistic growth', 'Permanent increase in carrying capacity']),
+  makeQuestion(70012, 'Unit 7', 'Climate Change', 'Why is climate change a biodiversity concern?', 'It changes habitats faster than some species can adapt or move', ['It affects only abiotic factors and no organisms', 'It only matters in oceans', 'It stops natural selection']),
+  makeQuestion(70013, 'Unit 7', 'Biodiversity', 'Ecosystem diversity means...', 'A variety of different habitats, communities, and ecological processes', ['Only many individuals in one species', 'Only many genes in one population', 'Only high rainfall']),
+  makeQuestion(70014, 'Unit 7', 'Conservation', 'Why are endangered species monitored?', 'To track population trends and guide protection efforts', ['To remove them from food webs', 'To increase pollution', 'To stop all competition']),
+  makeQuestion(70015, 'Unit 7', 'Human Impact', 'Deforestation often leads to...', 'Habitat loss, erosion, and reduced biodiversity', ['More old-growth forest', 'Less carbon dioxide in atmosphere automatically', 'Higher genetic diversity in every species']),
+  makeQuestion(70016, 'Unit 7', 'Human Impact', 'Pollinators are important to biodiversity because they...', 'Support reproduction in many flowering plants', ['Only eat invasive species', 'Prevent nutrient cycling', 'Replace decomposers']),
+  makeQuestion(70017, 'Unit 7', 'Human Impact', 'What is one major consequence of reducing a keystone species?', 'The ecosystem may change dramatically', ['Nothing important happens', 'Every niche becomes identical', 'Biodiversity always rises']),
+  makeQuestion(70018, 'Unit 7', 'Conservation', 'Protected areas such as parks and reserves help by...', 'Preserving habitats and limiting harmful human disturbance', ['Removing all predators', 'Preventing all succession', 'Stopping weather']),
+  makeQuestion(70019, 'Unit 7', 'Human Impact', 'How can pollution affect aquatic ecosystems?', 'It can lower water quality and harm organisms directly or indirectly', ['It always improves dissolved oxygen', 'It prevents algae from growing', 'It removes all decomposers permanently']),
+  makeQuestion(70020, 'Unit 7', 'Human Impact', 'Why are invasive species especially damaging on islands?', 'Island species often evolved with fewer predators or competitors', ['Islands have no habitats', 'Ocean water blocks all ecological change', 'All island species are producers']),
+  makeQuestion(70021, 'Unit 7', 'Biodiversity', 'Which ecosystem is usually more stable: one with many species or one with few species?', 'One with many species', ['One with only one species', 'They are always equally stable', 'The one with the tallest organisms']),
+  makeQuestion(70022, 'Unit 7', 'Human Impact', 'What is an example of restoration ecology?', 'Replanting native species in a damaged wetland', ['Building more parking lots in habitats', 'Importing invasive predators', 'Removing all decomposers']),
+  makeQuestion(70023, 'Unit 7', 'Conservation', 'Captive breeding programs aim to...', 'Help endangered species recover and maintain populations', ['Replace all wild habitats', 'Increase habitat fragmentation', 'Lower genetic diversity on purpose']),
+  makeQuestion(70024, 'Unit 7', 'Conservation', 'Why is genetic diversity important in conservation?', 'It helps populations adapt and reduces inbreeding risk', ['It is unrelated to survival', 'It removes natural selection', 'It only matters in plants']),
+  makeQuestion(70025, 'Unit 7', 'Human Impact', 'Ocean plastic pollution can harm organisms by...', 'Entangling them or being eaten by mistake', ['Increasing biodiversity automatically', 'Creating new producers', 'Neutralizing every toxin']),
+  makeQuestion(70026, 'Unit 7', 'Climate Change', 'Species may respond to climate change by...', 'Migrating, adapting, or declining', ['Ignoring temperature completely', 'Stopping reproduction forever', 'Turning into producers']),
+  makeQuestion(70027, 'Unit 7', 'Biodiversity', 'Why are top predators often considered indicators of ecosystem health?', 'They reflect conditions across many lower trophic levels', ['They are unaffected by toxins', 'They need no habitat', 'They are always the most numerous']),
+  makeQuestion(70028, 'Unit 7', 'Human Impact', 'What can happen when humans introduce a nonnative species without natural predators?', 'Its population can grow rapidly and disrupt native communities', ['It immediately goes extinct', 'It always helps every native species', 'It stops competition']),
+  makeQuestion(70029, 'Unit 7', 'Conservation', 'Sustainable resource use means...', 'Using resources in ways that do not deplete them long-term', ['Using all resources as fast as possible', 'Banning every human activity', 'Ignoring population sizes']),
+  makeQuestion(70030, 'Unit 7', 'Human Impact', 'Why are wetlands often protected?', 'They reduce flooding, filter water, and support many species', ['They have no ecological value', 'They are too dry for life', 'They eliminate nutrient cycling']),
+  makeQuestion(70031, 'Unit 7', 'Human Impact', 'What is one likely effect of pesticide runoff?', 'Harm to non-target organisms and food webs', ['Guaranteed higher biodiversity', 'Immediate climate cooling', 'No effect on aquatic life ever']),
+  makeQuestion(70032, 'Unit 7', 'Conservation', 'Why is reintroducing native species sometimes helpful?', 'It can restore missing ecological roles', ['It always removes predators', 'It guarantees no competition', 'It stops succession']),
+  makeQuestion(70033, 'Unit 7', 'Biodiversity', 'Why do ecosystems with many niches often support more species?', 'More niches allow more species to specialize and coexist', ['Because all species share one resource', 'Because competition disappears completely', 'Because abiotic factors become irrelevant']),
+  makeQuestion(70034, 'Unit 7', 'Human Impact', 'What is one way humans can reduce biodiversity loss?', 'Protect habitat and reduce pollution', ['Introduce more invasive species', 'Overharvest key species', 'Increase fragmentation']),
+  makeQuestion(70035, 'Unit 7', 'Conservation', 'Why is biodiversity protection important for humans too?', 'Healthy ecosystems provide food, clean water, pollination, medicine, and stability', ['Humans do not depend on ecosystems', 'Only predators benefit from biodiversity', 'Biodiversity matters only in forests']),
+
   // Unit 8 - Cell Division & Cancer
   { id: 801, unit: 'Unit 8', topic: 'Cancer', q: 'Which molecule can damage DNA and contribute to cancer development?', a: 'carcinogen', wrong: ['water', 'oxygen', 'glucose'] },
   { id: 802, unit: 'Unit 8', topic: 'Onion Cells', q: 'In onion root cells, interphase lasts about 15 hours and mitosis lasts about 80 minutes total. If each stage of mitosis takes the same amount of time, how many hours old is a cell that is just starting anaphase?', a: '15 hours 40 minutes', wrong: ['15 hours', '16 hours', '16 hours 20 minutes'] },
@@ -620,6 +974,18 @@ const graphChoiceImages: {[key: string]: string} = {
   'Genetic drift graph': '/study-graphs/genetic-drift.jpg',
   'Stabilizing selection graph': '/study-graphs/stabilizing.jpg',
 };
+
+const getQuestionsForSelection = (unitKey: string) => {
+  if (unitKey === 'All') return allNonRootQuestions;
+  if (semesterUnitMap[unitKey]) {
+    return allQuestions.filter(q => semesterUnitMap[unitKey].includes(q.unit));
+  }
+  return allQuestions.filter(q => q.unit === unitKey);
+};
+
+const jeopardyUnitKeys = units
+  .map(unit => unit.key)
+  .filter(key => key !== 'All' && key !== 'Roots' && !semesterUnitMap[key]);
 
 
 // Deep explanations for tricky questions (Learn mode)
@@ -1310,7 +1676,7 @@ export default function StudyGuide() {
 
   // Get missed questions (ones with more incorrect than correct, or never seen correctly)
   const getMissedQuestions = useCallback(() => {
-    const base = selectedUnit === 'All' ? allNonRootQuestions : allQuestions.filter(q => q.unit === selectedUnit);
+    const base = getQuestionsForSelection(selectedUnit);
     return base.filter(q => {
       const s = getQuestionStats(q.id);
       if (!s) return false;
@@ -1318,7 +1684,7 @@ export default function StudyGuide() {
     });
   }, [getQuestionStats, selectedUnit]);
 
-  const unitQuestions = selectedUnit === 'All' ? allNonRootQuestions : allQuestions.filter(q => q.unit === selectedUnit);
+  const unitQuestions = getQuestionsForSelection(selectedUnit);
   const rootQuestions = allQuestions.filter(q => q.unit === 'Roots');
   const customRootQuestions = rootQuestions.filter(q => savedCustomRootIds.includes(q.id));
   const currentRootPlacementQuestion = rootPlacementOrder[rootPlacementIndex] || null;
@@ -1328,7 +1694,7 @@ export default function StudyGuide() {
   const unitLabel = units.find(u => u.key === selectedUnit)?.label || selectedUnit;
 
   const getFilteredQuestions = useCallback(() => {
-    const uq = selectedUnit === 'All' ? allNonRootQuestions : allQuestions.filter(q => q.unit === selectedUnit);
+    const uq = getQuestionsForSelection(selectedUnit);
     if (selectedUnit === 'Roots' && selectedTopic === ROOTS_CUSTOM_TOPIC) {
       return uq.filter(q => savedCustomRootIds.includes(q.id));
     }
@@ -1554,12 +1920,10 @@ export default function StudyGuide() {
 
   const getJeopardyQuestions = () => {
     if (selectedUnit === 'All') {
-      return units
-        .filter(u => u.key !== 'All' && u.key !== 'Roots')
-        .flatMap(u => shuffle(allQuestions.filter(q => q.unit === u.key)).slice(0, 4));
+      return jeopardyUnitKeys.flatMap(unitKey => shuffle(allQuestions.filter(q => q.unit === unitKey)).slice(0, 4));
     }
 
-    return allQuestions.filter(q => q.unit === selectedUnit);
+    return getQuestionsForSelection(selectedUnit);
   };
 
   const getWrongJeopardyQuestions = (correctQuestion: typeof uniqueQuestions[0]) => {
@@ -2544,7 +2908,7 @@ export default function StudyGuide() {
                     color: isActive ? 'white' : uTheme.primary,
                     boxShadow: isActive ? `0 4px 14px ${uTheme.shadow}` : '0 2px 8px rgba(0,0,0,0.04)',
                     transition: 'all 0.25s ease', backdropFilter: 'blur(8px)',
-                  }}>{u.key === 'All' ? '📚 All' : u.key === 'Unit 8' ? '👩‍⚕️ Unit 8' : u.key === 'Unit 9' ? '🔬 Unit 9' : u.key === 'Unit 10' ? '🌱 Unit 10' : u.key === 'Unit 11' ? '🧑‍🧑‍🧒‍🧒 Unit 11' : u.key === 'Unit 12' ? '🧫 Unit 12' : u.key === '🌎Unit 13' ? '🌎 Unit 13' : u.key === '🔭Unit 14' ? '🔭 Unit 14' : u.key === 'Unit 15' ? '👩‍🔬 Unit 15' : u.key === 'Roots' ? '📖 Roots' : u.key}</button>
+                  }}>{u.shortLabel}</button>
                 );
               })}
             </div>
