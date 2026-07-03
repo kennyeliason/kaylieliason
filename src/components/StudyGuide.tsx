@@ -2887,7 +2887,7 @@ export default function StudyGuide() {
             </h1>
           </div>
           <div style={{display: 'flex', justifyContent: 'center', margin: '4px 0 10px'}}>
-            <div style={{background: 'rgba(255,255,255,0.7)', color: theme.primaryDark, border: `1px solid ${theme.primary}33`, borderRadius: '999px', padding: '8px 14px', fontSize: '13px', fontWeight: 700, boxShadow: `0 6px 18px ${theme.shadow}`, backdropFilter: 'blur(8px)'}}>
+            <div style={{background: '#fff1f2', color: '#dc2626', border: '1px solid #fecdd3', borderRadius: '999px', padding: '8px 14px', fontSize: '13px', fontWeight: 700, boxShadow: '0 6px 18px rgba(220,38,38,0.12)', backdropFilter: 'blur(8px)'}}>
               * questions: related to semester exam study guide
             </div>
           </div>
