@@ -28,12 +28,12 @@ const units = [
 // Theme colors per unit
 const unitThemes: {[key: string]: {primary: string, primaryLight: string, primaryDark: string, gradient: string, bgGradient: string, accent: string, accentLight: string, emojis: string[], shadow: string}} = {
   'All': {
-    primary: '#ec4899', primaryLight: '#f472b6', primaryDark: '#db2777',
-    gradient: 'linear-gradient(135deg, #ec4899, #f472b6)',
-    bgGradient: 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #fff1f2 100%)',
-    accent: '#ec4899', accentLight: '#fce7f3',
-    emojis: ['📚', '🧬', '🔬', '🌱', '🧫', '☀️'],
-    shadow: 'rgba(236,72,153,0.3)',
+    primary: '#0ea5a4', primaryLight: '#22d3ee', primaryDark: '#0f766e',
+    gradient: 'linear-gradient(135deg, #0891b2, #22d3ee)',
+    bgGradient: 'linear-gradient(135deg, #ecfeff 0%, #cffafe 48%, #e0f2fe 100%)',
+    accent: '#06b6d4', accentLight: '#cffafe',
+    emojis: ['📚', '🧬', '🔬', '🌊', '🧫', '🩵'],
+    shadow: 'rgba(14,165,164,0.28)',
   },
   'Semester 1': {
     primary: '#0f766e', primaryLight: '#14b8a6', primaryDark: '#115e59',
@@ -2641,8 +2641,8 @@ export default function StudyGuide() {
     },
     inner: { maxWidth: '900px', margin: '0 auto' },
     header: { textAlign: 'center' as const, marginBottom: '32px' },
-    title: { fontFamily: "'Luckiest Guy', cursive", fontSize: '26px', fontWeight: '400', color: theme.primaryDark, marginBottom: '6px', letterSpacing: '1px' },
-    subtitle: { color: '#b0b5c0', fontSize: '14px', fontWeight: '500', letterSpacing: '0.5px' },
+    title: { fontFamily: "'Luckiest Guy', cursive", fontSize: '46px', fontWeight: '400', color: theme.primaryDark, marginBottom: '8px', letterSpacing: '1.5px', lineHeight: 1.05, textShadow: '0 10px 24px rgba(8,145,178,0.14)' },
+    subtitle: { color: '#5b7180', fontSize: '16px', fontWeight: '700', letterSpacing: '0.7px' },
     topicFilter: { display: 'flex', flexWrap: 'wrap' as const, justifyContent: 'center', gap: '8px', marginBottom: '24px' },
     topicBtn: (active: boolean) => ({
       padding: '10px 18px', borderRadius: '50px', border: 'none', cursor: 'pointer',
@@ -2817,7 +2817,7 @@ export default function StudyGuide() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&family=Luckiest+Guy&display=swap');
         .study-container * { font-family: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-        .study-title-cursive { font-family: 'Luckiest Guy', cursive !important; font-weight: 400 !important; font-size: 26px !important; letter-spacing: 1px !important; }
+        .study-title-cursive { font-family: 'Luckiest Guy', cursive !important; font-weight: 400 !important; font-size: 46px !important; letter-spacing: 1.5px !important; line-height: 1.05 !important; }
         .study-container button:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.03); }
         .study-container button:active:not(:disabled) { transform: translateY(0px) !important; }
         .study-container button { transition: all 0.2s ease !important; }
@@ -2886,8 +2886,8 @@ export default function StudyGuide() {
               {theme.emojis[0]} Biology Study Guide {theme.emojis[theme.emojis.length - 1]}
             </h1>
           </div>
-          <div style={{display: 'flex', justifyContent: 'center', margin: '0 0 8px'}}>
-            <div style={{background: '#fff1f2', color: '#dc2626', border: '1px solid #fecdd3', borderRadius: '999px', padding: '8px 14px', fontSize: '13px', fontWeight: 700, boxShadow: '0 2px 8px rgba(220,38,38,0.08)'}}>
+          <div style={{display: 'flex', justifyContent: 'center', margin: '4px 0 10px'}}>
+            <div style={{background: 'rgba(255,255,255,0.7)', color: theme.primaryDark, border: `1px solid ${theme.primary}33`, borderRadius: '999px', padding: '8px 14px', fontSize: '13px', fontWeight: 700, boxShadow: `0 6px 18px ${theme.shadow}`, backdropFilter: 'blur(8px)'}}>
               * questions: related to semester exam study guide
             </div>
           </div>
