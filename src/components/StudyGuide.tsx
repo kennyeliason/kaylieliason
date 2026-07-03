@@ -4,25 +4,25 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 
 // Unit definitions
 const units = [
-  { key: 'All', label: 'All Units', shortLabel: '📚 All' },
-  { key: 'Semester 1', label: 'Semester 1: Units 1-7', shortLabel: '🗂️ Sem 1' },
-  { key: 'Unit 1', label: '🧪 Unit 1: Scientific Method & Experimental Design', shortLabel: '🧪 Unit 1' },
-  { key: 'Unit 2', label: '💧 Unit 2: Chemistry of Life', shortLabel: '💧 Unit 2' },
-  { key: 'Unit 3', label: '🌍 Unit 3: Ecology Foundations', shortLabel: '🌍 Unit 3' },
-  { key: 'Unit 4', label: '🌿 Unit 4: Biomes & Aquatic Ecosystems', shortLabel: '🌿 Unit 4' },
-  { key: 'Unit 5', label: '🦌 Unit 5: Populations', shortLabel: '🦌 Unit 5' },
-  { key: 'Unit 6', label: '🤝 Unit 6: Interactions in Ecosystems', shortLabel: '🤝 Unit 6' },
-  { key: 'Unit 7', label: '🦋 Unit 7: Biodiversity & Human Impact', shortLabel: '🦋 Unit 7' },
-  { key: 'Semester 2', label: 'Semester 2: Units 8-15', shortLabel: '🗂️ Sem 2' },
-  { key: 'Unit 8', label: '👩‍⚕️ Unit 8: Cell Division & Cancer', shortLabel: '👩‍⚕️ Unit 8' },
-  { key: 'Unit 9', label: '🔬 Unit 9: Cell Structure & Transport', shortLabel: '🔬 Unit 9' },
-  { key: 'Unit 10', label: '🌱 Unit 10: Photosynthesis & Calvin Cycle', shortLabel: '🌱 Unit 10' },
-  { key: 'Unit 11', label: '🧑‍🧑‍🧒‍🧒 Unit 11: Introduction to Genetics', shortLabel: '🧑‍🧑‍🧒‍🧒 Unit 11' },
-  { key: 'Unit 12', label: '🧫 Unit 12: DNA, RNA, and Protein Synthesis', shortLabel: '🧫 Unit 12' },
-  { key: '🌎Unit 13', label: '🌎Unit 13: Evolution & Natural Selection', shortLabel: '🌎 Unit 13' },
-  { key: '🔭Unit 14', label: '🔭Unit 14: Biotechnology', shortLabel: '🔭 Unit 14' },
-  { key: 'Unit 15', label: '👩‍🔬 Unit 15: Classification, Fossils & Phylogeny', shortLabel: '👩‍🔬 Unit 15' },
-  { key: 'Roots', label: 'Word Roots', shortLabel: '📖 Roots' },
+  { key: 'All', label: 'All Units', shortLabel: 'All' },
+  { key: 'Semester 1', label: 'Semester 1: Units 1-7', shortLabel: 'Sem 1' },
+  { key: 'Unit 1', label: 'Unit 1: Scientific Method & Experimental Design', shortLabel: 'Unit 1' },
+  { key: 'Unit 2', label: 'Unit 2: Chemistry of Life', shortLabel: 'Unit 2' },
+  { key: 'Unit 3', label: 'Unit 3: Ecology Foundations', shortLabel: 'Unit 3' },
+  { key: 'Unit 4', label: 'Unit 4: Biomes & Aquatic Ecosystems', shortLabel: 'Unit 4' },
+  { key: 'Unit 5', label: 'Unit 5: Populations', shortLabel: 'Unit 5' },
+  { key: 'Unit 6', label: 'Unit 6: Interactions in Ecosystems', shortLabel: 'Unit 6' },
+  { key: 'Unit 7', label: 'Unit 7: Biodiversity & Human Impact', shortLabel: 'Unit 7' },
+  { key: 'Semester 2', label: 'Semester 2: Units 8-15', shortLabel: 'Sem 2' },
+  { key: 'Unit 8', label: 'Unit 8: Cell Division & Cancer', shortLabel: 'Unit 8' },
+  { key: 'Unit 9', label: 'Unit 9: Cell Structure & Transport', shortLabel: 'Unit 9' },
+  { key: 'Unit 10', label: 'Unit 10: Photosynthesis & Calvin Cycle', shortLabel: 'Unit 10' },
+  { key: 'Unit 11', label: 'Unit 11: Introduction to Genetics', shortLabel: 'Unit 11' },
+  { key: 'Unit 12', label: 'Unit 12: DNA, RNA, and Protein Synthesis', shortLabel: 'Unit 12' },
+  { key: 'Unit 13', label: 'Unit 13: Evolution & Natural Selection', shortLabel: 'Unit 13' },
+  { key: 'Unit 14', label: 'Unit 14: Biotechnology', shortLabel: 'Unit 14' },
+  { key: 'Unit 15', label: 'Unit 15: Classification, Fossils & Phylogeny', shortLabel: 'Unit 15' },
+  { key: 'Roots', label: 'Word Roots', shortLabel: 'Roots' },
 ];
 
 // Theme colors per unit
@@ -32,7 +32,7 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
     gradient: 'linear-gradient(135deg, #0891b2, #22d3ee)',
     bgGradient: 'linear-gradient(135deg, #ecfeff 0%, #cffafe 48%, #e0f2fe 100%)',
     accent: '#06b6d4', accentLight: '#cffafe',
-    emojis: ['📚', '🧬', '🔬', '🌊', '🧫', '🩵'],
+    emojis: ['', '', '', '', '', ''],
     shadow: 'rgba(14,165,164,0.28)',
   },
   'Semester 1': {
@@ -40,7 +40,7 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
     gradient: 'linear-gradient(135deg, #0f766e, #14b8a6)',
     bgGradient: 'linear-gradient(135deg, #ecfeff 0%, #ccfbf1 50%, #f0fdfa 100%)',
     accent: '#14b8a6', accentLight: '#ccfbf1',
-    emojis: ['🗂️', '🧪', '🌍', '🦋'],
+    emojis: ['', '', '', ''],
     shadow: 'rgba(15,118,110,0.28)',
   },
   'Unit 1': {
@@ -48,7 +48,7 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
     gradient: 'linear-gradient(135deg, #2563eb, #60a5fa)',
     bgGradient: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #f0f9ff 100%)',
     accent: '#2563eb', accentLight: '#dbeafe',
-    emojis: ['🧪', '📊', '🔍', '📈'],
+    emojis: ['', '', '', ''],
     shadow: 'rgba(37,99,235,0.28)',
   },
   'Unit 2': {
@@ -56,7 +56,7 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
     gradient: 'linear-gradient(135deg, #0891b2, #22d3ee)',
     bgGradient: 'linear-gradient(135deg, #ecfeff 0%, #cffafe 50%, #f0fdfa 100%)',
     accent: '#0891b2', accentLight: '#cffafe',
-    emojis: ['💧', '⚗️', '🧬', '🔗'],
+    emojis: ['', '', '', ''],
     shadow: 'rgba(8,145,178,0.28)',
   },
   'Unit 3': {
@@ -64,7 +64,7 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
     gradient: 'linear-gradient(135deg, #16a34a, #4ade80)',
     bgGradient: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #ecfccb 100%)',
     accent: '#16a34a', accentLight: '#dcfce7',
-    emojis: ['🌍', '🌞', '🌱', '🍄'],
+    emojis: ['', '', '', ''],
     shadow: 'rgba(22,163,74,0.28)',
   },
   'Unit 4': {
@@ -72,7 +72,7 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
     gradient: 'linear-gradient(135deg, #65a30d, #84cc16)',
     bgGradient: 'linear-gradient(135deg, #f7fee7 0%, #ecfccb 50%, #fefce8 100%)',
     accent: '#65a30d', accentLight: '#ecfccb',
-    emojis: ['🌿', '🐠', '🏜️', '🌧️'],
+    emojis: ['', '', '', ''],
     shadow: 'rgba(101,163,13,0.28)',
   },
   'Unit 5': {
@@ -80,7 +80,7 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
     gradient: 'linear-gradient(135deg, #d97706, #f59e0b)',
     bgGradient: 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 50%, #fff7ed 100%)',
     accent: '#d97706', accentLight: '#fef3c7',
-    emojis: ['🦌', '📈', '🌾', '🐇'],
+    emojis: ['', '', '', ''],
     shadow: 'rgba(217,119,6,0.28)',
   },
   'Unit 6': {
@@ -88,7 +88,7 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
     gradient: 'linear-gradient(135deg, #7c3aed, #a78bfa)',
     bgGradient: 'linear-gradient(135deg, #f5f3ff 0%, #ede9fe 50%, #faf5ff 100%)',
     accent: '#7c3aed', accentLight: '#ede9fe',
-    emojis: ['🤝', '🐝', '🌲', '🪱'],
+    emojis: ['', '', '', ''],
     shadow: 'rgba(124,58,237,0.28)',
   },
   'Unit 7': {
@@ -96,7 +96,7 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
     gradient: 'linear-gradient(135deg, #db2777, #f472b6)',
     bgGradient: 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #fff1f2 100%)',
     accent: '#db2777', accentLight: '#fce7f3',
-    emojis: ['🦋', '🌎', '🚫', '🧯'],
+    emojis: ['', '', '', ''],
     shadow: 'rgba(219,39,119,0.28)',
   },
   'Semester 2': {
@@ -104,7 +104,7 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
     gradient: 'linear-gradient(135deg, #b45309, #f59e0b)',
     bgGradient: 'linear-gradient(135deg, #fff7ed 0%, #ffedd5 50%, #fef3c7 100%)',
     accent: '#b45309', accentLight: '#ffedd5',
-    emojis: ['🗂️', '🧬', '🔬', '👩‍🔬'],
+    emojis: ['', '', '', ''],
     shadow: 'rgba(180,83,9,0.28)',
   },
   'Unit 8': {
@@ -112,7 +112,7 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
     gradient: 'linear-gradient(135deg, #f97316, #fb923c)',
     bgGradient: 'linear-gradient(135deg, #fff7ed 0%, #ffedd5 50%, #fffbeb 100%)',
     accent: '#f97316', accentLight: '#ffedd5',
-    emojis: ['👩‍⚕️', '🧡', '🧬', '🧫'],
+    emojis: ['', '', '', ''],
     shadow: 'rgba(249,115,22,0.3)',
   },
   'Unit 9': {
@@ -120,7 +120,7 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
     gradient: 'linear-gradient(135deg, #8b5cf6, #a78bfa)',
     bgGradient: 'linear-gradient(135deg, #f5f3ff 0%, #ede9fe 50%, #f3e8ff 100%)',
     accent: '#8b5cf6', accentLight: '#ede9fe',
-    emojis: ['🔬', '🧫', '🦠', '🫧'],
+    emojis: ['', '', '', ''],
     shadow: 'rgba(139,92,246,0.3)',
   },
   'Unit 10': {
@@ -128,7 +128,7 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
     gradient: 'linear-gradient(135deg, #22c55e, #4ade80)',
     bgGradient: 'linear-gradient(135deg, #f0fdf4 0%, #dcfce7 50%, #ecfdf5 100%)',
     accent: '#22c55e', accentLight: '#dcfce7',
-    emojis: ['🌱', '🌿', '☀️', '🍃', '🌻'],
+    emojis: ['', '', '', '', ''],
     shadow: 'rgba(34,197,94,0.3)',
   },
   'Unit 11': {
@@ -136,7 +136,7 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
     gradient: 'linear-gradient(135deg, #3b82f6, #60a5fa)',
     bgGradient: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 50%, #e0f2fe 100%)',
     accent: '#3b82f6', accentLight: '#dbeafe',
-    emojis: ['🧑‍🧑‍🧒‍🧒', '🧬', '🫛', '🧑‍🧑‍🧒‍🧒'],
+    emojis: ['', '', '', ''],
     shadow: 'rgba(59,130,246,0.3)',
   },
   'Unit 12': {
@@ -144,23 +144,23 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
     gradient: 'linear-gradient(135deg, #ef4444, #f87171)',
     bgGradient: 'linear-gradient(135deg, #fef2f2 0%, #fee2e2 50%, #fecaca 100%)',
     accent: '#ef4444', accentLight: '#fee2e2',
-    emojis: ['🧬', '🔬', '🧪', '🔗'],
+    emojis: ['', '', '', ''],
     shadow: 'rgba(239,68,68,0.3)',
   },
-  '🌎Unit 13': {
+  'Unit 13': {
     primary: '#0ea5a4', primaryLight: '#2dd4bf', primaryDark: '#0f766e',
     gradient: 'linear-gradient(135deg, #0ea5a4, #2dd4bf)',
     bgGradient: 'linear-gradient(135deg, #ecfeff 0%, #ccfbf1 50%, #f0fdfa 100%)',
     accent: '#0ea5a4', accentLight: '#ccfbf1',
-    emojis: ['🌎', '🦋', '🧬', '🐦'],
+    emojis: ['', '', '', ''],
     shadow: 'rgba(14,165,164,0.3)',
   },
-  '🔭Unit 14': {
+  'Unit 14': {
     primary: '#046307', primaryLight: '#0b8a0f', primaryDark: '#034b05',
     gradient: 'linear-gradient(135deg, #046307, #0b8a0f)',
     bgGradient: 'linear-gradient(135deg, #ecfdf3 0%, #d1fae5 50%, #bbf7d0 100%)',
     accent: '#046307', accentLight: '#d1fae5',
-    emojis: ['🔭', '🧬', '🧫', '🧪'],
+    emojis: ['', '', '', ''],
     shadow: 'rgba(4,99,7,0.3)',
   },
   'Unit 15': {
@@ -168,7 +168,7 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
     gradient: 'linear-gradient(135deg, #9a6b3f, #c79b71)',
     bgGradient: 'linear-gradient(135deg, #fbf4ea 0%, #efe1cf 50%, #f8ecdd 100%)',
     accent: '#9a6b3f', accentLight: '#efe1cf',
-    emojis: ['👩‍🔬', '🤎', '🦴', '🧬', '🦠'],
+    emojis: ['', '', '', '', ''],
     shadow: 'rgba(154,107,63,0.28)',
   },
 
@@ -177,14 +177,14 @@ const unitThemes: {[key: string]: {primary: string, primaryLight: string, primar
     gradient: 'linear-gradient(135deg, #f59e0b, #fbbf24)',
     bgGradient: 'linear-gradient(135deg, #fffbeb 0%, #fef3c7 50%, #fff7ed 100%)',
     accent: '#f59e0b', accentLight: '#fef3c7',
-    emojis: ['📖', '🔤', '✏️', '🧩'],
+    emojis: ['', '', '', ''],
     shadow: 'rgba(245,158,11,0.3)',
   },
 };
 
 const semesterUnitMap: {[key: string]: string[]} = {
   'Semester 1': ['Unit 1', 'Unit 2', 'Unit 3', 'Unit 4', 'Unit 5', 'Unit 6', 'Unit 7'],
-  'Semester 2': ['Unit 8', 'Unit 9', 'Unit 10', 'Unit 11', 'Unit 12', '🌎Unit 13', '🔭Unit 14', 'Unit 15'],
+  'Semester 2': ['Unit 8', 'Unit 9', 'Unit 10', 'Unit 11', 'Unit 12', 'Unit 13', 'Unit 14', 'Unit 15'],
 };
 
 const makeQuestion = (id: number, unit: string, topic: string, q: string, a: string, wrong: string[]) => ({
@@ -729,120 +729,120 @@ const questions = [
   { id: 1248, unit: 'Unit 12', topic: 'Translation', q: 'Which contains the codon?', a: 'mRNA', wrong: ['DNA helicase', 'tRNA', 'DNA'] },
   { id: 1249, unit: 'Unit 12', topic: 'DNA Function', q: 'DNA contains the code for:', a: 'Proteins', wrong: ['Lipids', 'Biomolecules', 'Ribosomes'] },
 
-  // 🌎Unit 13 - Evolution & Natural Selection
-  { id: 1301, unit: '🌎Unit 13', topic: 'Variation', q: 'Sexual reproduction increases variation by:', a: 'Mixing genes', wrong: ['Removing alleles', 'Copying DNA exactly', 'Stopping mutation'] },
-  { id: 1302, unit: '🌎Unit 13', topic: 'Variation', q: 'Genetic variation increases a population’s ability to:', a: 'Survive change', wrong: ['Stay the same', 'Shrink', 'Stop evolving'] },
-  { id: 1303, unit: '🌎Unit 13', topic: 'Mutation', q: 'A mutation is:', a: 'Random DNA change', wrong: ['Reproduction', 'Controlled breeding', 'Migration'] },
-  { id: 1304, unit: '🌎Unit 13', topic: 'Fitness', q: 'Fitness refers to an organism’s ability to:', a: 'Survive and reproduce', wrong: ['Run fast', 'Grow quickly', 'Eat more'] },
-  { id: 1305, unit: '🌎Unit 13', topic: 'Traits', q: 'Polygenic traits show:', a: 'A wide range', wrong: ['Two phenotypes', 'No traits', 'One phenotype'] },
-  { id: 1306, unit: '🌎Unit 13', topic: 'Speciation', q: 'When two populations can no longer reproduce together, they are:', a: 'New species', wrong: ['Alleles', 'Mutations', 'Same species'] },
-  { id: 1307, unit: '🌎Unit 13', topic: 'Traits', q: 'Single-gene traits usually have:', a: 'Two phenotypes', wrong: ['No variation', 'Many phenotypes', 'Infinite variation'] },
-  { id: 1308, unit: '🌎Unit 13', topic: 'Selection', q: 'Farmers breeding crops for size is an example of:', a: 'Artificial selection', wrong: ['Genetic drift', 'Natural selection', 'Mutation'] },
-  { id: 1309, unit: '🌎Unit 13', topic: 'Genetic Drift', q: 'Founder effect occurs when:', a: 'Small group starts a new population', wrong: ['Selection ends', 'Mutation stops', 'Large population forms'] },
-  { id: 1310, unit: '🌎Unit 13', topic: 'Variation', q: 'Darwin observed that organisms differ from place to place, which is called:', a: 'Variation', wrong: ['Fitness', 'Mutation', 'Adaptation'] },
-  { id: 1311, unit: '🌎Unit 13', topic: 'Evolution', q: 'If allele frequencies change, the population is:', a: 'Evolving', wrong: ['Fixed', 'Dead', 'Stable'] },
-  { id: 1312, unit: '🌎Unit 13', topic: 'Isolation', q: 'Postzygotic barriers result in:', a: 'Weak or infertile offspring', wrong: ['No evolution', 'No mating', 'No variation'] },
-  { id: 1313, unit: '🌎Unit 13', topic: 'Selection', q: 'Disruptive selection favors:', a: 'Both extremes', wrong: ['One allele', 'No traits', 'Middle traits'] },
-  { id: 1314, unit: '🌎Unit 13', topic: 'Selection Graphs', q: 'A population of beetles exhibits variation in coloration from light to dark. Over multiple generations, stabilizing selection occurs.', a: 'Stabilizing selection graph', wrong: ['Disruptive selection graph', 'Directional selection graph', 'Natural selection graph', 'Genetic drift graph'] },
-  { id: 1315, unit: '🌎Unit 13', topic: 'Population Genetics', q: 'A gene pool includes all:', a: 'Alleles in a population', wrong: ['Traits', 'Mutations', 'Chromosomes'] },
-  { id: 1316, unit: '🌎Unit 13', topic: 'Darwin', q: 'Darwin published his ideas in:', a: 'Origin of Species', wrong: ['Evolution Theory', 'Life Forms', 'Natural Science'] },
-  { id: 1317, unit: '🌎Unit 13', topic: 'Adaptation', q: 'Traits that increase survival are called:', a: 'Adaptations', wrong: ['Alleles', 'Phenotypes', 'Mutations'] },
-  { id: 1318, unit: '🌎Unit 13', topic: 'Isolation', q: 'Prezygotic barriers occur:', a: 'Before fertilization', wrong: ['After fertilization', 'After birth', 'During mutation'] },
-  { id: 1319, unit: '🌎Unit 13', topic: 'Genetic Drift', q: 'A population of beetles exhibits variation in coloration from light to dark. Over multiple generations, genetic drift occurs.', a: 'Genetic drift graph', wrong: ['Disruptive selection graph', 'Directional selection graph', 'Natural selection graph', 'Stabilizing selection graph'] },
-  { id: 1320, unit: '🌎Unit 13', topic: 'Selection', q: 'Stabilizing selection favors:', a: 'Average traits', wrong: ['Extremes', 'Rare traits', 'New traits'] },
-  { id: 1321, unit: '🌎Unit 13', topic: 'Darwin', q: 'Charles Darwin is best known as a:', a: 'Naturalist', wrong: ['Chemist', 'Geologist', 'Physicist'] },
-  { id: 1322, unit: '🌎Unit 13', topic: 'Scientists', q: 'Which scientist influenced Darwin with ideas about population growth?', a: 'Malthus', wrong: ['Lyell', 'Lamarck', 'Wallace'] },
-  { id: 1323, unit: '🌎Unit 13', topic: 'Scientists', q: 'Hutton & Lyell came up with the idea that…', a: 'Earth changes slowly over time', wrong: ['Population growth is limited by resources', 'Traits acquired during life are inherited', 'Species change by natural selection'] },
-  { id: 13231, unit: '🌎Unit 13', topic: 'Scientists', q: 'Malthus came up with the idea that…', a: 'Population growth is limited by resources', wrong: ['Earth changes slowly over time', 'Traits acquired during life are inherited', 'Species never change'] },
-  { id: 13232, unit: '🌎Unit 13', topic: 'Scientists', q: 'Lamarck came up with the idea that…', a: 'Traits acquired during life are inherited', wrong: ['Population growth is limited by resources', 'Earth changes slowly over time', 'Natural selection explains evolution'] },
-  { id: 13233, unit: '🌎Unit 13', topic: 'Scientists', q: 'Wallace came up with the idea that…', a: 'Natural selection explains evolution', wrong: ['Earth changes slowly over time', 'Traits acquired during life are inherited', 'Use and disuse never affects organisms'] },
-  { id: 13234, unit: '🌎Unit 13', topic: 'Scientists', q: 'Darwin came up with the idea that…', a: 'Species change by natural selection', wrong: ['Population growth is unlimited', 'Acquired traits are always inherited', 'Earth never changes over time'] },
-  { id: 1324, unit: '🌎Unit 13', topic: 'Natural Selection', q: 'Natural selection is best described as:', a: 'Survival of the fittest', wrong: ['Artificial breeding', 'Random survival', 'Mutation only'] },
-  { id: 1325, unit: '🌎Unit 13', topic: 'Population Genetics', q: 'Allele frequency refers to:', a: 'Proportion of alleles', wrong: ['Number of species', 'Gene size', 'DNA length'] },
-  { id: 1326, unit: '🌎Unit 13', topic: 'Artificial Selection', q: 'Artificial selection is done by:', a: 'Humans', wrong: ['Climate', 'Animals', 'Nature'] },
-  { id: 1327, unit: '🌎Unit 13', topic: 'Selection', q: 'Directional selection favors:', a: 'Extreme traits', wrong: ['Average traits', 'Random traits', 'No traits'] },
-  { id: 1328, unit: '🌎Unit 13', topic: 'Population', q: 'A population is:', a: 'A group of the same species in one area', wrong: ['Different species together', 'One organism', 'All organisms on Earth'] },
-  { id: 1329, unit: '🌎Unit 13', topic: 'Speciation', q: 'Speciation is:', a: 'Formation of new species', wrong: ['Selection', 'Mutation', 'Reproduction'] },
-  { id: 1330, unit: '🌎Unit 13', topic: 'Isolation', q: 'Behavioral isolation involves differences in:', a: 'Mating behavior', wrong: ['Geography', 'Structure', 'Habitat'] },
-  { id: 1331, unit: '🌎Unit 13', topic: 'Traits', q: 'A bell curve represents:', a: 'Polygenic distribution', wrong: ['Genetic drift', 'Mutation', 'Fitness'] },
-  { id: 1332, unit: '🌎Unit 13', topic: 'Isolation', q: 'Temporal isolation means:', a: 'Different mating times', wrong: ['Different structures', 'Different locations', 'Different genes'] },
-  { id: 1333, unit: '🌎Unit 13', topic: 'Evidence', q: 'Fossils that resemble modern species suggest:', a: 'Evolution over time', wrong: ['Random extinction only', 'Sudden creation', 'Organisms never change'] },
-  { id: 1334, unit: '🌎Unit 13', topic: 'Gene Flow', q: 'Gene flow occurs when:', a: 'Individuals move between populations', wrong: ['Alleles disappear', 'Genes mutate', 'Selection happens'] },
-  { id: 1335, unit: '🌎Unit 13', topic: 'Genetic Drift', q: 'Genetic drift is:', a: 'Random change in allele frequency', wrong: ['Natural selection', 'Gene flow', 'Mutation only'] },
-  { id: 1336, unit: '🌎Unit 13', topic: 'Selection Graphs', q: 'A population of beetles exhibits variation in coloration from light to dark. Over multiple generations, disruptive selection occurs.', a: 'Disruptive selection graph', wrong: ['Directional selection graph', 'Natural selection graph', 'Genetic drift graph', 'Stabilizing selection graph'] },
-  { id: 1337, unit: '🌎Unit 13', topic: 'Scientists', q: 'The idea that Earth changes slowly over time came from:', a: 'Hutton & Lyell', wrong: ['Mendel', 'Lamarck', 'Darwin'] },
-  { id: 1338, unit: '🌎Unit 13', topic: 'Isolation', q: 'Geographic isolation is caused by:', a: 'Physical barriers', wrong: ['Behavior', 'Genes', 'Time differences'] },
-  { id: 1339, unit: '🌎Unit 13', topic: 'Genetic Drift', q: 'Genetic drift affects small populations more because:', a: 'Random events have bigger impact', wrong: ['They mutate more', 'They evolve faster', 'They reproduce less'] },
-  { id: 1340, unit: '🌎Unit 13', topic: 'Darwin', q: 'Darwin traveled on the:', a: 'HMS Beagle', wrong: ['HMS Darwin', 'HMS Explorer', 'HMS Victory'] },
-  { id: 1341, unit: '🌎Unit 13', topic: 'Selection Graphs', q: 'A population of beetles exhibits variation in coloration from light to dark. Over multiple generations, directional selection occurs.', a: 'Directional selection graph', wrong: ['Disruptive selection graph', 'Natural selection graph', 'Genetic drift graph', 'Stabilizing selection graph'] },
-  { id: 1342, unit: '🌎Unit 13', topic: 'Selection Graphs', q: 'A population of beetles exhibits variation in coloration from light to dark. Over multiple generations, natural selection occurs.', a: 'Natural selection graph', wrong: ['Disruptive selection graph', 'Directional selection graph', 'Genetic drift graph', 'Stabilizing selection graph'] },
-  { id: 1343, unit: '🌎Unit 13', topic: 'Isolation', q: 'Mechanical isolation occurs when:', a: 'Structures don’t match', wrong: ['Behavior changes', 'Timing differs', 'Genes mutate'] },
-  { id: 1344, unit: '🌎Unit 13', topic: 'Selection', q: 'Match the Type of Selection:', a: 'Genetic Drift = random change in allele frequency; Disruptive = favors both extremes; Stabilizing = favors average traits; Directional = favors one extreme; Natural Selection = survival of the fittest', wrong: [] },
-  { id: 1345, unit: '🌎Unit 13', topic: 'Hardy-Weinberg', q: 'Hardy-Weinberg equilibrium means:', a: 'No evolution occurs', wrong: ['Allele frequencies change', 'Evolution is happening', 'Mutation increases'] },
-  { id: 1346, unit: '🌎Unit 13', topic: 'Genetic Drift', q: 'A bottleneck occurs when:', a: 'Population shrinks suddenly', wrong: ['Genes mix', 'Mutation increases', 'Population grows'] },
-  { id: 1347, unit: '🌎Unit 13', topic: 'Hardy-Weinberg', q: 'Which is NOT a Hardy-Weinberg condition?', a: 'Mutation occurs', wrong: ['Random mating', 'No gene flow', 'Large population'] },
+  // Unit 13 - Evolution & Natural Selection
+  { id: 1301, unit: 'Unit 13', topic: 'Variation', q: 'Sexual reproduction increases variation by:', a: 'Mixing genes', wrong: ['Removing alleles', 'Copying DNA exactly', 'Stopping mutation'] },
+  { id: 1302, unit: 'Unit 13', topic: 'Variation', q: 'Genetic variation increases a population’s ability to:', a: 'Survive change', wrong: ['Stay the same', 'Shrink', 'Stop evolving'] },
+  { id: 1303, unit: 'Unit 13', topic: 'Mutation', q: 'A mutation is:', a: 'Random DNA change', wrong: ['Reproduction', 'Controlled breeding', 'Migration'] },
+  { id: 1304, unit: 'Unit 13', topic: 'Fitness', q: 'Fitness refers to an organism’s ability to:', a: 'Survive and reproduce', wrong: ['Run fast', 'Grow quickly', 'Eat more'] },
+  { id: 1305, unit: 'Unit 13', topic: 'Traits', q: 'Polygenic traits show:', a: 'A wide range', wrong: ['Two phenotypes', 'No traits', 'One phenotype'] },
+  { id: 1306, unit: 'Unit 13', topic: 'Speciation', q: 'When two populations can no longer reproduce together, they are:', a: 'New species', wrong: ['Alleles', 'Mutations', 'Same species'] },
+  { id: 1307, unit: 'Unit 13', topic: 'Traits', q: 'Single-gene traits usually have:', a: 'Two phenotypes', wrong: ['No variation', 'Many phenotypes', 'Infinite variation'] },
+  { id: 1308, unit: 'Unit 13', topic: 'Selection', q: 'Farmers breeding crops for size is an example of:', a: 'Artificial selection', wrong: ['Genetic drift', 'Natural selection', 'Mutation'] },
+  { id: 1309, unit: 'Unit 13', topic: 'Genetic Drift', q: 'Founder effect occurs when:', a: 'Small group starts a new population', wrong: ['Selection ends', 'Mutation stops', 'Large population forms'] },
+  { id: 1310, unit: 'Unit 13', topic: 'Variation', q: 'Darwin observed that organisms differ from place to place, which is called:', a: 'Variation', wrong: ['Fitness', 'Mutation', 'Adaptation'] },
+  { id: 1311, unit: 'Unit 13', topic: 'Evolution', q: 'If allele frequencies change, the population is:', a: 'Evolving', wrong: ['Fixed', 'Dead', 'Stable'] },
+  { id: 1312, unit: 'Unit 13', topic: 'Isolation', q: 'Postzygotic barriers result in:', a: 'Weak or infertile offspring', wrong: ['No evolution', 'No mating', 'No variation'] },
+  { id: 1313, unit: 'Unit 13', topic: 'Selection', q: 'Disruptive selection favors:', a: 'Both extremes', wrong: ['One allele', 'No traits', 'Middle traits'] },
+  { id: 1314, unit: 'Unit 13', topic: 'Selection Graphs', q: 'A population of beetles exhibits variation in coloration from light to dark. Over multiple generations, stabilizing selection occurs.', a: 'Stabilizing selection graph', wrong: ['Disruptive selection graph', 'Directional selection graph', 'Natural selection graph', 'Genetic drift graph'] },
+  { id: 1315, unit: 'Unit 13', topic: 'Population Genetics', q: 'A gene pool includes all:', a: 'Alleles in a population', wrong: ['Traits', 'Mutations', 'Chromosomes'] },
+  { id: 1316, unit: 'Unit 13', topic: 'Darwin', q: 'Darwin published his ideas in:', a: 'Origin of Species', wrong: ['Evolution Theory', 'Life Forms', 'Natural Science'] },
+  { id: 1317, unit: 'Unit 13', topic: 'Adaptation', q: 'Traits that increase survival are called:', a: 'Adaptations', wrong: ['Alleles', 'Phenotypes', 'Mutations'] },
+  { id: 1318, unit: 'Unit 13', topic: 'Isolation', q: 'Prezygotic barriers occur:', a: 'Before fertilization', wrong: ['After fertilization', 'After birth', 'During mutation'] },
+  { id: 1319, unit: 'Unit 13', topic: 'Genetic Drift', q: 'A population of beetles exhibits variation in coloration from light to dark. Over multiple generations, genetic drift occurs.', a: 'Genetic drift graph', wrong: ['Disruptive selection graph', 'Directional selection graph', 'Natural selection graph', 'Stabilizing selection graph'] },
+  { id: 1320, unit: 'Unit 13', topic: 'Selection', q: 'Stabilizing selection favors:', a: 'Average traits', wrong: ['Extremes', 'Rare traits', 'New traits'] },
+  { id: 1321, unit: 'Unit 13', topic: 'Darwin', q: 'Charles Darwin is best known as a:', a: 'Naturalist', wrong: ['Chemist', 'Geologist', 'Physicist'] },
+  { id: 1322, unit: 'Unit 13', topic: 'Scientists', q: 'Which scientist influenced Darwin with ideas about population growth?', a: 'Malthus', wrong: ['Lyell', 'Lamarck', 'Wallace'] },
+  { id: 1323, unit: 'Unit 13', topic: 'Scientists', q: 'Hutton & Lyell came up with the idea that…', a: 'Earth changes slowly over time', wrong: ['Population growth is limited by resources', 'Traits acquired during life are inherited', 'Species change by natural selection'] },
+  { id: 13231, unit: 'Unit 13', topic: 'Scientists', q: 'Malthus came up with the idea that…', a: 'Population growth is limited by resources', wrong: ['Earth changes slowly over time', 'Traits acquired during life are inherited', 'Species never change'] },
+  { id: 13232, unit: 'Unit 13', topic: 'Scientists', q: 'Lamarck came up with the idea that…', a: 'Traits acquired during life are inherited', wrong: ['Population growth is limited by resources', 'Earth changes slowly over time', 'Natural selection explains evolution'] },
+  { id: 13233, unit: 'Unit 13', topic: 'Scientists', q: 'Wallace came up with the idea that…', a: 'Natural selection explains evolution', wrong: ['Earth changes slowly over time', 'Traits acquired during life are inherited', 'Use and disuse never affects organisms'] },
+  { id: 13234, unit: 'Unit 13', topic: 'Scientists', q: 'Darwin came up with the idea that…', a: 'Species change by natural selection', wrong: ['Population growth is unlimited', 'Acquired traits are always inherited', 'Earth never changes over time'] },
+  { id: 1324, unit: 'Unit 13', topic: 'Natural Selection', q: 'Natural selection is best described as:', a: 'Survival of the fittest', wrong: ['Artificial breeding', 'Random survival', 'Mutation only'] },
+  { id: 1325, unit: 'Unit 13', topic: 'Population Genetics', q: 'Allele frequency refers to:', a: 'Proportion of alleles', wrong: ['Number of species', 'Gene size', 'DNA length'] },
+  { id: 1326, unit: 'Unit 13', topic: 'Artificial Selection', q: 'Artificial selection is done by:', a: 'Humans', wrong: ['Climate', 'Animals', 'Nature'] },
+  { id: 1327, unit: 'Unit 13', topic: 'Selection', q: 'Directional selection favors:', a: 'Extreme traits', wrong: ['Average traits', 'Random traits', 'No traits'] },
+  { id: 1328, unit: 'Unit 13', topic: 'Population', q: 'A population is:', a: 'A group of the same species in one area', wrong: ['Different species together', 'One organism', 'All organisms on Earth'] },
+  { id: 1329, unit: 'Unit 13', topic: 'Speciation', q: 'Speciation is:', a: 'Formation of new species', wrong: ['Selection', 'Mutation', 'Reproduction'] },
+  { id: 1330, unit: 'Unit 13', topic: 'Isolation', q: 'Behavioral isolation involves differences in:', a: 'Mating behavior', wrong: ['Geography', 'Structure', 'Habitat'] },
+  { id: 1331, unit: 'Unit 13', topic: 'Traits', q: 'A bell curve represents:', a: 'Polygenic distribution', wrong: ['Genetic drift', 'Mutation', 'Fitness'] },
+  { id: 1332, unit: 'Unit 13', topic: 'Isolation', q: 'Temporal isolation means:', a: 'Different mating times', wrong: ['Different structures', 'Different locations', 'Different genes'] },
+  { id: 1333, unit: 'Unit 13', topic: 'Evidence', q: 'Fossils that resemble modern species suggest:', a: 'Evolution over time', wrong: ['Random extinction only', 'Sudden creation', 'Organisms never change'] },
+  { id: 1334, unit: 'Unit 13', topic: 'Gene Flow', q: 'Gene flow occurs when:', a: 'Individuals move between populations', wrong: ['Alleles disappear', 'Genes mutate', 'Selection happens'] },
+  { id: 1335, unit: 'Unit 13', topic: 'Genetic Drift', q: 'Genetic drift is:', a: 'Random change in allele frequency', wrong: ['Natural selection', 'Gene flow', 'Mutation only'] },
+  { id: 1336, unit: 'Unit 13', topic: 'Selection Graphs', q: 'A population of beetles exhibits variation in coloration from light to dark. Over multiple generations, disruptive selection occurs.', a: 'Disruptive selection graph', wrong: ['Directional selection graph', 'Natural selection graph', 'Genetic drift graph', 'Stabilizing selection graph'] },
+  { id: 1337, unit: 'Unit 13', topic: 'Scientists', q: 'The idea that Earth changes slowly over time came from:', a: 'Hutton & Lyell', wrong: ['Mendel', 'Lamarck', 'Darwin'] },
+  { id: 1338, unit: 'Unit 13', topic: 'Isolation', q: 'Geographic isolation is caused by:', a: 'Physical barriers', wrong: ['Behavior', 'Genes', 'Time differences'] },
+  { id: 1339, unit: 'Unit 13', topic: 'Genetic Drift', q: 'Genetic drift affects small populations more because:', a: 'Random events have bigger impact', wrong: ['They mutate more', 'They evolve faster', 'They reproduce less'] },
+  { id: 1340, unit: 'Unit 13', topic: 'Darwin', q: 'Darwin traveled on the:', a: 'HMS Beagle', wrong: ['HMS Darwin', 'HMS Explorer', 'HMS Victory'] },
+  { id: 1341, unit: 'Unit 13', topic: 'Selection Graphs', q: 'A population of beetles exhibits variation in coloration from light to dark. Over multiple generations, directional selection occurs.', a: 'Directional selection graph', wrong: ['Disruptive selection graph', 'Natural selection graph', 'Genetic drift graph', 'Stabilizing selection graph'] },
+  { id: 1342, unit: 'Unit 13', topic: 'Selection Graphs', q: 'A population of beetles exhibits variation in coloration from light to dark. Over multiple generations, natural selection occurs.', a: 'Natural selection graph', wrong: ['Disruptive selection graph', 'Directional selection graph', 'Genetic drift graph', 'Stabilizing selection graph'] },
+  { id: 1343, unit: 'Unit 13', topic: 'Isolation', q: 'Mechanical isolation occurs when:', a: 'Structures don’t match', wrong: ['Behavior changes', 'Timing differs', 'Genes mutate'] },
+  { id: 1344, unit: 'Unit 13', topic: 'Selection', q: 'Match the Type of Selection:', a: 'Genetic Drift = random change in allele frequency; Disruptive = favors both extremes; Stabilizing = favors average traits; Directional = favors one extreme; Natural Selection = survival of the fittest', wrong: [] },
+  { id: 1345, unit: 'Unit 13', topic: 'Hardy-Weinberg', q: 'Hardy-Weinberg equilibrium means:', a: 'No evolution occurs', wrong: ['Allele frequencies change', 'Evolution is happening', 'Mutation increases'] },
+  { id: 1346, unit: 'Unit 13', topic: 'Genetic Drift', q: 'A bottleneck occurs when:', a: 'Population shrinks suddenly', wrong: ['Genes mix', 'Mutation increases', 'Population grows'] },
+  { id: 1347, unit: 'Unit 13', topic: 'Hardy-Weinberg', q: 'Which is NOT a Hardy-Weinberg condition?', a: 'Mutation occurs', wrong: ['Random mating', 'No gene flow', 'Large population'] },
 
 
-  // 🔭Unit 14 - Biotechnology
-  { id: 1450, unit: '🔭Unit 14', topic: 'Gene Editing', q: 'What is CRISPR-Cas9?', a: 'A method used to edit genes precisely', wrong: ['A circular DNA molecule in bacteria', 'A way to separate proteins', 'A cloned organism'] },
-  { id: 1451, unit: '🔭Unit 14', topic: 'Cloning', q: 'What is a clone?', a: 'An exact genetic copy of an organism or cell', wrong: ['DNA from another species', 'A type of enzyme', 'A DNA fingerprint'] },
-  { id: 1452, unit: '🔭Unit 14', topic: 'Epigenetics', q: 'What is epigenetics?', a: 'Regulation of gene expression without changing DNA sequence', wrong: ['Cutting DNA into fragments', 'Creating identical organisms', 'Making proteins from RNA'] },
-  { id: 1453, unit: '🔭Unit 14', topic: 'Plasmids', q: 'What is a plasmid?', a: 'A small circular DNA molecule commonly found in bacteria', wrong: ['A type of chromosome in humans', 'A protein made by cells', 'A DNA fingerprint'] },
-  { id: 1454, unit: '🔭Unit 14', topic: 'Gel Electrophoresis', q: 'What is gel electrophoresis?', a: 'A process that separates DNA fragments by size', wrong: ['A way to clone animals', 'A method for editing genes', 'A process that creates proteins'] },
-  { id: 1455, unit: '🔭Unit 14', topic: 'Restriction Enzymes', q: 'What is a restriction enzyme?', a: 'An enzyme that cuts DNA at specific sequences', wrong: ['An enzyme used in digestion only', 'A protein that joins DNA together', 'A type of plasmid'] },
-  { id: 1456, unit: '🔭Unit 14', topic: 'PCR', q: 'What is PCR?', a: 'A process used to make many copies of DNA', wrong: ['A way to destroy DNA', 'A method for making proteins', 'A type of selective breeding'] },
-  { id: 1457, unit: '🔭Unit 14', topic: 'Recombinant DNA', q: 'What is recombinant DNA?', a: 'DNA combined from different sources', wrong: ['DNA found only in bacteria', 'DNA destroyed by enzymes', 'DNA that cannot be copied'] },
-  { id: 1458, unit: '🔭Unit 14', topic: 'Transgenic Organisms', q: 'What is a transgenic organism?', a: 'An organism containing DNA from another species', wrong: ['An organism with no DNA', 'A cloned organism only', 'An organism produced by mitosis'] },
-  { id: 1459, unit: '🔭Unit 14', topic: 'STRs', q: 'What are STRs?', a: 'Repeating DNA sequences that vary among individuals', wrong: ['Proteins that cut DNA', 'Circular DNA molecules', 'A type of chromosome'] },
-  { id: 1460, unit: '🔭Unit 14', topic: 'PCR', q: 'PCR stands for:', a: 'Polymerase Chain Reaction', wrong: ['Primary Cell Replication', 'Protein Chain Reaction', 'Protein Copy Replication'] },
-  { id: 1462, unit: '🔭Unit 14', topic: 'DNA Analysis', q: 'Which biotechnology application is used to determine family relationships?', a: 'DNA analysis', wrong: ['Translation', 'Cloning plants', 'Fermentation'] },
-  { id: 1463, unit: '🔭Unit 14', topic: 'Recombinant DNA', q: 'Which process is MOST associated with making insulin-producing bacteria?', a: 'Recombinant DNA technology', wrong: ['Photosynthesis', 'Osmosis', 'Natural selection'] },
-  { id: 1464, unit: '🔭Unit 14', topic: 'Gel Electrophoresis', q: 'Gel electrophoresis separates DNA fragments based on:', a: 'Size', wrong: ['Shape', 'Density', 'Color'] },
-  { id: 1465, unit: '🔭Unit 14', topic: 'DNA Technology', q: 'DNA technology mainly relies on the ability to:', a: 'Copy and manipulate DNA strands', wrong: ['Eliminate mutations', 'Destroy all DNA', 'Stop protein production'] },
-  { id: 1467, unit: '🔭Unit 14', topic: 'Plasmids', q: 'Bacteria containing recombinant plasmids can:', a: 'Produce useful proteins', wrong: ['Eliminate all disease', 'Destroy chromosomes', 'Stop reproducing'] },
-  { id: 1468, unit: '🔭Unit 14', topic: 'Biotechnology Basics', q: 'Which statement about biotechnology is TRUE?', a: 'Biotechnology can improve medicine and agriculture', wrong: ['Biotechnology only involves animals', 'Biotechnology cannot affect society', 'Biotechnology is completely new'] },
-  { id: 1469, unit: '🔭Unit 14', topic: 'PCR', q: 'Which enzyme is important in PCR?', a: 'DNA polymerase', wrong: ['Amylase', 'Lipase', 'Catalase'] },
-  { id: 1471, unit: '🔭Unit 14', topic: 'Epigenetics', q: 'Tightly packed chromatin usually results in:', a: 'Reduced gene expression', wrong: ['Increased gene activity', 'Faster protein production', 'No effect on genes'] },
-  { id: 1472, unit: '🔭Unit 14', topic: 'DNA Analysis', q: 'DNA fingerprinting is an example of:', a: 'DNA Analysis', wrong: ['Gene Editing', 'Selective Breeding'] },
-  { id: 1473, unit: '🔭Unit 14', topic: 'Gene Editing', q: 'CRISPR-Cas9 is an example of:', a: 'Gene Editing', wrong: ['DNA Analysis', 'Selective Breeding'] },
-  { id: 1474, unit: '🔭Unit 14', topic: 'Selective Breeding', q: 'Choosing organisms with desired traits to reproduce is an example of:', a: 'Selective Breeding', wrong: ['DNA Analysis', 'Gene Editing'] },
-  { id: 1475, unit: '🔭Unit 14', topic: 'DNA Analysis', q: 'Gel electrophoresis is most associated with:', a: 'DNA Analysis', wrong: ['Gene Editing', 'Selective Breeding'] },
-  { id: 1476, unit: '🔭Unit 14', topic: 'Gene Editing', q: 'Creating crops resistant to pests by changing genes is an example of:', a: 'Gene Editing', wrong: ['DNA Analysis', 'Selective Breeding'] },
-  { id: 1477, unit: '🔭Unit 14', topic: 'Selective Breeding', q: 'Breeding dogs for certain traits is an example of:', a: 'Selective Breeding', wrong: ['DNA Analysis', 'Gene Editing'] },
-  { id: 1478, unit: '🔭Unit 14', topic: 'Cloning', q: 'Somatic cell nuclear transfer involves:', a: 'Replacing an egg cell nucleus with a body cell nucleus', wrong: ['Cutting proteins', 'Creating gametes', 'Moving DNA into bacteria only'] },
-  { id: 1479, unit: '🔭Unit 14', topic: 'Human Genome Project', q: 'Scientists discovered that only a small percentage of human DNA:', a: 'Codes for proteins', wrong: ['Mutates', 'Is inherited', 'Exists in chromosomes'] },
-  { id: 1482, unit: '🔭Unit 14', topic: 'Biotechnology Basics', q: 'Which of the following is an example of early biotechnology?', a: 'Bread making using yeast', wrong: ['CRISPR', 'Gel electrophoresis', 'PCR'] },
-  { id: 1483, unit: '🔭Unit 14', topic: 'Biotechnology Impacts', q: 'Producing insulin for diabetics is a:', a: 'Advantage', wrong: ['Concern'] },
-  { id: 1484, unit: '🔭Unit 14', topic: 'Biotechnology Impacts', q: 'Possible ethical issues with cloning are a:', a: 'Concern', wrong: ['Advantage'] },
-  { id: 1485, unit: '🔭Unit 14', topic: 'Biotechnology Impacts', q: 'Genetically modified crops increasing food production is a:', a: 'Advantage', wrong: ['Concern'] },
-  { id: 1486, unit: '🔭Unit 14', topic: 'Biotechnology Impacts', q: 'Fear of unintended genetic changes is a:', a: 'Concern', wrong: ['Advantage'] },
-  { id: 1487, unit: '🔭Unit 14', topic: 'Biotechnology Impacts', q: 'Improved medical treatments are a:', a: 'Advantage', wrong: ['Concern'] },
-  { id: 1488, unit: '🔭Unit 14', topic: 'Biotechnology Impacts', q: 'Concerns about privacy from DNA databases are a:', a: 'Concern', wrong: ['Advantage'] },
-  { id: 1489, unit: '🔭Unit 14', topic: 'Plasmids', q: 'Plasmids are commonly found in:', a: 'Bacteria', wrong: ['Plants', 'Viruses', 'Animals'] },
-  { id: 1490, unit: '🔭Unit 14', topic: 'STRs', q: 'Short tandem repeats (STRs) are useful because they:', a: 'Vary greatly among individuals', wrong: ['Eliminate mutations', 'Are identical in everyone', 'Create proteins'] },
-  { id: 1492, unit: '🔭Unit 14', topic: 'Epigenetics', q: 'Loosely packed chromatin is associated with:', a: 'Active genes', wrong: ['Cell death', 'Dead cells', 'Mutated chromosomes'] },
-  { id: 1494, unit: '🔭Unit 14', topic: 'DNA Analysis', q: 'A DNA fingerprint is produced using:', a: 'Gel electrophoresis', wrong: ['Mitosis', 'Photosynthesis', 'DNA sequencing only'] },
-  { id: 1497, unit: '🔭Unit 14', topic: 'PCR', q: 'Which biotechnology tool is MOST useful for rapidly copying a tiny DNA sample?', a: 'PCR', wrong: ['Gel electrophoresis', 'Selective breeding', 'Cloning'] },
-  { id: 1498, unit: '🔭Unit 14', topic: 'DNA Analysis', q: 'Which biotechnology application is used in criminal investigations?', a: 'DNA fingerprinting', wrong: ['Photosynthesis', 'Mitosis', 'Selective breeding'] },
-  { id: 1499, unit: '🔭Unit 14', topic: 'Gene Editing', q: 'CRISPR works by:', a: 'Cutting DNA at targeted locations', wrong: ['Melting proteins', 'Making ATP', 'Separating chromosomes'] },
-  { id: 1500, unit: '🔭Unit 14', topic: 'Biotechnology Categories', q: 'PCR is a:', a: 'Process', wrong: ['Tool', 'Product'] },
-  { id: 1501, unit: '🔭Unit 14', topic: 'Biotechnology Categories', q: 'Restriction enzymes are a:', a: 'Tool', wrong: ['Process', 'Product'] },
-  { id: 1502, unit: '🔭Unit 14', topic: 'Biotechnology Categories', q: 'Insulin made by bacteria is a:', a: 'Product', wrong: ['Process', 'Tool'] },
-  { id: 1503, unit: '🔭Unit 14', topic: 'Biotechnology Categories', q: 'Gel electrophoresis is a:', a: 'Tool', wrong: ['Process', 'Product'] },
-  { id: 1504, unit: '🔭Unit 14', topic: 'Biotechnology Categories', q: 'Recombinant DNA technology is a:', a: 'Process', wrong: ['Tool', 'Product'] },
-  { id: 1505, unit: '🔭Unit 14', topic: 'Biotechnology Categories', q: 'A genetically modified crop is a:', a: 'Product', wrong: ['Process', 'Tool'] },
-  { id: 1506, unit: '🔭Unit 14', topic: 'Selective Breeding', q: 'Selective breeding can sometimes:', a: 'Produce unwanted traits', wrong: ['Eliminate mutations', 'Increase genetic diversity greatly', 'Stop inheritance'] },
-  { id: 1507, unit: '🔭Unit 14', topic: 'Cloning', q: 'Dolly the sheep is famous because she:', a: 'Was cloned from an adult somatic cell', wrong: ['Produced insulin', 'Was the first transgenic mammal', 'Sequenced the human genome'] },
-  { id: 1509, unit: '🔭Unit 14', topic: 'Biotechnology Organisms', q: 'HIV is an example of a:', a: 'Virus', wrong: ['Bacteria', 'Human'] },
-  { id: 1511, unit: '🔭Unit 14', topic: 'Recombinant DNA', q: 'Recombinant insulin is commonly produced using:', a: 'Bacteria', wrong: ['Viruses', 'Humans'] },
-  { id: 1512, unit: '🔭Unit 14', topic: 'Biotechnology Organisms', q: 'A cold or flu is caused by:', a: 'Viruses', wrong: ['Bacteria', 'Humans'] },
-  { id: 1513, unit: '🔭Unit 14', topic: 'DNA Analysis', q: 'STR analysis is commonly used to identify:', a: 'Humans', wrong: ['Bacteria', 'Viruses'] },
-  { id: 1514, unit: '🔭Unit 14', topic: 'Cloning', q: 'Which of the following is a possible application of cloning?', a: 'Producing genetically identical livestock', wrong: ['Creating new elements', 'Preventing meiosis', 'Stopping protein synthesis'] },
-  { id: 1515, unit: '🔭Unit 14', topic: 'Human Genome Project', q: 'The Human Genome Project was completed in:', a: '2003', wrong: ['1990', '2020', '1985'] },
-  { id: 1516, unit: '🔭Unit 14', topic: 'Epigenetics', q: 'Methyl groups attached to DNA often:', a: 'Stop transcription', wrong: ['Cause mutations immediately', 'Increase gene expression', 'Create proteins'] },
-  { id: 1518, unit: '🔭Unit 14', topic: 'Human Genome Project', q: 'The Human Genome Project focused on:', a: 'Sequencing human DNA', wrong: ['Producing vaccines', 'Cloning humans', 'Creating designer babies'] },
-  { id: 1520, unit: '🔭Unit 14', topic: 'Gel Electrophoresis', q: 'In gel electrophoresis, smaller DNA fragments:', a: 'Move farther through the gel', wrong: ['Float upward', 'Stay near the wells', 'Move slower'] },
-  { id: 1521, unit: '🔭Unit 14', topic: 'Biotechnology Basics', q: 'Which statement best describes biotechnology?', a: 'The use of living organisms or biological systems to make products or solve problems', wrong: ['The study of only fossils and rocks', 'The process of destroying DNA', 'The study of weather patterns'] },
+  // Unit 14 - Biotechnology
+  { id: 1450, unit: 'Unit 14', topic: 'Gene Editing', q: 'What is CRISPR-Cas9?', a: 'A method used to edit genes precisely', wrong: ['A circular DNA molecule in bacteria', 'A way to separate proteins', 'A cloned organism'] },
+  { id: 1451, unit: 'Unit 14', topic: 'Cloning', q: 'What is a clone?', a: 'An exact genetic copy of an organism or cell', wrong: ['DNA from another species', 'A type of enzyme', 'A DNA fingerprint'] },
+  { id: 1452, unit: 'Unit 14', topic: 'Epigenetics', q: 'What is epigenetics?', a: 'Regulation of gene expression without changing DNA sequence', wrong: ['Cutting DNA into fragments', 'Creating identical organisms', 'Making proteins from RNA'] },
+  { id: 1453, unit: 'Unit 14', topic: 'Plasmids', q: 'What is a plasmid?', a: 'A small circular DNA molecule commonly found in bacteria', wrong: ['A type of chromosome in humans', 'A protein made by cells', 'A DNA fingerprint'] },
+  { id: 1454, unit: 'Unit 14', topic: 'Gel Electrophoresis', q: 'What is gel electrophoresis?', a: 'A process that separates DNA fragments by size', wrong: ['A way to clone animals', 'A method for editing genes', 'A process that creates proteins'] },
+  { id: 1455, unit: 'Unit 14', topic: 'Restriction Enzymes', q: 'What is a restriction enzyme?', a: 'An enzyme that cuts DNA at specific sequences', wrong: ['An enzyme used in digestion only', 'A protein that joins DNA together', 'A type of plasmid'] },
+  { id: 1456, unit: 'Unit 14', topic: 'PCR', q: 'What is PCR?', a: 'A process used to make many copies of DNA', wrong: ['A way to destroy DNA', 'A method for making proteins', 'A type of selective breeding'] },
+  { id: 1457, unit: 'Unit 14', topic: 'Recombinant DNA', q: 'What is recombinant DNA?', a: 'DNA combined from different sources', wrong: ['DNA found only in bacteria', 'DNA destroyed by enzymes', 'DNA that cannot be copied'] },
+  { id: 1458, unit: 'Unit 14', topic: 'Transgenic Organisms', q: 'What is a transgenic organism?', a: 'An organism containing DNA from another species', wrong: ['An organism with no DNA', 'A cloned organism only', 'An organism produced by mitosis'] },
+  { id: 1459, unit: 'Unit 14', topic: 'STRs', q: 'What are STRs?', a: 'Repeating DNA sequences that vary among individuals', wrong: ['Proteins that cut DNA', 'Circular DNA molecules', 'A type of chromosome'] },
+  { id: 1460, unit: 'Unit 14', topic: 'PCR', q: 'PCR stands for:', a: 'Polymerase Chain Reaction', wrong: ['Primary Cell Replication', 'Protein Chain Reaction', 'Protein Copy Replication'] },
+  { id: 1462, unit: 'Unit 14', topic: 'DNA Analysis', q: 'Which biotechnology application is used to determine family relationships?', a: 'DNA analysis', wrong: ['Translation', 'Cloning plants', 'Fermentation'] },
+  { id: 1463, unit: 'Unit 14', topic: 'Recombinant DNA', q: 'Which process is MOST associated with making insulin-producing bacteria?', a: 'Recombinant DNA technology', wrong: ['Photosynthesis', 'Osmosis', 'Natural selection'] },
+  { id: 1464, unit: 'Unit 14', topic: 'Gel Electrophoresis', q: 'Gel electrophoresis separates DNA fragments based on:', a: 'Size', wrong: ['Shape', 'Density', 'Color'] },
+  { id: 1465, unit: 'Unit 14', topic: 'DNA Technology', q: 'DNA technology mainly relies on the ability to:', a: 'Copy and manipulate DNA strands', wrong: ['Eliminate mutations', 'Destroy all DNA', 'Stop protein production'] },
+  { id: 1467, unit: 'Unit 14', topic: 'Plasmids', q: 'Bacteria containing recombinant plasmids can:', a: 'Produce useful proteins', wrong: ['Eliminate all disease', 'Destroy chromosomes', 'Stop reproducing'] },
+  { id: 1468, unit: 'Unit 14', topic: 'Biotechnology Basics', q: 'Which statement about biotechnology is TRUE?', a: 'Biotechnology can improve medicine and agriculture', wrong: ['Biotechnology only involves animals', 'Biotechnology cannot affect society', 'Biotechnology is completely new'] },
+  { id: 1469, unit: 'Unit 14', topic: 'PCR', q: 'Which enzyme is important in PCR?', a: 'DNA polymerase', wrong: ['Amylase', 'Lipase', 'Catalase'] },
+  { id: 1471, unit: 'Unit 14', topic: 'Epigenetics', q: 'Tightly packed chromatin usually results in:', a: 'Reduced gene expression', wrong: ['Increased gene activity', 'Faster protein production', 'No effect on genes'] },
+  { id: 1472, unit: 'Unit 14', topic: 'DNA Analysis', q: 'DNA fingerprinting is an example of:', a: 'DNA Analysis', wrong: ['Gene Editing', 'Selective Breeding'] },
+  { id: 1473, unit: 'Unit 14', topic: 'Gene Editing', q: 'CRISPR-Cas9 is an example of:', a: 'Gene Editing', wrong: ['DNA Analysis', 'Selective Breeding'] },
+  { id: 1474, unit: 'Unit 14', topic: 'Selective Breeding', q: 'Choosing organisms with desired traits to reproduce is an example of:', a: 'Selective Breeding', wrong: ['DNA Analysis', 'Gene Editing'] },
+  { id: 1475, unit: 'Unit 14', topic: 'DNA Analysis', q: 'Gel electrophoresis is most associated with:', a: 'DNA Analysis', wrong: ['Gene Editing', 'Selective Breeding'] },
+  { id: 1476, unit: 'Unit 14', topic: 'Gene Editing', q: 'Creating crops resistant to pests by changing genes is an example of:', a: 'Gene Editing', wrong: ['DNA Analysis', 'Selective Breeding'] },
+  { id: 1477, unit: 'Unit 14', topic: 'Selective Breeding', q: 'Breeding dogs for certain traits is an example of:', a: 'Selective Breeding', wrong: ['DNA Analysis', 'Gene Editing'] },
+  { id: 1478, unit: 'Unit 14', topic: 'Cloning', q: 'Somatic cell nuclear transfer involves:', a: 'Replacing an egg cell nucleus with a body cell nucleus', wrong: ['Cutting proteins', 'Creating gametes', 'Moving DNA into bacteria only'] },
+  { id: 1479, unit: 'Unit 14', topic: 'Human Genome Project', q: 'Scientists discovered that only a small percentage of human DNA:', a: 'Codes for proteins', wrong: ['Mutates', 'Is inherited', 'Exists in chromosomes'] },
+  { id: 1482, unit: 'Unit 14', topic: 'Biotechnology Basics', q: 'Which of the following is an example of early biotechnology?', a: 'Bread making using yeast', wrong: ['CRISPR', 'Gel electrophoresis', 'PCR'] },
+  { id: 1483, unit: 'Unit 14', topic: 'Biotechnology Impacts', q: 'Producing insulin for diabetics is a:', a: 'Advantage', wrong: ['Concern'] },
+  { id: 1484, unit: 'Unit 14', topic: 'Biotechnology Impacts', q: 'Possible ethical issues with cloning are a:', a: 'Concern', wrong: ['Advantage'] },
+  { id: 1485, unit: 'Unit 14', topic: 'Biotechnology Impacts', q: 'Genetically modified crops increasing food production is a:', a: 'Advantage', wrong: ['Concern'] },
+  { id: 1486, unit: 'Unit 14', topic: 'Biotechnology Impacts', q: 'Fear of unintended genetic changes is a:', a: 'Concern', wrong: ['Advantage'] },
+  { id: 1487, unit: 'Unit 14', topic: 'Biotechnology Impacts', q: 'Improved medical treatments are a:', a: 'Advantage', wrong: ['Concern'] },
+  { id: 1488, unit: 'Unit 14', topic: 'Biotechnology Impacts', q: 'Concerns about privacy from DNA databases are a:', a: 'Concern', wrong: ['Advantage'] },
+  { id: 1489, unit: 'Unit 14', topic: 'Plasmids', q: 'Plasmids are commonly found in:', a: 'Bacteria', wrong: ['Plants', 'Viruses', 'Animals'] },
+  { id: 1490, unit: 'Unit 14', topic: 'STRs', q: 'Short tandem repeats (STRs) are useful because they:', a: 'Vary greatly among individuals', wrong: ['Eliminate mutations', 'Are identical in everyone', 'Create proteins'] },
+  { id: 1492, unit: 'Unit 14', topic: 'Epigenetics', q: 'Loosely packed chromatin is associated with:', a: 'Active genes', wrong: ['Cell death', 'Dead cells', 'Mutated chromosomes'] },
+  { id: 1494, unit: 'Unit 14', topic: 'DNA Analysis', q: 'A DNA fingerprint is produced using:', a: 'Gel electrophoresis', wrong: ['Mitosis', 'Photosynthesis', 'DNA sequencing only'] },
+  { id: 1497, unit: 'Unit 14', topic: 'PCR', q: 'Which biotechnology tool is MOST useful for rapidly copying a tiny DNA sample?', a: 'PCR', wrong: ['Gel electrophoresis', 'Selective breeding', 'Cloning'] },
+  { id: 1498, unit: 'Unit 14', topic: 'DNA Analysis', q: 'Which biotechnology application is used in criminal investigations?', a: 'DNA fingerprinting', wrong: ['Photosynthesis', 'Mitosis', 'Selective breeding'] },
+  { id: 1499, unit: 'Unit 14', topic: 'Gene Editing', q: 'CRISPR works by:', a: 'Cutting DNA at targeted locations', wrong: ['Melting proteins', 'Making ATP', 'Separating chromosomes'] },
+  { id: 1500, unit: 'Unit 14', topic: 'Biotechnology Categories', q: 'PCR is a:', a: 'Process', wrong: ['Tool', 'Product'] },
+  { id: 1501, unit: 'Unit 14', topic: 'Biotechnology Categories', q: 'Restriction enzymes are a:', a: 'Tool', wrong: ['Process', 'Product'] },
+  { id: 1502, unit: 'Unit 14', topic: 'Biotechnology Categories', q: 'Insulin made by bacteria is a:', a: 'Product', wrong: ['Process', 'Tool'] },
+  { id: 1503, unit: 'Unit 14', topic: 'Biotechnology Categories', q: 'Gel electrophoresis is a:', a: 'Tool', wrong: ['Process', 'Product'] },
+  { id: 1504, unit: 'Unit 14', topic: 'Biotechnology Categories', q: 'Recombinant DNA technology is a:', a: 'Process', wrong: ['Tool', 'Product'] },
+  { id: 1505, unit: 'Unit 14', topic: 'Biotechnology Categories', q: 'A genetically modified crop is a:', a: 'Product', wrong: ['Process', 'Tool'] },
+  { id: 1506, unit: 'Unit 14', topic: 'Selective Breeding', q: 'Selective breeding can sometimes:', a: 'Produce unwanted traits', wrong: ['Eliminate mutations', 'Increase genetic diversity greatly', 'Stop inheritance'] },
+  { id: 1507, unit: 'Unit 14', topic: 'Cloning', q: 'Dolly the sheep is famous because she:', a: 'Was cloned from an adult somatic cell', wrong: ['Produced insulin', 'Was the first transgenic mammal', 'Sequenced the human genome'] },
+  { id: 1509, unit: 'Unit 14', topic: 'Biotechnology Organisms', q: 'HIV is an example of a:', a: 'Virus', wrong: ['Bacteria', 'Human'] },
+  { id: 1511, unit: 'Unit 14', topic: 'Recombinant DNA', q: 'Recombinant insulin is commonly produced using:', a: 'Bacteria', wrong: ['Viruses', 'Humans'] },
+  { id: 1512, unit: 'Unit 14', topic: 'Biotechnology Organisms', q: 'A cold or flu is caused by:', a: 'Viruses', wrong: ['Bacteria', 'Humans'] },
+  { id: 1513, unit: 'Unit 14', topic: 'DNA Analysis', q: 'STR analysis is commonly used to identify:', a: 'Humans', wrong: ['Bacteria', 'Viruses'] },
+  { id: 1514, unit: 'Unit 14', topic: 'Cloning', q: 'Which of the following is a possible application of cloning?', a: 'Producing genetically identical livestock', wrong: ['Creating new elements', 'Preventing meiosis', 'Stopping protein synthesis'] },
+  { id: 1515, unit: 'Unit 14', topic: 'Human Genome Project', q: 'The Human Genome Project was completed in:', a: '2003', wrong: ['1990', '2020', '1985'] },
+  { id: 1516, unit: 'Unit 14', topic: 'Epigenetics', q: 'Methyl groups attached to DNA often:', a: 'Stop transcription', wrong: ['Cause mutations immediately', 'Increase gene expression', 'Create proteins'] },
+  { id: 1518, unit: 'Unit 14', topic: 'Human Genome Project', q: 'The Human Genome Project focused on:', a: 'Sequencing human DNA', wrong: ['Producing vaccines', 'Cloning humans', 'Creating designer babies'] },
+  { id: 1520, unit: 'Unit 14', topic: 'Gel Electrophoresis', q: 'In gel electrophoresis, smaller DNA fragments:', a: 'Move farther through the gel', wrong: ['Float upward', 'Stay near the wells', 'Move slower'] },
+  { id: 1521, unit: 'Unit 14', topic: 'Biotechnology Basics', q: 'Which statement best describes biotechnology?', a: 'The use of living organisms or biological systems to make products or solve problems', wrong: ['The study of only fossils and rocks', 'The process of destroying DNA', 'The study of weather patterns'] },
 
   // Word Roots - Set 1
   { id: 250, unit: 'Roots', topic: 'Set 1', q: 'What does the prefix A- (AN-) mean?', a: 'Without, not', wrong: ['With, together', 'Before', 'Against'] },
@@ -1344,7 +1344,7 @@ function WheelResult({ currentQ, wheelGuessedLetters, wheelWrongGuesses, wheelSc
         {isWrong ? (
           <>The answer was: <span style={{color: '#059669'}}>{currentQ.a}</span></>
         ) : (
-          'You got it! 🎉'
+          'You got it! '
         )}
       </div>
       {isLastQuestion ? (
@@ -1567,61 +1567,61 @@ export default function StudyGuide() {
   // Board spaces by game length
   const lifeBoardOptions = {
     fast: [ // 10 stops
-      { type: 'start', label: 'Start', emoji: '🚀', goodChoice: null, badChoice: null },
-      { type: 'choice', label: 'High School', emoji: '🎒', goodChoice: { text: 'Join Science Club', emoji: '🔬', money: 1000 }, badChoice: { text: 'Skip Class', emoji: '😴', money: -500 } },
-      { type: 'career', label: 'First Job', emoji: '💼', goodChoice: { text: 'Research Scientist', emoji: '🔬', salary: 80000 }, badChoice: { text: 'Fast Food', emoji: '🍔', salary: 25000 } },
-      { type: 'choice', label: 'Dating', emoji: '💕', goodChoice: { text: 'Find True Love', emoji: '💍', money: 5000, spouse: true }, badChoice: { text: 'Stay Single', emoji: '🎭', money: 0 } },
-      { type: 'house', label: 'First Home', emoji: '🏠', goodChoice: { text: 'Nice House', emoji: '🏡', value: 200000 }, badChoice: { text: 'Tiny Apartment', emoji: '🏚️', value: 50000 } },
-      { type: 'event', label: 'Bonus!', emoji: '💵', event: { text: 'Work bonus!', effect: '+$15,000', money: 15000 } },
-      { type: 'choice', label: 'Family', emoji: '👨‍👩‍👧', goodChoice: { text: 'Have Kids', emoji: '👶', money: 0, kids: 2 }, badChoice: { text: 'Get a Dog', emoji: '🐕', money: -2000 } },
-      { type: 'career', label: 'Promotion', emoji: '📈', goodChoice: { text: 'Director', emoji: '👔', salary: 150000 }, badChoice: { text: 'Stay Put', emoji: '📊', salary: 60000 } },
-      { type: 'event', label: 'Lottery!', emoji: '🎰', event: { text: 'You won!', effect: '+$25,000', money: 25000 } },
-      { type: 'retire', label: 'Retirement!', emoji: '🌅', goodChoice: null, badChoice: null },
+      { type: 'start', label: 'Start', emoji: '', goodChoice: null, badChoice: null },
+      { type: 'choice', label: 'High School', emoji: '', goodChoice: { text: 'Join Science Club', emoji: '', money: 1000 }, badChoice: { text: 'Skip Class', emoji: '', money: -500 } },
+      { type: 'career', label: 'First Job', emoji: '', goodChoice: { text: 'Research Scientist', emoji: '', salary: 80000 }, badChoice: { text: 'Fast Food', emoji: '', salary: 25000 } },
+      { type: 'choice', label: 'Dating', emoji: '', goodChoice: { text: 'Find True Love', emoji: '', money: 5000, spouse: true }, badChoice: { text: 'Stay Single', emoji: '', money: 0 } },
+      { type: 'house', label: 'First Home', emoji: '', goodChoice: { text: 'Nice House', emoji: '', value: 200000 }, badChoice: { text: 'Tiny Apartment', emoji: '', value: 50000 } },
+      { type: 'event', label: 'Bonus!', emoji: '', event: { text: 'Work bonus!', effect: '+$15,000', money: 15000 } },
+      { type: 'choice', label: 'Family', emoji: '', goodChoice: { text: 'Have Kids', emoji: '', money: 0, kids: 2 }, badChoice: { text: 'Get a Dog', emoji: '', money: -2000 } },
+      { type: 'career', label: 'Promotion', emoji: '', goodChoice: { text: 'Director', emoji: '', salary: 150000 }, badChoice: { text: 'Stay Put', emoji: '', salary: 60000 } },
+      { type: 'event', label: 'Lottery!', emoji: '', event: { text: 'You won!', effect: '+$25,000', money: 25000 } },
+      { type: 'retire', label: 'Retirement!', emoji: '', goodChoice: null, badChoice: null },
     ],
     regular: [ // 16 stops
-      { type: 'start', label: 'Start', emoji: '🚀', goodChoice: null, badChoice: null },
-      { type: 'choice', label: 'High School', emoji: '🎒', goodChoice: { text: 'Join Science Club', emoji: '🔬', money: 1000 }, badChoice: { text: 'Skip Class', emoji: '😴', money: -500 } },
-      { type: 'choice', label: 'College Apps', emoji: '📝', goodChoice: { text: 'Apply to Top Schools', emoji: '🎓', money: -5000 }, badChoice: { text: 'Skip College', emoji: '🎮', money: 0 } },
-      { type: 'event', label: 'Graduation!', emoji: '🎓', event: { text: 'You graduated!', effect: '+$5,000 gift', money: 5000 } },
-      { type: 'career', label: 'First Job', emoji: '💼', goodChoice: { text: 'Research Scientist', emoji: '🔬', salary: 80000 }, badChoice: { text: 'Fast Food', emoji: '🍔', salary: 25000 } },
-      { type: 'choice', label: 'Dating', emoji: '💕', goodChoice: { text: 'Find True Love', emoji: '💍', money: 5000, spouse: true }, badChoice: { text: 'Stay Single', emoji: '🎭', money: 0 } },
-      { type: 'house', label: 'First Home', emoji: '🏠', goodChoice: { text: 'Nice House', emoji: '🏡', value: 200000 }, badChoice: { text: 'Tiny Apartment', emoji: '🏚️', value: 50000 } },
-      { type: 'event', label: 'Tax Refund!', emoji: '💵', event: { text: 'Tax refund!', effect: '+$10,000', money: 10000 } },
-      { type: 'choice', label: 'Family', emoji: '👨‍👩‍👧', goodChoice: { text: 'Have Kids', emoji: '👶', money: 0, kids: 2 }, badChoice: { text: 'Get a Dog', emoji: '🐕', money: -2000 } },
-      { type: 'career', label: 'Promotion', emoji: '📈', goodChoice: { text: 'Director', emoji: '👔', salary: 150000 }, badChoice: { text: 'Stay Put', emoji: '📊', salary: 60000 } },
-      { type: 'event', label: 'Lottery!', emoji: '🎰', event: { text: 'You won!', effect: '+$25,000', money: 25000 } },
-      { type: 'house', label: 'Dream Home', emoji: '🏰', goodChoice: { text: 'Mansion', emoji: '🏰', value: 500000 }, badChoice: { text: 'Keep Current', emoji: '🏠', value: 0 } },
-      { type: 'choice', label: 'Mid-Life', emoji: '🎂', goodChoice: { text: 'Start a Business', emoji: '💼', money: 50000 }, badChoice: { text: 'Mid-Life Crisis Car', emoji: '🏎️', money: -30000 } },
-      { type: 'event', label: 'Kids College', emoji: '🎒', event: { text: 'College tuition!', effect: '-$20,000', money: -20000 } },
-      { type: 'career', label: 'Peak Career', emoji: '🏆', goodChoice: { text: 'CEO', emoji: '👑', salary: 300000 }, badChoice: { text: 'Early Retirement', emoji: '🏖️', salary: 0 } },
-      { type: 'retire', label: 'Retirement!', emoji: '🌅', goodChoice: null, badChoice: null },
+      { type: 'start', label: 'Start', emoji: '', goodChoice: null, badChoice: null },
+      { type: 'choice', label: 'High School', emoji: '', goodChoice: { text: 'Join Science Club', emoji: '', money: 1000 }, badChoice: { text: 'Skip Class', emoji: '', money: -500 } },
+      { type: 'choice', label: 'College Apps', emoji: '', goodChoice: { text: 'Apply to Top Schools', emoji: '', money: -5000 }, badChoice: { text: 'Skip College', emoji: '', money: 0 } },
+      { type: 'event', label: 'Graduation!', emoji: '', event: { text: 'You graduated!', effect: '+$5,000 gift', money: 5000 } },
+      { type: 'career', label: 'First Job', emoji: '', goodChoice: { text: 'Research Scientist', emoji: '', salary: 80000 }, badChoice: { text: 'Fast Food', emoji: '', salary: 25000 } },
+      { type: 'choice', label: 'Dating', emoji: '', goodChoice: { text: 'Find True Love', emoji: '', money: 5000, spouse: true }, badChoice: { text: 'Stay Single', emoji: '', money: 0 } },
+      { type: 'house', label: 'First Home', emoji: '', goodChoice: { text: 'Nice House', emoji: '', value: 200000 }, badChoice: { text: 'Tiny Apartment', emoji: '', value: 50000 } },
+      { type: 'event', label: 'Tax Refund!', emoji: '', event: { text: 'Tax refund!', effect: '+$10,000', money: 10000 } },
+      { type: 'choice', label: 'Family', emoji: '', goodChoice: { text: 'Have Kids', emoji: '', money: 0, kids: 2 }, badChoice: { text: 'Get a Dog', emoji: '', money: -2000 } },
+      { type: 'career', label: 'Promotion', emoji: '', goodChoice: { text: 'Director', emoji: '', salary: 150000 }, badChoice: { text: 'Stay Put', emoji: '', salary: 60000 } },
+      { type: 'event', label: 'Lottery!', emoji: '', event: { text: 'You won!', effect: '+$25,000', money: 25000 } },
+      { type: 'house', label: 'Dream Home', emoji: '', goodChoice: { text: 'Mansion', emoji: '', value: 500000 }, badChoice: { text: 'Keep Current', emoji: '', value: 0 } },
+      { type: 'choice', label: 'Mid-Life', emoji: '', goodChoice: { text: 'Start a Business', emoji: '', money: 50000 }, badChoice: { text: 'Mid-Life Crisis Car', emoji: '', money: -30000 } },
+      { type: 'event', label: 'Kids College', emoji: '', event: { text: 'College tuition!', effect: '-$20,000', money: -20000 } },
+      { type: 'career', label: 'Peak Career', emoji: '', goodChoice: { text: 'CEO', emoji: '', salary: 300000 }, badChoice: { text: 'Early Retirement', emoji: '', salary: 0 } },
+      { type: 'retire', label: 'Retirement!', emoji: '', goodChoice: null, badChoice: null },
     ],
     long: [ // 25 stops
-      { type: 'start', label: 'Start', emoji: '🚀', goodChoice: null, badChoice: null },
-      { type: 'choice', label: 'Elementary', emoji: '📚', goodChoice: { text: 'Study Hard', emoji: '📖', money: 500 }, badChoice: { text: 'Goof Off', emoji: '🎪', money: 0 } },
-      { type: 'choice', label: 'Middle School', emoji: '🏫', goodChoice: { text: 'Join Sports', emoji: '⚽', money: 0 }, badChoice: { text: 'Play Video Games', emoji: '🎮', money: -200 } },
-      { type: 'choice', label: 'High School', emoji: '🎒', goodChoice: { text: 'Join Science Club', emoji: '🔬', money: 1000 }, badChoice: { text: 'Skip Class', emoji: '😴', money: -500 } },
-      { type: 'event', label: 'Prom!', emoji: '💃', event: { text: 'Best prom ever!', effect: '+$200', money: 200 } },
-      { type: 'choice', label: 'College Apps', emoji: '📝', goodChoice: { text: 'Apply to Top Schools', emoji: '🎓', money: -5000 }, badChoice: { text: 'Skip College', emoji: '🛋️', money: 0 } },
-      { type: 'choice', label: 'College Life', emoji: '🎓', goodChoice: { text: 'Dean\'s List', emoji: '⭐', money: 2000 }, badChoice: { text: 'Party Time', emoji: '🎉', money: -3000 } },
-      { type: 'event', label: 'Graduation!', emoji: '🎓', event: { text: 'You graduated!', effect: '+$5,000 gift', money: 5000 } },
-      { type: 'choice', label: 'Internship', emoji: '💻', goodChoice: { text: 'Dream Company', emoji: '🏢', money: 10000 }, badChoice: { text: 'Unpaid Intern', emoji: '😓', money: 0 } },
-      { type: 'career', label: 'First Job', emoji: '💼', goodChoice: { text: 'Research Scientist', emoji: '🔬', salary: 80000 }, badChoice: { text: 'Fast Food', emoji: '🍔', salary: 25000 } },
-      { type: 'choice', label: 'Dating', emoji: '💕', goodChoice: { text: 'Find True Love', emoji: '💍', money: 5000, spouse: true }, badChoice: { text: 'Stay Single', emoji: '🎭', money: 0 } },
-      { type: 'event', label: 'Wedding!', emoji: '💒', event: { text: 'Beautiful wedding!', effect: '-$15,000', money: -15000 } },
-      { type: 'house', label: 'First Home', emoji: '🏠', goodChoice: { text: 'Nice House', emoji: '🏡', value: 200000 }, badChoice: { text: 'Tiny Apartment', emoji: '🏚️', value: 50000 } },
-      { type: 'event', label: 'Tax Refund!', emoji: '💵', event: { text: 'Tax refund!', effect: '+$10,000', money: 10000 } },
-      { type: 'choice', label: 'Family', emoji: '👨‍👩‍👧', goodChoice: { text: 'Have Kids', emoji: '👶', money: 0, kids: 2 }, badChoice: { text: 'Get Pets', emoji: '🐕', money: -2000 } },
-      { type: 'event', label: 'Baby Shower!', emoji: '🍼', event: { text: 'Gifts galore!', effect: '+$3,000', money: 3000 } },
-      { type: 'career', label: 'Promotion', emoji: '📈', goodChoice: { text: 'Director', emoji: '👔', salary: 150000 }, badChoice: { text: 'Stay Put', emoji: '📊', salary: 60000 } },
-      { type: 'choice', label: 'Vacation', emoji: '✈️', goodChoice: { text: 'Dream Vacation', emoji: '🏝️', money: -8000 }, badChoice: { text: 'Staycation', emoji: '🏠', money: 0 } },
-      { type: 'event', label: 'Lottery!', emoji: '🎰', event: { text: 'You won!', effect: '+$25,000', money: 25000 } },
-      { type: 'house', label: 'Dream Home', emoji: '🏰', goodChoice: { text: 'Mansion', emoji: '🏰', value: 500000 }, badChoice: { text: 'Keep Current', emoji: '🏠', value: 0 } },
-      { type: 'choice', label: 'Mid-Life', emoji: '🎂', goodChoice: { text: 'Start a Business', emoji: '💼', money: 50000 }, badChoice: { text: 'Mid-Life Crisis Car', emoji: '🏎️', money: -30000 } },
-      { type: 'event', label: 'Kids Graduate!', emoji: '🎓', event: { text: 'So proud!', effect: '+$5,000', money: 5000 } },
-      { type: 'event', label: 'Kids College', emoji: '🎒', event: { text: 'College tuition!', effect: '-$20,000', money: -20000 } },
-      { type: 'career', label: 'Peak Career', emoji: '🏆', goodChoice: { text: 'CEO', emoji: '👑', salary: 300000 }, badChoice: { text: 'Early Retirement', emoji: '🏖️', salary: 0 } },
-      { type: 'retire', label: 'Retirement!', emoji: '🌅', goodChoice: null, badChoice: null },
+      { type: 'start', label: 'Start', emoji: '', goodChoice: null, badChoice: null },
+      { type: 'choice', label: 'Elementary', emoji: '', goodChoice: { text: 'Study Hard', emoji: '', money: 500 }, badChoice: { text: 'Goof Off', emoji: '', money: 0 } },
+      { type: 'choice', label: 'Middle School', emoji: '', goodChoice: { text: 'Join Sports', emoji: '', money: 0 }, badChoice: { text: 'Play Video Games', emoji: '', money: -200 } },
+      { type: 'choice', label: 'High School', emoji: '', goodChoice: { text: 'Join Science Club', emoji: '', money: 1000 }, badChoice: { text: 'Skip Class', emoji: '', money: -500 } },
+      { type: 'event', label: 'Prom!', emoji: '', event: { text: 'Best prom ever!', effect: '+$200', money: 200 } },
+      { type: 'choice', label: 'College Apps', emoji: '', goodChoice: { text: 'Apply to Top Schools', emoji: '', money: -5000 }, badChoice: { text: 'Skip College', emoji: '', money: 0 } },
+      { type: 'choice', label: 'College Life', emoji: '', goodChoice: { text: 'Dean\'s List', emoji: '', money: 2000 }, badChoice: { text: 'Party Time', emoji: '', money: -3000 } },
+      { type: 'event', label: 'Graduation!', emoji: '', event: { text: 'You graduated!', effect: '+$5,000 gift', money: 5000 } },
+      { type: 'choice', label: 'Internship', emoji: '', goodChoice: { text: 'Dream Company', emoji: '', money: 10000 }, badChoice: { text: 'Unpaid Intern', emoji: '', money: 0 } },
+      { type: 'career', label: 'First Job', emoji: '', goodChoice: { text: 'Research Scientist', emoji: '', salary: 80000 }, badChoice: { text: 'Fast Food', emoji: '', salary: 25000 } },
+      { type: 'choice', label: 'Dating', emoji: '', goodChoice: { text: 'Find True Love', emoji: '', money: 5000, spouse: true }, badChoice: { text: 'Stay Single', emoji: '', money: 0 } },
+      { type: 'event', label: 'Wedding!', emoji: '', event: { text: 'Beautiful wedding!', effect: '-$15,000', money: -15000 } },
+      { type: 'house', label: 'First Home', emoji: '', goodChoice: { text: 'Nice House', emoji: '', value: 200000 }, badChoice: { text: 'Tiny Apartment', emoji: '', value: 50000 } },
+      { type: 'event', label: 'Tax Refund!', emoji: '', event: { text: 'Tax refund!', effect: '+$10,000', money: 10000 } },
+      { type: 'choice', label: 'Family', emoji: '', goodChoice: { text: 'Have Kids', emoji: '', money: 0, kids: 2 }, badChoice: { text: 'Get Pets', emoji: '', money: -2000 } },
+      { type: 'event', label: 'Baby Shower!', emoji: '', event: { text: 'Gifts galore!', effect: '+$3,000', money: 3000 } },
+      { type: 'career', label: 'Promotion', emoji: '', goodChoice: { text: 'Director', emoji: '', salary: 150000 }, badChoice: { text: 'Stay Put', emoji: '', salary: 60000 } },
+      { type: 'choice', label: 'Vacation', emoji: '', goodChoice: { text: 'Dream Vacation', emoji: '', money: -8000 }, badChoice: { text: 'Staycation', emoji: '', money: 0 } },
+      { type: 'event', label: 'Lottery!', emoji: '', event: { text: 'You won!', effect: '+$25,000', money: 25000 } },
+      { type: 'house', label: 'Dream Home', emoji: '', goodChoice: { text: 'Mansion', emoji: '', value: 500000 }, badChoice: { text: 'Keep Current', emoji: '', value: 0 } },
+      { type: 'choice', label: 'Mid-Life', emoji: '', goodChoice: { text: 'Start a Business', emoji: '', money: 50000 }, badChoice: { text: 'Mid-Life Crisis Car', emoji: '', money: -30000 } },
+      { type: 'event', label: 'Kids Graduate!', emoji: '', event: { text: 'So proud!', effect: '+$5,000', money: 5000 } },
+      { type: 'event', label: 'Kids College', emoji: '', event: { text: 'College tuition!', effect: '-$20,000', money: -20000 } },
+      { type: 'career', label: 'Peak Career', emoji: '', goodChoice: { text: 'CEO', emoji: '', salary: 300000 }, badChoice: { text: 'Early Retirement', emoji: '', salary: 0 } },
+      { type: 'retire', label: 'Retirement!', emoji: '', goodChoice: null, badChoice: null },
     ],
   };
   
@@ -2883,7 +2883,7 @@ export default function StudyGuide() {
         <div style={styles.header}>
           <div style={{padding: '8px 0'}}>
             <h1 className="study-title-cursive" style={styles.title}>
-              {theme.emojis[0]} Biology Study Guide {theme.emojis[theme.emojis.length - 1]}
+              Biology Study Guide
             </h1>
           </div>
           <div style={{display: 'flex', justifyContent: 'center', margin: '4px 0 10px'}}>
@@ -2973,7 +2973,7 @@ export default function StudyGuide() {
                     </div>
                     {rootPlacementFeedback && (
                       <div style={{marginTop: '12px', fontSize: '14px', color: rootPlacementFeedback.correct ? '#059669' : '#dc2626', fontWeight: 700}}>
-                        {rootPlacementFeedback.correct ? 'Correct ✓' : `Not quite — answer: ${rootPlacementFeedback.answer}`}
+                        {rootPlacementFeedback.correct ? 'Correct ' : `Not quite — answer: ${rootPlacementFeedback.answer}`}
                       </div>
                     )}
                   </>
@@ -2993,7 +2993,7 @@ export default function StudyGuide() {
                     </div>
                     <div style={{fontSize: '13px', color: '#6b7280', marginBottom: '12px'}}>Custom set size: {rootPlacementIncorrectIds.length}</div>
                     {rootPlacementIncorrectIds.length === 0 ? (
-                      <div style={{fontSize: '14px', color: '#059669', fontWeight: 700}}>Perfect score 🎉 You cleared all the roots, so your custom list is empty.</div>
+                      <div style={{fontSize: '14px', color: '#059669', fontWeight: 700}}>Perfect score  You cleared all the roots, so your custom list is empty.</div>
                     ) : (
                       <div style={{display: 'grid', gap: '12px'}}>
                         {topics.map(topic => {
@@ -3100,7 +3100,7 @@ export default function StudyGuide() {
         )}
 
         {mode !== 'menu' && (
-          <button onClick={() => setMode('menu')} style={styles.backBtn}>← Back</button>
+          <button onClick={() => setMode('menu')} style={styles.backBtn}>Back</button>
         )}
 
         {/* Stats Page */}
@@ -3223,7 +3223,7 @@ export default function StudyGuide() {
               </div>
               {selectedAnswer && (
                 <div style={{marginTop: '16px', fontSize: '15px', fontWeight: '700', color: selectedAnswer.toLowerCase() === currentQ.a.trim().toLowerCase() ? '#059669' : '#dc2626'}}>
-                  {selectedAnswer.toLowerCase() === currentQ.a.trim().toLowerCase() ? 'Correct ✓' : `Incorrect — ${currentQ.a}`}
+                  {selectedAnswer.toLowerCase() === currentQ.a.trim().toLowerCase() ? 'Correct ' : `Incorrect — ${currentQ.a}`}
                 </div>
               )}
             </div>
@@ -3242,7 +3242,7 @@ export default function StudyGuide() {
         {/* Review empty state */}
         {mode === 'review' && shuffledQuestions.length === 0 && (
           <div style={styles.complete}>
-            <div style={{fontSize: '48px', marginBottom: '16px'}}>🎉</div>
+            <div style={{fontSize: '48px', marginBottom: '16px'}}></div>
             <div style={{fontSize: '24px', fontWeight: 'bold', color: '#059669', marginBottom: '8px'}}>No questions to review!</div>
             <div style={{color: '#6b7280', marginBottom: '24px'}}>You&apos;re doing great - keep practicing!</div>
             <button onClick={() => setMode('menu')} style={styles.primaryBtn}>Back to Menu</button>
@@ -3331,7 +3331,7 @@ export default function StudyGuide() {
         {/* Jeopardy */}
         {mode === 'jeopardy' && jeopardySetupMode && (
           <div style={styles.complete}>
-            <div style={{fontSize: '42px', marginBottom: '10px'}}>🎯</div>
+            <div style={{fontSize: '42px', marginBottom: '10px'}}></div>
             <div style={{fontSize: '28px', fontWeight: '800', color: theme.primary, marginBottom: '8px'}}>Choose your Jeopardy mode</div>
             <div style={{fontSize: '15px', color: '#6b7280', marginBottom: '24px'}}>Play solo or pass the device back and forth with a friend.</div>
             <div style={{display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap'}}>
@@ -3382,7 +3382,7 @@ export default function StudyGuide() {
                       <button key={cell.question.id} onClick={() => handleJeopardySelect(index)}
                         style={styles.jeopardyCell(cell.answered, cell.correct)}>
                         <div style={{fontSize: '20px', fontWeight: '900'}}>
-                          {cell.answered ? (cell.correct ? '✓' : '✗') : `$${cell.points}`}
+                          {cell.answered ? (cell.correct ? '' : '') : `$${cell.points}`}
                         </div>
                         {!cell.answered && (
                           <div style={{fontSize: '10px', opacity: 0.85, marginTop: '6px'}}>
@@ -3407,7 +3407,7 @@ export default function StudyGuide() {
           const playerTwoWon = jeopardyScores[1] > jeopardyScores[0];
           return (
             <div style={{textAlign: 'center'}}>
-              <div style={{fontSize: '48px', marginBottom: '8px'}}>🏆</div>
+              <div style={{fontSize: '48px', marginBottom: '8px'}}></div>
               {jeopardyPlayerCount === 1 ? (
                 <>
                   <div style={{fontSize: '28px', fontWeight: 'bold', color: theme.primary, marginBottom: '4px'}}>${jeopardyScores[0]}</div>
@@ -3544,11 +3544,11 @@ export default function StudyGuide() {
             {/* Leaderboard */}
             {leaderboard.length > 0 && (
               <div style={{marginTop: '24px', background: 'white', borderRadius: '12px', padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)'}}>
-                <div style={{fontSize: '16px', fontWeight: 'bold', color: '#374151', marginBottom: '12px', textAlign: 'center'}}>🏆 Leaderboard</div>
+                <div style={{fontSize: '16px', fontWeight: 'bold', color: '#374151', marginBottom: '12px', textAlign: 'center'}}> Leaderboard</div>
                 {leaderboard.slice(0, 10).map((entry, i) => (
                   <div key={i} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', borderRadius: '8px', background: i === 0 ? '#fef3c7' : i === 1 ? '#f3f4f6' : i === 2 ? '#fff7ed' : 'transparent', marginBottom: '4px'}}>
                     <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
-                      <span style={{fontSize: '14px', fontWeight: 'bold', color: i === 0 ? '#f59e0b' : i === 1 ? '#6b7280' : i === 2 ? '#ea580c' : '#9ca3af', width: '24px'}}>{i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`}</span>
+                      <span style={{fontSize: '14px', fontWeight: 'bold', color: i === 0 ? '#f59e0b' : i === 1 ? '#6b7280' : i === 2 ? '#ea580c' : '#9ca3af', width: '24px'}}>{i === 0 ? '' : i === 1 ? '' : i === 2 ? '' : `${i + 1}.`}</span>
                       <span style={{fontSize: '15px', color: '#374151', fontWeight: i < 3 ? '600' : '400'}}>{entry.name}</span>
                     </div>
                     <span style={{fontSize: '16px', fontWeight: 'bold', color: theme.primary}}>{entry.score}</span>
@@ -3584,16 +3584,16 @@ export default function StudyGuide() {
               <div style={styles.score}>{speedScore}</div>
               <div style={{color: '#6b7280', marginBottom: '8px'}}>correct in 60 seconds</div>
               {speedScore >= highScores.speed && speedScore > 0 && (
-                <div style={{color: '#f59e0b', fontWeight: 'bold', marginBottom: '16px', fontSize: '18px'}}>👑 New High Score!</div>
+                <div style={{color: '#f59e0b', fontWeight: 'bold', marginBottom: '16px', fontSize: '18px'}}> New High Score!</div>
               )}
               <div style={{color: '#9ca3af', fontSize: '13px', marginBottom: '16px'}}>
-                High Score: {highScores.speed} {highScores.speed > 0 && '👑'}
+                High Score: {highScores.speed} {highScores.speed > 0 && ''}
               </div>
 
               {/* Submit to leaderboard */}
               {!lbSubmitted && !lbShowInput && speedScore > 0 && (
                 <button onClick={() => setLbShowInput(true)} style={{...styles.secondaryBtn, marginBottom: '12px', background: '#fef3c7', color: '#92400e'}}>
-                  🏆 Add to Leaderboard
+                   Add to Leaderboard
                 </button>
               )}
               {lbShowInput && !lbSubmitted && (
@@ -3613,7 +3613,7 @@ export default function StudyGuide() {
                 </div>
               )}
               {lbSubmitted && (
-                <div style={{color: '#059669', fontWeight: '600', marginBottom: '16px', fontSize: '14px'}}>✅ Score submitted!</div>
+                <div style={{color: '#059669', fontWeight: '600', marginBottom: '16px', fontSize: '14px'}}> Score submitted!</div>
               )}
 
               <button onClick={startSpeedRound} style={styles.primaryBtn}>Play Again</button>
@@ -3622,11 +3622,11 @@ export default function StudyGuide() {
             {/* Leaderboard */}
             {leaderboard.length > 0 && (
               <div style={{marginTop: '24px', background: 'white', borderRadius: '12px', padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)'}}>
-                <div style={{fontSize: '16px', fontWeight: 'bold', color: '#374151', marginBottom: '12px', textAlign: 'center'}}>🏆 Leaderboard</div>
+                <div style={{fontSize: '16px', fontWeight: 'bold', color: '#374151', marginBottom: '12px', textAlign: 'center'}}> Leaderboard</div>
                 {leaderboard.slice(0, 10).map((entry, i) => (
                   <div key={i} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 12px', borderRadius: '8px', background: i === 0 ? '#fef3c7' : i === 1 ? '#f3f4f6' : i === 2 ? '#fff7ed' : 'transparent', marginBottom: '4px'}}>
                     <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
-                      <span style={{fontSize: '14px', fontWeight: 'bold', color: i === 0 ? '#f59e0b' : i === 1 ? '#6b7280' : i === 2 ? '#ea580c' : '#9ca3af', width: '24px'}}>{i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `${i + 1}.`}</span>
+                      <span style={{fontSize: '14px', fontWeight: 'bold', color: i === 0 ? '#f59e0b' : i === 1 ? '#6b7280' : i === 2 ? '#ea580c' : '#9ca3af', width: '24px'}}>{i === 0 ? '' : i === 1 ? '' : i === 2 ? '' : `${i + 1}.`}</span>
                       <span style={{fontSize: '15px', color: '#374151', fontWeight: i < 3 ? '600' : '400'}}>{entry.name}</span>
                     </div>
                     <span style={{fontSize: '16px', fontWeight: 'bold', color: theme.primary}}>{entry.score}</span>
@@ -3685,10 +3685,10 @@ export default function StudyGuide() {
               {millionaireFinalPrize >= 1000000 ? 'You won the million!' : millionaireFinalPrize > 0 ? 'Final Winnings' : 'Better luck next time!'}
             </div>
             {millionaireFinalPrize >= highScores.millionaire && millionaireFinalPrize > 0 && (
-              <div style={{color: '#fbbf24', fontWeight: 'bold', marginBottom: '16px', fontSize: '18px'}}>👑 New High Score!</div>
+              <div style={{color: '#fbbf24', fontWeight: 'bold', marginBottom: '16px', fontSize: '18px'}}> New High Score!</div>
             )}
             <div style={{color: '#818cf8', fontSize: '13px', marginBottom: '16px'}}>
-              High Score: ${highScores.millionaire.toLocaleString()} {highScores.millionaire > 0 && '👑'}
+              High Score: ${highScores.millionaire.toLocaleString()} {highScores.millionaire > 0 && ''}
             </div>
             <button onClick={() => startMode('millionaire')} style={{...styles.primaryBtn, background: '#7c3aed'}}>Play Again</button>
           </div>
@@ -3698,7 +3698,7 @@ export default function StudyGuide() {
         {mode === 'life' && lifePhase === 'setup' && (
           <div>
             <div style={{textAlign: 'center', marginBottom: '20px'}}>
-              <div style={{fontSize: '48px', marginBottom: '8px'}}>🎲</div>
+              <div style={{fontSize: '48px', marginBottom: '8px'}}></div>
               <h2 style={{margin: '0 0 8px 0', color: theme.primary}}>Bio Life</h2>
               <p style={{color: '#666', margin: 0}}>The Game of Life... with Biology!</p>
             </div>
@@ -3714,7 +3714,7 @@ export default function StudyGuide() {
                     borderRadius: '10px', background: lifeGameLength === 'fast' ? theme.accentLight : 'white', cursor: 'pointer', textAlign: 'center'
                   }}
                 >
-                  <div style={{fontSize: '20px'}}>⚡</div>
+                  <div style={{fontSize: '20px'}}></div>
                   <div style={{fontWeight: 'bold', color: theme.primary, fontSize: '14px'}}>Fast</div>
                   <div style={{fontSize: '11px', color: '#666'}}>10 stops</div>
                 </button>
@@ -3725,7 +3725,7 @@ export default function StudyGuide() {
                     borderRadius: '10px', background: lifeGameLength === 'regular' ? theme.accentLight : 'white', cursor: 'pointer', textAlign: 'center'
                   }}
                 >
-                  <div style={{fontSize: '20px'}}>🎯</div>
+                  <div style={{fontSize: '20px'}}></div>
                   <div style={{fontWeight: 'bold', color: theme.primary, fontSize: '14px'}}>Regular</div>
                   <div style={{fontSize: '11px', color: '#666'}}>16 stops</div>
                 </button>
@@ -3736,7 +3736,7 @@ export default function StudyGuide() {
                     borderRadius: '10px', background: lifeGameLength === 'long' ? theme.accentLight : 'white', cursor: 'pointer', textAlign: 'center'
                   }}
                 >
-                  <div style={{fontSize: '20px'}}>🏔️</div>
+                  <div style={{fontSize: '20px'}}></div>
                   <div style={{fontWeight: 'bold', color: theme.primary, fontSize: '14px'}}>Long</div>
                   <div style={{fontSize: '11px', color: '#666'}}>25 stops</div>
                 </button>
@@ -3752,7 +3752,7 @@ export default function StudyGuide() {
                   borderRadius: '12px', background: !lifeMultiplayer ? theme.accentLight : 'white', cursor: 'pointer', textAlign: 'center'
                 }}
               >
-                <div style={{fontSize: '28px'}}>🎮</div>
+                <div style={{fontSize: '28px'}}></div>
                 <div style={{fontWeight: 'bold', color: theme.primary}}>Solo</div>
               </button>
               <button
@@ -3762,7 +3762,7 @@ export default function StudyGuide() {
                   borderRadius: '12px', background: lifeMultiplayer ? theme.accentLight : 'white', cursor: 'pointer', textAlign: 'center'
                 }}
               >
-                <div style={{fontSize: '28px'}}>👥</div>
+                <div style={{fontSize: '28px'}}></div>
                 <div style={{fontWeight: 'bold', color: theme.primary}}>Multiplayer</div>
               </button>
             </div>
@@ -3817,7 +3817,7 @@ export default function StudyGuide() {
             <button
               onClick={() => {
                 const colors = ['#ef4444', '#3b82f6', '#22c55e', '#f59e0b'];
-                const emojis = ['🚗', '🚙', '🚕', '🏎️'];
+                const emojis = ['', '', '', ''];
                 const players: LifePlayer[] = Array.from({length: lifePlayerCount}).map((_, i) => ({
                   name: lifeMultiplayer ? lifePlayerNames[i] : 'You',
                   color: colors[i],
@@ -3845,9 +3845,9 @@ export default function StudyGuide() {
                 color: 'white', border: 'none', borderRadius: '12px', fontSize: '18px', fontWeight: 'bold', cursor: 'pointer'
               }}
             >
-              🚀 Start Game!
+               Start Game!
             </button>
-            <button onClick={() => setMode('menu')} style={{...styles.secondaryBtn, width: '100%', marginTop: '8px'}}>← Back</button>
+            <button onClick={() => setMode('menu')} style={{...styles.secondaryBtn, width: '100%', marginTop: '8px'}}>Back</button>
           </div>
         )}
 
@@ -3870,7 +3870,7 @@ export default function StudyGuide() {
               <div style={{textAlign: 'center', marginBottom: '12px'}}>
                 <div style={{fontSize: '24px'}}>{player.emoji}</div>
                 <div style={{fontWeight: 'bold', color: player.color, fontSize: '18px'}}>{player.name}'s Turn</div>
-                <div style={{fontSize: '13px', color: '#666'}}>💰 ${player.money.toLocaleString()}</div>
+                <div style={{fontSize: '13px', color: '#666'}}> ${player.money.toLocaleString()}</div>
                 <div style={{fontSize: '14px', color: '#374151', marginTop: '4px'}}>
                   Stop {player.position + 1} of {lifeBoardSpaces.length}
                 </div>
@@ -3907,10 +3907,10 @@ export default function StudyGuide() {
               
               {/* Player cards/stats */}
               <div style={{display: 'flex', gap: '8px', marginBottom: '12px', flexWrap: 'wrap'}}>
-                {player.career && <div style={{background: '#dbeafe', padding: '4px 8px', borderRadius: '6px', fontSize: '12px'}}>💼 {player.career.title}</div>}
-                {player.house && <div style={{background: '#f3e8ff', padding: '4px 8px', borderRadius: '6px', fontSize: '12px'}}>🏠 {player.house.name}</div>}
-                {player.spouse && <div style={{background: '#fce7f3', padding: '4px 8px', borderRadius: '6px', fontSize: '12px'}}>💍 Married</div>}
-                {player.kids > 0 && <div style={{background: '#fef3c7', padding: '4px 8px', borderRadius: '6px', fontSize: '12px'}}>👶 {player.kids} kid{player.kids > 1 ? 's' : ''}</div>}
+                {player.career && <div style={{background: '#dbeafe', padding: '4px 8px', borderRadius: '6px', fontSize: '12px'}}> {player.career.title}</div>}
+                {player.house && <div style={{background: '#f3e8ff', padding: '4px 8px', borderRadius: '6px', fontSize: '12px'}}> {player.house.name}</div>}
+                {player.spouse && <div style={{background: '#fce7f3', padding: '4px 8px', borderRadius: '6px', fontSize: '12px'}}> Married</div>}
+                {player.kids > 0 && <div style={{background: '#fef3c7', padding: '4px 8px', borderRadius: '6px', fontSize: '12px'}}> {player.kids} kid{player.kids > 1 ? 's' : ''}</div>}
               </div>
               
               {/* Next stop preview */}
@@ -3924,7 +3924,7 @@ export default function StudyGuide() {
               <div style={{textAlign: 'center', marginBottom: '16px'}}>
                 <div style={{marginBottom: '12px', padding: '8px 16px', background: '#f0f9ff', borderRadius: '8px', display: 'inline-block'}}>
                   <span style={{fontSize: '14px', color: '#0369a1'}}>
-                    Answer 2 questions correctly to move! ({lifeQuestionsCorrect}/2) ✅
+                    Answer 2 questions correctly to move! ({lifeQuestionsCorrect}/2) 
                   </span>
                 </div>
                 <br/>
@@ -3954,14 +3954,14 @@ export default function StudyGuide() {
                     color: 'white', border: 'none', borderRadius: '12px', fontSize: '18px', fontWeight: 'bold', cursor: 'pointer'
                   }}
                 >
-                  📝 Answer Questions
+                   Answer Questions
                 </button>
               </div>
               
               {/* All players scoreboard */}
               {lifePlayers.length > 1 && (
                 <div style={{background: '#f9fafb', padding: '12px', borderRadius: '12px'}}>
-                  <div style={{fontWeight: 'bold', marginBottom: '8px', fontSize: '13px'}}>📊 Scoreboard</div>
+                  <div style={{fontWeight: 'bold', marginBottom: '8px', fontSize: '13px'}}> Scoreboard</div>
                   {lifePlayers.map((p, i) => (
                     <div key={i} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '4px 0', borderBottom: i < lifePlayers.length - 1 ? '1px solid #e5e7eb' : 'none'}}>
                       <span style={{color: p.color, fontWeight: i === lifeCurrentPlayer ? 'bold' : 'normal'}}>{p.emoji} {p.name}</span>
@@ -4009,7 +4009,7 @@ export default function StudyGuide() {
                   </div>
                 )}
                 {lifePendingChoice && !lifePendingMove && (
-                  <span style={{color: '#666'}}> — {lifePendingChoice.type === 'career' ? '💼 Career Choice!' : lifePendingChoice.type === 'house' ? '🏠 House Choice!' : '🎯 Life Choice!'}</span>
+                  <span style={{color: '#666'}}> — {lifePendingChoice.type === 'career' ? ' Career Choice!' : lifePendingChoice.type === 'house' ? ' House Choice!' : ' Life Choice!'}</span>
                 )}
               </div>
               
@@ -4073,7 +4073,7 @@ export default function StudyGuide() {
                                 const bonus = updatedPlayers[lifeCurrentPlayer].career ? updatedPlayers[lifeCurrentPlayer].career!.salary : 0;
                                 updatedPlayers[lifeCurrentPlayer].money += bonus;
                                 setLifePlayers(updatedPlayers);
-                                setLifeEvent({ text: '🎉 RETIREMENT! Final salary bonus!', emoji: '🏖️', effect: `+$${bonus.toLocaleString()}` });
+                                setLifeEvent({ text: ' RETIREMENT! Final salary bonus!', emoji: '', effect: `+$${bonus.toLocaleString()}` });
                                 setLifePhase('event');
                               } else if (space.type === 'event' && space.event) {
                                 const evt = space.event;
@@ -4133,7 +4133,7 @@ export default function StudyGuide() {
                   background: lifeShowFeedback === 'correct' ? '#dcfce7' : '#fee2e2', textAlign: 'center'
                 }}>
                   <p style={{fontWeight: 'bold', margin: 0}}>
-                    {lifeShowFeedback === 'correct' ? `✅ Correct! +$5,000 (${lifeQuestionsCorrect + 1}/2)` : '❌ Wrong! Try again...'}
+                    {lifeShowFeedback === 'correct' ? ` Correct! +$5,000 (${lifeQuestionsCorrect + 1}/2)` : ' Wrong! Try again...'}
                   </p>
                 </div>
               )}
@@ -4150,11 +4150,11 @@ export default function StudyGuide() {
           return (
             <div>
               <div style={{textAlign: 'center', marginBottom: '16px'}}>
-                <div style={{fontSize: '36px', marginBottom: '8px'}}>{lifePendingChoice.type === 'career' ? '💼' : '🏠'}</div>
+                <div style={{fontSize: '36px', marginBottom: '8px'}}>{lifePendingChoice.type === 'career' ? '' : ''}</div>
                 <h3 style={{margin: '0 0 8px 0', color: theme.primary}}>
                   Choose Your {lifePendingChoice.type === 'career' ? 'Career' : 'House'}!
                 </h3>
-                {!gotItRight && <p style={{color: '#ef4444', fontSize: '13px', margin: 0}}>🔒 Premium options locked — answer correctly next time!</p>}
+                {!gotItRight && <p style={{color: '#ef4444', fontSize: '13px', margin: 0}}> Premium options locked — answer correctly next time!</p>}
               </div>
               
               <div style={{display: 'grid', gap: '8px'}}>
@@ -4191,7 +4191,7 @@ export default function StudyGuide() {
                         {lifePendingChoice.type === 'career' ? `$${opt.effect.salary.toLocaleString()}/yr` : `$${opt.effect.value.toLocaleString()}`}
                       </div>
                     </div>
-                    {!gotItRight && <span style={{marginLeft: 'auto'}}>🔒</span>}
+                    {!gotItRight && <span style={{marginLeft: 'auto'}}></span>}
                   </button>
                 ))}
                 
@@ -4270,7 +4270,7 @@ export default function StudyGuide() {
           return (
             <div>
               <div style={{textAlign: 'center', marginBottom: '20px'}}>
-                <div style={{fontSize: '48px', marginBottom: '8px'}}>🏆</div>
+                <div style={{fontSize: '48px', marginBottom: '8px'}}></div>
                 <h2 style={{margin: '0 0 8px 0', color: theme.primary}}>
                   {lifePlayers.length > 1 ? `${winner.name} Wins!` : 'Game Over!'}
                 </h2>
@@ -4290,10 +4290,10 @@ export default function StudyGuide() {
                     <div style={{flex: 1}}>
                       <div style={{fontWeight: 'bold', color: p.color}}>{p.name}</div>
                       <div style={{fontSize: '12px', color: '#666', display: 'flex', gap: '8px', flexWrap: 'wrap'}}>
-                        {p.career && <span>💼 {p.career.title}</span>}
-                        {p.house && <span>🏠 {p.house.name}</span>}
-                        {p.spouse && <span>💍</span>}
-                        {p.kids > 0 && <span>👶×{p.kids}</span>}
+                        {p.career && <span> {p.career.title}</span>}
+                        {p.house && <span> {p.house.name}</span>}
+                        {p.spouse && <span></span>}
+                        {p.kids > 0 && <span>×{p.kids}</span>}
                       </div>
                     </div>
                     <div style={{textAlign: 'right'}}>
@@ -4335,7 +4335,7 @@ export default function StudyGuide() {
                 
                 {/* Wrong guesses indicator */}
                 <div style={{marginBottom: '16px', color: '#dc2626'}}>
-                  {'❌'.repeat(wheelWrongGuesses)}{'⬜'.repeat(6 - wheelWrongGuesses)}
+                  {''.repeat(wheelWrongGuesses)}{'_'.repeat(6 - wheelWrongGuesses)}
                 </div>
               </div>
             </div>
@@ -4444,7 +4444,7 @@ export default function StudyGuide() {
 
                 {/* Bomb emoji */}
                 <div style={{textAlign: 'center', fontSize: '40px', marginBottom: '16px'}}>
-                  💣 Wire {bombWiresCut + 1} of {bombWiresTotal}
+                   Wire {bombWiresCut + 1} of {bombWiresTotal}
                 </div>
 
                 {/* Question */}
@@ -4472,7 +4472,7 @@ export default function StudyGuide() {
             {/* BOOM - Exploded */}
             {bombExploded && (
               <div style={{...styles.complete, background: 'linear-gradient(135deg, #991b1b 0%, #dc2626 100%)'}}>
-                <div style={{fontSize: '80px', marginBottom: '16px'}}>💥</div>
+                <div style={{fontSize: '80px', marginBottom: '16px'}}></div>
                 <div style={{fontSize: '28px', fontWeight: 'bold', color: 'white', marginBottom: '8px'}}>
                   {bombTime === 0 ? 'TIME\'S UP!' : 'WRONG WIRE!'}
                 </div>
@@ -4485,14 +4485,14 @@ export default function StudyGuide() {
                     <div style={{fontSize: '16px', color: 'white', fontWeight: 'bold'}}>{currentQ.a}</div>
                   </div>
                 )}
-                <button onClick={() => startMode('bomb')} style={{...styles.primaryBtn, background: '#7f1d1d'}}>Try Again 💣</button>
+                <button onClick={() => startMode('bomb')} style={{...styles.primaryBtn, background: '#7f1d1d'}}>Try Again </button>
               </div>
             )}
 
             {/* Defused! */}
             {bombDefused && (
               <div style={{...styles.complete, background: 'linear-gradient(135deg, #065f46 0%, #059669 100%)'}}>
-                <div style={{fontSize: '80px', marginBottom: '16px'}}>🎉</div>
+                <div style={{fontSize: '80px', marginBottom: '16px'}}></div>
                 <div style={{fontSize: '28px', fontWeight: 'bold', color: 'white', marginBottom: '8px'}}>
                   BOMB DEFUSED!
                 </div>
@@ -4506,16 +4506,16 @@ export default function StudyGuide() {
                   </div>
                   <div style={{background: 'rgba(255,255,255,0.2)', padding: '16px', borderRadius: '12px'}}>
                     <div style={{fontSize: '12px', color: '#a7f3d0', marginBottom: '4px'}}>WIRES CUT</div>
-                    <div style={{fontSize: '32px', fontWeight: 'bold', color: 'white'}}>{bombWiresCut} ✂️</div>
+                    <div style={{fontSize: '32px', fontWeight: 'bold', color: 'white'}}>{bombWiresCut} </div>
                   </div>
                 </div>
                 {bombTime >= highScores.bomb && bombTime > 0 && (
-                  <div style={{color: '#a7f3d0', fontWeight: 'bold', marginBottom: '16px', fontSize: '18px'}}>👑 New Best Time!</div>
+                  <div style={{color: '#a7f3d0', fontWeight: 'bold', marginBottom: '16px', fontSize: '18px'}}> New Best Time!</div>
                 )}
                 <div style={{color: '#6ee7b7', fontSize: '13px', marginBottom: '16px'}}>
-                  Best Time Remaining: {highScores.bomb}s {highScores.bomb > 0 && '👑'}
+                  Best Time Remaining: {highScores.bomb}s {highScores.bomb > 0 && ''}
                 </div>
-                <button onClick={() => startMode('bomb')} style={{...styles.primaryBtn, background: '#064e3b'}}>Play Again 💣</button>
+                <button onClick={() => startMode('bomb')} style={{...styles.primaryBtn, background: '#064e3b'}}>Play Again </button>
               </div>
             )}
           </div>
@@ -4783,7 +4783,7 @@ export default function StudyGuide() {
                     </div>
                     <div style={{flex: 1}}>
                       <div style={{fontSize: '12px', color: isCorrect ? '#10b981' : '#ef4444', fontWeight: '600', marginBottom: '4px'}}>
-                        {isCorrect ? '2.5/2.5 points ✓' : '0/2.5 points ✗'}
+                        {isCorrect ? '2.5/2.5 points ' : '0/2.5 points '}
                       </div>
                       <div style={{fontSize: '15px', color: '#374151', lineHeight: '1.5'}}>{renderQuestionWithExamFlag(q)}</div>
                     </div>
@@ -4802,7 +4802,7 @@ export default function StudyGuide() {
                         <div key={ci} style={{display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 12px', marginBottom: '4px', borderRadius: '6px', background: bg}}>
                           <div style={{width: '16px', height: '16px', borderRadius: '50%', border: `2px solid ${isUserChoice ? '#374151' : '#d1d5db'}`, background: isUserChoice ? '#374151' : 'white'}} />
                           <span style={{fontSize: '14px', color, fontWeight: isCorrectChoice ? '600' : '400'}}>{renderChoiceContent(choice)}</span>
-                          {isCorrectChoice && <span style={{marginLeft: 'auto', fontSize: '12px', color: '#059669'}}>✓ Correct</span>}
+                          {isCorrectChoice && <span style={{marginLeft: 'auto', fontSize: '12px', color: '#059669'}}> Correct</span>}
                           {isUserChoice && !isCorrect && <span style={{marginLeft: 'auto', fontSize: '12px', color: '#dc2626'}}>Your answer</span>}
                         </div>
                       );
@@ -4831,13 +4831,13 @@ export default function StudyGuide() {
               </div>
               <div style={{textAlign: 'center'}}>
                 <div style={{fontSize: '12px', color: '#fca5a5'}}>STREAK</div>
-                <div style={{fontSize: '28px', fontWeight: 'bold', color: '#fbbf24'}}>🔥 {challengeStreak}</div>
+                <div style={{fontSize: '28px', fontWeight: 'bold', color: '#fbbf24'}}> {challengeStreak}</div>
               </div>
               <div style={{textAlign: 'center'}}>
                 <div style={{fontSize: '12px', color: '#fca5a5'}}>STRIKES</div>
                 <div style={{fontSize: '24px'}}>
                   {[0,1,2].map(i => (
-                    <span key={i} style={{color: i < challengeWrong ? '#fca5a5' : '#7f1d1d'}}>✗</span>
+                    <span key={i} style={{color: i < challengeWrong ? '#fca5a5' : '#7f1d1d'}}></span>
                   ))}
                 </div>
               </div>
@@ -4911,7 +4911,7 @@ export default function StudyGuide() {
         {mode === 'challenge' && challengeGameOver && (
           <div style={{...styles.complete, background: 'linear-gradient(135deg, #7f1d1d 0%, #dc2626 100%)'}}>
             <div style={{fontSize: '24px', fontWeight: 'bold', color: 'white', marginBottom: '24px'}}>
-              ⚡ Challenge Complete
+               Challenge Complete
             </div>
             <div className="challenge-stats" style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px', marginBottom: '24px'}}>
               <div style={{background: 'rgba(255,255,255,0.2)', padding: '16px', borderRadius: '12px'}}>
@@ -4920,7 +4920,7 @@ export default function StudyGuide() {
               </div>
               <div style={{background: 'rgba(255,255,255,0.2)', padding: '16px', borderRadius: '12px'}}>
                 <div style={{fontSize: '12px', color: '#fecaca', marginBottom: '4px'}}>BEST STREAK</div>
-                <div style={{fontSize: '28px', fontWeight: 'bold', color: '#fbbf24'}}>🔥 {challengeBestStreak}</div>
+                <div style={{fontSize: '28px', fontWeight: 'bold', color: '#fbbf24'}}> {challengeBestStreak}</div>
               </div>
               <div style={{background: 'rgba(255,255,255,0.2)', padding: '16px', borderRadius: '12px'}}>
                 <div style={{fontSize: '12px', color: '#fecaca', marginBottom: '4px'}}>TIME USED</div>
@@ -4933,10 +4933,10 @@ export default function StudyGuide() {
               {challengeWrong >= 3 ? '3 strikes - you\'re out!' : 'Time\'s up!'}
             </div>
             {challengeScore >= highScores.challenge && challengeScore > 0 && (
-              <div style={{color: '#fbbf24', fontWeight: 'bold', marginBottom: '16px', fontSize: '18px'}}>👑 New High Score!</div>
+              <div style={{color: '#fbbf24', fontWeight: 'bold', marginBottom: '16px', fontSize: '18px'}}> New High Score!</div>
             )}
             <div style={{color: '#fca5a5', fontSize: '13px', marginBottom: '16px'}}>
-              High Score: {highScores.challenge} {highScores.challenge > 0 && '👑'}
+              High Score: {highScores.challenge} {highScores.challenge > 0 && ''}
             </div>
             <button onClick={() => startMode('challenge')} style={{...styles.primaryBtn, background: '#fecaca', color: '#7f1d1d'}}>Try Again</button>
           </div>
@@ -4947,7 +4947,7 @@ export default function StudyGuide() {
           <div>
             {/* Score bar */}
             <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'linear-gradient(135deg, #166534 0%, #22c55e 100%)', padding: '12px 20px', borderRadius: '12px', marginBottom: '16px'}}>
-              <div style={{color: '#dcfce7', fontSize: '14px'}}>🐍 Length: <strong style={{color: 'white'}}>{snakeBody.length}</strong></div>
+              <div style={{color: '#dcfce7', fontSize: '14px'}}> Length: <strong style={{color: 'white'}}>{snakeBody.length}</strong></div>
               <div style={{color: '#dcfce7', fontSize: '14px'}}>Score: <strong style={{color: 'white'}}>{snakeScore}</strong></div>
             </div>
 
@@ -4981,18 +4981,18 @@ export default function StudyGuide() {
                 <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px', maxWidth: '200px', margin: '16px auto 0'}}>
                   <div />
                   <button onClick={() => { if (snakeDirRef.current !== 'down') { snakeDirRef.current = 'up'; setSnakeDir('up'); }}} 
-                    style={{background: '#22c55e', border: 'none', borderRadius: '8px', padding: '12px', fontSize: '20px', cursor: 'pointer'}}>⬆️</button>
+                    style={{background: '#22c55e', border: 'none', borderRadius: '8px', padding: '12px', fontSize: '20px', cursor: 'pointer'}}>Up</button>
                   <div />
                   <button onClick={() => { if (snakeDirRef.current !== 'right') { snakeDirRef.current = 'left'; setSnakeDir('left'); }}}
-                    style={{background: '#22c55e', border: 'none', borderRadius: '8px', padding: '12px', fontSize: '20px', cursor: 'pointer'}}>⬅️</button>
+                    style={{background: '#22c55e', border: 'none', borderRadius: '8px', padding: '12px', fontSize: '20px', cursor: 'pointer'}}>Left</button>
                   <div style={{background: '#166534', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: '14px'}}>
-                    {snakeDir === 'up' ? '⬆' : snakeDir === 'down' ? '⬇' : snakeDir === 'left' ? '⬅' : '➡'}
+                    {snakeDir === 'up' ? 'U' : snakeDir === 'down' ? 'D' : snakeDir === 'left' ? 'L' : ''}
                   </div>
                   <button onClick={() => { if (snakeDirRef.current !== 'left') { snakeDirRef.current = 'right'; setSnakeDir('right'); }}}
-                    style={{background: '#22c55e', border: 'none', borderRadius: '8px', padding: '12px', fontSize: '20px', cursor: 'pointer'}}>➡️</button>
+                    style={{background: '#22c55e', border: 'none', borderRadius: '8px', padding: '12px', fontSize: '20px', cursor: 'pointer'}}></button>
                   <div />
                   <button onClick={() => { if (snakeDirRef.current !== 'up') { snakeDirRef.current = 'down'; setSnakeDir('down'); }}}
-                    style={{background: '#22c55e', border: 'none', borderRadius: '8px', padding: '12px', fontSize: '20px', cursor: 'pointer'}}>⬇️</button>
+                    style={{background: '#22c55e', border: 'none', borderRadius: '8px', padding: '12px', fontSize: '20px', cursor: 'pointer'}}>Down</button>
                   <div />
                 </div>
                 <div style={{textAlign: 'center', color: '#6b7280', fontSize: '12px', marginTop: '8px'}}>Use arrow keys or buttons</div>
@@ -5004,7 +5004,7 @@ export default function StudyGuide() {
               <div style={{background: 'white', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 20px rgba(0,0,0,0.15)'}}>
                 <div style={{textAlign: 'center', marginBottom: '16px'}}>
                   <span style={{background: '#22c55e', color: 'white', padding: '4px 12px', borderRadius: '12px', fontSize: '13px'}}>
-                    🍎 Answer to grow!
+                     Answer to grow!
                   </span>
                 </div>
                 <div style={{fontSize: '16px', color: '#374151', marginBottom: '20px', lineHeight: '1.5'}}>
@@ -5061,7 +5061,7 @@ export default function StudyGuide() {
                         fontWeight: snakeGameOver && choice === shuffledQuestions[snakeQuestionIndex].a ? 'bold' : 'normal'
                       }}
                     >
-                      {snakeGameOver && choice === shuffledQuestions[snakeQuestionIndex].a && '✅ '}{choice}
+                      {snakeGameOver && choice === shuffledQuestions[snakeQuestionIndex].a && ' '}{choice}
                     </button>
                   ))}
                   {snakeGameOver && (
@@ -5069,7 +5069,7 @@ export default function StudyGuide() {
                       onClick={() => setSnakeShowQuestion(false)}
                       style={{...styles.primaryBtn, marginTop: '12px', background: '#166534', width: '100%'}}
                     >
-                      Continue →
+                      Continue
                     </button>
                   )}
                 </div>
@@ -5081,7 +5081,7 @@ export default function StudyGuide() {
         {/* Snake Game Over */}
         {mode === 'snake' && snakeGameOver && !snakeShowQuestion && (
           <div style={{...styles.complete, background: 'linear-gradient(135deg, #166534 0%, #22c55e 100%)'}}>
-            <div style={{fontSize: '48px', marginBottom: '16px'}}>🐍</div>
+            <div style={{fontSize: '48px', marginBottom: '16px'}}></div>
             <div style={{fontSize: '24px', fontWeight: 'bold', color: 'white', marginBottom: '8px'}}>Game Over!</div>
             <div style={{display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px', maxWidth: '280px', margin: '0 auto 16px'}}>
               <div style={{background: 'rgba(255,255,255,0.2)', padding: '16px', borderRadius: '12px'}}>
@@ -5094,10 +5094,10 @@ export default function StudyGuide() {
               </div>
             </div>
             {snakeScore >= highScores.snake && snakeScore > 0 && (
-              <div style={{color: '#fbbf24', fontWeight: 'bold', marginBottom: '16px', fontSize: '18px'}}>👑 New High Score!</div>
+              <div style={{color: '#fbbf24', fontWeight: 'bold', marginBottom: '16px', fontSize: '18px'}}> New High Score!</div>
             )}
             <div style={{color: '#bbf7d0', fontSize: '13px', marginBottom: '16px'}}>
-              High Score: {highScores.snake} {highScores.snake > 0 && '👑'}
+              High Score: {highScores.snake} {highScores.snake > 0 && ''}
             </div>
             <button onClick={() => startMode('snake')} style={{...styles.primaryBtn, background: '#dcfce7', color: '#166534'}}>Play Again</button>
           </div>
@@ -5180,10 +5180,10 @@ export default function StudyGuide() {
                         transform: 'rotateY(180deg)',
                         overflow: 'hidden',
                       }}>
-                        {card.type === 'q' ? '❓ ' : '✓ '}{card.content.length > 60 ? card.content.slice(0, 57) + '...' : card.content}
+                        {card.type === 'q' ? ' ' : ' '}{card.content.length > 60 ? card.content.slice(0, 57) + '...' : card.content}
                       </div>
                     ) : (
-                      <div style={{fontSize: '32px'}}>🧪</div>
+                      <div style={{fontSize: '32px'}}></div>
                     )}
                   </div>
                 );
@@ -5195,19 +5195,19 @@ export default function StudyGuide() {
         {/* Memory Complete */}
         {mode === 'memory' && memoryMatches >= 6 && (
           <div style={{...styles.complete, background: 'linear-gradient(135deg, #7c3aed 0%, #a78bfa 100%)'}}>
-            <div style={{fontSize: '48px', marginBottom: '16px'}}>🧪🎉</div>
+            <div style={{fontSize: '48px', marginBottom: '16px'}}></div>
             <div style={{fontSize: '24px', fontWeight: 'bold', color: 'white', marginBottom: '8px'}}>All Matched!</div>
             <div style={{fontSize: '18px', color: '#ede9fe', marginBottom: '16px'}}>
               Completed in <strong>{memoryMoves}</strong> moves
             </div>
             {memoryMoves <= highScores.memory && (
-              <div style={{color: '#fbbf24', fontWeight: 'bold', marginBottom: '16px', fontSize: '18px'}}>👑 New High Score!</div>
+              <div style={{color: '#fbbf24', fontWeight: 'bold', marginBottom: '16px', fontSize: '18px'}}> New High Score!</div>
             )}
             <div style={{color: '#ddd6fe', fontSize: '13px', marginBottom: '16px'}}>
-              Best: {highScores.memory < 999 ? `${highScores.memory} moves 👑` : 'No record yet'}
+              Best: {highScores.memory < 999 ? `${highScores.memory} moves ` : 'No record yet'}
             </div>
             <div style={{fontSize: '14px', color: '#ddd6fe', marginBottom: '24px'}}>
-              {memoryMoves <= 8 ? '🏆 Perfect memory!' : memoryMoves <= 12 ? '⭐ Great job!' : memoryMoves <= 18 ? '👍 Nice work!' : 'Keep practicing!'}
+              {memoryMoves <= 8 ? 'Perfect memory!' : memoryMoves <= 12 ? 'Great job!' : memoryMoves <= 18 ? 'Nice work!' : 'Keep practicing!'}
             </div>
             <button onClick={() => startMode('memory')} style={{...styles.primaryBtn, background: '#ede9fe', color: '#5b21b6'}}>Play Again</button>
           </div>
