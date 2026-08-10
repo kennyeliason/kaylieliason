@@ -1,0 +1,87 @@
+---
+
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+		<title>Nail Sets | Kayli's Nailz</title>
+		<style>
+			* { margin: 0; padding: 0; box-sizing: border-box; }
+			body {
+				font-family: 'Outfit', sans-serif;
+				background: repeating-linear-gradient(90deg, #f8f9fa, #f8f9fa 20px, #f1f3f4 20px, #f1f3f4 40px);
+				min-height: 100vh;
+				padding: 2rem;
+			}
+			.container { max-width: 760px; margin: 0 auto; }
+			.back {
+				display: inline-block;
+				color: #1a7f88;
+				text-decoration: none;
+				margin-bottom: 1.5rem;
+				font-weight: 500;
+			}
+			.back:hover { text-decoration: underline; }
+			h1 { font-size: 2rem; color: #0d5c63; margin-bottom: 0.5rem; }
+			.subtitle { color: #1a7f88; margin-bottom: 2rem; }
+			.gallery {
+				display: grid;
+				grid-template-columns: 1fr;
+				gap: 1rem;
+			}
+			.photo-card {
+				background: white;
+				border-radius: 1rem;
+				box-shadow: 0 4px 20px rgba(13, 92, 99, 0.1);
+				border: 1px solid rgba(13, 92, 99, 0.08);
+				overflow: hidden;
+			}
+			.photo {
+				display: block;
+				width: 100%;
+				height: auto;
+			}
+			.cta {
+				display: block;
+				text-align: center;
+				background: linear-gradient(135deg, #0d5c63, #1a7f88);
+				color: white;
+				padding: 1rem;
+				border-radius: 0.75rem;
+				text-decoration: none;
+				font-weight: 600;
+				margin-top: 2rem;
+			}
+			@media (max-width: 640px) {
+				body { padding: 1rem; }
+			}
+		</style>
+	</head>
+	<body>
+		<div class="container">
+			<a href="/" class="back">Back</a>
+			<h1>Nail Sets</h1>
+			<p class="subtitle">Some sets Kayli has done</p>
+
+			<div class="gallery">
+				<div class="photo-card">
+					<img class="photo" src="/images/nails/IMG_6581.jpg" alt="Kayli nail set example 1" />
+				</div>
+				<div class="photo-card">
+					<img class="photo" src="/images/nails/IMG_6431.jpg" alt="Kayli nail set example 2" />
+				</div>
+				<div class="photo-card">
+					<img class="photo" src="/images/nails/IMG_6456.jpg" alt="Kayli nail set example 3" />
+				</div>
+			</div>
+
+			<a href="/#booking" class="cta">Book an Appointment</a>
+		</div>
+	</body>
+</html>
