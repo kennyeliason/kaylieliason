@@ -151,6 +151,16 @@
 				width: auto;
 				margin: 0;
 			}
+			.conditional-field[hidden] {
+				display: none;
+			}
+			.option-note {
+				display: block;
+				margin-top: 0.25rem;
+				color: #1a7f88;
+				font-size: 0.82rem;
+				line-height: 1.35;
+			}
 			button {
 				width: 100%;
 				background: linear-gradient(135deg, #0d5c63, #1a7f88);
@@ -263,6 +273,26 @@
 							</label>
 						</div>
 					</div>
+
+					<div id="gelx-follow-up" class="conditional-field" hidden>
+						<div class="field-label">If you want Gel X, do you want them done on the hand or off the hand?</div>
+						<div class="radio-group">
+							<div class="radio-option">
+								<label for="on-hand">
+									<input type="radio" id="on-hand" name="gel_x_type" value="On the hand" />
+									On the hand
+								</label>
+								<span class="option-note">Takes longer, stays longer</span>
+							</div>
+							<div class="radio-option">
+								<label for="off-hand">
+									<input type="radio" id="off-hand" name="gel_x_type" value="Off the hand" />
+									Off the hand
+								</label>
+								<span class="option-note">Quicker, lasts shorter</span>
+							</div>
+						</div>
+					</div>
 					
 					<label for="inspo">Upload inspo picture</label>
 					<input type="file" id="inspo" name="inspo_picture" accept="image/*" />
@@ -279,5 +309,34 @@
 			
 			<p class="footer">Made by Kayli</p>
 		</div>
+
+		<script>
+			const gelXOptions = document.querySelectorAll('input[name="gel_x"]');
+			const gelXFollowUp = document.getElementById('gelx-follow-up');
+			const gelXTypeOptions = document.querySelectorAll('input[name="gel_x_type"]');
+
+			const syncGelXFields = () => {
+				const selected = document.querySelector('input[name="gel_x"]:checked');
+				const wantsGelX = selected?.value === 'Yes';
+
+				if (wantsGelX) {
+					gelXFollowUp?.removeAttribute('hidden');
+					gelXTypeOptions.forEach((option) => option.setAttribute('required', 'required'));
+					return;
+				}
+
+				gelXFollowUp?.setAttribute('hidden', 'hidden');
+				gelXTypeOptions.forEach((option) => {
+					option.removeAttribute('required');
+					option.checked = false;
+				});
+			};
+
+			gelXOptions.forEach((option) => {
+				option.addEventListener('change', syncGelXFields);
+			});
+
+			syncGelXFields();
+		</script>
 	</body>
 </html>
