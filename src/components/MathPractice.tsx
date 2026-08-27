@@ -30,6 +30,8 @@ type PracticePrompt = {
   prompt: string;
   hint: string;
   answer: string;
+  acceptedAnswers: string[];
+  teaching: string;
 };
 
 type MathTopic = {
@@ -107,21 +109,40 @@ const TOPICS: MathTopic[] = [
         prompt: 'Find the domain and range of (0, 2), (1, 4), (2, 6).',
         hint: 'Take the x-values for the domain and the y-values for the range.',
         answer: 'Domain = {0, 1, 2}; Range = {2, 4, 6}',
+        acceptedAnswers: [
+          'domain = {0, 1, 2}; range = {2, 4, 6}',
+          'domain={0,1,2};range={2,4,6}',
+          '{0,1,2} and {2,4,6}',
+        ],
+        teaching: 'Start by separating inputs from outputs. The x-values are the domain, and the y-values are the range.',
       },
       {
         prompt: 'Is (4, 1), (5, 2), (4, 3) a function?',
         hint: 'Check whether one x-value is paired with two different y-values.',
         answer: 'No. The input 4 has two outputs: 1 and 3.',
+        acceptedAnswers: [
+          'no',
+          'not a function',
+          'no, it is not a function',
+        ],
+        teaching: 'Look only at the x-values first. Since 4 is matched with both 1 and 3, one input has two outputs, so it is not a function.',
       },
       {
         prompt: 'Use y = x - 2. What is y when x = 9?',
         hint: 'Substitute 9 for x and subtract 2.',
         answer: '7',
+        acceptedAnswers: ['7', 'y = 7'],
+        teaching: 'Plug the x-value into the rule. Replace x with 9, then do 9 - 2 to get 7.',
       },
       {
         prompt: 'Use y = x - 2. What ordered pair do you get when x = -1?',
         hint: 'Start with -1, then subtract 2 more.',
         answer: '(-1, -3)',
+        acceptedAnswers: [
+          '(-1, -3)',
+          '(-1,-3)',
+        ],
+        teaching: 'Use the rule first: y = -1 - 2, so y = -3. Then write the ordered pair as (x, y) = (-1, -3).',
       },
     ],
     vocabulary: [
@@ -258,6 +279,10 @@ export default function MathPractice() {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [finished, setFinished] = useState(false);
+  const [practiceIndex, setPracticeIndex] = useState(0);
+  const [practiceInput, setPracticeInput] = useState('');
+  const [practiceSubmitted, setPracticeSubmitted] = useState(false);
+  const [practiceCorrect, setPracticeCorrect] = useState(false);
 
   const activeTopic = useMemo(
     () => TOPICS.find((topic) => topic.key === activeTopicKey) ?? TOPICS[0],
@@ -265,15 +290,22 @@ export default function MathPractice() {
   );
 
   const currentQuestion = quizDeck[questionIndex];
+  const currentPractice = activeTopic.practicePrompts[practiceIndex];
   const answered = selectedAnswer !== null;
   const isCorrect = selectedAnswer === currentQuestion?.answer;
   const progress = quizDeck.length === 0 ? 0 : Math.round((questionIndex / quizDeck.length) * 100);
+  const practiceProgress = activeTopic.practicePrompts.length === 0 ? 0 : Math.round((practiceIndex / activeTopic.practicePrompts.length) * 100);
+
+  function normalizeAnswer(value: string) {
+    return value.toLowerCase().replace(/\s+/g, ' ').trim();
+  }
 
   function switchTopic(topicKey: string) {
     setActiveTopicKey(topicKey);
     setActivePanel('learn');
     setVocabReveal({});
     restartQuiz(topicKey);
+    restartPractice(topicKey);
   }
 
   function restartQuiz(topicKey = activeTopic.key) {
@@ -313,6 +345,38 @@ export default function MathPractice() {
       ...current,
       [term]: !current[term],
     }));
+  }
+
+  function restartPractice(topicKey = activeTopic.key) {
+    const topic = TOPICS.find((entry) => entry.key === topicKey) ?? TOPICS[0];
+    setPracticeIndex(0);
+    setPracticeInput('');
+    setPracticeSubmitted(false);
+    setPracticeCorrect(false);
+    if (topic.practicePrompts.length === 0) {
+      setPracticeIndex(0);
+    }
+  }
+
+  function submitPracticeAnswer() {
+    if (practiceSubmitted) return;
+    const guess = normalizeAnswer(practiceInput);
+    if (!guess) return;
+
+    const isMatch = currentPractice.acceptedAnswers.some(
+      (answer) => normalizeAnswer(answer) === guess,
+    );
+
+    setPracticeCorrect(isMatch);
+    setPracticeSubmitted(true);
+  }
+
+  function nextPractice() {
+    const nextIndex = (practiceIndex + 1) % activeTopic.practicePrompts.length;
+    setPracticeIndex(nextIndex);
+    setPracticeInput('');
+    setPracticeSubmitted(false);
+    setPracticeCorrect(false);
   }
 
   return (
@@ -489,21 +553,65 @@ export default function MathPractice() {
               <div className="section-head">
                 <div>
                   <p className="section-label">Try It</p>
-                  <h2>Practice with help built in</h2>
+                  <h2>Type your answer and get feedback</h2>
                 </div>
-                <div className="graph-badge">Write it out on paper</div>
+                <div className="graph-badge">Like a tutor</div>
               </div>
 
-              <div className="practice-stack">
-                {activeTopic.practicePrompts.map((item, index) => (
-                  <article className="practice-card" key={item.prompt}>
-                    <p className="practice-number">Practice {index + 1}</p>
-                    <h3>{item.prompt}</h3>
-                    <p className="practice-hint"><strong>Hint:</strong> {item.hint}</p>
-                    <p className="answer-line"><strong>Check:</strong> {item.answer}</p>
-                  </article>
-                ))}
+              <div className="stats">
+                <div className="stat-chip">Practice {practiceIndex + 1}/{activeTopic.practicePrompts.length}</div>
+                <div className="stat-chip">Progress: {practiceProgress}%</div>
               </div>
+
+              <div className="progress-track" aria-hidden="true">
+                <div className="progress-fill" style={{ width: `${practiceProgress}%` }} />
+              </div>
+
+              <article className="practice-card practice-card-live">
+                <p className="practice-number">Your Turn</p>
+                <h3>{currentPractice.prompt}</h3>
+                <p className="practice-hint"><strong>Hint:</strong> {currentPractice.hint}</p>
+
+                <label className="answer-label" htmlFor="practice-answer">Type your answer</label>
+                <input
+                  id="practice-answer"
+                  className="practice-input"
+                  type="text"
+                  value={practiceInput}
+                  onChange={(event) => setPracticeInput(event.target.value)}
+                  placeholder="Type your answer here"
+                  disabled={practiceSubmitted}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      event.preventDefault();
+                      submitPracticeAnswer();
+                    }
+                  }}
+                />
+
+                {!practiceSubmitted ? (
+                  <button
+                    className="primary-btn"
+                    onClick={submitPracticeAnswer}
+                    disabled={practiceInput.trim().length === 0}
+                  >
+                    Check Answer
+                  </button>
+                ) : (
+                  <div className={practiceCorrect ? 'feedback success' : 'feedback error'}>
+                    <p className="feedback-title">
+                      {practiceCorrect ? 'Great job. You got it right.' : 'Not quite, but here is how to fix it.'}
+                    </p>
+                    <p className="feedback-copy">
+                      {practiceCorrect ? 'Nice work. Keep the pattern going and try another one.' : currentPractice.teaching}
+                    </p>
+                    <p className="answer-line"><strong>Answer:</strong> {currentPractice.answer}</p>
+                    <button className="primary-btn" onClick={nextPractice}>
+                      Try Another
+                    </button>
+                  </div>
+                )}
+              </article>
             </div>
           </section>
         )}
@@ -685,9 +793,16 @@ export default function MathPractice() {
         .answer-btn,
         .primary-btn {
           border: 0;
-          cursor: pointer;
           font: inherit;
           transition: transform 150ms ease, box-shadow 150ms ease, background 150ms ease;
+        }
+
+        .topic-bubble,
+        .tab-bubble,
+        .vocab-card,
+        .answer-btn,
+        .primary-btn {
+          cursor: pointer;
         }
 
         .topic-bubble,
@@ -884,6 +999,11 @@ export default function MathPractice() {
           color: #1f3252;
         }
 
+        .practice-card-live {
+          max-width: 42rem;
+          margin: 0 auto;
+        }
+
         .step-list {
           margin: 0.8rem 0 0;
           padding-left: 1.2rem;
@@ -905,6 +1025,39 @@ export default function MathPractice() {
           margin: 0.8rem 0 0;
           line-height: 1.6;
           color: #456380;
+        }
+
+        .answer-label {
+          display: block;
+          margin-top: 1rem;
+          font-size: 0.88rem;
+          font-weight: 800;
+          color: #205387;
+        }
+
+        .practice-input {
+          width: 100%;
+          margin-top: 0.45rem;
+          padding: 0.95rem 1rem;
+          border-radius: 1rem;
+          border: 1px solid rgba(59, 130, 246, 0.2);
+          background: rgba(255, 255, 255, 0.95);
+          color: #1f3252;
+          font: inherit;
+          font-size: 1rem;
+          box-sizing: border-box;
+        }
+
+        .practice-input:focus {
+          outline: 2px solid rgba(37, 99, 235, 0.25);
+          border-color: rgba(37, 99, 235, 0.45);
+        }
+
+        .primary-btn:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+          transform: none;
+          box-shadow: none;
         }
 
         .axis {
