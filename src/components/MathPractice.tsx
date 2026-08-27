@@ -40,9 +40,11 @@ type MathTopic = {
   title: string;
   eyebrow: string;
   description: string;
+  starterTalk: string[];
   rule: string;
   notes: string[];
   checkpoints: string[];
+  mistakeAlerts: string[];
   guidedExamples: GuidedExample[];
   practicePrompts: PracticePrompt[];
   vocabulary: VocabularyCard[];
@@ -53,43 +55,69 @@ type MathTopic = {
 const TOPICS: MathTopic[] = [
   {
     key: 'relations-functions',
-    label: 'Unit 1',
+    label: 'Unit 2',
     title: 'Relations and Functions',
-    eyebrow: 'Math Starter Topic',
+    eyebrow: 'Algebra 2 Honors Unit 2',
     description:
-      'Learn the core words first, then practice reading tables and deciding when a relation is actually a function.',
+      'This page starts from the very beginning. It teaches what the words mean, what to look at first, and how to do one tiny step at a time.',
+    starterTalk: [
+      'You are not supposed to magically know this already.',
+      'In this unit, most problems are really asking you to match inputs with outputs.',
+      'If you can tell what goes in, what comes out, and whether one input is trying to have two answers, you are already doing the important part.',
+      'We are going to keep it super simple: look at x, look at y, then ask one small question at a time.',
+    ],
     rule: 'For the graph in the notes page, the pattern is y = x - 2.',
     notes: [
-      'A relation is any set of ordered pairs.',
-      'The domain is every x-value, and the range is every y-value.',
-      'A function matches each input with exactly one output.',
-      'The vertical line test helps you decide whether a graph is a function.',
-      'In f(x), x is the input and f(x) is the output.',
+      'An ordered pair looks like this: (x, y). The first number is x. The second number is y.',
+      'A relation is just a group of ordered pairs.',
+      'Domain is a fancy word for all the x-values.',
+      'Range is a fancy word for all the y-values.',
+      'A function means one input can only have one output.',
+      'In f(x), x goes in and f(x) comes out.',
     ],
     checkpoints: [
-      'Start by spotting inputs and outputs.',
-      'Ask: what are the x-values? That gives you the domain.',
-      'Ask: what are the y-values? That gives you the range.',
-      'Then check whether any x-value is matched with more than one y-value.',
+      'Step 1: Find the x-values. Those are the inputs.',
+      'Step 2: Find the y-values. Those are the outputs.',
+      'Step 3: If the question asks for domain, list the x-values.',
+      'Step 4: If the question asks for range, list the y-values.',
+      'Step 5: If the question asks “is it a function?”, check whether any x-value repeats with a different y-value.',
+    ],
+    mistakeAlerts: [
+      'Do not mix up domain and range. Domain = x-values. Range = y-values.',
+      'Do not look at y-values first when checking if it is a function. Check the x-values first.',
+      'Repeated y-values are okay. Repeated x-values with different y-values are the problem.',
+      'If you feel lost, go back to the ordered pairs and separate first numbers from second numbers.',
     ],
     guidedExamples: [
       {
-        title: 'Find the domain and range',
+        title: 'First learn how to read an ordered pair',
+        steps: [
+          'Look at (3, 8).',
+          'The first number is x, so x = 3.',
+          'The second number is y, so y = 8.',
+          'That means 3 is the input and 8 is the output.',
+        ],
+        answer: 'In (3, 8), input = 3 and output = 8',
+      },
+      {
+        title: 'Now find the domain and range',
         steps: [
           'Look at the ordered pairs (1, 4), (2, 5), (3, 6).',
-          'Pull out the x-values: 1, 2, 3.',
-          'Pull out the y-values: 4, 5, 6.',
-          'That means domain = {1, 2, 3} and range = {4, 5, 6}.',
+          'Take only the first numbers: 1, 2, 3.',
+          'Those first numbers are the x-values, so they are the domain.',
+          'Now take the second numbers: 4, 5, 6.',
+          'Those second numbers are the y-values, so they are the range.',
         ],
         answer: 'Domain = {1, 2, 3}, Range = {4, 5, 6}',
       },
       {
-        title: 'Decide if it is a function',
+        title: 'How to tell if it is a function',
         steps: [
           'Look at the pairs (2, 7), (3, 8), (2, 9).',
-          'Focus only on the x-values first.',
-          'The input 2 is used twice with different outputs.',
-          'One input has two outputs, so it is not a function.',
+          'Ignore the y-values for one second and only read the x-values: 2, 3, 2.',
+          'The x-value 2 shows up twice.',
+          'Now check whether it is matched with the same y-value both times. It is not: one goes to 7 and one goes to 9.',
+          'That means one input is trying to have two answers, so it is not a function.',
         ],
         answer: 'Not a function',
       },
@@ -436,8 +464,27 @@ export default function MathPractice() {
             <div className="board">
               <div className="section-head">
                 <div>
+                  <p className="section-label">Start Here</p>
+                  <h2>What is this even talking about?</h2>
+                </div>
+                <div className="rule-pill">Zero-pressure version</div>
+              </div>
+
+              <div className="hint-grid">
+                {activeTopic.starterTalk.map((note) => (
+                  <article className="hint-card" key={note}>
+                    <strong>Plain English</strong>
+                    <span>{note}</span>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div className="board">
+              <div className="section-head">
+                <div>
                   <p className="section-label">Learn First</p>
-                  <h2>What this topic means</h2>
+                  <h2>What the words really mean</h2>
                 </div>
                 <div className="rule-pill">{activeTopic.rule}</div>
               </div>
@@ -456,7 +503,7 @@ export default function MathPractice() {
               <div className="section-head">
                 <div>
                   <p className="section-label">How To Think</p>
-                  <h2>A simple way to work through it</h2>
+                  <h2>Do the same tiny steps every time</h2>
                 </div>
                 <div className="graph-badge">Step by step</div>
               </div>
@@ -474,8 +521,27 @@ export default function MathPractice() {
             <div className="board">
               <div className="section-head">
                 <div>
+                  <p className="section-label">Watch Out</p>
+                  <h2>Easy mistakes to avoid</h2>
+                </div>
+                <div className="graph-badge">This trips people up</div>
+              </div>
+
+              <div className="hint-grid">
+                {activeTopic.mistakeAlerts.map((item) => (
+                  <article className="hint-card" key={item}>
+                    <strong>Remember</strong>
+                    <span>{item}</span>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div className="board">
+              <div className="section-head">
+                <div>
                   <p className="section-label">Worked Example</p>
-                  <h2>Table from the line graph</h2>
+                  <h2>One graph, explained slowly</h2>
                 </div>
                 <div className="graph-badge">y = x - 2</div>
               </div>
@@ -495,7 +561,7 @@ export default function MathPractice() {
                     </svg>
                   </div>
                   <p className="graph-copy">
-                    Every time x goes up by 1, y also goes up by 1. The line starts at -2 on the y-axis.
+                    Start at the point where the line crosses the y-axis. That happens at -2. Then each time you move right 1, you also move up 1.
                   </p>
                 </div>
 
