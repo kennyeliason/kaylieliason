@@ -61,7 +61,6 @@ const TOPICS: MathTopic[] = [
     description:
       'This page starts from the very beginning. It teaches what the words mean, what to look at first, and how to do one tiny step at a time.',
     starterTalk: [
-      'You are not supposed to magically know this already.',
       'In this unit, most problems are really asking you to match inputs with outputs.',
       'If you can tell what goes in, what comes out, and whether one input is trying to have two answers, you are already doing the important part.',
       'We are going to keep it super simple: look at x, look at y, then ask one small question at a time.',
@@ -467,13 +466,13 @@ export default function MathPractice() {
                   <p className="section-label">Start Here</p>
                   <h2>What is this even talking about?</h2>
                 </div>
-                <div className="rule-pill">Zero-pressure version</div>
+                <div className="rule-pill">Simple version</div>
               </div>
 
               <div className="hint-grid">
                 {activeTopic.starterTalk.map((note) => (
                   <article className="hint-card" key={note}>
-                    <strong>Plain English</strong>
+                    <strong>Simple explanation</strong>
                     <span>{note}</span>
                   </article>
                 ))}
@@ -666,10 +665,10 @@ export default function MathPractice() {
                 ) : (
                   <div className={practiceCorrect ? 'feedback success' : 'feedback error'}>
                     <p className="feedback-title">
-                      {practiceCorrect ? 'Great job. You got it right.' : 'Not quite, but here is how to fix it.'}
+                      {practiceCorrect ? 'Correct.' : 'Not correct. Here is what to fix.'}
                     </p>
                     <p className="feedback-copy">
-                      {practiceCorrect ? 'Nice work. Keep the pattern going and try another one.' : currentPractice.teaching}
+                      {practiceCorrect ? 'That answer works. Try the next one.' : currentPractice.teaching}
                     </p>
                     <p className="answer-line"><strong>Answer:</strong> {currentPractice.answer}</p>
                     <button className="primary-btn" onClick={nextPractice}>
@@ -731,10 +730,10 @@ export default function MathPractice() {
                 <h2>You got {correctCount} out of {quizDeck.length}</h2>
                 <p className="result-copy">
                   {correctCount === quizDeck.length
-                    ? 'Perfect. You nailed this set.'
+                    ? 'All answers were correct.'
                     : correctCount >= quizDeck.length * 0.75
-                      ? 'Nice work. One more quick round and this should feel easy.'
-                      : 'Run it again and focus on the domain, range, and function rules.'}
+                      ? 'Most answers were correct. Review the ones you missed.'
+                      : 'Review domain, range, and function rules, then try again.'}
                 </p>
                 <button className="primary-btn" onClick={() => restartQuiz()}>Try Again</button>
               </div>
