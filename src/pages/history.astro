@@ -360,6 +360,13 @@ const studyUnits = [
         background: radial-gradient(circle, rgba(186, 138, 75, 0.24), transparent 70%);
       }
 
+      .eyebrow-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        align-items: center;
+      }
+
       .eyebrow {
         display: inline-flex;
         padding: 0.55rem 0.95rem;
@@ -394,50 +401,36 @@ const studyUnits = [
         margin-top: 1.3rem;
       }
 
-      .unit-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 1rem;
-        margin-bottom: 1.15rem;
+      .unit-switcher {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.55rem;
       }
 
-      .unit-card {
-        width: 100%;
-        min-height: 110px;
-        padding: 1rem 1.1rem;
+      .unit-chip {
+        padding: 0.55rem 0.95rem;
         border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 24px;
+        border-radius: 999px;
         background: rgba(255, 255, 255, 0.08);
         color: #fff8ec;
-        text-align: left;
         cursor: pointer;
         transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        font-weight: 700;
       }
 
-      .unit-card:hover {
+      .unit-chip:hover {
         transform: translateY(-2px);
         background: rgba(255, 255, 255, 0.12);
         border-color: rgba(255, 255, 255, 0.18);
       }
 
-      .unit-card.active {
+      .unit-chip.active {
         background: linear-gradient(135deg, rgba(186, 138, 75, 0.28), rgba(84, 27, 22, 0.18));
         border-color: rgba(255, 255, 255, 0.24);
         box-shadow: inset 0 0 0 1px rgba(255, 248, 236, 0.1);
-      }
-
-      .unit-card strong {
-        display: block;
-        font-family: 'Cinzel', 'Times New Roman', serif;
-        font-size: 1.2rem;
-      }
-
-      .unit-card span {
-        display: block;
-        margin-top: 0.45rem;
-        font-size: 1rem;
-        line-height: 1.4;
-        color: rgba(255, 248, 236, 0.88);
       }
 
       .menu-label {
@@ -733,7 +726,6 @@ const studyUnits = [
       @media (max-width: 760px) {
         main { width: min(100% - 0.75rem, 42rem); padding-top: 0.8rem; }
         .hero { padding: 1.5rem; border-radius: 22px; }
-        .unit-grid { grid-template-columns: 1fr; }
         .mode-grid { grid-template-columns: 1fr; }
         .board { padding: 0.9rem; border-radius: 22px; }
         .panel { padding: 1rem; }
@@ -745,21 +737,16 @@ const studyUnits = [
   <body>
     <main>
       <section class="hero">
-        <div class="eyebrow" id="unit-eyebrow">Unit One • First Peoples + Societies</div>
+        <div class="eyebrow-row">
+          <div class="eyebrow" id="unit-eyebrow">Unit One • First Peoples + Societies</div>
+          <div class="unit-switcher">
+            <button class="unit-chip active" data-unit="unit-1" type="button">Unit One</button>
+            <button class="unit-chip" data-unit="unit-2" type="button">Unit Two</button>
+          </div>
+        </div>
         <h1>World History Study Guide</h1>
         <p class="hero-copy">Choose your unit and study style and start studying!</p>
         <div class="menu-wrap">
-          <p class="menu-label">Choose a unit</p>
-          <div class="unit-grid">
-            <button class="unit-card active" data-unit="unit-1" type="button">
-              <strong>Unit One</strong>
-              <span>First Peoples + Societies</span>
-            </button>
-            <button class="unit-card" data-unit="unit-2" type="button">
-              <strong>Unit Two</strong>
-              <span>8 Features of Civilization</span>
-            </button>
-          </div>
           <p class="menu-label">Choose a mode</p>
           <div class="mode-grid">
             <button class="mode-card" data-mode="multiple" type="button">
