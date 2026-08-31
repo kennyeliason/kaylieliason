@@ -1,5 +1,11 @@
 ---
-const questions = [
+const studyUnits = [
+  {
+    id: 'unit-1',
+    shortLabel: 'Unit One',
+    title: 'First Peoples + Societies',
+    description: 'Study early humans, agriculture, domestication, and the first societies.',
+    questions: [
   {
     category: 'Vocabulary',
     question: 'What is an artifact?',
@@ -175,6 +181,100 @@ const questions = [
     answer: 'Maize, manioc, and sweet potatoes',
     explanation: 'Those are the crops identified in the notes for the Americas.',
   },
+    ],
+    jeopardyCategories: [
+      { name: 'Vocabulary', indexes: [0, 1, 2, 3, 4] },
+      { name: 'Revolution', indexes: [5, 8, 9, 10, 12] },
+      { name: 'Plants', indexes: [6, 7, 13, 14, 23] },
+      { name: 'Animals', indexes: [16, 17, 18, 19, 20] },
+      { name: 'Societies', indexes: [11, 15, 21, 22, 24] },
+    ],
+  },
+  {
+    id: 'unit-2',
+    shortLabel: 'Unit Two',
+    title: '8 Features of Civilization',
+    description: 'Review the traits that turned growing settlements into full civilizations.',
+    questions: [
+      {
+        category: 'Cities',
+        question: 'What helped early farmers grow a surplus of food?',
+        choices: ['Improved farming that produced more food than people immediately needed', 'The end of all trade', 'A decrease in population', 'A ban on irrigation'],
+        answer: 'Improved farming that produced more food than people immediately needed',
+        explanation: 'A surplus means extra food beyond immediate survival needs.',
+      },
+      {
+        category: 'Cities',
+        question: 'What happened to some settlements as food supplies grew?',
+        choices: ['They turned into cities', 'They disappeared completely', 'They became smaller villages only', 'They moved into mountains'],
+        answer: 'They turned into cities',
+        explanation: 'More food supported larger populations, which helped settlements grow into cities.',
+      },
+      {
+        category: 'Job Specialization',
+        question: 'What is job specialization?',
+        choices: ['People focusing on specific jobs and tasks instead of everyone doing everything', 'Everyone farming the same crop', 'Only leaders being allowed to work', 'Moving from city to city for work'],
+        answer: 'People focusing on specific jobs and tasks instead of everyone doing everything',
+        explanation: 'Civilizations needed different people to handle different jobs.',
+      },
+      {
+        category: 'Job Specialization',
+        question: 'Which is an example of a specialized job from the notes?',
+        choices: ['Teaching, scribing, or stone-cutting', 'Only hunting wild animals', 'Crossing glaciers', 'Growing one tree at a time'],
+        answer: 'Teaching, scribing, or stone-cutting',
+        explanation: 'The notes list teaching, scribing, and stone-cutting as examples of specialized jobs.',
+      },
+      {
+        category: 'Government',
+        question: 'Why did civilizations need organized central governments?',
+        choices: ['To manage systems like food supply, irrigation, and waste removal', 'To stop people from building cities', 'To end all religion', 'To keep writing from spreading'],
+        answer: 'To manage systems like food supply, irrigation, and waste removal',
+        explanation: 'Governments coordinated the big systems a civilization depended on.',
+      },
+      {
+        category: 'Religion',
+        question: 'What role did religious leaders have in complex religions?',
+        choices: ['They led rituals to please the gods', 'They built only roads', 'They taught everyone to farm', 'They traded all surplus goods'],
+        answer: 'They led rituals to please the gods',
+        explanation: 'The notes say religious leaders led rituals to please gods.',
+      },
+      {
+        category: 'Writing',
+        question: 'Why did civilizations need writing?',
+        choices: ['To keep records of trade goods and food storage', 'To decorate every building', 'To replace farming tools', 'To move cities to new places'],
+        answer: 'To keep records of trade goods and food storage',
+        explanation: 'Writing helped civilizations track goods, storage, and other important information.',
+      },
+      {
+        category: 'Social Classes',
+        question: 'How did specialized jobs affect social classes?',
+        choices: ['They helped create a social structure', 'They removed all leaders', 'They made everyone equal in status', 'They ended building work'],
+        answer: 'They helped create a social structure',
+        explanation: 'The notes connect specialized jobs to the growth of social classes.',
+      },
+      {
+        category: 'Public Works',
+        question: 'What is a public work?',
+        choices: ['A project ordered to benefit the whole community, like a wall or canal', 'A private house for one family', 'A hunting trip', 'A religious song'],
+        answer: 'A project ordered to benefit the whole community, like a wall or canal',
+        explanation: 'Public works were large projects that helped the civilization survive and function.',
+      },
+      {
+        category: 'Art and Architecture',
+        question: 'What did art and architecture show about a civilization?',
+        choices: ['Its beliefs, values, beauty, and power', 'Only its food supply', 'Only its weather patterns', 'Its lack of leaders'],
+        answer: 'Its beliefs, values, beauty, and power',
+        explanation: 'The notes say art and architecture expressed beliefs and values and could impress people with power and beauty.',
+      },
+    ],
+    jeopardyCategories: [
+      { name: 'Cities', indexes: [0, 1] },
+      { name: 'Jobs', indexes: [2, 3] },
+      { name: 'Government', indexes: [4, 8] },
+      { name: 'Beliefs', indexes: [5, 7] },
+      { name: 'Writing', indexes: [6, 9] },
+    ],
+  },
 ];
 ---
 
@@ -184,7 +284,7 @@ const questions = [
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="World history study guide for First Peoples and Societies." />
+    <meta name="description" content="World history study guide with interactive review games." />
     <meta name="generator" content={Astro.generator} />
     <title>World History Study Guide</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -292,6 +392,52 @@ const questions = [
 
       .menu-wrap {
         margin-top: 1.3rem;
+      }
+
+      .unit-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.15rem;
+      }
+
+      .unit-card {
+        width: 100%;
+        min-height: 110px;
+        padding: 1rem 1.1rem;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff8ec;
+        text-align: left;
+        cursor: pointer;
+        transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+      }
+
+      .unit-card:hover {
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.18);
+      }
+
+      .unit-card.active {
+        background: linear-gradient(135deg, rgba(186, 138, 75, 0.28), rgba(84, 27, 22, 0.18));
+        border-color: rgba(255, 255, 255, 0.24);
+        box-shadow: inset 0 0 0 1px rgba(255, 248, 236, 0.1);
+      }
+
+      .unit-card strong {
+        display: block;
+        font-family: 'Cinzel', 'Times New Roman', serif;
+        font-size: 1.2rem;
+      }
+
+      .unit-card span {
+        display: block;
+        margin-top: 0.45rem;
+        font-size: 1rem;
+        line-height: 1.4;
+        color: rgba(255, 248, 236, 0.88);
       }
 
       .menu-label {
@@ -587,6 +733,7 @@ const questions = [
       @media (max-width: 760px) {
         main { width: min(100% - 0.75rem, 42rem); padding-top: 0.8rem; }
         .hero { padding: 1.5rem; border-radius: 22px; }
+        .unit-grid { grid-template-columns: 1fr; }
         .mode-grid { grid-template-columns: 1fr; }
         .board { padding: 0.9rem; border-radius: 22px; }
         .panel { padding: 1rem; }
@@ -598,10 +745,21 @@ const questions = [
   <body>
     <main>
       <section class="hero">
-        <div class="eyebrow">Unit One • First Peoples + Societies</div>
+        <div class="eyebrow" id="unit-eyebrow">Unit One • First Peoples + Societies</div>
         <h1>World History Study Guide</h1>
         <p class="hero-copy">Choose your unit and study style and start studying!</p>
         <div class="menu-wrap">
+          <p class="menu-label">Choose a unit</p>
+          <div class="unit-grid">
+            <button class="unit-card active" data-unit="unit-1" type="button">
+              <strong>Unit One</strong>
+              <span>First Peoples + Societies</span>
+            </button>
+            <button class="unit-card" data-unit="unit-2" type="button">
+              <strong>Unit Two</strong>
+              <span>8 Features of Civilization</span>
+            </button>
+          </div>
           <p class="menu-label">Choose a mode</p>
           <div class="mode-grid">
             <button class="mode-card" data-mode="multiple" type="button">
@@ -629,20 +787,16 @@ const questions = [
       </section>
     </main>
 
-    <script type="application/json" id="history-questions" set:html={JSON.stringify(questions)}></script>
+    <script type="application/json" id="history-units" set:html={JSON.stringify(studyUnits)}></script>
     <script>
-      const baseQuestions = JSON.parse(document.getElementById('history-questions').textContent || '[]');
+      const units = JSON.parse(document.getElementById('history-units').textContent || '[]');
       const root = document.getElementById('game-root');
       const board = document.getElementById('game-board');
       const modeButtons = Array.from(document.querySelectorAll('[data-mode]'));
+      const unitButtons = Array.from(document.querySelectorAll('[data-unit]'));
+      const unitEyebrow = document.getElementById('unit-eyebrow');
       const prizeLadder = ['$100', '$200', '$300', '$500', '$1,000', '$2,000', '$4,000', '$8,000', '$16,000', '$32,000'];
-      const jeopardyCategories = [
-        { name: 'Vocabulary', indexes: [0, 1, 2, 3, 4] },
-        { name: 'Revolution', indexes: [5, 8, 9, 10, 12] },
-        { name: 'Plants', indexes: [6, 7, 13, 14, 23] },
-        { name: 'Animals', indexes: [16, 17, 18, 19, 20] },
-        { name: 'Societies', indexes: [11, 15, 21, 22, 24] },
-      ];
+      let currentUnit = units[0];
 
       let state = {};
 
@@ -659,8 +813,28 @@ const questions = [
         return value.toLowerCase().replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim();
       }
 
+      function currentQuestions() {
+        return currentUnit.questions;
+      }
+
+      function currentJeopardyCategories() {
+        return currentUnit.jeopardyCategories;
+      }
+
       function buildMcQuestions() {
-        return baseQuestions.map((item) => ({ ...item, choices: shuffle(item.choices) }));
+        return currentQuestions().map((item) => ({ ...item, choices: shuffle(item.choices) }));
+      }
+
+      function updateUnitDisplay() {
+        unitEyebrow.textContent = `${currentUnit.shortLabel} • ${currentUnit.title}`;
+      }
+
+      function setActiveUnit(unitId) {
+        currentUnit = units.find((unit) => unit.id === unitId) || units[0];
+        unitButtons.forEach((button) => {
+          button.classList.toggle('active', button.dataset.unit === currentUnit.id);
+        });
+        updateUnitDisplay();
       }
 
       function setActiveMode(mode) {
@@ -742,7 +916,7 @@ const questions = [
       }
 
       function initTyping() {
-        state = { mode: 'typing', deck: baseQuestions, index: 0, score: 0 };
+        state = { mode: 'typing', deck: currentQuestions(), index: 0, score: 0 };
         setActiveMode('typing');
         renderTyping();
       }
@@ -817,7 +991,7 @@ const questions = [
       }
 
       function initMillionaire() {
-        state = { mode: 'millionaire', deck: shuffle(baseQuestions).slice(0, 10).map((item) => ({ ...item, choices: shuffle(item.choices) })), index: 0, locked: false };
+        state = { mode: 'millionaire', deck: shuffle(currentQuestions()).slice(0, Math.min(10, currentQuestions().length)).map((item) => ({ ...item, choices: shuffle(item.choices) })), index: 0, locked: false };
         setActiveMode('millionaire');
         renderMillionaire();
       }
@@ -909,7 +1083,9 @@ const questions = [
       }
 
       function renderJeopardyBoard() {
-        const remaining = 25 - Object.keys(state.answered).length;
+        const jeopardyCategories = currentJeopardyCategories();
+        const rowCount = Math.max(...jeopardyCategories.map((category) => category.indexes.length));
+        const remaining = currentQuestions().length - Object.keys(state.answered).length;
         root.innerHTML = `
           <div class="panel-top">
             <div>
@@ -920,8 +1096,9 @@ const questions = [
           </div>
           <div class="jeopardy-grid">
             ${jeopardyCategories.map((category) => `<div class="jeopardy-head">${category.name}</div>`).join('')}
-            ${[0,1,2,3,4].map((row) => jeopardyCategories.map((category) => {
+            ${Array.from({ length: rowCount }, (_, row) => jeopardyCategories.map((category) => {
               const questionIndex = category.indexes[row];
+              if (questionIndex === undefined) return '<div></div>';
               const key = String(questionIndex);
               const done = state.answered[key];
               return `<button class="jeopardy-cell ${done ? 'done' : ''}" data-j-index="${questionIndex}" ${done ? 'disabled' : ''}>$${(row + 1) * 100}</button>`;
@@ -936,7 +1113,7 @@ const questions = [
       }
 
       function openJeopardyQuestion(index) {
-        const item = { ...baseQuestions[index], choices: shuffle(baseQuestions[index].choices) };
+        const item = { ...currentQuestions()[index], choices: shuffle(currentQuestions()[index].choices) };
         state.activeCell = index;
         root.innerHTML = `
           <div class="panel-top">
@@ -988,10 +1165,12 @@ const questions = [
 
         const next = document.createElement('button');
         next.className = 'btn btn-primary';
-        next.textContent = Object.keys(state.answered).length === 25 ? 'See Score' : 'Back to Board';
+        next.textContent = Object.keys(state.answered).length === currentQuestions().length ? 'See Score' : 'Back to Board';
         next.addEventListener('click', () => {
-          if (Object.keys(state.answered).length === 25) {
-            renderResult('Jeopardy', state.score, 2500, initJeopardy, 'Nice. You cleared the whole board.');
+          if (Object.keys(state.answered).length === currentQuestions().length) {
+            const jeopardyCategories = currentJeopardyCategories();
+            const maxScore = jeopardyCategories.reduce((sum, category) => sum + category.indexes.reduce((inner, _, row) => inner + ((row + 1) * 100), 0), 0);
+            renderResult('Jeopardy', state.score, maxScore, initJeopardy, 'Nice. You cleared the whole board.');
             return;
           }
           renderJeopardyBoard();
@@ -1000,6 +1179,7 @@ const questions = [
       }
 
       function findJeopardyRow(index) {
+        const jeopardyCategories = currentJeopardyCategories();
         for (const category of jeopardyCategories) {
           const row = category.indexes.indexOf(index);
           if (row !== -1) return row;
@@ -1037,6 +1217,16 @@ const questions = [
         return value.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
       }
 
+      unitButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          setActiveUnit(button.dataset.unit);
+          if (state.mode === 'multiple') initMultiple();
+          if (state.mode === 'typing') initTyping();
+          if (state.mode === 'millionaire') initMillionaire();
+          if (state.mode === 'jeopardy') initJeopardy();
+        });
+      });
+
       modeButtons.forEach((button) => {
         button.addEventListener('click', () => {
           const mode = button.dataset.mode;
@@ -1047,6 +1237,7 @@ const questions = [
         });
       });
 
+      updateUnitDisplay();
     </script>
   </body>
 </html>
