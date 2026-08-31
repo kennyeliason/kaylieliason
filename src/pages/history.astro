@@ -360,24 +360,6 @@ const studyUnits = [
         background: radial-gradient(circle, rgba(186, 138, 75, 0.24), transparent 70%);
       }
 
-      .eyebrow-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-        align-items: center;
-      }
-
-      .eyebrow {
-        display: inline-flex;
-        padding: 0.55rem 0.95rem;
-        border-radius: 999px;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        background: rgba(255, 255, 255, 0.06);
-        letter-spacing: 0.1em;
-        font-size: 0.92rem;
-        text-transform: uppercase;
-      }
-
       h1, h2, h3 {
         margin: 0;
         font-family: 'Cinzel', 'Times New Roman', serif;
@@ -415,9 +397,9 @@ const studyUnits = [
         color: #fff8ec;
         cursor: pointer;
         transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        font-size: 0.85rem;
+        font-family: 'Cinzel', 'Times New Roman', serif;
+        letter-spacing: 0.04em;
+        font-size: 0.92rem;
         font-weight: 700;
       }
 
@@ -737,12 +719,9 @@ const studyUnits = [
   <body>
     <main>
       <section class="hero">
-        <div class="eyebrow-row">
-          <div class="eyebrow" id="unit-eyebrow">Unit One • First Peoples + Societies</div>
-          <div class="unit-switcher">
-            <button class="unit-chip active" data-unit="unit-1" type="button">Unit One • First Peoples + Societies</button>
-            <button class="unit-chip" data-unit="unit-2" type="button">Unit Two • 8 Features of Civilizations</button>
-          </div>
+        <div class="unit-switcher">
+          <button class="unit-chip active" data-unit="unit-1" type="button">Unit One • First Peoples + Societies</button>
+          <button class="unit-chip" data-unit="unit-2" type="button">Unit Two • 8 Features of Civilizations</button>
         </div>
         <h1>World History Study Guide</h1>
         <p class="hero-copy">Choose your unit and study style and start studying!</p>
@@ -781,7 +760,6 @@ const studyUnits = [
       const board = document.getElementById('game-board');
       const modeButtons = Array.from(document.querySelectorAll('[data-mode]'));
       const unitButtons = Array.from(document.querySelectorAll('[data-unit]'));
-      const unitEyebrow = document.getElementById('unit-eyebrow');
       const prizeLadder = ['$100', '$200', '$300', '$500', '$1,000', '$2,000', '$4,000', '$8,000', '$16,000', '$32,000'];
       let currentUnit = units[0];
 
@@ -812,16 +790,11 @@ const studyUnits = [
         return currentQuestions().map((item) => ({ ...item, choices: shuffle(item.choices) }));
       }
 
-      function updateUnitDisplay() {
-        unitEyebrow.textContent = `${currentUnit.shortLabel} • ${currentUnit.title}`;
-      }
-
       function setActiveUnit(unitId) {
         currentUnit = units.find((unit) => unit.id === unitId) || units[0];
         unitButtons.forEach((button) => {
           button.classList.toggle('active', button.dataset.unit === currentUnit.id);
         });
-        updateUnitDisplay();
       }
 
       function setActiveMode(mode) {
@@ -1224,7 +1197,6 @@ const studyUnits = [
         });
       });
 
-      updateUnitDisplay();
     </script>
   </body>
 </html>
