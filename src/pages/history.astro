@@ -357,6 +357,10 @@ const questions = [
         backdrop-filter: blur(10px);
       }
 
+      .board[hidden] {
+        display: none;
+      }
+
       .panel {
         padding: 1.4rem;
         border-radius: 24px;
@@ -575,19 +579,19 @@ const questions = [
         <div class="menu-wrap">
           <p class="menu-label">Choose a mode</p>
           <div class="mode-grid">
-            <button class="mode-card active" data-mode="multiple">
+            <button class="mode-card" data-mode="multiple" type="button">
               <strong>Multiple Choice</strong>
               <span>Classic one-question practice with instant feedback.</span>
             </button>
-            <button class="mode-card" data-mode="jeopardy">
+            <button class="mode-card" data-mode="jeopardy" type="button">
               <strong>Jeopardy</strong>
               <span>Pick dollar values from a board and clear the whole set.</span>
             </button>
-            <button class="mode-card" data-mode="millionaire">
+            <button class="mode-card" data-mode="millionaire" type="button">
               <strong>Millionaire</strong>
               <span>Climb the prize ladder one history question at a time.</span>
             </button>
-            <button class="mode-card" data-mode="typing">
+            <button class="mode-card" data-mode="typing" type="button">
               <strong>Typing Quiz</strong>
               <span>Type the answer yourself instead of picking from choices.</span>
             </button>
@@ -595,15 +599,16 @@ const questions = [
         </div>
       </section>
 
-      <section class="board">
+      <section class="board" id="game-board" hidden>
         <div id="game-root" class="panel"></div>
       </section>
     </main>
 
-    <script type="application/json" id="history-questions">{JSON.stringify(questions)}</script>
+    <script type="application/json" id="history-questions" set:html={JSON.stringify(questions)}></script>
     <script>
       const baseQuestions = JSON.parse(document.getElementById('history-questions').textContent || '[]');
       const root = document.getElementById('game-root');
+      const board = document.getElementById('game-board');
       const modeButtons = Array.from(document.querySelectorAll('[data-mode]'));
       const prizeLadder = ['$100', '$200', '$300', '$500', '$1,000', '$2,000', '$4,000', '$8,000', '$16,000', '$32,000'];
       const jeopardyCategories = [
@@ -634,6 +639,7 @@ const questions = [
       }
 
       function setActiveMode(mode) {
+        board.hidden = false;
         modeButtons.forEach((button) => {
           button.classList.toggle('active', button.dataset.mode === mode);
         });
@@ -1016,7 +1022,6 @@ const questions = [
         });
       });
 
-      initMultiple();
     </script>
   </body>
 </html>
