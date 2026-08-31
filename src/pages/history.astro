@@ -1,0 +1,491 @@
+---
+const questions = [
+  {
+    number: 1,
+    category: 'Vocabulary',
+    question: 'What is an artifact?',
+    answer: 'An object of historical value made by human beings.',
+  },
+  {
+    number: 2,
+    category: 'Vocabulary',
+    question: 'What does migrate mean?',
+    answer: 'To move from one region to another.',
+  },
+  {
+    number: 3,
+    category: 'Vocabulary',
+    question: 'What is a hunter-gatherer?',
+    answer: 'A person who survives by hunting game and gathering wild plants.',
+  },
+  {
+    number: 4,
+    category: 'Vocabulary',
+    question: 'What does it mean to adapt?',
+    answer: 'To develop characteristics that aid in survival.',
+  },
+  {
+    number: 5,
+    category: 'Vocabulary',
+    question: 'What is agriculture?',
+    answer: 'The cultivation of plant foods and the domestication of animals.',
+  },
+  {
+    number: 6,
+    category: 'Vocabulary',
+    question: 'What is domestication?',
+    answer: 'The taming of wild animals or the controlled cultivation of plants.',
+  },
+  {
+    number: 7,
+    category: 'Vocabulary',
+    question: 'What is an economy?',
+    answer: 'The system of producing and obtaining goods.',
+  },
+  {
+    number: 8,
+    category: 'Vocabulary',
+    question: 'What is a surplus?',
+    answer: 'A supply of goods or labor not needed for short-term survival.',
+  },
+  {
+    number: 9,
+    category: 'Neolithic Revolution',
+    question: 'What was the Neolithic Revolution also called?',
+    answer: 'The Agricultural Revolution.',
+  },
+  {
+    number: 10,
+    category: 'Neolithic Revolution',
+    question: 'What major change happened during the Neolithic Revolution?',
+    answer: 'Humans shifted from hunting and gathering to agriculture and more permanent settlements.',
+  },
+  {
+    number: 11,
+    category: 'Neolithic Revolution',
+    question: 'Why were societies able to support larger populations after this shift?',
+    answer: 'Agriculture produced a steadier food supply and helped communities settle permanently.',
+  },
+  {
+    number: 12,
+    category: 'Climate and Change',
+    question: 'Why were climate changes around 12,000 BC important?',
+    answer: 'The retreat of glaciers changed environments and helped push people toward agriculture.',
+  },
+  {
+    number: 13,
+    category: 'Climate and Change',
+    question: 'Why did agriculture become more important as game decreased?',
+    answer: 'With fewer animals to hunt, people needed a more reliable way to get food.',
+  },
+  {
+    number: 14,
+    category: 'Plants',
+    question: 'Which two early grains in the notes were growing wild before being domesticated?',
+    answer: 'Wild barley and wheat.',
+  },
+  {
+    number: 15,
+    category: 'Plants',
+    question: 'How did people improve crop yields and disease resistance over time?',
+    answer: 'They used the best grains and mixed different varieties.',
+  },
+  {
+    number: 16,
+    category: 'Settlements',
+    question: 'Why did some nomadic groups choose to settle down?',
+    answer: 'Agriculture caught on quickly and made permanent communities more practical.',
+  },
+  {
+    number: 17,
+    category: 'Animals',
+    question: 'How were animals domesticated according to the notes?',
+    answer: 'They were domesticated through the ways they interacted with humans.',
+  },
+  {
+    number: 18,
+    category: 'Animals',
+    question: 'Which animal was tamed as early as 12,000 BC?',
+    answer: 'Dogs.',
+  },
+  {
+    number: 19,
+    category: 'Animals',
+    question: 'Which animals were first domesticated between 8500 and 7000 BC?',
+    answer: 'Sheep, goats, and pigs.',
+  },
+  {
+    number: 20,
+    category: 'Animals',
+    question: 'When were horned cattle not tamed until?',
+    answer: 'About 6500 BC.',
+  },
+  {
+    number: 21,
+    category: 'Animal Uses',
+    question: 'What did animals provide besides meat?',
+    answer: 'Milk, hides, wool, and manure that enriched the soil.',
+  },
+  {
+    number: 22,
+    category: 'Animal Uses',
+    question: 'What were horns and bones used for?',
+    answer: 'They were carved to make tools.',
+  },
+  {
+    number: 23,
+    category: 'Pastoralism',
+    question: 'What is pastoralism?',
+    answer: 'A way of life based on herding and grazing animals.',
+  },
+  {
+    number: 24,
+    category: 'Regional Impact',
+    question: 'Which crops became important in Africa as agriculture spread?',
+    answer: 'Root crops like cassava, bananas, palm nuts, and millet-based agriculture.',
+  },
+  {
+    number: 25,
+    category: 'Regional Impact',
+    question: 'Which crops are listed in the notes for the Americas?',
+    answer: 'Maize, manioc, and sweet potatoes.',
+  },
+];
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Unit 1 history quiz for First Peoples and Societies."
+    />
+    <meta name="generator" content={Astro.generator} />
+    <title>History | First Peoples + Societies</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --sand: #eadfc8;
+        --sand-light: #f6efdf;
+        --clay: #c59a6c;
+        --ink: #342015;
+        --rust: #7a2f24;
+        --rust-deep: #541b16;
+        --gold: #b98a4a;
+        --card: rgba(248, 242, 230, 0.9);
+        --line: rgba(84, 27, 22, 0.18);
+        --shadow: 0 20px 50px rgba(52, 32, 21, 0.18);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        color: var(--ink);
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        background:
+          radial-gradient(circle at top, rgba(185, 138, 74, 0.22), transparent 28%),
+          linear-gradient(180deg, rgba(122, 47, 36, 0.1), transparent 18%),
+          linear-gradient(135deg, #f6efdf 0%, #e8d9bc 50%, #d9c3a1 100%);
+      }
+
+      body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0.22;
+        background-image:
+          linear-gradient(rgba(84, 27, 22, 0.06) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(84, 27, 22, 0.05) 1px, transparent 1px);
+        background-size: 28px 28px;
+        mask-image: linear-gradient(180deg, black, rgba(0, 0, 0, 0.35));
+      }
+
+      main {
+        width: min(1120px, calc(100% - 2rem));
+        margin: 0 auto;
+        padding: 3rem 0 4rem;
+      }
+
+      .hero {
+        position: relative;
+        overflow: hidden;
+        padding: 2.75rem;
+        border: 1px solid rgba(84, 27, 22, 0.2);
+        border-radius: 28px;
+        background:
+          linear-gradient(145deg, rgba(84, 27, 22, 0.96), rgba(122, 47, 36, 0.88)),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent);
+        color: var(--sand-light);
+        box-shadow: var(--shadow);
+      }
+
+      .hero::after {
+        content: '';
+        position: absolute;
+        inset: auto -4rem -5rem auto;
+        width: 15rem;
+        height: 15rem;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(185, 138, 74, 0.24), transparent 70%);
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.65rem;
+        padding: 0.5rem 0.9rem;
+        border-radius: 999px;
+        background: rgba(246, 239, 223, 0.08);
+        border: 1px solid rgba(246, 239, 223, 0.14);
+        font-size: 0.95rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      h1,
+      h2 {
+        font-family: 'Cinzel', 'Times New Roman', serif;
+        margin: 0;
+      }
+
+      h1 {
+        margin-top: 1rem;
+        font-size: clamp(2.5rem, 5vw, 4.8rem);
+        line-height: 0.95;
+      }
+
+      .hero p {
+        max-width: 42rem;
+        margin: 1rem 0 0;
+        font-size: clamp(1.25rem, 2vw, 1.5rem);
+        line-height: 1.5;
+        color: rgba(246, 239, 223, 0.9);
+      }
+
+      .summary {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+        margin-top: 1.75rem;
+      }
+
+      .summary-card {
+        padding: 1rem 1.1rem;
+        border-radius: 18px;
+        background: rgba(246, 239, 223, 0.1);
+        border: 1px solid rgba(246, 239, 223, 0.12);
+      }
+
+      .summary-card strong {
+        display: block;
+        font-size: 1.5rem;
+        color: var(--sand-light);
+      }
+
+      .summary-card span {
+        font-size: 0.98rem;
+        color: rgba(246, 239, 223, 0.8);
+      }
+
+      .section-heading {
+        margin: 2.25rem 0 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+      }
+
+      .section-heading::before,
+      .section-heading::after {
+        content: '';
+        height: 1px;
+        background: linear-gradient(90deg, transparent, var(--rust), transparent);
+        flex: 1;
+      }
+
+      h2 {
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        color: var(--rust-deep);
+        text-align: center;
+        letter-spacing: 0.04em;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      details {
+        background: var(--card);
+        border: 1px solid var(--line);
+        border-radius: 22px;
+        box-shadow: 0 14px 30px rgba(52, 32, 21, 0.08);
+        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      details:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 18px 36px rgba(52, 32, 21, 0.12);
+      }
+
+      details[open] {
+        border-color: rgba(122, 47, 36, 0.28);
+      }
+
+      summary {
+        list-style: none;
+        cursor: pointer;
+        padding: 1.2rem 1.25rem 1.15rem;
+      }
+
+      summary::-webkit-details-marker {
+        display: none;
+      }
+
+      .question-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+
+      .badge {
+        flex: none;
+        min-width: 3rem;
+        padding: 0.45rem 0.7rem;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--rust), var(--rust-deep));
+        color: var(--sand-light);
+        text-align: center;
+        font-weight: 700;
+        font-size: 0.95rem;
+        letter-spacing: 0.04em;
+      }
+
+      .category {
+        display: inline-block;
+        margin-bottom: 0.45rem;
+        color: var(--rust);
+        font-size: 0.95rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .question-text {
+        font-size: 1.45rem;
+        line-height: 1.2;
+      }
+
+      .answer {
+        padding: 0 1.25rem 1.25rem;
+      }
+
+      .answer-inner {
+        padding: 1rem 1.05rem;
+        border-left: 4px solid var(--gold);
+        border-radius: 14px;
+        background: rgba(185, 138, 74, 0.1);
+        font-size: 1.2rem;
+        line-height: 1.45;
+      }
+
+      .footer-note {
+        margin-top: 1.4rem;
+        text-align: center;
+        color: rgba(84, 27, 22, 0.8);
+        font-size: 1.1rem;
+      }
+
+      @media (max-width: 820px) {
+        main {
+          width: min(100% - 1rem, 42rem);
+          padding-top: 1rem;
+        }
+
+        .hero {
+          padding: 1.5rem;
+          border-radius: 22px;
+        }
+
+        .summary,
+        .grid {
+          grid-template-columns: 1fr;
+        }
+
+        .question-text {
+          font-size: 1.25rem;
+        }
+
+        .answer-inner {
+          font-size: 1.08rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="hero">
+        <div class="eyebrow">Unit One • First Peoples + Societies</div>
+        <h1>History Review</h1>
+        <p>
+          A quieter, older-world study page for early human societies, migration,
+          agriculture, and domestication. Tap each question to reveal the answer.
+        </p>
+
+        <div class="summary">
+          <div class="summary-card">
+            <strong>25</strong>
+            <span>quiz questions</span>
+          </div>
+          <div class="summary-card">
+            <strong>Unit 1</strong>
+            <span>first peoples + societies</span>
+          </div>
+          <div class="summary-card">
+            <strong>Muted</strong>
+            <span>browns, clay reds, and parchment tones</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-heading">
+        <h2>Question Bank</h2>
+      </div>
+
+      <section class="grid">
+        {questions.map((item) => (
+          <details>
+            <summary>
+              <div class="question-top">
+                <div>
+                  <span class="category">{item.category}</span>
+                  <div class="question-text">{item.question}</div>
+                </div>
+                <div class="badge">#{item.number}</div>
+              </div>
+            </summary>
+            <div class="answer">
+              <div class="answer-inner">{item.answer}</div>
+            </div>
+          </details>
+        ))}
+      </section>
+
+      <p class="footer-note">Built from Kayli&apos;s Unit 1 notes.</p>
+    </main>
+  </body>
+</html>

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 
-type PanelKey = 'learn' | 'practice' | 'vocab' | 'quiz';
+type PanelKey = 'learn' | 'practice' | 'vocab';
 
 type VocabularyCard = {
   term: string;
@@ -30,6 +30,7 @@ type PracticePrompt = {
   prompt: string;
   hint: string;
   answer: string;
+  answerExample: string;
   acceptedAnswers: string[];
   teaching: string;
 };
@@ -136,10 +137,12 @@ const TOPICS: MathTopic[] = [
         prompt: 'Find the domain and range of (0, 2), (1, 4), (2, 6).',
         hint: 'Take the x-values for the domain and the y-values for the range.',
         answer: 'Domain = {0, 1, 2}; Range = {2, 4, 6}',
+        answerExample: 'Example format: Domain = {0, 1, 2}; Range = {2, 4, 6}',
         acceptedAnswers: [
           'domain = {0, 1, 2}; range = {2, 4, 6}',
           'domain={0,1,2};range={2,4,6}',
           '{0,1,2} and {2,4,6}',
+          'domain {0, 1, 2} range {2, 4, 6}',
         ],
         teaching: 'Start by separating inputs from outputs. The x-values are the domain, and the y-values are the range.',
       },
@@ -147,10 +150,13 @@ const TOPICS: MathTopic[] = [
         prompt: 'Is (4, 1), (5, 2), (4, 3) a function?',
         hint: 'Check whether one x-value is paired with two different y-values.',
         answer: 'No. The input 4 has two outputs: 1 and 3.',
+        answerExample: 'Example format: Not a function',
         acceptedAnswers: [
           'no',
           'not a function',
           'no, it is not a function',
+          'no the input 4 has two outputs',
+          'input 4 has two outputs',
         ],
         teaching: 'Look only at the x-values first. Since 4 is matched with both 1 and 3, one input has two outputs, so it is not a function.',
       },
@@ -158,6 +164,7 @@ const TOPICS: MathTopic[] = [
         prompt: 'Use y = x - 2. What is y when x = 9?',
         hint: 'Substitute 9 for x and subtract 2.',
         answer: '7',
+        answerExample: 'Example format: 7',
         acceptedAnswers: ['7', 'y = 7'],
         teaching: 'Plug the x-value into the rule. Replace x with 9, then do 9 - 2 to get 7.',
       },
@@ -165,9 +172,12 @@ const TOPICS: MathTopic[] = [
         prompt: 'Use y = x - 2. What ordered pair do you get when x = -1?',
         hint: 'Start with -1, then subtract 2 more.',
         answer: '(-1, -3)',
+        answerExample: 'Example format: (-1, -3)',
         acceptedAnswers: [
           '(-1, -3)',
           '(-1,-3)',
+          '-1, -3',
+          '-1,-3',
         ],
         teaching: 'Use the rule first: y = -1 - 2, so y = -3. Then write the ordered pair as (x, y) = (-1, -3).',
       },
@@ -324,7 +334,23 @@ export default function MathPractice() {
   const practiceProgress = activeTopic.practicePrompts.length === 0 ? 0 : Math.round((practiceIndex / activeTopic.practicePrompts.length) * 100);
 
   function normalizeAnswer(value: string) {
-    return value.toLowerCase().replace(/\s+/g, ' ').trim();
+    return value
+      .toLowerCase()
+      .replace(/[(){}[\];:=]/g, ' ')
+      .replace(/,/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+  }
+
+  function matchesPracticeAnswer(guess: string, answer: string) {
+    const normalizedGuess = normalizeAnswer(guess);
+    const normalizedAnswer = normalizeAnswer(answer);
+
+    return (
+      normalizedGuess === normalizedAnswer ||
+      normalizedGuess.includes(normalizedAnswer) ||
+      normalizedAnswer.includes(normalizedGuess)
+    );
   }
 
   function switchTopic(topicKey: string) {
@@ -387,11 +413,11 @@ export default function MathPractice() {
 
   function submitPracticeAnswer() {
     if (practiceSubmitted) return;
-    const guess = normalizeAnswer(practiceInput);
+    const guess = practiceInput.trim();
     if (!guess) return;
 
     const isMatch = currentPractice.acceptedAnswers.some(
-      (answer) => normalizeAnswer(answer) === guess,
+      (answer) => matchesPracticeAnswer(guess, answer),
     );
 
     setPracticeCorrect(isMatch);
@@ -444,12 +470,6 @@ export default function MathPractice() {
               onClick={() => setActivePanel('vocab')}
             >
               Vocabulary
-            </button>
-            <button
-              className={activePanel === 'quiz' ? 'tab-bubble active' : 'tab-bubble'}
-              onClick={() => setActivePanel('quiz')}
-            >
-              Quick Check
             </button>
           </div>
 
@@ -635,7 +655,6 @@ export default function MathPractice() {
               <article className="practice-card practice-card-live">
                 <p className="practice-number">Your Turn</p>
                 <h3>{currentPractice.prompt}</h3>
-                <p className="practice-hint"><strong>Hint:</strong> {currentPractice.hint}</p>
 
                 <label className="answer-label" htmlFor="practice-answer">Type your answer</label>
                 <input
@@ -653,6 +672,7 @@ export default function MathPractice() {
                     }
                   }}
                 />
+                <p className="answer-example"><strong>Example:</strong> {currentPractice.answerExample.replace(/^Example format:\s*/i, '')}</p>
 
                 {!practiceSubmitted ? (
                   <button
@@ -709,11 +729,15 @@ export default function MathPractice() {
                 );
               })}
             </div>
-          </section>
-        )}
 
-        {activePanel === 'quiz' && (
-          <section className="board">
+            <div className="section-head quiz-section-head">
+              <div>
+                <p className="section-label">Quick Check</p>
+                <h2>Do a few questions after the vocab cards</h2>
+              </div>
+              <div className="rule-pill">Mini quiz</div>
+            </div>
+
             <div className="stats">
               <div className="stat-chip">Score: {correctCount}/{quizDeck.length}</div>
               <div className="stat-chip">Question: {Math.min(questionIndex + 1, quizDeck.length)}/{quizDeck.length}</div>
@@ -738,7 +762,7 @@ export default function MathPractice() {
                 <button className="primary-btn" onClick={() => restartQuiz()}>Try Again</button>
               </div>
             ) : (
-              <div className="question-card">
+              <div className="question-card question-card-embedded">
                 <div className="question-topline">Quick Check</div>
                 <p className="sentence">{currentQuestion.prompt}</p>
 
@@ -1085,11 +1109,28 @@ export default function MathPractice() {
           color: #1d4ed8;
         }
 
-        .practice-hint,
         .answer-line {
           margin: 0.8rem 0 0;
           line-height: 1.6;
           color: #456380;
+        }
+
+        .answer-example {
+          margin: 0.7rem 0 0;
+          padding: 0.8rem 0.95rem;
+          border-radius: 0.95rem;
+          background: rgba(219, 234, 254, 0.8);
+          border: 1px dashed rgba(37, 99, 235, 0.28);
+          color: #244667;
+          line-height: 1.5;
+        }
+
+        .quiz-section-head {
+          margin-top: 2rem;
+        }
+
+        .question-card-embedded {
+          margin-top: 1rem;
         }
 
         .answer-label {
