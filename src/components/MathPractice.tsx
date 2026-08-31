@@ -30,7 +30,7 @@ type PracticePrompt = {
   prompt: string;
   hint: string;
   answer: string;
-  answerExample: string;
+  answerFormat: string;
   acceptedAnswers: string[];
   teaching: string;
 };
@@ -137,7 +137,7 @@ const TOPICS: MathTopic[] = [
         prompt: 'Find the domain and range of (0, 2), (1, 4), (2, 6).',
         hint: 'Take the x-values for the domain and the y-values for the range.',
         answer: 'Domain = {0, 1, 2}; Range = {2, 4, 6}',
-        answerExample: 'Example format: Domain = {0, 1, 2}; Range = {2, 4, 6}',
+        answerFormat: 'Domain = {x-values}; Range = {y-values}',
         acceptedAnswers: [
           'domain = {0, 1, 2}; range = {2, 4, 6}',
           'domain={0,1,2};range={2,4,6}',
@@ -150,7 +150,7 @@ const TOPICS: MathTopic[] = [
         prompt: 'Is (4, 1), (5, 2), (4, 3) a function?',
         hint: 'Check whether one x-value is paired with two different y-values.',
         answer: 'No. The input 4 has two outputs: 1 and 3.',
-        answerExample: 'Example format: Not a function',
+        answerFormat: 'Not a function',
         acceptedAnswers: [
           'no',
           'not a function',
@@ -164,7 +164,7 @@ const TOPICS: MathTopic[] = [
         prompt: 'Use y = x - 2. What is y when x = 9?',
         hint: 'Substitute 9 for x and subtract 2.',
         answer: '7',
-        answerExample: 'Example format: 7',
+        answerFormat: 'number only',
         acceptedAnswers: ['7', 'y = 7'],
         teaching: 'Plug the x-value into the rule. Replace x with 9, then do 9 - 2 to get 7.',
       },
@@ -172,7 +172,7 @@ const TOPICS: MathTopic[] = [
         prompt: 'Use y = x - 2. What ordered pair do you get when x = -1?',
         hint: 'Start with -1, then subtract 2 more.',
         answer: '(-1, -3)',
-        answerExample: 'Example format: (-1, -3)',
+        answerFormat: '(x, y)',
         acceptedAnswers: [
           '(-1, -3)',
           '(-1,-3)',
@@ -672,7 +672,7 @@ export default function MathPractice() {
                     }
                   }}
                 />
-                <p className="answer-example"><strong>Example:</strong> {currentPractice.answerExample.replace(/^Example format:\s*/i, '')}</p>
+                <p className="answer-example"><strong>Format:</strong> {currentPractice.answerFormat}</p>
 
                 {!practiceSubmitted ? (
                   <button
