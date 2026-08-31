@@ -1,154 +1,279 @@
 ---
 const questions = [
   {
-    number: 1,
-    category: 'Vocabulary',
     question: 'What is an artifact?',
-    answer: 'An object of historical value made by human beings.',
+    choices: [
+      'An object of historical value made by human beings',
+      'A story told by early farmers',
+      'A wild plant used for food',
+      'A place where people migrated',
+    ],
+    answer: 'An object of historical value made by human beings',
+    explanation: 'Artifacts are human-made objects that help historians learn about the past.',
   },
   {
-    number: 2,
-    category: 'Vocabulary',
     question: 'What does migrate mean?',
-    answer: 'To move from one region to another.',
+    choices: [
+      'To move from one region to another',
+      'To grow crops in one place',
+      'To tame wild animals',
+      'To build a permanent village',
+    ],
+    answer: 'To move from one region to another',
+    explanation: 'Migration is the movement of people from one area to another.',
   },
   {
-    number: 3,
-    category: 'Vocabulary',
     question: 'What is a hunter-gatherer?',
-    answer: 'A person who survives by hunting game and gathering wild plants.',
+    choices: [
+      'A person who survives by hunting game and gathering wild plants',
+      'A person who only raises cattle',
+      'A leader of a farming village',
+      'A person who makes tools from bronze',
+    ],
+    answer: 'A person who survives by hunting game and gathering wild plants',
+    explanation: 'Hunter-gatherers lived by finding food in nature instead of farming it.',
   },
   {
-    number: 4,
-    category: 'Vocabulary',
     question: 'What does it mean to adapt?',
-    answer: 'To develop characteristics that aid in survival.',
+    choices: [
+      'To develop characteristics that aid in survival',
+      'To copy another group exactly',
+      'To leave a settlement quickly',
+      'To stop using tools',
+    ],
+    answer: 'To develop characteristics that aid in survival',
+    explanation: 'Adaptation helps people or living things survive in changing conditions.',
   },
   {
-    number: 5,
-    category: 'Vocabulary',
     question: 'What is agriculture?',
-    answer: 'The cultivation of plant foods and the domestication of animals.',
+    choices: [
+      'The cultivation of plant foods and the domestication of animals',
+      'The study of ancient artifacts',
+      'The movement of glaciers',
+      'The exchange of only tools',
+    ],
+    answer: 'The cultivation of plant foods and the domestication of animals',
+    explanation: 'Agriculture is farming plants and raising animals for food and other uses.',
   },
   {
-    number: 6,
-    category: 'Vocabulary',
     question: 'What is domestication?',
-    answer: 'The taming of wild animals or the controlled cultivation of plants.',
+    choices: [
+      'The taming of wild animals or controlled cultivation of plants',
+      'The building of stone cities',
+      'The trading of surplus goods',
+      'The melting of glaciers',
+    ],
+    answer: 'The taming of wild animals or controlled cultivation of plants',
+    explanation: 'Domestication means humans gradually control plants or animals for their needs.',
   },
   {
-    number: 7,
-    category: 'Vocabulary',
     question: 'What is an economy?',
-    answer: 'The system of producing and obtaining goods.',
+    choices: [
+      'The system of producing and obtaining goods',
+      'A law for permanent settlements',
+      'A list of domesticated animals',
+      'A type of root crop',
+    ],
+    answer: 'The system of producing and obtaining goods',
+    explanation: 'An economy is how people make, use, and exchange goods.',
   },
   {
-    number: 8,
-    category: 'Vocabulary',
     question: 'What is a surplus?',
-    answer: 'A supply of goods or labor not needed for short-term survival.',
+    choices: [
+      'A supply of goods or labor not needed for short-term survival',
+      'A shortage of food in winter',
+      'A migration route between regions',
+      'A tool made from bone',
+    ],
+    answer: 'A supply of goods or labor not needed for short-term survival',
+    explanation: 'A surplus means there is extra beyond what is immediately needed.',
   },
   {
-    number: 9,
-    category: 'Neolithic Revolution',
     question: 'What was the Neolithic Revolution also called?',
-    answer: 'The Agricultural Revolution.',
+    choices: [
+      'The Agricultural Revolution',
+      'The Bronze Revolution',
+      'The Ice Age',
+      'The Migration Era',
+    ],
+    answer: 'The Agricultural Revolution',
+    explanation: 'The Neolithic Revolution is another name for the Agricultural Revolution.',
   },
   {
-    number: 10,
-    category: 'Neolithic Revolution',
     question: 'What major change happened during the Neolithic Revolution?',
-    answer: 'Humans shifted from hunting and gathering to agriculture and more permanent settlements.',
+    choices: [
+      'Humans shifted from hunting and gathering to agriculture and permanent settlements',
+      'Humans stopped using animals completely',
+      'People moved away from rivers',
+      'All societies became nomadic',
+    ],
+    answer: 'Humans shifted from hunting and gathering to agriculture and permanent settlements',
+    explanation: 'This revolution changed daily life by making farming and settled living more common.',
   },
   {
-    number: 11,
-    category: 'Neolithic Revolution',
     question: 'Why were societies able to support larger populations after this shift?',
-    answer: 'Agriculture produced a steadier food supply and helped communities settle permanently.',
+    choices: [
+      'Agriculture produced a steadier food supply',
+      'People hunted more wild game than ever',
+      'Glaciers returned and cooled the land',
+      'Everyone migrated less often',
+    ],
+    answer: 'Agriculture produced a steadier food supply',
+    explanation: 'Reliable farming helped feed more people than hunting and gathering alone.',
   },
   {
-    number: 12,
-    category: 'Climate and Change',
     question: 'Why were climate changes around 12,000 BC important?',
-    answer: 'The retreat of glaciers changed environments and helped push people toward agriculture.',
+    choices: [
+      'The retreat of glaciers changed environments and encouraged agriculture',
+      'They ended all human migration',
+      'They caused bronze tools to spread',
+      'They made all animals easier to tame',
+    ],
+    answer: 'The retreat of glaciers changed environments and encouraged agriculture',
+    explanation: 'As climates changed, people had to adjust how they found food.',
   },
   {
-    number: 13,
-    category: 'Climate and Change',
     question: 'Why did agriculture become more important as game decreased?',
-    answer: 'With fewer animals to hunt, people needed a more reliable way to get food.',
+    choices: [
+      'People needed a more reliable way to get food',
+      'Animals disappeared from every region',
+      'Farming required no work',
+      'Permanent settlements were banned',
+    ],
+    answer: 'People needed a more reliable way to get food',
+    explanation: 'When hunting became less dependable, farming became more valuable.',
   },
   {
-    number: 14,
-    category: 'Plants',
     question: 'Which two early grains in the notes were growing wild before being domesticated?',
-    answer: 'Wild barley and wheat.',
+    choices: [
+      'Wild barley and wheat',
+      'Rice and corn',
+      'Cotton and flax',
+      'Cassava and millet',
+    ],
+    answer: 'Wild barley and wheat',
+    explanation: 'The notes mention wild barley and wheat as early plants linked to domestication.',
   },
   {
-    number: 15,
-    category: 'Plants',
     question: 'How did people improve crop yields and disease resistance over time?',
-    answer: 'They used the best grains and mixed different varieties.',
+    choices: [
+      'They used the best grains and mixed different varieties',
+      'They stopped planting near rivers',
+      'They only used wild seeds forever',
+      'They avoided permanent settlements',
+    ],
+    answer: 'They used the best grains and mixed different varieties',
+    explanation: 'Choosing strong plants and combining varieties helped crops improve.',
   },
   {
-    number: 16,
-    category: 'Settlements',
     question: 'Why did some nomadic groups choose to settle down?',
-    answer: 'Agriculture caught on quickly and made permanent communities more practical.',
+    choices: [
+      'Agriculture made permanent communities more practical',
+      'They were forced to stop using animals',
+      'Surplus goods made migration impossible',
+      'They lost the ability to hunt',
+    ],
+    answer: 'Agriculture made permanent communities more practical',
+    explanation: 'Farming encouraged people to stay in one place and build lasting communities.',
   },
   {
-    number: 17,
-    category: 'Animals',
     question: 'How were animals domesticated according to the notes?',
-    answer: 'They were domesticated through the ways they interacted with humans.',
+    choices: [
+      'Through the ways they interacted with humans',
+      'By being released into the wild',
+      'By growing near rivers only',
+      'Through bronze tools',
+    ],
+    answer: 'Through the ways they interacted with humans',
+    explanation: 'Animals that worked well with humans were more likely to be domesticated.',
   },
   {
-    number: 18,
-    category: 'Animals',
     question: 'Which animal was tamed as early as 12,000 BC?',
-    answer: 'Dogs.',
+    choices: [
+      'Dogs',
+      'Cattle',
+      'Goats',
+      'Pigs',
+    ],
+    answer: 'Dogs',
+    explanation: 'The notes say dogs were tamed very early, around 12,000 BC.',
   },
   {
-    number: 19,
-    category: 'Animals',
     question: 'Which animals were first domesticated between 8500 and 7000 BC?',
-    answer: 'Sheep, goats, and pigs.',
+    choices: [
+      'Sheep, goats, and pigs',
+      'Dogs, horses, and chickens',
+      'Cattle, camels, and llamas',
+      'Wolves, deer, and foxes',
+    ],
+    answer: 'Sheep, goats, and pigs',
+    explanation: 'Those three animals are specifically listed in the notes for that period.',
   },
   {
-    number: 20,
-    category: 'Animals',
     question: 'When were horned cattle not tamed until?',
-    answer: 'About 6500 BC.',
+    choices: [
+      'About 6500 BC',
+      'About 12,000 BC',
+      'About 8500 BC',
+      'About 3000 BC',
+    ],
+    answer: 'About 6500 BC',
+    explanation: 'The notes place the domestication of horned cattle later than dogs, sheep, goats, and pigs.',
   },
   {
-    number: 21,
-    category: 'Animal Uses',
     question: 'What did animals provide besides meat?',
-    answer: 'Milk, hides, wool, and manure that enriched the soil.',
+    choices: [
+      'Milk, hides, wool, and manure that enriched the soil',
+      'Only bones for decoration',
+      'Only transportation across oceans',
+      'Silver and stone tools',
+    ],
+    answer: 'Milk, hides, wool, and manure that enriched the soil',
+    explanation: 'Animals were valuable for many products beyond meat.',
   },
   {
-    number: 22,
-    category: 'Animal Uses',
     question: 'What were horns and bones used for?',
-    answer: 'They were carved to make tools.',
+    choices: [
+      'They were carved to make tools',
+      'They were planted as crops',
+      'They were used to measure glaciers',
+      'They were traded for wheat only',
+    ],
+    answer: 'They were carved to make tools',
+    explanation: 'Animal parts could be shaped into useful tools.',
   },
   {
-    number: 23,
-    category: 'Pastoralism',
     question: 'What is pastoralism?',
-    answer: 'A way of life based on herding and grazing animals.',
+    choices: [
+      'A way of life based on herding and grazing animals',
+      'A way of life based only on fishing',
+      'A farming system based on wheat alone',
+      'A method of making pottery',
+    ],
+    answer: 'A way of life based on herding and grazing animals',
+    explanation: 'Pastoralism centers on raising and moving with herds.',
   },
   {
-    number: 24,
-    category: 'Regional Impact',
     question: 'Which crops became important in Africa as agriculture spread?',
-    answer: 'Root crops like cassava, bananas, palm nuts, and millet-based agriculture.',
+    choices: [
+      'Cassava, bananas, palm nuts, and millet',
+      'Wheat, rye, and oats',
+      'Corn, beans, and squash',
+      'Olives, grapes, and figs',
+    ],
+    answer: 'Cassava, bananas, palm nuts, and millet',
+    explanation: 'Those are the crops listed in the notes for Africa.',
   },
   {
-    number: 25,
-    category: 'Regional Impact',
     question: 'Which crops are listed in the notes for the Americas?',
-    answer: 'Maize, manioc, and sweet potatoes.',
+    choices: [
+      'Maize, manioc, and sweet potatoes',
+      'Barley, wheat, and rice',
+      'Cotton, flax, and millet',
+      'Goats, pigs, and sheep',
+    ],
+    answer: 'Maize, manioc, and sweet potatoes',
+    explanation: 'The notes identify those three crops as important in the Americas.',
   },
 ];
 ---
@@ -161,10 +286,10 @@ const questions = [
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="Unit 1 history quiz for First Peoples and Societies."
+      content="World history study guide for First Peoples and Societies."
     />
     <meta name="generator" content={Astro.generator} />
-    <title>History | First Peoples + Societies</title>
+    <title>World History Study Guide</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -175,14 +300,16 @@ const questions = [
       :root {
         --sand: #eadfc8;
         --sand-light: #f6efdf;
-        --clay: #c59a6c;
+        --sand-deep: #d6c1a0;
         --ink: #342015;
         --rust: #7a2f24;
         --rust-deep: #541b16;
         --gold: #b98a4a;
-        --card: rgba(248, 242, 230, 0.9);
-        --line: rgba(84, 27, 22, 0.18);
-        --shadow: 0 20px 50px rgba(52, 32, 21, 0.18);
+        --card: rgba(248, 242, 230, 0.96);
+        --line: rgba(84, 27, 22, 0.16);
+        --shadow: 0 24px 60px rgba(52, 32, 21, 0.16);
+        --success: #1f6b47;
+        --error: #8b2d25;
       }
 
       * {
@@ -195,9 +322,9 @@ const questions = [
         color: var(--ink);
         font-family: 'Cormorant Garamond', Georgia, serif;
         background:
-          radial-gradient(circle at top, rgba(185, 138, 74, 0.22), transparent 28%),
-          linear-gradient(180deg, rgba(122, 47, 36, 0.1), transparent 18%),
-          linear-gradient(135deg, #f6efdf 0%, #e8d9bc 50%, #d9c3a1 100%);
+          radial-gradient(circle at top, rgba(185, 138, 74, 0.2), transparent 28%),
+          linear-gradient(180deg, rgba(122, 47, 36, 0.08), transparent 18%),
+          linear-gradient(135deg, #f6efdf 0%, #eadcc2 50%, #ddc7a5 100%);
       }
 
       body::before {
@@ -205,7 +332,7 @@ const questions = [
         position: fixed;
         inset: 0;
         pointer-events: none;
-        opacity: 0.22;
+        opacity: 0.18;
         background-image:
           linear-gradient(rgba(84, 27, 22, 0.06) 1px, transparent 1px),
           linear-gradient(90deg, rgba(84, 27, 22, 0.05) 1px, transparent 1px);
@@ -214,19 +341,19 @@ const questions = [
       }
 
       main {
-        width: min(1120px, calc(100% - 2rem));
+        width: min(980px, calc(100% - 1.25rem));
         margin: 0 auto;
-        padding: 3rem 0 4rem;
+        padding: 1.25rem 0 3rem;
       }
 
       .hero {
         position: relative;
         overflow: hidden;
-        padding: 2.75rem;
+        padding: 2.25rem;
         border: 1px solid rgba(84, 27, 22, 0.2);
         border-radius: 28px;
         background:
-          linear-gradient(145deg, rgba(84, 27, 22, 0.96), rgba(122, 47, 36, 0.88)),
+          linear-gradient(145deg, rgba(84, 27, 22, 0.96), rgba(122, 47, 36, 0.9)),
           linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent);
         color: var(--sand-light);
         box-shadow: var(--shadow);
@@ -235,9 +362,9 @@ const questions = [
       .hero::after {
         content: '';
         position: absolute;
-        inset: auto -4rem -5rem auto;
-        width: 15rem;
-        height: 15rem;
+        inset: auto -3rem -5rem auto;
+        width: 14rem;
+        height: 14rem;
         border-radius: 50%;
         background: radial-gradient(circle, rgba(185, 138, 74, 0.24), transparent 70%);
       }
@@ -245,8 +372,7 @@ const questions = [
       .eyebrow {
         display: inline-flex;
         align-items: center;
-        gap: 0.65rem;
-        padding: 0.5rem 0.9rem;
+        padding: 0.55rem 0.95rem;
         border-radius: 999px;
         background: rgba(246, 239, 223, 0.08);
         border: 1px solid rgba(246, 239, 223, 0.14);
@@ -256,164 +382,219 @@ const questions = [
       }
 
       h1,
-      h2 {
-        font-family: 'Cinzel', 'Times New Roman', serif;
+      h2,
+      h3 {
         margin: 0;
+        font-family: 'Cinzel', 'Times New Roman', serif;
       }
 
       h1 {
         margin-top: 1rem;
-        font-size: clamp(2.5rem, 5vw, 4.8rem);
+        font-size: clamp(2.4rem, 5vw, 4.5rem);
         line-height: 0.95;
       }
 
       .hero p {
-        max-width: 42rem;
+        max-width: 38rem;
         margin: 1rem 0 0;
-        font-size: clamp(1.25rem, 2vw, 1.5rem);
+        font-size: clamp(1.18rem, 2vw, 1.45rem);
         line-height: 1.5;
-        color: rgba(246, 239, 223, 0.9);
+        color: rgba(246, 239, 223, 0.92);
       }
 
-      .summary {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 1rem;
-        margin-top: 1.75rem;
+      .quiz-shell {
+        margin-top: 1.4rem;
+        padding: 1.2rem;
+        border-radius: 28px;
+        background: rgba(255, 252, 246, 0.56);
+        border: 1px solid rgba(84, 27, 22, 0.12);
+        box-shadow: 0 18px 45px rgba(52, 32, 21, 0.1);
+        backdrop-filter: blur(10px);
       }
 
-      .summary-card {
-        padding: 1rem 1.1rem;
-        border-radius: 18px;
-        background: rgba(246, 239, 223, 0.1);
-        border: 1px solid rgba(246, 239, 223, 0.12);
-      }
-
-      .summary-card strong {
-        display: block;
-        font-size: 1.5rem;
-        color: var(--sand-light);
-      }
-
-      .summary-card span {
-        font-size: 0.98rem;
-        color: rgba(246, 239, 223, 0.8);
-      }
-
-      .section-heading {
-        margin: 2.25rem 0 1rem;
+      .topline {
         display: flex;
+        justify-content: space-between;
         align-items: center;
-        gap: 0.8rem;
-      }
-
-      .section-heading::before,
-      .section-heading::after {
-        content: '';
-        height: 1px;
-        background: linear-gradient(90deg, transparent, var(--rust), transparent);
-        flex: 1;
-      }
-
-      h2 {
-        font-size: clamp(1.5rem, 3vw, 2rem);
-        color: var(--rust-deep);
-        text-align: center;
-        letter-spacing: 0.04em;
-      }
-
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 1rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
       }
 
-      details {
+      .topline h2 {
+        color: var(--rust-deep);
+        font-size: clamp(1.45rem, 3vw, 1.9rem);
+      }
+
+      .progress-text {
+        color: var(--rust);
+        font-size: 1.05rem;
+        font-weight: 700;
+      }
+
+      .progress-track {
+        width: 100%;
+        height: 12px;
+        border-radius: 999px;
+        background: rgba(122, 47, 36, 0.12);
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        width: 4%;
+        border-radius: 999px;
+        background: linear-gradient(90deg, var(--gold), #d6a45f);
+        transition: width 0.25s ease;
+      }
+
+      .question-card {
+        margin-top: 1rem;
+        padding: 1.55rem;
+        border-radius: 24px;
         background: var(--card);
         border: 1px solid var(--line);
-        border-radius: 22px;
-        box-shadow: 0 14px 30px rgba(52, 32, 21, 0.08);
-        overflow: hidden;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
       }
 
-      details:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 18px 36px rgba(52, 32, 21, 0.12);
-      }
-
-      details[open] {
-        border-color: rgba(122, 47, 36, 0.28);
-      }
-
-      summary {
-        list-style: none;
-        cursor: pointer;
-        padding: 1.2rem 1.25rem 1.15rem;
-      }
-
-      summary::-webkit-details-marker {
-        display: none;
-      }
-
-      .question-top {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 1rem;
-      }
-
-      .badge {
-        flex: none;
-        min-width: 3rem;
-        padding: 0.45rem 0.7rem;
+      .question-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 4.4rem;
+        padding: 0.45rem 0.8rem;
         border-radius: 999px;
         background: linear-gradient(135deg, var(--rust), var(--rust-deep));
         color: var(--sand-light);
-        text-align: center;
+        font-size: 0.96rem;
         font-weight: 700;
-        font-size: 0.95rem;
-        letter-spacing: 0.04em;
-      }
-
-      .category {
-        display: inline-block;
-        margin-bottom: 0.45rem;
-        color: var(--rust);
-        font-size: 0.95rem;
-        letter-spacing: 0.08em;
+        letter-spacing: 0.06em;
         text-transform: uppercase;
       }
 
-      .question-text {
-        font-size: 1.45rem;
-        line-height: 1.2;
+      .question-title {
+        margin-top: 1rem;
+        font-size: clamp(1.55rem, 3vw, 2.2rem);
+        line-height: 1.15;
+        color: var(--ink);
       }
 
-      .answer {
-        padding: 0 1.25rem 1.25rem;
+      .choices {
+        display: grid;
+        gap: 0.85rem;
+        margin-top: 1.35rem;
       }
 
-      .answer-inner {
+      .choice {
+        width: 100%;
         padding: 1rem 1.05rem;
+        border-radius: 18px;
+        border: 1px solid rgba(84, 27, 22, 0.14);
+        background: rgba(255, 255, 255, 0.76);
+        color: var(--ink);
+        font: inherit;
+        font-size: 1.18rem;
+        text-align: left;
+        cursor: pointer;
+        transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      }
+
+      .choice:hover:enabled {
+        transform: translateY(-1px);
+        border-color: rgba(122, 47, 36, 0.28);
+        box-shadow: 0 12px 22px rgba(52, 32, 21, 0.08);
+      }
+
+      .choice.correct {
+        background: rgba(31, 107, 71, 0.12);
+        border-color: rgba(31, 107, 71, 0.45);
+        color: var(--success);
+      }
+
+      .choice.wrong {
+        background: rgba(139, 45, 37, 0.12);
+        border-color: rgba(139, 45, 37, 0.35);
+        color: var(--error);
+      }
+
+      .choice:disabled {
+        cursor: default;
+      }
+
+      .feedback {
+        margin-top: 1.2rem;
+        padding: 1rem 1.05rem;
+        border-radius: 18px;
         border-left: 4px solid var(--gold);
-        border-radius: 14px;
-        background: rgba(185, 138, 74, 0.1);
-        font-size: 1.2rem;
+        background: rgba(185, 138, 74, 0.12);
+      }
+
+      .feedback strong {
+        display: block;
+        margin-bottom: 0.35rem;
+        font-size: 1.05rem;
+      }
+
+      .feedback p {
+        margin: 0;
+        font-size: 1.12rem;
         line-height: 1.45;
       }
 
-      .footer-note {
-        margin-top: 1.4rem;
-        text-align: center;
-        color: rgba(84, 27, 22, 0.8);
-        font-size: 1.1rem;
+      .actions {
+        display: flex;
+        gap: 0.85rem;
+        margin-top: 1.25rem;
+        flex-wrap: wrap;
       }
 
-      @media (max-width: 820px) {
+      .btn {
+        border: none;
+        border-radius: 999px;
+        padding: 0.9rem 1.4rem;
+        font: inherit;
+        font-size: 1.02rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--rust), var(--rust-deep));
+        color: var(--sand-light);
+      }
+
+      .btn-secondary {
+        background: rgba(84, 27, 22, 0.08);
+        color: var(--rust-deep);
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+      }
+
+      .result {
+        margin-top: 1rem;
+        padding: 1.7rem;
+        border-radius: 24px;
+        background: var(--card);
+        border: 1px solid var(--line);
+        text-align: center;
+      }
+
+      .result h2 {
+        color: var(--rust-deep);
+        font-size: clamp(1.5rem, 3vw, 2rem);
+      }
+
+      .result p {
+        margin: 0.9rem 0 0;
+        font-size: 1.18rem;
+        line-height: 1.5;
+      }
+
+      @media (max-width: 720px) {
         main {
-          width: min(100% - 1rem, 42rem);
-          padding-top: 1rem;
+          width: min(100% - 0.75rem, 42rem);
+          padding-top: 0.75rem;
         }
 
         .hero {
@@ -421,16 +602,22 @@ const questions = [
           border-radius: 22px;
         }
 
-        .summary,
-        .grid {
-          grid-template-columns: 1fr;
+        .quiz-shell {
+          padding: 0.9rem;
+          border-radius: 22px;
         }
 
-        .question-text {
-          font-size: 1.25rem;
+        .question-card,
+        .result {
+          padding: 1.15rem;
+          border-radius: 20px;
         }
 
-        .answer-inner {
+        .question-title {
+          font-size: 1.55rem;
+        }
+
+        .choice {
           font-size: 1.08rem;
         }
       }
@@ -440,52 +627,180 @@ const questions = [
     <main>
       <section class="hero">
         <div class="eyebrow">Unit One • First Peoples + Societies</div>
-        <h1>History Review</h1>
+        <h1>World History Study Guide</h1>
         <p>
           A quieter, older-world study page for early human societies, migration,
-          agriculture, and domestication. Tap each question to reveal the answer.
+          agriculture, and domestication. Answer one multiple-choice question at a time.
         </p>
+      </section>
 
-        <div class="summary">
-          <div class="summary-card">
-            <strong>25</strong>
-            <span>quiz questions</span>
-          </div>
-          <div class="summary-card">
-            <strong>Unit 1</strong>
-            <span>first peoples + societies</span>
-          </div>
-          <div class="summary-card">
-            <strong>Muted</strong>
-            <span>browns, clay reds, and parchment tones</span>
-          </div>
+      <section class="quiz-shell">
+        <div class="topline">
+          <h2>Question Bank</h2>
+          <div class="progress-text" id="progress-text">Question 1 of 25</div>
         </div>
+        <div class="progress-track" aria-hidden="true">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+
+        <article class="question-card" id="question-card">
+          <div class="question-number" id="question-number">#1</div>
+          <h3 class="question-title" id="question-title"></h3>
+          <div class="choices" id="choices"></div>
+          <div class="feedback" id="feedback" hidden>
+            <strong id="feedback-title"></strong>
+            <p id="feedback-copy"></p>
+          </div>
+          <div class="actions">
+            <button class="btn btn-primary" id="next-btn" hidden>Next Question</button>
+            <button class="btn btn-secondary" id="restart-btn" hidden>Start Over</button>
+          </div>
+        </article>
+
+        <article class="result" id="result-card" hidden>
+          <h2 id="result-title"></h2>
+          <p id="result-copy"></p>
+          <div class="actions" style="justify-content:center;">
+            <button class="btn btn-primary" id="restart-final-btn">Try Again</button>
+          </div>
+        </article>
       </section>
-
-      <div class="section-heading">
-        <h2>Question Bank</h2>
-      </div>
-
-      <section class="grid">
-        {questions.map((item) => (
-          <details>
-            <summary>
-              <div class="question-top">
-                <div>
-                  <span class="category">{item.category}</span>
-                  <div class="question-text">{item.question}</div>
-                </div>
-                <div class="badge">#{item.number}</div>
-              </div>
-            </summary>
-            <div class="answer">
-              <div class="answer-inner">{item.answer}</div>
-            </div>
-          </details>
-        ))}
-      </section>
-
-      <p class="footer-note">Built from Kayli&apos;s Unit 1 notes.</p>
     </main>
+
+    <script type="application/json" id="history-questions">{JSON.stringify(questions)}</script>
+    <script>
+      const questions = JSON.parse(document.getElementById('history-questions').textContent || '[]');
+      let questionIndex = 0;
+      let score = 0;
+      let locked = false;
+
+      const progressText = document.getElementById('progress-text');
+      const progressFill = document.getElementById('progress-fill');
+      const questionCard = document.getElementById('question-card');
+      const resultCard = document.getElementById('result-card');
+      const questionNumber = document.getElementById('question-number');
+      const questionTitle = document.getElementById('question-title');
+      const choices = document.getElementById('choices');
+      const feedback = document.getElementById('feedback');
+      const feedbackTitle = document.getElementById('feedback-title');
+      const feedbackCopy = document.getElementById('feedback-copy');
+      const nextBtn = document.getElementById('next-btn');
+      const restartBtn = document.getElementById('restart-btn');
+      const restartFinalBtn = document.getElementById('restart-final-btn');
+      const resultTitle = document.getElementById('result-title');
+      const resultCopy = document.getElementById('result-copy');
+
+      function shuffle(items) {
+        const copy = [...items];
+        for (let i = copy.length - 1; i > 0; i -= 1) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
+      }
+
+      function setProgress() {
+        const current = Math.min(questionIndex + 1, questions.length);
+        progressText.textContent = `Question ${current} of ${questions.length}`;
+        progressFill.style.width = `${(current / questions.length) * 100}%`;
+      }
+
+      function renderQuestion() {
+        const item = questions[questionIndex];
+        locked = false;
+        questionCard.hidden = false;
+        resultCard.hidden = true;
+        feedback.hidden = true;
+        nextBtn.hidden = true;
+        restartBtn.hidden = true;
+
+        setProgress();
+        questionNumber.textContent = `#${questionIndex + 1}`;
+        questionTitle.textContent = item.question;
+        choices.innerHTML = '';
+
+        shuffle(item.choices).forEach((choiceText) => {
+          const button = document.createElement('button');
+          button.className = 'choice';
+          button.type = 'button';
+          button.textContent = choiceText;
+          button.addEventListener('click', () => handleChoice(button, choiceText, item));
+          choices.appendChild(button);
+        });
+      }
+
+      function handleChoice(button, choiceText, item) {
+        if (locked) return;
+        locked = true;
+
+        const buttons = Array.from(choices.querySelectorAll('.choice'));
+        buttons.forEach((entry) => {
+          entry.disabled = true;
+          if (entry.textContent === item.answer) {
+            entry.classList.add('correct');
+          }
+        });
+
+        if (choiceText === item.answer) {
+          score += 1;
+          feedbackTitle.textContent = 'Correct';
+          feedbackCopy.textContent = item.explanation;
+          button.classList.add('correct');
+        } else {
+          feedbackTitle.textContent = `Not quite. The answer is ${item.answer}.`;
+          feedbackCopy.textContent = item.explanation;
+          button.classList.add('wrong');
+        }
+
+        feedback.hidden = false;
+
+        if (questionIndex === questions.length - 1) {
+          nextBtn.textContent = 'See Score';
+        } else {
+          nextBtn.textContent = 'Next Question';
+        }
+
+        nextBtn.hidden = false;
+        restartBtn.hidden = false;
+      }
+
+      function showResults() {
+        questionCard.hidden = true;
+        resultCard.hidden = false;
+        progressText.textContent = `Final Score: ${score} / ${questions.length}`;
+        progressFill.style.width = '100%';
+        resultTitle.textContent = `You got ${score} out of ${questions.length}`;
+
+        if (score === questions.length) {
+          resultCopy.textContent = 'Perfect score. You definitely know this unit.';
+        } else if (score >= Math.ceil(questions.length * 0.8)) {
+          resultCopy.textContent = 'Nice job. You are really close, just review the few you missed.';
+        } else {
+          resultCopy.textContent = 'You have the base down. Run through it again and the hard ones will stick.';
+        }
+      }
+
+      function nextQuestion() {
+        if (questionIndex === questions.length - 1) {
+          showResults();
+          return;
+        }
+
+        questionIndex += 1;
+        renderQuestion();
+      }
+
+      function restartQuiz() {
+        questionIndex = 0;
+        score = 0;
+        renderQuestion();
+      }
+
+      nextBtn.addEventListener('click', nextQuestion);
+      restartBtn.addEventListener('click', restartQuiz);
+      restartFinalBtn.addEventListener('click', restartQuiz);
+
+      renderQuestion();
+    </script>
   </body>
 </html>
