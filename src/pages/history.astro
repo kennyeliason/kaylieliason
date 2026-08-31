@@ -1,279 +1,179 @@
 ---
 const questions = [
   {
+    category: 'Vocabulary',
     question: 'What is an artifact?',
-    choices: [
-      'An object of historical value made by human beings',
-      'A story told by early farmers',
-      'A wild plant used for food',
-      'A place where people migrated',
-    ],
+    choices: ['An object of historical value made by human beings', 'A wild plant used for food', 'A permanent settlement', 'A migration path'],
     answer: 'An object of historical value made by human beings',
-    explanation: 'Artifacts are human-made objects that help historians learn about the past.',
+    explanation: 'Artifacts are human-made objects that help historians understand the past.',
   },
   {
+    category: 'Vocabulary',
     question: 'What does migrate mean?',
-    choices: [
-      'To move from one region to another',
-      'To grow crops in one place',
-      'To tame wild animals',
-      'To build a permanent village',
-    ],
+    choices: ['To move from one region to another', 'To tame wild animals', 'To build a village', 'To store extra goods'],
     answer: 'To move from one region to another',
-    explanation: 'Migration is the movement of people from one area to another.',
+    explanation: 'Migration means people move from one place to another.',
   },
   {
+    category: 'Vocabulary',
     question: 'What is a hunter-gatherer?',
-    choices: [
-      'A person who survives by hunting game and gathering wild plants',
-      'A person who only raises cattle',
-      'A leader of a farming village',
-      'A person who makes tools from bronze',
-    ],
+    choices: ['A person who survives by hunting game and gathering wild plants', 'A person who grows only wheat', 'A leader of a farming village', 'A seller of tools'],
     answer: 'A person who survives by hunting game and gathering wild plants',
-    explanation: 'Hunter-gatherers lived by finding food in nature instead of farming it.',
+    explanation: 'Hunter-gatherers found food in nature instead of raising it through farming.',
   },
   {
+    category: 'Vocabulary',
     question: 'What does it mean to adapt?',
-    choices: [
-      'To develop characteristics that aid in survival',
-      'To copy another group exactly',
-      'To leave a settlement quickly',
-      'To stop using tools',
-    ],
+    choices: ['To develop characteristics that aid in survival', 'To leave a region forever', 'To invent bronze', 'To stop moving'],
     answer: 'To develop characteristics that aid in survival',
-    explanation: 'Adaptation helps people or living things survive in changing conditions.',
+    explanation: 'Adaptation helps living things survive in changing conditions.',
   },
   {
+    category: 'Vocabulary',
     question: 'What is agriculture?',
-    choices: [
-      'The cultivation of plant foods and the domestication of animals',
-      'The study of ancient artifacts',
-      'The movement of glaciers',
-      'The exchange of only tools',
-    ],
+    choices: ['The cultivation of plant foods and the domestication of animals', 'The study of old objects', 'The melting of glaciers', 'The exchange of only food'],
     answer: 'The cultivation of plant foods and the domestication of animals',
-    explanation: 'Agriculture is farming plants and raising animals for food and other uses.',
+    explanation: 'Agriculture means farming plants and raising animals.',
   },
   {
+    category: 'Vocabulary',
     question: 'What is domestication?',
-    choices: [
-      'The taming of wild animals or controlled cultivation of plants',
-      'The building of stone cities',
-      'The trading of surplus goods',
-      'The melting of glaciers',
-    ],
+    choices: ['The taming of wild animals or controlled cultivation of plants', 'The movement of humans between regions', 'The building of roads', 'The storage of grain'],
     answer: 'The taming of wild animals or controlled cultivation of plants',
-    explanation: 'Domestication means humans gradually control plants or animals for their needs.',
+    explanation: 'Domestication is the process of bringing plants and animals under human control.',
   },
   {
+    category: 'Vocabulary',
     question: 'What is an economy?',
-    choices: [
-      'The system of producing and obtaining goods',
-      'A law for permanent settlements',
-      'A list of domesticated animals',
-      'A type of root crop',
-    ],
+    choices: ['The system of producing and obtaining goods', 'A type of settlement', 'A kind of crop', 'A tool made from bone'],
     answer: 'The system of producing and obtaining goods',
-    explanation: 'An economy is how people make, use, and exchange goods.',
+    explanation: 'An economy is how people make, trade, and use goods.',
   },
   {
+    category: 'Vocabulary',
     question: 'What is a surplus?',
-    choices: [
-      'A supply of goods or labor not needed for short-term survival',
-      'A shortage of food in winter',
-      'A migration route between regions',
-      'A tool made from bone',
-    ],
+    choices: ['A supply of goods or labor not needed for short-term survival', 'A shortage of crops', 'A wild animal', 'A kind of migration'],
     answer: 'A supply of goods or labor not needed for short-term survival',
-    explanation: 'A surplus means there is extra beyond what is immediately needed.',
+    explanation: 'A surplus means there is extra beyond what is needed right away.',
   },
   {
+    category: 'Neolithic Revolution',
     question: 'What was the Neolithic Revolution also called?',
-    choices: [
-      'The Agricultural Revolution',
-      'The Bronze Revolution',
-      'The Ice Age',
-      'The Migration Era',
-    ],
+    choices: ['The Agricultural Revolution', 'The Ice Revolution', 'The Tool Revolution', 'The River Revolution'],
     answer: 'The Agricultural Revolution',
     explanation: 'The Neolithic Revolution is another name for the Agricultural Revolution.',
   },
   {
+    category: 'Neolithic Revolution',
     question: 'What major change happened during the Neolithic Revolution?',
-    choices: [
-      'Humans shifted from hunting and gathering to agriculture and permanent settlements',
-      'Humans stopped using animals completely',
-      'People moved away from rivers',
-      'All societies became nomadic',
-    ],
+    choices: ['Humans shifted from hunting and gathering to agriculture and permanent settlements', 'Humans stopped using animals', 'People left river valleys', 'All groups became nomadic'],
     answer: 'Humans shifted from hunting and gathering to agriculture and permanent settlements',
-    explanation: 'This revolution changed daily life by making farming and settled living more common.',
+    explanation: 'This was the big change that reshaped early societies.',
   },
   {
+    category: 'Neolithic Revolution',
     question: 'Why were societies able to support larger populations after this shift?',
-    choices: [
-      'Agriculture produced a steadier food supply',
-      'People hunted more wild game than ever',
-      'Glaciers returned and cooled the land',
-      'Everyone migrated less often',
-    ],
+    choices: ['Agriculture produced a steadier food supply', 'People hunted more game than ever', 'Everyone moved less', 'Glaciers returned'],
     answer: 'Agriculture produced a steadier food supply',
-    explanation: 'Reliable farming helped feed more people than hunting and gathering alone.',
+    explanation: 'Farming helped feed more people more consistently.',
   },
   {
+    category: 'Climate and Change',
     question: 'Why were climate changes around 12,000 BC important?',
-    choices: [
-      'The retreat of glaciers changed environments and encouraged agriculture',
-      'They ended all human migration',
-      'They caused bronze tools to spread',
-      'They made all animals easier to tame',
-    ],
+    choices: ['The retreat of glaciers changed environments and encouraged agriculture', 'They ended all migration', 'They created bronze tools', 'They made all animals tame'],
     answer: 'The retreat of glaciers changed environments and encouraged agriculture',
-    explanation: 'As climates changed, people had to adjust how they found food.',
+    explanation: 'Climate change forced people to adjust how they got food.',
   },
   {
+    category: 'Climate and Change',
     question: 'Why did agriculture become more important as game decreased?',
-    choices: [
-      'People needed a more reliable way to get food',
-      'Animals disappeared from every region',
-      'Farming required no work',
-      'Permanent settlements were banned',
-    ],
+    choices: ['People needed a more reliable way to get food', 'Farming required less work', 'Animals disappeared everywhere', 'Villages banned hunting'],
     answer: 'People needed a more reliable way to get food',
-    explanation: 'When hunting became less dependable, farming became more valuable.',
+    explanation: 'As hunting became less dependable, farming became more valuable.',
   },
   {
+    category: 'Plants',
     question: 'Which two early grains in the notes were growing wild before being domesticated?',
-    choices: [
-      'Wild barley and wheat',
-      'Rice and corn',
-      'Cotton and flax',
-      'Cassava and millet',
-    ],
+    choices: ['Wild barley and wheat', 'Rice and corn', 'Cotton and flax', 'Cassava and millet'],
     answer: 'Wild barley and wheat',
-    explanation: 'The notes mention wild barley and wheat as early plants linked to domestication.',
+    explanation: 'The notes point to wild barley and wheat as early domesticated grains.',
   },
   {
+    category: 'Plants',
     question: 'How did people improve crop yields and disease resistance over time?',
-    choices: [
-      'They used the best grains and mixed different varieties',
-      'They stopped planting near rivers',
-      'They only used wild seeds forever',
-      'They avoided permanent settlements',
-    ],
+    choices: ['They used the best grains and mixed different varieties', 'They planted farther from rivers', 'They used only wild seeds', 'They stopped farming in groups'],
     answer: 'They used the best grains and mixed different varieties',
-    explanation: 'Choosing strong plants and combining varieties helped crops improve.',
+    explanation: 'Selecting strong plants helped improve crops over time.',
   },
   {
+    category: 'Settlements',
     question: 'Why did some nomadic groups choose to settle down?',
-    choices: [
-      'Agriculture made permanent communities more practical',
-      'They were forced to stop using animals',
-      'Surplus goods made migration impossible',
-      'They lost the ability to hunt',
-    ],
+    choices: ['Agriculture made permanent communities more practical', 'They lost the ability to hunt', 'Animals forced them to stay', 'Trade became illegal'],
     answer: 'Agriculture made permanent communities more practical',
-    explanation: 'Farming encouraged people to stay in one place and build lasting communities.',
+    explanation: 'Farming encouraged people to stay in one place.',
   },
   {
+    category: 'Animals',
     question: 'How were animals domesticated according to the notes?',
-    choices: [
-      'Through the ways they interacted with humans',
-      'By being released into the wild',
-      'By growing near rivers only',
-      'Through bronze tools',
-    ],
+    choices: ['Through the ways they interacted with humans', 'By being released into forests', 'By mixing them with crops', 'Through bronze tools'],
     answer: 'Through the ways they interacted with humans',
-    explanation: 'Animals that worked well with humans were more likely to be domesticated.',
+    explanation: 'Animals that worked well around people were more likely to be domesticated.',
   },
   {
+    category: 'Animals',
     question: 'Which animal was tamed as early as 12,000 BC?',
-    choices: [
-      'Dogs',
-      'Cattle',
-      'Goats',
-      'Pigs',
-    ],
+    choices: ['Dogs', 'Cattle', 'Goats', 'Pigs'],
     answer: 'Dogs',
-    explanation: 'The notes say dogs were tamed very early, around 12,000 BC.',
+    explanation: 'Dogs were among the earliest domesticated animals.',
   },
   {
+    category: 'Animals',
     question: 'Which animals were first domesticated between 8500 and 7000 BC?',
-    choices: [
-      'Sheep, goats, and pigs',
-      'Dogs, horses, and chickens',
-      'Cattle, camels, and llamas',
-      'Wolves, deer, and foxes',
-    ],
+    choices: ['Sheep, goats, and pigs', 'Dogs, horses, and chickens', 'Cattle, camels, and llamas', 'Wolves, deer, and foxes'],
     answer: 'Sheep, goats, and pigs',
-    explanation: 'Those three animals are specifically listed in the notes for that period.',
+    explanation: 'Those three are specifically listed in the notes for that period.',
   },
   {
+    category: 'Animals',
     question: 'When were horned cattle not tamed until?',
-    choices: [
-      'About 6500 BC',
-      'About 12,000 BC',
-      'About 8500 BC',
-      'About 3000 BC',
-    ],
+    choices: ['About 6500 BC', 'About 12,000 BC', 'About 8500 BC', 'About 3000 BC'],
     answer: 'About 6500 BC',
-    explanation: 'The notes place the domestication of horned cattle later than dogs, sheep, goats, and pigs.',
+    explanation: 'Horned cattle were domesticated later than several other animals.',
   },
   {
+    category: 'Animal Uses',
     question: 'What did animals provide besides meat?',
-    choices: [
-      'Milk, hides, wool, and manure that enriched the soil',
-      'Only bones for decoration',
-      'Only transportation across oceans',
-      'Silver and stone tools',
-    ],
+    choices: ['Milk, hides, wool, and manure that enriched the soil', 'Only bones for decoration', 'Only transportation across oceans', 'Silver and tools'],
     answer: 'Milk, hides, wool, and manure that enriched the soil',
-    explanation: 'Animals were valuable for many products beyond meat.',
+    explanation: 'Animals were useful for many products beyond meat.',
   },
   {
+    category: 'Animal Uses',
     question: 'What were horns and bones used for?',
-    choices: [
-      'They were carved to make tools',
-      'They were planted as crops',
-      'They were used to measure glaciers',
-      'They were traded for wheat only',
-    ],
+    choices: ['They were carved to make tools', 'They were planted as crops', 'They were used to track glaciers', 'They were traded for wheat only'],
     answer: 'They were carved to make tools',
     explanation: 'Animal parts could be shaped into useful tools.',
   },
   {
+    category: 'Pastoralism',
     question: 'What is pastoralism?',
-    choices: [
-      'A way of life based on herding and grazing animals',
-      'A way of life based only on fishing',
-      'A farming system based on wheat alone',
-      'A method of making pottery',
-    ],
+    choices: ['A way of life based on herding and grazing animals', 'A way of life based only on fishing', 'A farming system based only on wheat', 'A method of writing laws'],
     answer: 'A way of life based on herding and grazing animals',
     explanation: 'Pastoralism centers on raising and moving with herds.',
   },
   {
+    category: 'Regional Impact',
     question: 'Which crops became important in Africa as agriculture spread?',
-    choices: [
-      'Cassava, bananas, palm nuts, and millet',
-      'Wheat, rye, and oats',
-      'Corn, beans, and squash',
-      'Olives, grapes, and figs',
-    ],
+    choices: ['Cassava, bananas, palm nuts, and millet', 'Wheat, rye, and oats', 'Corn, beans, and squash', 'Olives, grapes, and figs'],
     answer: 'Cassava, bananas, palm nuts, and millet',
-    explanation: 'Those are the crops listed in the notes for Africa.',
+    explanation: 'Those are the crops named in the notes for Africa.',
   },
   {
+    category: 'Regional Impact',
     question: 'Which crops are listed in the notes for the Americas?',
-    choices: [
-      'Maize, manioc, and sweet potatoes',
-      'Barley, wheat, and rice',
-      'Cotton, flax, and millet',
-      'Goats, pigs, and sheep',
-    ],
+    choices: ['Maize, manioc, and sweet potatoes', 'Barley, wheat, and rice', 'Cotton, flax, and millet', 'Goats, pigs, and sheep'],
     answer: 'Maize, manioc, and sweet potatoes',
-    explanation: 'The notes identify those three crops as important in the Americas.',
+    explanation: 'Those are the crops identified in the notes for the Americas.',
   },
 ];
 ---
@@ -284,37 +184,28 @@ const questions = [
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta
-      name="description"
-      content="World history study guide for First Peoples and Societies."
-    />
+    <meta name="description" content="World history study guide for First Peoples and Societies." />
     <meta name="generator" content={Astro.generator} />
     <title>World History Study Guide</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:wght@400;500;600&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Cormorant+Garamond:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style>
       :root {
-        --sand: #eadfc8;
-        --sand-light: #f6efdf;
-        --sand-deep: #d6c1a0;
-        --ink: #342015;
+        --sand: #f4ebda;
+        --sand-dark: #ddc6a2;
+        --ink: #382116;
         --rust: #7a2f24;
         --rust-deep: #541b16;
-        --gold: #b98a4a;
-        --card: rgba(248, 242, 230, 0.96);
-        --line: rgba(84, 27, 22, 0.16);
-        --shadow: 0 24px 60px rgba(52, 32, 21, 0.16);
-        --success: #1f6b47;
-        --error: #8b2d25;
+        --gold: #ba8a4b;
+        --card: rgba(250, 245, 235, 0.95);
+        --line: rgba(84, 27, 22, 0.14);
+        --shadow: 0 24px 55px rgba(52, 32, 21, 0.15);
+        --success: #1d6a45;
+        --danger: #8d3027;
       }
 
-      * {
-        box-sizing: border-box;
-      }
+      * { box-sizing: border-box; }
 
       body {
         margin: 0;
@@ -322,9 +213,9 @@ const questions = [
         color: var(--ink);
         font-family: 'Cormorant Garamond', Georgia, serif;
         background:
-          radial-gradient(circle at top, rgba(185, 138, 74, 0.2), transparent 28%),
-          linear-gradient(180deg, rgba(122, 47, 36, 0.08), transparent 18%),
-          linear-gradient(135deg, #f6efdf 0%, #eadcc2 50%, #ddc7a5 100%);
+          radial-gradient(circle at top, rgba(186, 138, 75, 0.18), transparent 30%),
+          linear-gradient(180deg, rgba(122, 47, 36, 0.08), transparent 16%),
+          linear-gradient(135deg, #f7f0e2 0%, #ead8bc 50%, #dfc8a5 100%);
       }
 
       body::before {
@@ -334,14 +225,13 @@ const questions = [
         pointer-events: none;
         opacity: 0.18;
         background-image:
-          linear-gradient(rgba(84, 27, 22, 0.06) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(84, 27, 22, 0.05) 1px, transparent 1px);
+          linear-gradient(rgba(84, 27, 22, 0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(84, 27, 22, 0.04) 1px, transparent 1px);
         background-size: 28px 28px;
-        mask-image: linear-gradient(180deg, black, rgba(0, 0, 0, 0.35));
       }
 
       main {
-        width: min(980px, calc(100% - 1.25rem));
+        width: min(1040px, calc(100% - 1.25rem));
         margin: 0 auto;
         padding: 1.25rem 0 3rem;
       }
@@ -349,70 +239,132 @@ const questions = [
       .hero {
         position: relative;
         overflow: hidden;
-        padding: 2.25rem;
-        border: 1px solid rgba(84, 27, 22, 0.2);
-        border-radius: 28px;
+        padding: 2.2rem;
+        border: 1px solid rgba(84, 27, 22, 0.18);
+        border-radius: 30px;
         background:
           linear-gradient(145deg, rgba(84, 27, 22, 0.96), rgba(122, 47, 36, 0.9)),
-          linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent);
-        color: var(--sand-light);
+          linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent);
+        color: #f7f0e2;
         box-shadow: var(--shadow);
       }
 
       .hero::after {
         content: '';
         position: absolute;
-        inset: auto -3rem -5rem auto;
-        width: 14rem;
-        height: 14rem;
+        right: -3rem;
+        bottom: -5rem;
+        width: 15rem;
+        height: 15rem;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(185, 138, 74, 0.24), transparent 70%);
+        background: radial-gradient(circle, rgba(186, 138, 75, 0.24), transparent 70%);
       }
 
       .eyebrow {
         display: inline-flex;
-        align-items: center;
         padding: 0.55rem 0.95rem;
         border-radius: 999px;
-        background: rgba(246, 239, 223, 0.08);
-        border: 1px solid rgba(246, 239, 223, 0.14);
-        font-size: 0.95rem;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.06);
         letter-spacing: 0.1em;
+        font-size: 0.92rem;
         text-transform: uppercase;
       }
 
-      h1,
-      h2,
-      h3 {
+      h1, h2, h3 {
         margin: 0;
         font-family: 'Cinzel', 'Times New Roman', serif;
       }
 
       h1 {
         margin-top: 1rem;
-        font-size: clamp(2.4rem, 5vw, 4.5rem);
+        font-size: clamp(2.4rem, 5vw, 4.3rem);
         line-height: 0.95;
       }
 
-      .hero p {
-        max-width: 38rem;
-        margin: 1rem 0 0;
-        font-size: clamp(1.18rem, 2vw, 1.45rem);
+      .hero-copy {
+        max-width: 40rem;
+        margin-top: 1rem;
+        font-size: clamp(1.15rem, 2vw, 1.42rem);
         line-height: 1.5;
-        color: rgba(246, 239, 223, 0.92);
+        color: rgba(247, 240, 226, 0.92);
       }
 
-      .quiz-shell {
+      .menu-wrap {
+        margin-top: 1.3rem;
+      }
+
+      .menu-label {
+        margin: 0 0 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.95rem;
+        color: rgba(247, 240, 226, 0.82);
+      }
+
+      .mode-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .mode-card {
+        width: 100%;
+        min-height: 150px;
+        padding: 1.2rem;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff8ec;
+        text-align: left;
+        cursor: pointer;
+        transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+      }
+
+      .mode-card:hover {
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.18);
+      }
+
+      .mode-card.active {
+        background: linear-gradient(135deg, rgba(186, 138, 75, 0.28), rgba(84, 27, 22, 0.18));
+        border-color: rgba(255, 255, 255, 0.24);
+        box-shadow: inset 0 0 0 1px rgba(255, 248, 236, 0.1);
+      }
+
+      .mode-card strong {
+        display: block;
+        font-family: 'Cinzel', 'Times New Roman', serif;
+        font-size: 1.28rem;
+      }
+
+      .mode-card span {
+        display: block;
+        margin-top: 0.6rem;
+        font-size: 1.05rem;
+        line-height: 1.4;
+        color: rgba(255, 248, 236, 0.88);
+      }
+
+      .board {
         margin-top: 1.4rem;
         padding: 1.2rem;
         border-radius: 28px;
-        background: rgba(255, 252, 246, 0.56);
-        border: 1px solid rgba(84, 27, 22, 0.12);
-        box-shadow: 0 18px 45px rgba(52, 32, 21, 0.1);
+        background: rgba(255, 252, 246, 0.58);
+        border: 1px solid rgba(84, 27, 22, 0.1);
+        box-shadow: 0 18px 42px rgba(52, 32, 21, 0.08);
         backdrop-filter: blur(10px);
       }
 
-      .topline {
+      .panel {
+        padding: 1.4rem;
+        border-radius: 24px;
+        background: var(--card);
+        border: 1px solid var(--line);
+      }
+
+      .panel-top {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -421,15 +373,24 @@ const questions = [
         flex-wrap: wrap;
       }
 
-      .topline h2 {
-        color: var(--rust-deep);
-        font-size: clamp(1.45rem, 3vw, 1.9rem);
+      .panel-top p {
+        margin: 0.25rem 0 0;
+        font-size: 1.06rem;
+        color: #71473b;
       }
 
-      .progress-text {
-        color: var(--rust);
-        font-size: 1.05rem;
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.55rem 0.9rem;
+        border-radius: 999px;
+        background: linear-gradient(135deg, var(--rust), var(--rust-deep));
+        color: #fff8ec;
+        font-size: 0.92rem;
         font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
       }
 
       .progress-track {
@@ -442,46 +403,21 @@ const questions = [
 
       .progress-fill {
         height: 100%;
-        width: 4%;
         border-radius: 999px;
-        background: linear-gradient(90deg, var(--gold), #d6a45f);
+        background: linear-gradient(90deg, var(--gold), #d7a462);
         transition: width 0.25s ease;
       }
 
-      .question-card {
+      .question {
         margin-top: 1rem;
-        padding: 1.55rem;
-        border-radius: 24px;
-        background: var(--card);
-        border: 1px solid var(--line);
-      }
-
-      .question-number {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 4.4rem;
-        padding: 0.45rem 0.8rem;
-        border-radius: 999px;
-        background: linear-gradient(135deg, var(--rust), var(--rust-deep));
-        color: var(--sand-light);
-        font-size: 0.96rem;
-        font-weight: 700;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-      }
-
-      .question-title {
-        margin-top: 1rem;
-        font-size: clamp(1.55rem, 3vw, 2.2rem);
-        line-height: 1.15;
-        color: var(--ink);
+        font-size: clamp(1.55rem, 3vw, 2.15rem);
+        line-height: 1.18;
       }
 
       .choices {
         display: grid;
         gap: 0.85rem;
-        margin-top: 1.35rem;
+        margin-top: 1.2rem;
       }
 
       .choice {
@@ -489,137 +425,144 @@ const questions = [
         padding: 1rem 1.05rem;
         border-radius: 18px;
         border: 1px solid rgba(84, 27, 22, 0.14);
-        background: rgba(255, 255, 255, 0.76);
+        background: rgba(255, 255, 255, 0.78);
         color: var(--ink);
         font: inherit;
-        font-size: 1.18rem;
+        font-size: 1.16rem;
         text-align: left;
         cursor: pointer;
-        transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
       }
 
-      .choice:hover:enabled {
-        transform: translateY(-1px);
-        border-color: rgba(122, 47, 36, 0.28);
-        box-shadow: 0 12px 22px rgba(52, 32, 21, 0.08);
-      }
-
-      .choice.correct {
-        background: rgba(31, 107, 71, 0.12);
-        border-color: rgba(31, 107, 71, 0.45);
-        color: var(--success);
-      }
-
-      .choice.wrong {
-        background: rgba(139, 45, 37, 0.12);
-        border-color: rgba(139, 45, 37, 0.35);
-        color: var(--error);
-      }
-
-      .choice:disabled {
-        cursor: default;
-      }
+      .choice:hover:enabled { transform: translateY(-1px); }
+      .choice.correct { background: rgba(29, 106, 69, 0.12); border-color: rgba(29, 106, 69, 0.38); color: var(--success); }
+      .choice.wrong { background: rgba(141, 48, 39, 0.12); border-color: rgba(141, 48, 39, 0.35); color: var(--danger); }
 
       .feedback {
-        margin-top: 1.2rem;
-        padding: 1rem 1.05rem;
-        border-radius: 18px;
+        margin-top: 1rem;
+        padding: 1rem;
         border-left: 4px solid var(--gold);
-        background: rgba(185, 138, 74, 0.12);
+        border-radius: 16px;
+        background: rgba(186, 138, 75, 0.12);
       }
 
       .feedback strong {
         display: block;
         margin-bottom: 0.35rem;
-        font-size: 1.05rem;
       }
 
       .feedback p {
         margin: 0;
-        font-size: 1.12rem;
+        font-size: 1.1rem;
         line-height: 1.45;
       }
 
       .actions {
         display: flex;
         gap: 0.85rem;
-        margin-top: 1.25rem;
+        margin-top: 1.1rem;
         flex-wrap: wrap;
       }
 
       .btn {
         border: none;
         border-radius: 999px;
-        padding: 0.9rem 1.4rem;
+        padding: 0.9rem 1.3rem;
         font: inherit;
-        font-size: 1.02rem;
+        font-size: 1rem;
         font-weight: 700;
         cursor: pointer;
       }
 
-      .btn-primary {
+      .btn-primary { background: linear-gradient(135deg, var(--rust), var(--rust-deep)); color: #fff8ec; }
+      .btn-secondary { background: rgba(84, 27, 22, 0.08); color: var(--rust-deep); }
+
+      .typing-input {
+        width: 100%;
+        margin-top: 1.1rem;
+        padding: 1rem;
+        border-radius: 18px;
+        border: 1px solid rgba(84, 27, 22, 0.16);
+        background: rgba(255,255,255,0.92);
+        color: var(--ink);
+        font: inherit;
+        font-size: 1.14rem;
+      }
+
+      .typing-help {
+        margin-top: 0.7rem;
+        font-size: 1rem;
+        color: #7a4f42;
+      }
+
+      .ladder {
+        display: grid;
+        gap: 0.45rem;
+        margin-top: 1.2rem;
+      }
+
+      .ladder-step {
+        padding: 0.75rem 0.9rem;
+        border-radius: 14px;
+        background: rgba(84, 27, 22, 0.06);
+        color: #6f4738;
+      }
+
+      .ladder-step.active {
         background: linear-gradient(135deg, var(--rust), var(--rust-deep));
-        color: var(--sand-light);
+        color: #fff8ec;
       }
 
-      .btn-secondary {
-        background: rgba(84, 27, 22, 0.08);
-        color: var(--rust-deep);
-      }
-
-      .btn:hover {
-        transform: translateY(-1px);
-      }
-
-      .result {
+      .jeopardy-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 0.6rem;
         margin-top: 1rem;
-        padding: 1.7rem;
-        border-radius: 24px;
-        background: var(--card);
-        border: 1px solid var(--line);
+      }
+
+      .jeopardy-head,
+      .jeopardy-cell {
+        padding: 0.9rem 0.55rem;
+        border-radius: 16px;
         text-align: center;
       }
 
-      .result h2 {
-        color: var(--rust-deep);
-        font-size: clamp(1.5rem, 3vw, 2rem);
+      .jeopardy-head {
+        background: linear-gradient(135deg, var(--rust), var(--rust-deep));
+        color: #fff8ec;
+        font-family: 'Cinzel', 'Times New Roman', serif;
+        font-size: 0.82rem;
+      }
+
+      .jeopardy-cell {
+        border: 1px solid rgba(84, 27, 22, 0.12);
+        background: rgba(255,255,255,0.78);
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .jeopardy-cell.done {
+        background: rgba(84, 27, 22, 0.08);
+        color: #8f7669;
+        cursor: default;
+      }
+
+      .result {
+        text-align: center;
       }
 
       .result p {
-        margin: 0.9rem 0 0;
-        font-size: 1.18rem;
-        line-height: 1.5;
+        font-size: 1.14rem;
+        line-height: 1.45;
       }
 
-      @media (max-width: 720px) {
-        main {
-          width: min(100% - 0.75rem, 42rem);
-          padding-top: 0.75rem;
-        }
-
-        .hero {
-          padding: 1.5rem;
-          border-radius: 22px;
-        }
-
-        .quiz-shell {
-          padding: 0.9rem;
-          border-radius: 22px;
-        }
-
-        .question-card,
-        .result {
-          padding: 1.15rem;
-          border-radius: 20px;
-        }
-
-        .question-title {
-          font-size: 1.55rem;
-        }
-
-        .choice {
-          font-size: 1.08rem;
-        }
+      @media (max-width: 760px) {
+        main { width: min(100% - 0.75rem, 42rem); padding-top: 0.8rem; }
+        .hero { padding: 1.5rem; border-radius: 22px; }
+        .mode-grid { grid-template-columns: 1fr; }
+        .board { padding: 0.9rem; border-radius: 22px; }
+        .panel { padding: 1rem; }
+        .jeopardy-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .jeopardy-head { display: none; }
       }
     </style>
   </head>
@@ -628,67 +571,50 @@ const questions = [
       <section class="hero">
         <div class="eyebrow">Unit One • First Peoples + Societies</div>
         <h1>World History Study Guide</h1>
-        <p>
-          A quieter, older-world study page for early human societies, migration,
-          agriculture, and domestication. Answer one multiple-choice question at a time.
-        </p>
+        <p class="hero-copy">Pick a study game and drill the unit your way. Same notes, better energy.</p>
+        <div class="menu-wrap">
+          <p class="menu-label">Choose a mode</p>
+          <div class="mode-grid">
+            <button class="mode-card active" data-mode="multiple">
+              <strong>Multiple Choice</strong>
+              <span>Classic one-question practice with instant feedback.</span>
+            </button>
+            <button class="mode-card" data-mode="jeopardy">
+              <strong>Jeopardy</strong>
+              <span>Pick dollar values from a board and clear the whole set.</span>
+            </button>
+            <button class="mode-card" data-mode="millionaire">
+              <strong>Millionaire</strong>
+              <span>Climb the prize ladder one history question at a time.</span>
+            </button>
+            <button class="mode-card" data-mode="typing">
+              <strong>Typing Quiz</strong>
+              <span>Type the answer yourself instead of picking from choices.</span>
+            </button>
+          </div>
+        </div>
       </section>
 
-      <section class="quiz-shell">
-        <div class="topline">
-          <h2>Question Bank</h2>
-          <div class="progress-text" id="progress-text">Question 1 of 25</div>
-        </div>
-        <div class="progress-track" aria-hidden="true">
-          <div class="progress-fill" id="progress-fill"></div>
-        </div>
-
-        <article class="question-card" id="question-card">
-          <div class="question-number" id="question-number">#1</div>
-          <h3 class="question-title" id="question-title"></h3>
-          <div class="choices" id="choices"></div>
-          <div class="feedback" id="feedback" hidden>
-            <strong id="feedback-title"></strong>
-            <p id="feedback-copy"></p>
-          </div>
-          <div class="actions">
-            <button class="btn btn-primary" id="next-btn" hidden>Next Question</button>
-            <button class="btn btn-secondary" id="restart-btn" hidden>Start Over</button>
-          </div>
-        </article>
-
-        <article class="result" id="result-card" hidden>
-          <h2 id="result-title"></h2>
-          <p id="result-copy"></p>
-          <div class="actions" style="justify-content:center;">
-            <button class="btn btn-primary" id="restart-final-btn">Try Again</button>
-          </div>
-        </article>
+      <section class="board">
+        <div id="game-root" class="panel"></div>
       </section>
     </main>
 
     <script type="application/json" id="history-questions">{JSON.stringify(questions)}</script>
     <script>
-      const questions = JSON.parse(document.getElementById('history-questions').textContent || '[]');
-      let questionIndex = 0;
-      let score = 0;
-      let locked = false;
+      const baseQuestions = JSON.parse(document.getElementById('history-questions').textContent || '[]');
+      const root = document.getElementById('game-root');
+      const modeButtons = Array.from(document.querySelectorAll('[data-mode]'));
+      const prizeLadder = ['$100', '$200', '$300', '$500', '$1,000', '$2,000', '$4,000', '$8,000', '$16,000', '$32,000'];
+      const jeopardyCategories = [
+        { name: 'Vocabulary', indexes: [0, 1, 2, 3, 4] },
+        { name: 'Revolution', indexes: [5, 8, 9, 10, 12] },
+        { name: 'Plants', indexes: [6, 7, 13, 14, 23] },
+        { name: 'Animals', indexes: [16, 17, 18, 19, 20] },
+        { name: 'Societies', indexes: [11, 15, 21, 22, 24] },
+      ];
 
-      const progressText = document.getElementById('progress-text');
-      const progressFill = document.getElementById('progress-fill');
-      const questionCard = document.getElementById('question-card');
-      const resultCard = document.getElementById('result-card');
-      const questionNumber = document.getElementById('question-number');
-      const questionTitle = document.getElementById('question-title');
-      const choices = document.getElementById('choices');
-      const feedback = document.getElementById('feedback');
-      const feedbackTitle = document.getElementById('feedback-title');
-      const feedbackCopy = document.getElementById('feedback-copy');
-      const nextBtn = document.getElementById('next-btn');
-      const restartBtn = document.getElementById('restart-btn');
-      const restartFinalBtn = document.getElementById('restart-final-btn');
-      const resultTitle = document.getElementById('result-title');
-      const resultCopy = document.getElementById('result-copy');
+      let state = {};
 
       function shuffle(items) {
         const copy = [...items];
@@ -699,108 +625,398 @@ const questions = [
         return copy;
       }
 
-      function setProgress() {
-        const current = Math.min(questionIndex + 1, questions.length);
-        progressText.textContent = `Question ${current} of ${questions.length}`;
-        progressFill.style.width = `${(current / questions.length) * 100}%`;
+      function normalize(value) {
+        return value.toLowerCase().replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim();
       }
 
-      function renderQuestion() {
-        const item = questions[questionIndex];
-        locked = false;
-        questionCard.hidden = false;
-        resultCard.hidden = true;
-        feedback.hidden = true;
-        nextBtn.hidden = true;
-        restartBtn.hidden = true;
+      function buildMcQuestions() {
+        return baseQuestions.map((item) => ({ ...item, choices: shuffle(item.choices) }));
+      }
 
-        setProgress();
-        questionNumber.textContent = `#${questionIndex + 1}`;
-        questionTitle.textContent = item.question;
-        choices.innerHTML = '';
-
-        shuffle(item.choices).forEach((choiceText) => {
-          const button = document.createElement('button');
-          button.className = 'choice';
-          button.type = 'button';
-          button.textContent = choiceText;
-          button.addEventListener('click', () => handleChoice(button, choiceText, item));
-          choices.appendChild(button);
+      function setActiveMode(mode) {
+        modeButtons.forEach((button) => {
+          button.classList.toggle('active', button.dataset.mode === mode);
         });
       }
 
-      function handleChoice(button, choiceText, item) {
-        if (locked) return;
-        locked = true;
+      function initMultiple() {
+        state = { mode: 'multiple', deck: buildMcQuestions(), index: 0, score: 0, locked: false };
+        setActiveMode('multiple');
+        renderMultiple();
+      }
 
-        const buttons = Array.from(choices.querySelectorAll('.choice'));
-        buttons.forEach((entry) => {
+      function renderMultiple() {
+        const item = state.deck[state.index];
+        const progress = ((state.index + 1) / state.deck.length) * 100;
+        root.innerHTML = `
+          <div class="panel-top">
+            <div>
+              <h2>Multiple Choice</h2>
+              <p>Question ${state.index + 1} of ${state.deck.length}</p>
+            </div>
+            <div class="pill">Score ${state.score}</div>
+          </div>
+          <div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div>
+          <div class="question">${item.question}</div>
+          <div class="choices">
+            ${item.choices.map((choice) => `<button class="choice" data-choice="${escapeHtml(choice)}">${choice}</button>`).join('')}
+          </div>
+          <div class="feedback" id="feedback" hidden>
+            <strong id="feedback-title"></strong>
+            <p id="feedback-copy"></p>
+          </div>
+          <div class="actions">
+            <button class="btn btn-primary" id="next-btn" hidden>${state.index === state.deck.length - 1 ? 'See Score' : 'Next Question'}</button>
+            <button class="btn btn-secondary" id="restart-btn">Start Over</button>
+          </div>
+        `;
+
+        root.querySelectorAll('[data-choice]').forEach((button) => {
+          button.addEventListener('click', () => handleMultipleChoice(button, button.textContent, item));
+        });
+        root.querySelector('#restart-btn').addEventListener('click', initMultiple);
+      }
+
+      function handleMultipleChoice(button, choice, item) {
+        if (state.locked) return;
+        state.locked = true;
+        const feedback = root.querySelector('#feedback');
+        const feedbackTitle = root.querySelector('#feedback-title');
+        const feedbackCopy = root.querySelector('#feedback-copy');
+        const nextBtn = root.querySelector('#next-btn');
+        root.querySelectorAll('[data-choice]').forEach((entry) => {
           entry.disabled = true;
-          if (entry.textContent === item.answer) {
-            entry.classList.add('correct');
-          }
+          if (entry.textContent === item.answer) entry.classList.add('correct');
         });
+        if (choice === item.answer) {
+          state.score += 1;
+          button.classList.add('correct');
+          feedbackTitle.textContent = 'Correct';
+        } else {
+          button.classList.add('wrong');
+          feedbackTitle.textContent = `Not quite. The answer is ${item.answer}.`;
+        }
+        feedbackCopy.textContent = item.explanation;
+        feedback.hidden = false;
+        nextBtn.hidden = false;
+        nextBtn.addEventListener('click', () => {
+          if (state.index === state.deck.length - 1) {
+            renderResult('Multiple Choice', state.score, state.deck.length, initMultiple);
+            return;
+          }
+          state.index += 1;
+          state.locked = false;
+          renderMultiple();
+        }, { once: true });
+      }
 
-        if (choiceText === item.answer) {
-          score += 1;
+      function initTyping() {
+        state = { mode: 'typing', deck: baseQuestions, index: 0, score: 0 };
+        setActiveMode('typing');
+        renderTyping();
+      }
+
+      function renderTyping() {
+        const item = state.deck[state.index];
+        const progress = ((state.index + 1) / state.deck.length) * 100;
+        root.innerHTML = `
+          <div class="panel-top">
+            <div>
+              <h2>Typing Quiz</h2>
+              <p>Question ${state.index + 1} of ${state.deck.length}</p>
+            </div>
+            <div class="pill">Score ${state.score}</div>
+          </div>
+          <div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div>
+          <div class="question">${item.question}</div>
+          <input class="typing-input" id="typing-input" type="text" placeholder="Type your answer here" />
+          <div class="typing-help">Short answer is fine. It checks loosely, not word for word.</div>
+          <div class="actions">
+            <button class="btn btn-primary" id="check-btn">Check Answer</button>
+            <button class="btn btn-secondary" id="restart-btn">Start Over</button>
+          </div>
+          <div class="feedback" id="feedback" hidden>
+            <strong id="feedback-title"></strong>
+            <p id="feedback-copy"></p>
+          </div>
+        `;
+
+        const input = root.querySelector('#typing-input');
+        const checkBtn = root.querySelector('#check-btn');
+        const restartBtn = root.querySelector('#restart-btn');
+        checkBtn.addEventListener('click', () => handleTyping(item));
+        input.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter') handleTyping(item);
+        });
+        restartBtn.addEventListener('click', initTyping);
+      }
+
+      function handleTyping(item) {
+        const input = root.querySelector('#typing-input');
+        const guess = normalize(input.value);
+        if (!guess) return;
+        const answer = normalize(item.answer);
+        const feedback = root.querySelector('#feedback');
+        const feedbackTitle = root.querySelector('#feedback-title');
+        const feedbackCopy = root.querySelector('#feedback-copy');
+        const ok = guess === answer || guess.includes(answer) || answer.includes(guess);
+        if (ok) {
+          state.score += 1;
           feedbackTitle.textContent = 'Correct';
           feedbackCopy.textContent = item.explanation;
-          button.classList.add('correct');
         } else {
           feedbackTitle.textContent = `Not quite. The answer is ${item.answer}.`;
           feedbackCopy.textContent = item.explanation;
-          button.classList.add('wrong');
         }
+        feedback.hidden = false;
+        input.disabled = true;
+        root.querySelector('#check-btn').hidden = true;
+        const next = document.createElement('button');
+        next.className = 'btn btn-primary';
+        next.textContent = state.index === state.deck.length - 1 ? 'See Score' : 'Next Question';
+        next.addEventListener('click', () => {
+          if (state.index === state.deck.length - 1) {
+            renderResult('Typing Quiz', state.score, state.deck.length, initTyping);
+            return;
+          }
+          state.index += 1;
+          renderTyping();
+        }, { once: true });
+        root.querySelector('.actions').prepend(next);
+      }
 
+      function initMillionaire() {
+        state = { mode: 'millionaire', deck: shuffle(baseQuestions).slice(0, 10).map((item) => ({ ...item, choices: shuffle(item.choices) })), index: 0, locked: false };
+        setActiveMode('millionaire');
+        renderMillionaire();
+      }
+
+      function renderMillionaire() {
+        const item = state.deck[state.index];
+        root.innerHTML = `
+          <div class="panel-top">
+            <div>
+              <h2>Millionaire</h2>
+              <p>Answer ten in a row and climb the ladder.</p>
+            </div>
+            <div class="pill">${prizeLadder[state.index]}</div>
+          </div>
+          <div class="question">${item.question}</div>
+          <div class="choices">
+            ${item.choices.map((choice) => `<button class="choice" data-choice="${escapeHtml(choice)}">${choice}</button>`).join('')}
+          </div>
+          <div class="feedback" id="feedback" hidden>
+            <strong id="feedback-title"></strong>
+            <p id="feedback-copy"></p>
+          </div>
+          <div class="ladder">
+            ${prizeLadder.slice().reverse().map((step, idx) => {
+              const actual = prizeLadder.length - 1 - idx;
+              return `<div class="ladder-step ${actual === state.index ? 'active' : ''}">${step}</div>`;
+            }).join('')}
+          </div>
+          <div class="actions">
+            <button class="btn btn-secondary" id="restart-btn">Start Over</button>
+          </div>
+        `;
+
+        root.querySelectorAll('[data-choice]').forEach((button) => {
+          button.addEventListener('click', () => handleMillionaireChoice(button, button.textContent, item));
+        });
+        root.querySelector('#restart-btn').addEventListener('click', initMillionaire);
+      }
+
+      function handleMillionaireChoice(button, choice, item) {
+        if (state.locked) return;
+        state.locked = true;
+        const feedback = root.querySelector('#feedback');
+        const feedbackTitle = root.querySelector('#feedback-title');
+        const feedbackCopy = root.querySelector('#feedback-copy');
+        root.querySelectorAll('[data-choice]').forEach((entry) => {
+          entry.disabled = true;
+          if (entry.textContent === item.answer) entry.classList.add('correct');
+        });
+        if (choice === item.answer) {
+          button.classList.add('correct');
+          feedbackTitle.textContent = `Correct. You reached ${prizeLadder[state.index]}.`;
+          feedbackCopy.textContent = item.explanation;
+          const next = document.createElement('button');
+          next.className = 'btn btn-primary';
+          next.textContent = state.index === state.deck.length - 1 ? 'Claim Win' : 'Next Question';
+          next.addEventListener('click', () => {
+            if (state.index === state.deck.length - 1) {
+              renderResult('Millionaire', state.deck.length, state.deck.length, initMillionaire, 'You cleared the whole ladder.');
+              return;
+            }
+            state.index += 1;
+            state.locked = false;
+            renderMillionaire();
+          }, { once: true });
+          root.querySelector('.actions').prepend(next);
+        } else {
+          button.classList.add('wrong');
+          feedbackTitle.textContent = `Game over. The answer is ${item.answer}.`;
+          feedbackCopy.textContent = item.explanation;
+          const retry = document.createElement('button');
+          retry.className = 'btn btn-primary';
+          retry.textContent = 'Play Again';
+          retry.addEventListener('click', initMillionaire, { once: true });
+          root.querySelector('.actions').prepend(retry);
+        }
+        feedback.hidden = false;
+      }
+
+      function initJeopardy() {
+        state = {
+          mode: 'jeopardy',
+          answered: {},
+          activeCell: null,
+          score: 0,
+        };
+        setActiveMode('jeopardy');
+        renderJeopardyBoard();
+      }
+
+      function renderJeopardyBoard() {
+        const remaining = 25 - Object.keys(state.answered).length;
+        root.innerHTML = `
+          <div class="panel-top">
+            <div>
+              <h2>Jeopardy</h2>
+              <p>Pick a square and clear the board.</p>
+            </div>
+            <div class="pill">Score ${state.score}</div>
+          </div>
+          <div class="jeopardy-grid">
+            ${jeopardyCategories.map((category) => `<div class="jeopardy-head">${category.name}</div>`).join('')}
+            ${[0,1,2,3,4].map((row) => jeopardyCategories.map((category) => {
+              const questionIndex = category.indexes[row];
+              const key = String(questionIndex);
+              const done = state.answered[key];
+              return `<button class="jeopardy-cell ${done ? 'done' : ''}" data-j-index="${questionIndex}" ${done ? 'disabled' : ''}>$${(row + 1) * 100}</button>`;
+            }).join('')).join('')}
+          </div>
+          <div class="typing-help">${remaining} square${remaining === 1 ? '' : 's'} left.</div>
+        `;
+
+        root.querySelectorAll('[data-j-index]').forEach((button) => {
+          button.addEventListener('click', () => openJeopardyQuestion(Number(button.dataset.jIndex)));
+        });
+      }
+
+      function openJeopardyQuestion(index) {
+        const item = { ...baseQuestions[index], choices: shuffle(baseQuestions[index].choices) };
+        state.activeCell = index;
+        root.innerHTML = `
+          <div class="panel-top">
+            <div>
+              <h2>Jeopardy</h2>
+              <p>Choose the best answer.</p>
+            </div>
+            <div class="pill">$${(findJeopardyRow(index) + 1) * 100}</div>
+          </div>
+          <div class="question">${item.question}</div>
+          <div class="choices">
+            ${item.choices.map((choice) => `<button class="choice" data-choice="${escapeHtml(choice)}">${choice}</button>`).join('')}
+          </div>
+          <div class="feedback" id="feedback" hidden>
+            <strong id="feedback-title"></strong>
+            <p id="feedback-copy"></p>
+          </div>
+          <div class="actions">
+            <button class="btn btn-secondary" id="board-btn">Back to Board</button>
+          </div>
+        `;
+
+        root.querySelectorAll('[data-choice]').forEach((button) => {
+          button.addEventListener('click', () => handleJeopardyChoice(button, button.textContent, item));
+        });
+        root.querySelector('#board-btn').addEventListener('click', renderJeopardyBoard);
+      }
+
+      function handleJeopardyChoice(button, choice, item) {
+        const feedback = root.querySelector('#feedback');
+        const feedbackTitle = root.querySelector('#feedback-title');
+        const feedbackCopy = root.querySelector('#feedback-copy');
+        const value = (findJeopardyRow(state.activeCell) + 1) * 100;
+        root.querySelectorAll('[data-choice]').forEach((entry) => {
+          entry.disabled = true;
+          if (entry.textContent === item.answer) entry.classList.add('correct');
+        });
+        state.answered[String(state.activeCell)] = true;
+        if (choice === item.answer) {
+          state.score += value;
+          button.classList.add('correct');
+          feedbackTitle.textContent = `Correct. +$${value}`;
+        } else {
+          button.classList.add('wrong');
+          feedbackTitle.textContent = `Not quite. The answer is ${item.answer}.`;
+        }
+        feedbackCopy.textContent = item.explanation;
         feedback.hidden = false;
 
-        if (questionIndex === questions.length - 1) {
-          nextBtn.textContent = 'See Score';
-        } else {
-          nextBtn.textContent = 'Next Question';
+        const next = document.createElement('button');
+        next.className = 'btn btn-primary';
+        next.textContent = Object.keys(state.answered).length === 25 ? 'See Score' : 'Back to Board';
+        next.addEventListener('click', () => {
+          if (Object.keys(state.answered).length === 25) {
+            renderResult('Jeopardy', state.score, 2500, initJeopardy, 'Nice. You cleared the whole board.');
+            return;
+          }
+          renderJeopardyBoard();
+        }, { once: true });
+        root.querySelector('.actions').prepend(next);
+      }
+
+      function findJeopardyRow(index) {
+        for (const category of jeopardyCategories) {
+          const row = category.indexes.indexOf(index);
+          if (row !== -1) return row;
         }
-
-        nextBtn.hidden = false;
-        restartBtn.hidden = false;
+        return 0;
       }
 
-      function showResults() {
-        questionCard.hidden = true;
-        resultCard.hidden = false;
-        progressText.textContent = `Final Score: ${score} / ${questions.length}`;
-        progressFill.style.width = '100%';
-        resultTitle.textContent = `You got ${score} out of ${questions.length}`;
-
-        if (score === questions.length) {
-          resultCopy.textContent = 'Perfect score. You definitely know this unit.';
-        } else if (score >= Math.ceil(questions.length * 0.8)) {
-          resultCopy.textContent = 'Nice job. You are really close, just review the few you missed.';
-        } else {
-          resultCopy.textContent = 'You have the base down. Run through it again and the hard ones will stick.';
-        }
+      function renderResult(label, score, total, restartFn, customCopy) {
+        root.innerHTML = `
+          <div class="result">
+            <div class="panel-top">
+              <div>
+                <h2>${label}</h2>
+                <p>Round complete.</p>
+              </div>
+              <div class="pill">Finished</div>
+            </div>
+            <div class="question">You got ${score}${label === 'Jeopardy' ? '' : ` out of ${total}`}</div>
+            <p>${customCopy || resultCopy(score, total)}</p>
+            <div class="actions" style="justify-content:center;">
+              <button class="btn btn-primary" id="restart-final">Play Again</button>
+            </div>
+          </div>
+        `;
+        root.querySelector('#restart-final').addEventListener('click', restartFn);
       }
 
-      function nextQuestion() {
-        if (questionIndex === questions.length - 1) {
-          showResults();
-          return;
-        }
-
-        questionIndex += 1;
-        renderQuestion();
+      function resultCopy(score, total) {
+        if (score === total) return 'Perfect score. You know this unit cold.';
+        if (score >= Math.ceil(total * 0.8)) return 'Very solid. A quick rerun and you are locked in.';
+        return 'Good start. Another round will help the tricky details stick.';
       }
 
-      function restartQuiz() {
-        questionIndex = 0;
-        score = 0;
-        renderQuestion();
+      function escapeHtml(value) {
+        return value.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
       }
 
-      nextBtn.addEventListener('click', nextQuestion);
-      restartBtn.addEventListener('click', restartQuiz);
-      restartFinalBtn.addEventListener('click', restartQuiz);
+      modeButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const mode = button.dataset.mode;
+          if (mode === 'multiple') initMultiple();
+          if (mode === 'typing') initTyping();
+          if (mode === 'millionaire') initMillionaire();
+          if (mode === 'jeopardy') initJeopardy();
+        });
+      });
 
-      renderQuestion();
+      initMultiple();
     </script>
   </body>
 </html>
