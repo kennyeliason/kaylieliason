@@ -26,6 +26,25 @@ type GuidedExample = {
   answer: string;
 };
 
+type MappingExample = {
+  title: string;
+  steps: string[];
+  pairs: ExamplePoint[];
+  answer: string;
+};
+
+type LearnSection = {
+  key: string;
+  title: string;
+  preview: string;
+  badge: string;
+  bullets?: string[];
+  steps?: string[];
+  answer?: string;
+  pairs?: ExamplePoint[];
+  graphNote?: string;
+};
+
 type PracticePrompt = {
   prompt: string;
   hint: string;
@@ -35,7 +54,7 @@ type PracticePrompt = {
   teaching: string;
 };
 
-type MathTopic = {
+type MathLesson = {
   key: string;
   label: string;
   title: string;
@@ -46,6 +65,8 @@ type MathTopic = {
   notes: string[];
   checkpoints: string[];
   mistakeAlerts: string[];
+  notationExample: GuidedExample;
+  mappingExample: MappingExample;
   guidedExamples: GuidedExample[];
   practicePrompts: PracticePrompt[];
   vocabulary: VocabularyCard[];
@@ -53,245 +74,363 @@ type MathTopic = {
   quiz: QuizQuestion[];
 };
 
-const TOPICS: MathTopic[] = [
+type LessonOption = {
+  key: string;
+  label: string;
+  teaser: string;
+  status: 'available' | 'soon';
+  content?: MathLesson;
+};
+
+type MathUnit = {
+  key: string;
+  label: string;
+  title: string;
+  eyebrow: string;
+  description: string;
+  lessons: LessonOption[];
+};
+
+const UNITS: MathUnit[] = [
   {
-    key: 'relations-functions',
+    key: 'unit-2',
     label: 'Unit 2',
     title: 'Relations and Functions',
-    eyebrow: 'Algebra 2 Honors Unit 2',
+    eyebrow: 'Algebra 2 Honors',
     description:
-      'This page starts from the very beginning. It teaches what the words mean, what to look at first, and how to do one tiny step at a time.',
-    starterTalk: [
-      'In this unit, most problems are really asking you to match inputs with outputs.',
-      'If you can tell what goes in, what comes out, and whether one input is trying to have two answers, you are already doing the important part.',
-      'We are going to keep it super simple: look at x, look at y, then ask one small question at a time.',
-    ],
-    rule: 'For the graph in the notes page, the pattern is y = x - 2.',
-    notes: [
-      'An ordered pair looks like this: (x, y). The first number is x. The second number is y.',
-      'A relation is just a group of ordered pairs.',
-      'Domain is a fancy word for all the x-values.',
-      'Range is a fancy word for all the y-values.',
-      'A function means one input can only have one output.',
-      'In f(x), x goes in and f(x) comes out.',
-    ],
-    checkpoints: [
-      'Step 1: Find the x-values. Those are the inputs.',
-      'Step 2: Find the y-values. Those are the outputs.',
-      'Step 3: If the question asks for domain, list the x-values.',
-      'Step 4: If the question asks for range, list the y-values.',
-      'Step 5: If the question asks “is it a function?”, check whether any x-value repeats with a different y-value.',
-    ],
-    mistakeAlerts: [
-      'Do not mix up domain and range. Domain = x-values. Range = y-values.',
-      'Do not look at y-values first when checking if it is a function. Check the x-values first.',
-      'Repeated y-values are okay. Repeated x-values with different y-values are the problem.',
-      'If you feel lost, go back to the ordered pairs and separate first numbers from second numbers.',
-    ],
-    guidedExamples: [
+      'Pick your unit first, then choose the lesson you want. Lesson 1 is ready now, and Lesson 2 already has a slot waiting for it.',
+    lessons: [
       {
-        title: 'First learn how to read an ordered pair',
-        steps: [
-          'Look at (3, 8).',
-          'The first number is x, so x = 3.',
-          'The second number is y, so y = 8.',
-          'That means 3 is the input and 8 is the output.',
-        ],
-        answer: 'In (3, 8), input = 3 and output = 8',
+        key: 'relations-functions-lesson-1',
+        label: 'Lesson 1',
+        teaser: 'Basics, function notation, and relation mapping',
+        status: 'available',
+        content: {
+          key: 'relations-functions-lesson-1',
+          label: 'Lesson 1',
+          title: 'Relations and Functions',
+          eyebrow: 'Algebra 2 Honors Unit 2',
+          description:
+            'This lesson starts from the very beginning. It teaches what the words mean, what to look at first, how to solve the f(x) thing, and how to turn a relation into a mapping.',
+          starterTalk: [
+            'In this unit, most problems are really asking you to match inputs with outputs.',
+            'If you can tell what goes in, what comes out, and whether one input is trying to have two answers, you are already doing the important part.',
+            'We are going to keep it super simple: look at x, look at y, then ask one small question at a time.',
+          ],
+          rule: 'For the graph in the notes page, the pattern is y = x - 2.',
+          notes: [
+            'An ordered pair looks like this: (x, y). The first number is x. The second number is y.',
+            'A relation is just a group of ordered pairs.',
+            'Domain is a fancy word for all the x-values.',
+            'Range is a fancy word for all the y-values.',
+            'A function means one input can only have one output.',
+            'In f(x), x goes in and f(x) comes out.',
+          ],
+          checkpoints: [
+            'Step 1: Find the x-values. Those are the inputs.',
+            'Step 2: Find the y-values. Those are the outputs.',
+            'Step 3: If the question asks for domain, list the x-values.',
+            'Step 4: If the question asks for range, list the y-values.',
+            'Step 5: If the question asks “is it a function?”, check whether any x-value repeats with a different y-value.',
+            'Step 6: If the question asks for f(3) or f(-2), replace x with that number and solve.',
+            'Step 7: If the question asks for a mapping, draw arrows from each x-value to its matching y-value.',
+          ],
+          mistakeAlerts: [
+            'Do not mix up domain and range. Domain = x-values. Range = y-values.',
+            'Do not look at y-values first when checking if it is a function. Check the x-values first.',
+            'Repeated y-values are okay. Repeated x-values with different y-values are the problem.',
+            'If you feel lost, go back to the ordered pairs and separate first numbers from second numbers.',
+            'In f(4), the 4 replaces x. Do not multiply f times 4.',
+          ],
+          notationExample: {
+            title: 'How to solve the f(x) equation thing',
+            steps: [
+              'Look at the rule f(x) = x + 4.',
+              'If the problem asks for f(3), replace x with 3.',
+              'Now the rule says 3 + 4.',
+              'Solve it: 3 + 4 = 7.',
+              'So f(3) = 7.',
+            ],
+            answer: 'f(3) = 7',
+          },
+          mappingExample: {
+            title: 'How to make a mapping for a relation',
+            steps: [
+              'Start with the ordered pairs (1, 4), (2, 5), (3, 6).',
+              'Put the x-values on one side: 1, 2, 3.',
+              'Put the y-values on the other side: 4, 5, 6.',
+              'Draw an arrow from each x-value to the y-value in the same ordered pair.',
+            ],
+            pairs: [
+              { x: 1, y: 4 },
+              { x: 2, y: 5 },
+              { x: 3, y: 6 },
+            ],
+            answer: '1 -> 4, 2 -> 5, 3 -> 6',
+          },
+          guidedExamples: [
+            {
+              title: 'First learn how to read an ordered pair',
+              steps: [
+                'Look at (3, 8).',
+                'The first number is x, so x = 3.',
+                'The second number is y, so y = 8.',
+                'That means 3 is the input and 8 is the output.',
+              ],
+              answer: 'In (3, 8), input = 3 and output = 8',
+            },
+            {
+              title: 'Now find the domain and range',
+              steps: [
+                'Look at the ordered pairs (1, 4), (2, 5), (3, 6).',
+                'Take only the first numbers: 1, 2, 3.',
+                'Those first numbers are the x-values, so they are the domain.',
+                'Now take the second numbers: 4, 5, 6.',
+                'Those second numbers are the y-values, so they are the range.',
+              ],
+              answer: 'Domain = {1, 2, 3}, Range = {4, 5, 6}',
+            },
+            {
+              title: 'How to tell if it is a function',
+              steps: [
+                'Look at the pairs (2, 7), (3, 8), (2, 9).',
+                'Ignore the y-values for one second and only read the x-values: 2, 3, 2.',
+                'The x-value 2 shows up twice.',
+                'Now check whether it is matched with the same y-value both times. It is not: one goes to 7 and one goes to 9.',
+                'That means one input is trying to have two answers, so it is not a function.',
+              ],
+              answer: 'Not a function',
+            },
+            {
+              title: 'Use the rule y = x - 2',
+              steps: [
+                'Plug in x = 5.',
+                'Subtract 2 from 5.',
+                'That gives y = 3.',
+                'So the ordered pair is (5, 3).',
+              ],
+              answer: '(5, 3)',
+            },
+          ],
+          practicePrompts: [
+            {
+              prompt: 'Find the domain and range of (0, 2), (1, 4), (2, 6).',
+              hint: 'Take the x-values for the domain and the y-values for the range.',
+              answer: 'Domain = {0, 1, 2}; Range = {2, 4, 6}',
+              answerFormat: 'Domain = {x-values}; Range = {y-values}',
+              acceptedAnswers: [
+                'domain = {0, 1, 2}; range = {2, 4, 6}',
+                'domain={0,1,2};range={2,4,6}',
+                '{0,1,2} and {2,4,6}',
+                'domain {0, 1, 2} range {2, 4, 6}',
+              ],
+              teaching: 'Start by separating inputs from outputs. The x-values are the domain, and the y-values are the range.',
+            },
+            {
+              prompt: 'Is (4, 1), (5, 2), (4, 3) a function?',
+              hint: 'Check whether one x-value is paired with two different y-values.',
+              answer: 'No. The input 4 has two outputs: 1 and 3.',
+              answerFormat: 'Not a function',
+              acceptedAnswers: [
+                'no',
+                'not a function',
+                'no, it is not a function',
+                'no the input 4 has two outputs',
+                'input 4 has two outputs',
+              ],
+              teaching: 'Look only at the x-values first. Since 4 is matched with both 1 and 3, one input has two outputs, so it is not a function.',
+            },
+            {
+              prompt: 'Use y = x - 2. What is y when x = 9?',
+              hint: 'Substitute 9 for x and subtract 2.',
+              answer: '7',
+              answerFormat: 'number only',
+              acceptedAnswers: ['7', 'y = 7'],
+              teaching: 'Plug the x-value into the rule. Replace x with 9, then do 9 - 2 to get 7.',
+            },
+            {
+              prompt: 'Use y = x - 2. What ordered pair do you get when x = -1?',
+              hint: 'Start with -1, then subtract 2 more.',
+              answer: '(-1, -3)',
+              answerFormat: '(x, y)',
+              acceptedAnswers: [
+                '(-1, -3)',
+                '(-1,-3)',
+                '-1, -3',
+                '-1,-3',
+              ],
+              teaching: 'Use the rule first: y = -1 - 2, so y = -3. Then write the ordered pair as (x, y) = (-1, -3).',
+            },
+            {
+              prompt: 'If f(x) = x + 4, what is f(6)?',
+              hint: 'Replace x with 6, then solve.',
+              answer: '10',
+              answerFormat: 'number only',
+              acceptedAnswers: ['10', 'f(6) = 10', '10.0'],
+              teaching: 'Write 6 in place of x. That gives 6 + 4, which equals 10.',
+            },
+            {
+              prompt: 'Make the mapping for (2, 5), (4, 7), (6, 9).',
+              hint: 'Each x-value points to the y-value in the same ordered pair.',
+              answer: '2 -> 5, 4 -> 7, 6 -> 9',
+              answerFormat: 'x -> y, x -> y, x -> y',
+              acceptedAnswers: [
+                '2 -> 5, 4 -> 7, 6 -> 9',
+                '2→5 4→7 6→9',
+                '2 to 5 4 to 7 6 to 9',
+                '2 maps to 5, 4 maps to 7, 6 maps to 9',
+              ],
+              teaching: 'Read each ordered pair one at a time. The first number points to the second number, so 2 goes to 5, 4 goes to 7, and 6 goes to 9.',
+            },
+          ],
+          vocabulary: [
+            {
+              term: 'Relation',
+              definition: 'A set of ordered pairs, inputs, and outputs.',
+              clue: 'Think: a list of x and y partners.',
+            },
+            {
+              term: 'Domain',
+              definition: 'All of the input values, or x-values.',
+              clue: 'Domain = what goes in.',
+            },
+            {
+              term: 'Range',
+              definition: 'All of the output values, or y-values.',
+              clue: 'Range = what comes out.',
+            },
+            {
+              term: 'Function',
+              definition: 'A relation where each input has exactly one output.',
+              clue: 'One x cannot point to two different y-values.',
+            },
+            {
+              term: 'Vertical Line Test',
+              definition: 'If a vertical line hits the graph more than once, it is not a function.',
+              clue: 'More than one hit means not a function.',
+            },
+            {
+              term: 'Function Notation',
+              definition: 'f(x) names a function and shows the output for input x.',
+              clue: 'Read it as “f of x,” not “f times x.”',
+            },
+            {
+              term: 'Independent Variable',
+              definition: 'The input value, usually x.',
+              clue: 'It stands on its own first.',
+            },
+            {
+              term: 'Dependent Variable',
+              definition: 'The output value, usually y or f(x).',
+              clue: 'It depends on the input.',
+            },
+          ],
+          examplePoints: [
+            { x: -3, y: -5 },
+            { x: -2, y: -4 },
+            { x: -1, y: -3 },
+            { x: 0, y: -2 },
+            { x: 1, y: -1 },
+            { x: 2, y: 0 },
+            { x: 3, y: 1 },
+            { x: 4, y: 2 },
+            { x: 5, y: 3 },
+          ],
+          quiz: [
+            {
+              prompt: 'What is the domain of a relation?',
+              choices: ['All x-values', 'All y-values', 'Only the positive numbers', 'The rule of the graph'],
+              answer: 'All x-values',
+              explanation: 'The domain is the set of every input, which means every x-value.',
+            },
+            {
+              prompt: 'What is the range of the ordered pairs (2, 5), (3, 6), (4, 7)?',
+              choices: ['2, 3, 4', '5, 6, 7', '2, 5, 7', '3, 4, 5'],
+              answer: '5, 6, 7',
+              explanation: 'The range is made from the y-values, so use 5, 6, and 7.',
+            },
+            {
+              prompt: 'Which statement makes a relation a function?',
+              choices: [
+                'Each input has exactly one output',
+                'Each output has exactly one input',
+                'The graph must be a line',
+                'All numbers must be positive',
+              ],
+              answer: 'Each input has exactly one output',
+              explanation: 'A function is about inputs. One x can only match one y.',
+            },
+            {
+              prompt: 'If a vertical line crosses a graph in two places, what do you know?',
+              choices: ['It is a function', 'It is not a function', 'It has no domain', 'It has no range'],
+              answer: 'It is not a function',
+              explanation: 'Two hits on one vertical line means one x has more than one y-value.',
+            },
+            {
+              prompt: 'In f(x), which value is the input?',
+              choices: ['f', 'x', 'y', 'the slope'],
+              answer: 'x',
+              explanation: 'The x-value is the input. The output is written as f(x).',
+            },
+            {
+              prompt: 'If f(x) = x + 4, what is f(2)?',
+              choices: ['2', '4', '6', '8'],
+              answer: '6',
+              explanation: 'Replace x with 2. Then solve 2 + 4 = 6.',
+            },
+            {
+              prompt: 'For the table pattern y = x - 2, what is y when x = 6?',
+              choices: ['8', '6', '4', '-4'],
+              answer: '4',
+              explanation: 'Substitute 6 for x: 6 - 2 = 4.',
+            },
+            {
+              prompt: 'Which list is a relation that is NOT a function?',
+              choices: ['(1, 2), (2, 3), (3, 4)', '(4, 1), (4, 2), (5, 3)', '(0, 0), (1, 1), (2, 2)', '(2, 5), (3, 6), (4, 7)'],
+              answer: '(4, 1), (4, 2), (5, 3)',
+              explanation: 'The input 4 is paired with two different outputs, so it fails the function rule.',
+            },
+            {
+              prompt: 'Which mapping matches the relation (1, 3), (2, 4)?',
+              choices: ['1 -> 3 and 2 -> 4', '1 -> 2 and 3 -> 4', '3 -> 1 and 4 -> 2', '1 -> 4 and 2 -> 3'],
+              answer: '1 -> 3 and 2 -> 4',
+              explanation: 'A mapping keeps the first number as the input and the second number as the output.',
+            },
+            {
+              prompt: 'Which variable is usually the dependent variable?',
+              choices: ['x', 'y', 'input', 'domain'],
+              answer: 'y',
+              explanation: 'The dependent variable is usually y because it depends on the input x.',
+            },
+          ],
+        },
       },
       {
-        title: 'Now find the domain and range',
-        steps: [
-          'Look at the ordered pairs (1, 4), (2, 5), (3, 6).',
-          'Take only the first numbers: 1, 2, 3.',
-          'Those first numbers are the x-values, so they are the domain.',
-          'Now take the second numbers: 4, 5, 6.',
-          'Those second numbers are the y-values, so they are the range.',
-        ],
-        answer: 'Domain = {1, 2, 3}, Range = {4, 5, 6}',
-      },
-      {
-        title: 'How to tell if it is a function',
-        steps: [
-          'Look at the pairs (2, 7), (3, 8), (2, 9).',
-          'Ignore the y-values for one second and only read the x-values: 2, 3, 2.',
-          'The x-value 2 shows up twice.',
-          'Now check whether it is matched with the same y-value both times. It is not: one goes to 7 and one goes to 9.',
-          'That means one input is trying to have two answers, so it is not a function.',
-        ],
-        answer: 'Not a function',
-      },
-      {
-        title: 'Use the rule y = x - 2',
-        steps: [
-          'Plug in x = 5.',
-          'Subtract 2 from 5.',
-          'That gives y = 3.',
-          'So the ordered pair is (5, 3).',
-        ],
-        answer: '(5, 3)',
-      },
-    ],
-    practicePrompts: [
-      {
-        prompt: 'Find the domain and range of (0, 2), (1, 4), (2, 6).',
-        hint: 'Take the x-values for the domain and the y-values for the range.',
-        answer: 'Domain = {0, 1, 2}; Range = {2, 4, 6}',
-        answerFormat: 'Domain = {x-values}; Range = {y-values}',
-        acceptedAnswers: [
-          'domain = {0, 1, 2}; range = {2, 4, 6}',
-          'domain={0,1,2};range={2,4,6}',
-          '{0,1,2} and {2,4,6}',
-          'domain {0, 1, 2} range {2, 4, 6}',
-        ],
-        teaching: 'Start by separating inputs from outputs. The x-values are the domain, and the y-values are the range.',
-      },
-      {
-        prompt: 'Is (4, 1), (5, 2), (4, 3) a function?',
-        hint: 'Check whether one x-value is paired with two different y-values.',
-        answer: 'No. The input 4 has two outputs: 1 and 3.',
-        answerFormat: 'Not a function',
-        acceptedAnswers: [
-          'no',
-          'not a function',
-          'no, it is not a function',
-          'no the input 4 has two outputs',
-          'input 4 has two outputs',
-        ],
-        teaching: 'Look only at the x-values first. Since 4 is matched with both 1 and 3, one input has two outputs, so it is not a function.',
-      },
-      {
-        prompt: 'Use y = x - 2. What is y when x = 9?',
-        hint: 'Substitute 9 for x and subtract 2.',
-        answer: '7',
-        answerFormat: 'number only',
-        acceptedAnswers: ['7', 'y = 7'],
-        teaching: 'Plug the x-value into the rule. Replace x with 9, then do 9 - 2 to get 7.',
-      },
-      {
-        prompt: 'Use y = x - 2. What ordered pair do you get when x = -1?',
-        hint: 'Start with -1, then subtract 2 more.',
-        answer: '(-1, -3)',
-        answerFormat: '(x, y)',
-        acceptedAnswers: [
-          '(-1, -3)',
-          '(-1,-3)',
-          '-1, -3',
-          '-1,-3',
-        ],
-        teaching: 'Use the rule first: y = -1 - 2, so y = -3. Then write the ordered pair as (x, y) = (-1, -3).',
-      },
-    ],
-    vocabulary: [
-      {
-        term: 'Relation',
-        definition: 'A set of ordered pairs, inputs, and outputs.',
-        clue: 'Think: a list of x and y partners.',
-      },
-      {
-        term: 'Domain',
-        definition: 'All of the input values, or x-values.',
-        clue: 'Domain = what goes in.',
-      },
-      {
-        term: 'Range',
-        definition: 'All of the output values, or y-values.',
-        clue: 'Range = what comes out.',
-      },
-      {
-        term: 'Function',
-        definition: 'A relation where each input has exactly one output.',
-        clue: 'One x cannot point to two different y-values.',
-      },
-      {
-        term: 'Vertical Line Test',
-        definition: 'If a vertical line hits the graph more than once, it is not a function.',
-        clue: 'More than one hit means not a function.',
-      },
-      {
-        term: 'Function Notation',
-        definition: 'f(x) names a function and shows the output for input x.',
-        clue: 'Read it as “f of x,” not “f times x.”',
-      },
-      {
-        term: 'Independent Variable',
-        definition: 'The input value, usually x.',
-        clue: 'It stands on its own first.',
-      },
-      {
-        term: 'Dependent Variable',
-        definition: 'The output value, usually y or f(x).',
-        clue: 'It depends on the input.',
-      },
-    ],
-    examplePoints: [
-      { x: -3, y: -5 },
-      { x: -2, y: -4 },
-      { x: -1, y: -3 },
-      { x: 0, y: -2 },
-      { x: 1, y: -1 },
-      { x: 2, y: 0 },
-      { x: 3, y: 1 },
-      { x: 4, y: 2 },
-      { x: 5, y: 3 },
-    ],
-    quiz: [
-      {
-        prompt: 'What is the domain of a relation?',
-        choices: ['All x-values', 'All y-values', 'Only the positive numbers', 'The rule of the graph'],
-        answer: 'All x-values',
-        explanation: 'The domain is the set of every input, which means every x-value.',
-      },
-      {
-        prompt: 'What is the range of the ordered pairs (2, 5), (3, 6), (4, 7)?',
-        choices: ['2, 3, 4', '5, 6, 7', '2, 5, 7', '3, 4, 5'],
-        answer: '5, 6, 7',
-        explanation: 'The range is made from the y-values, so use 5, 6, and 7.',
-      },
-      {
-        prompt: 'Which statement makes a relation a function?',
-        choices: [
-          'Each input has exactly one output',
-          'Each output has exactly one input',
-          'The graph must be a line',
-          'All numbers must be positive',
-        ],
-        answer: 'Each input has exactly one output',
-        explanation: 'A function is about inputs. One x can only match one y.',
-      },
-      {
-        prompt: 'If a vertical line crosses a graph in two places, what do you know?',
-        choices: ['It is a function', 'It is not a function', 'It has no domain', 'It has no range'],
-        answer: 'It is not a function',
-        explanation: 'Two hits on one vertical line means one x has more than one y-value.',
-      },
-      {
-        prompt: 'In f(x), which value is the input?',
-        choices: ['f', 'x', 'y', 'the slope'],
-        answer: 'x',
-        explanation: 'The x-value is the input. The output is written as f(x).',
-      },
-      {
-        prompt: 'For the table pattern y = x - 2, what is y when x = 6?',
-        choices: ['8', '6', '4', '-4'],
-        answer: '4',
-        explanation: 'Substitute 6 for x: 6 - 2 = 4.',
-      },
-      {
-        prompt: 'Which list is a relation that is NOT a function?',
-        choices: ['(1, 2), (2, 3), (3, 4)', '(4, 1), (4, 2), (5, 3)', '(0, 0), (1, 1), (2, 2)', '(2, 5), (3, 6), (4, 7)'],
-        answer: '(4, 1), (4, 2), (5, 3)',
-        explanation: 'The input 4 is paired with two different outputs, so it fails the function rule.',
-      },
-      {
-        prompt: 'Which variable is usually the dependent variable?',
-        choices: ['x', 'y', 'input', 'domain'],
-        answer: 'y',
-        explanation: 'The dependent variable is usually y because it depends on the input x.',
+        key: 'relations-functions-lesson-2',
+        label: 'Lesson 2',
+        teaser: 'Waiting for the next notes',
+        status: 'soon',
       },
     ],
   },
 ];
+
+function getFirstAvailableLessonKey(unit: MathUnit) {
+  return unit.lessons.find((lesson) => lesson.status === 'available' && lesson.content)?.key ?? '';
+}
+
+function getLessonContent(unit: MathUnit, lessonKey: string) {
+  const selectedLesson = unit.lessons.find(
+    (lesson) => lesson.key === lessonKey && lesson.status === 'available' && lesson.content,
+  );
+  const fallbackLesson = unit.lessons.find(
+    (lesson) => lesson.status === 'available' && lesson.content,
+  );
+  return (selectedLesson ?? fallbackLesson)?.content as MathLesson;
+}
+
+const DEFAULT_UNIT = UNITS[0];
+const DEFAULT_LESSON_KEY = getFirstAvailableLessonKey(DEFAULT_UNIT);
 
 function shuffle<T>(items: T[]) {
   const copy = [...items];
@@ -303,11 +442,13 @@ function shuffle<T>(items: T[]) {
 }
 
 export default function MathPractice() {
-  const [activeTopicKey, setActiveTopicKey] = useState(TOPICS[0].key);
+  const [activeUnitKey, setActiveUnitKey] = useState(DEFAULT_UNIT.key);
+  const [activeLessonKey, setActiveLessonKey] = useState(DEFAULT_LESSON_KEY);
   const [activePanel, setActivePanel] = useState<PanelKey>('learn');
+  const [openLearnSection, setOpenLearnSection] = useState('range-domain');
   const [vocabReveal, setVocabReveal] = useState<Record<string, boolean>>({});
   const [quizDeck, setQuizDeck] = useState(() =>
-    TOPICS[0].quiz.map((question) => ({
+    getLessonContent(DEFAULT_UNIT, DEFAULT_LESSON_KEY).quiz.map((question) => ({
       ...question,
       choices: shuffle(question.choices),
     })),
@@ -321,21 +462,125 @@ export default function MathPractice() {
   const [practiceSubmitted, setPracticeSubmitted] = useState(false);
   const [practiceCorrect, setPracticeCorrect] = useState(false);
 
-  const activeTopic = useMemo(
-    () => TOPICS.find((topic) => topic.key === activeTopicKey) ?? TOPICS[0],
-    [activeTopicKey],
+  const activeUnit = useMemo(
+    () => UNITS.find((unit) => unit.key === activeUnitKey) ?? DEFAULT_UNIT,
+    [activeUnitKey],
   );
 
+  const activeLessonOption = useMemo(
+    () =>
+      activeUnit.lessons.find(
+        (lesson) => lesson.key === activeLessonKey && lesson.status === 'available' && lesson.content,
+      ) ??
+      activeUnit.lessons.find((lesson) => lesson.status === 'available' && lesson.content),
+    [activeLessonKey, activeUnit],
+  );
+
+  const activeLesson = activeLessonOption?.content ?? getLessonContent(activeUnit, activeLessonKey);
+
   const currentQuestion = quizDeck[questionIndex];
-  const currentPractice = activeTopic.practicePrompts[practiceIndex];
+  const currentPractice = activeLesson.practicePrompts[practiceIndex];
   const answered = selectedAnswer !== null;
   const isCorrect = selectedAnswer === currentQuestion?.answer;
   const progress = quizDeck.length === 0 ? 0 : Math.round((questionIndex / quizDeck.length) * 100);
-  const practiceProgress = activeTopic.practicePrompts.length === 0 ? 0 : Math.round((practiceIndex / activeTopic.practicePrompts.length) * 100);
+  const practiceProgress = activeLesson.practicePrompts.length === 0 ? 0 : Math.round((practiceIndex / activeLesson.practicePrompts.length) * 100);
+  const learnSections: LearnSection[] = [
+    {
+      key: 'range-domain',
+      title: 'How to find range and domain',
+      preview: 'Grab the x-values for domain and the y-values for range.',
+      badge: 'Start here',
+      bullets: [
+        activeLesson.notes[0],
+        activeLesson.notes[2],
+        activeLesson.notes[3],
+        'Example: for (1, 4), (2, 5), (3, 6), domain = {1, 2, 3} and range = {4, 5, 6}.',
+      ],
+    },
+    {
+      key: 'map-relations',
+      title: 'How to map relations',
+      preview: 'Put inputs on one side, outputs on the other, then draw arrows.',
+      badge: 'Mapping',
+      steps: activeLesson.mappingExample.steps,
+      answer: activeLesson.mappingExample.answer,
+      pairs: activeLesson.mappingExample.pairs,
+    },
+    {
+      key: 'recognize-function',
+      title: 'How to recognize a function',
+      preview: 'One input can only have one output.',
+      badge: 'Function rule',
+      bullets: [
+        activeLesson.notes[4],
+        'Check the x-values first, not the y-values.',
+        'If one x-value matches two different y-values, it is not a function.',
+        'Repeated y-values are okay. Repeated x-values with different outputs are the problem.',
+      ],
+    },
+    {
+      key: 'table-of-rules',
+      title: 'Creating a table of rules',
+      preview: 'Plug x-values into the rule and fill in the y-column.',
+      badge: activeLesson.rule,
+      bullets: [
+        'Start with the rule.',
+        'Pick an x-value.',
+        'Substitute the x-value into the rule.',
+        'Solve for y and write the ordered pair in the table.',
+      ],
+      graphNote: 'Use the rule y = x - 2. If x = 5, then y = 3, so the point is (5, 3).',
+    },
+    {
+      key: 'vertical-line-test',
+      title: 'Vertical line test',
+      preview: 'If one vertical line hits the graph twice, it is not a function.',
+      badge: 'Graph check',
+      bullets: [
+        'Imagine a straight vertical line moving across the graph.',
+        'If it touches the graph only once at every spot, it passes.',
+        'If it touches the graph more than once in one place, it fails.',
+        activeLesson.vocabulary.find((card) => card.term === 'Vertical Line Test')?.definition ?? '',
+      ].filter(Boolean),
+    },
+    {
+      key: 'writing-functions',
+      title: 'Writing functions',
+      preview: 'Write the rule so each input has exactly one output.',
+      badge: 'Rule writing',
+      bullets: [
+        'Functions are often written like y = x - 2 or f(x) = x + 4.',
+        'The expression on the right tells you what to do to x.',
+        'After you write the rule, test it with an x-value to make sure it works.',
+        'If the same x would give two different answers, it is not a valid function rule.',
+      ],
+    },
+    {
+      key: 'function-notation',
+      title: 'Function notation',
+      preview: 'f(x) means the output of a function when x goes in.',
+      badge: 'Read the symbol',
+      bullets: [
+        activeLesson.notes[5],
+        'Read f(x) as "f of x."',
+        'The x inside the parentheses is the input.',
+        'The answer you get is the output.',
+      ],
+    },
+    {
+      key: 'fx-equations',
+      title: 'f(x) equations',
+      preview: 'Replace x with the number you are given, then solve.',
+      badge: 'Plug it in',
+      steps: activeLesson.notationExample.steps,
+      answer: activeLesson.notationExample.answer,
+    },
+  ];
 
   function normalizeAnswer(value: string) {
     return value
       .toLowerCase()
+      .replace(/->|=>|→/g, ' to ')
       .replace(/[(){}[\];:=]/g, ' ')
       .replace(/,/g, ' ')
       .replace(/\s+/g, ' ')
@@ -353,18 +598,38 @@ export default function MathPractice() {
     );
   }
 
-  function switchTopic(topicKey: string) {
-    setActiveTopicKey(topicKey);
+  function switchUnit(unitKey: string) {
+    const unit = UNITS.find((entry) => entry.key === unitKey) ?? DEFAULT_UNIT;
+    const lessonKey = getFirstAvailableLessonKey(unit);
+
+    setActiveUnitKey(unit.key);
+    setActiveLessonKey(lessonKey);
     setActivePanel('learn');
+    setOpenLearnSection('range-domain');
     setVocabReveal({});
-    restartQuiz(topicKey);
-    restartPractice(topicKey);
+    restartQuiz(unit.key, lessonKey);
+    restartPractice(unit.key, lessonKey);
   }
 
-  function restartQuiz(topicKey = activeTopic.key) {
-    const topic = TOPICS.find((entry) => entry.key === topicKey) ?? TOPICS[0];
+  function switchLesson(lessonKey: string) {
+    const lesson = activeUnit.lessons.find(
+      (entry) => entry.key === lessonKey && entry.status === 'available' && entry.content,
+    );
+    if (!lesson) return;
+
+    setActiveLessonKey(lessonKey);
+    setActivePanel('learn');
+    setOpenLearnSection('range-domain');
+    setVocabReveal({});
+    restartQuiz(activeUnit.key, lessonKey);
+    restartPractice(activeUnit.key, lessonKey);
+  }
+
+  function restartQuiz(unitKey = activeUnit.key, lessonKey = activeLesson.key) {
+    const unit = UNITS.find((entry) => entry.key === unitKey) ?? DEFAULT_UNIT;
+    const lesson = getLessonContent(unit, lessonKey);
     setQuizDeck(
-      topic.quiz.map((question) => ({
+      lesson.quiz.map((question) => ({
         ...question,
         choices: shuffle(question.choices),
       })),
@@ -400,13 +665,14 @@ export default function MathPractice() {
     }));
   }
 
-  function restartPractice(topicKey = activeTopic.key) {
-    const topic = TOPICS.find((entry) => entry.key === topicKey) ?? TOPICS[0];
+  function restartPractice(unitKey = activeUnit.key, lessonKey = activeLesson.key) {
+    const unit = UNITS.find((entry) => entry.key === unitKey) ?? DEFAULT_UNIT;
+    const lesson = getLessonContent(unit, lessonKey);
     setPracticeIndex(0);
     setPracticeInput('');
     setPracticeSubmitted(false);
     setPracticeCorrect(false);
-    if (topic.practicePrompts.length === 0) {
+    if (lesson.practicePrompts.length === 0) {
       setPracticeIndex(0);
     }
   }
@@ -425,7 +691,7 @@ export default function MathPractice() {
   }
 
   function nextPractice() {
-    const nextIndex = (practiceIndex + 1) % activeTopic.practicePrompts.length;
+    const nextIndex = (practiceIndex + 1) % activeLesson.practicePrompts.length;
     setPracticeIndex(nextIndex);
     setPracticeInput('');
     setPracticeSubmitted(false);
@@ -440,16 +706,31 @@ export default function MathPractice() {
       <main className="shell">
         <section className="hero">
           <div className="topic-row">
-            {TOPICS.map((topic) => (
+            {UNITS.map((unit) => (
               <button
-                key={topic.key}
-                className={topic.key === activeTopic.key ? 'topic-bubble active' : 'topic-bubble'}
-                onClick={() => switchTopic(topic.key)}
+                key={unit.key}
+                className={unit.key === activeUnit.key ? 'topic-bubble active' : 'topic-bubble'}
+                onClick={() => switchUnit(unit.key)}
               >
-                {topic.label}
+                {unit.label}
               </button>
             ))}
             <div className="topic-bubble muted">More topics soon</div>
+          </div>
+
+          <div className="lesson-row">
+            {activeUnit.lessons.map((lesson) => (
+              <button
+                key={lesson.key}
+                className={lesson.key === activeLesson.key ? 'lesson-bubble active' : 'lesson-bubble'}
+                onClick={() => switchLesson(lesson.key)}
+                disabled={lesson.status !== 'available'}
+                type="button"
+              >
+                <strong>{lesson.label}</strong>
+                <span>{lesson.teaser}</span>
+              </button>
+            ))}
           </div>
 
           <div className="panel-row">
@@ -473,9 +754,10 @@ export default function MathPractice() {
             </button>
           </div>
 
-          <div className="eyebrow">{activeTopic.eyebrow}</div>
-          <h1>{activeTopic.title}</h1>
-          <p className="hero-copy">{activeTopic.description}</p>
+          <div className="eyebrow">{activeUnit.eyebrow}</div>
+          <h1>{activeUnit.title}</h1>
+          <p className="hero-copy">{activeUnit.description}</p>
+          <p className="hero-mini">{activeLesson.label}: {activeLesson.description}</p>
         </section>
 
         {activePanel === 'learn' && (
@@ -483,126 +765,74 @@ export default function MathPractice() {
             <div className="board">
               <div className="section-head">
                 <div>
-                  <p className="section-label">Start Here</p>
-                  <h2>What is this even talking about?</h2>
+                  <p className="section-label">Learn It</p>
+                  <h2>Tap a topic to open it</h2>
                 </div>
-                <div className="rule-pill">Simple version</div>
+                <div className="graph-badge">8 lesson sections</div>
               </div>
 
-              <div className="hint-grid">
-                {activeTopic.starterTalk.map((note) => (
-                  <article className="hint-card" key={note}>
-                    <strong>Simple explanation</strong>
-                    <span>{note}</span>
-                  </article>
-                ))}
-              </div>
-            </div>
+              <div className="learn-grid">
+                {learnSections.map((section) => {
+                  const expanded = openLearnSection === section.key;
 
-            <div className="board">
-              <div className="section-head">
-                <div>
-                  <p className="section-label">Learn First</p>
-                  <h2>What the words really mean</h2>
-                </div>
-                <div className="rule-pill">{activeTopic.rule}</div>
-              </div>
+                  return (
+                    <button
+                      key={section.key}
+                      className={expanded ? 'learn-card expanded' : 'learn-card'}
+                      type="button"
+                      onClick={() => setOpenLearnSection(expanded ? '' : section.key)}
+                    >
+                      <div className="learn-card-top">
+                        <div>
+                          <p className="learn-badge">{section.badge}</p>
+                          <h3>{section.title}</h3>
+                        </div>
+                        <span className="learn-toggle">{expanded ? '−' : '+'}</span>
+                      </div>
+                      <p className="learn-preview">{section.preview}</p>
 
-              <div className="hint-grid">
-                {activeTopic.notes.map((note) => (
-                  <article className="hint-card" key={note}>
-                    <strong>Lock this in</strong>
-                    <span>{note}</span>
-                  </article>
-                ))}
-              </div>
-            </div>
+                      {expanded && (
+                        <div className="learn-detail">
+                          {section.bullets && (
+                            <ul className="learn-list">
+                              {section.bullets.map((item) => (
+                                <li key={item}>{item}</li>
+                              ))}
+                            </ul>
+                          )}
 
-            <div className="board">
-              <div className="section-head">
-                <div>
-                  <p className="section-label">How To Think</p>
-                  <h2>Do the same tiny steps every time</h2>
-                </div>
-                <div className="graph-badge">Step by step</div>
-              </div>
+                          {section.steps && (
+                            <ol className="step-list">
+                              {section.steps.map((step) => (
+                                <li key={step}>{step}</li>
+                              ))}
+                            </ol>
+                          )}
 
-              <div className="hint-grid">
-                {activeTopic.checkpoints.map((item, index) => (
-                  <article className="hint-card" key={item}>
-                    <strong>Step {index + 1}</strong>
-                    <span>{item}</span>
-                  </article>
-                ))}
-              </div>
-            </div>
+                          {section.pairs && (
+                            <div className="mapping-mini">
+                              {section.pairs.map((pair) => (
+                                <div className="mapping-row-item" key={`${pair.x}-${pair.y}`}>
+                                  <span className="mapping-pill">{pair.x}</span>
+                                  <span className="mapping-arrow">→</span>
+                                  <span className="mapping-pill output">{pair.y}</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
 
-            <div className="board">
-              <div className="section-head">
-                <div>
-                  <p className="section-label">Watch Out</p>
-                  <h2>Easy mistakes to avoid</h2>
-                </div>
-                <div className="graph-badge">This trips people up</div>
-              </div>
+                          {section.graphNote && (
+                            <div className="graph-note">
+                              <strong>Example:</strong> {section.graphNote}
+                            </div>
+                          )}
 
-              <div className="hint-grid">
-                {activeTopic.mistakeAlerts.map((item) => (
-                  <article className="hint-card" key={item}>
-                    <strong>Remember</strong>
-                    <span>{item}</span>
-                  </article>
-                ))}
-              </div>
-            </div>
-
-            <div className="board">
-              <div className="section-head">
-                <div>
-                  <p className="section-label">Worked Example</p>
-                  <h2>One graph, explained slowly</h2>
-                </div>
-                <div className="graph-badge">y = x - 2</div>
-              </div>
-
-              <div className="example-grid">
-                <div className="graph-card">
-                  <div className="graph-frame" aria-hidden="true">
-                    <div className="axis axis-x" />
-                    <div className="axis axis-y" />
-                    <svg viewBox="0 0 100 100" className="graph-svg" role="img" aria-label="Line graph for y equals x minus 2">
-                      <line x1="10" y1="90" x2="90" y2="10" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" />
-                      {activeTopic.examplePoints.map((point) => {
-                        const plotX = 50 + point.x * 8;
-                        const plotY = 50 - point.y * 8;
-                        return <circle key={`${point.x}-${point.y}`} cx={plotX} cy={plotY} r="3.4" fill="#1d4ed8" />;
-                      })}
-                    </svg>
-                  </div>
-                  <p className="graph-copy">
-                    Start at the point where the line crosses the y-axis. That happens at -2. Then each time you move right 1, you also move up 1.
-                  </p>
-                </div>
-
-                <div className="table-card">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>x</th>
-                        <th>y</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {activeTopic.examplePoints.slice(0, 6).map((point) => (
-                        <tr key={`${point.x}-${point.y}`}>
-                          <td>{point.x}</td>
-                          <td>{point.y}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                  <p className="table-copy">Use the rule <strong>y = x - 2</strong> to keep extending the table.</p>
-                </div>
+                          {section.answer && <p className="answer-line"><strong>Answer:</strong> {section.answer}</p>}
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </section>
@@ -620,7 +850,7 @@ export default function MathPractice() {
               </div>
 
               <div className="practice-stack">
-                {activeTopic.guidedExamples.map((example) => (
+                {activeLesson.guidedExamples.map((example) => (
                   <article className="practice-card" key={example.title}>
                     <h3>{example.title}</h3>
                     <ol className="step-list">
@@ -644,7 +874,7 @@ export default function MathPractice() {
               </div>
 
               <div className="stats">
-                <div className="stat-chip">Practice {practiceIndex + 1}/{activeTopic.practicePrompts.length}</div>
+                <div className="stat-chip">Practice {practiceIndex + 1}/{activeLesson.practicePrompts.length}</div>
                 <div className="stat-chip">Progress: {practiceProgress}%</div>
               </div>
 
@@ -712,7 +942,7 @@ export default function MathPractice() {
             </div>
 
             <div className="vocab-grid">
-              {activeTopic.vocabulary.map((card) => {
+              {activeLesson.vocabulary.map((card) => {
                 const shown = Boolean(vocabReveal[card.term]);
                 return (
                   <button
@@ -860,6 +1090,7 @@ export default function MathPractice() {
         }
 
         .topic-row,
+        .lesson-row,
         .panel-row,
         .stats {
           display: flex;
@@ -872,11 +1103,16 @@ export default function MathPractice() {
           margin-bottom: 0.9rem;
         }
 
+        .lesson-row {
+          margin-bottom: 1rem;
+        }
+
         .panel-row {
           margin-bottom: 1rem;
         }
 
         .topic-bubble,
+        .lesson-bubble,
         .tab-bubble,
         .vocab-card,
         .answer-btn,
@@ -887,6 +1123,7 @@ export default function MathPractice() {
         }
 
         .topic-bubble,
+        .lesson-bubble,
         .tab-bubble,
         .vocab-card,
         .answer-btn,
@@ -904,11 +1141,41 @@ export default function MathPractice() {
           color: #21518f;
         }
 
+        .lesson-bubble {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          min-width: 13rem;
+          padding: 0.9rem 1rem;
+          border-radius: 1.2rem;
+          text-align: left;
+          background: rgba(255, 255, 255, 0.82);
+          border: 1px solid rgba(59, 130, 246, 0.14);
+          color: #21518f;
+          box-shadow: 0 10px 24px rgba(32, 83, 133, 0.08);
+        }
+
+        .lesson-bubble strong {
+          font-size: 0.98rem;
+        }
+
+        .lesson-bubble span {
+          margin-top: 0.25rem;
+          font-size: 0.85rem;
+          line-height: 1.45;
+          color: #5d7c99;
+        }
+
         .topic-bubble.active,
+        .lesson-bubble.active,
         .tab-bubble.active {
           background: linear-gradient(135deg, #38bdf8 0%, #2563eb 100%);
           color: #f8fbff;
           box-shadow: 0 12px 24px rgba(37, 99, 235, 0.2);
+        }
+
+        .lesson-bubble.active span {
+          color: rgba(248, 251, 255, 0.85);
         }
 
         .topic-bubble.muted {
@@ -917,12 +1184,20 @@ export default function MathPractice() {
         }
 
         .topic-bubble:hover,
+        .lesson-bubble:hover:enabled,
         .tab-bubble:hover,
         .vocab-card:hover,
         .answer-btn:hover:enabled,
         .primary-btn:hover {
           transform: translateY(-1px);
           box-shadow: 0 10px 24px rgba(32, 83, 133, 0.12);
+        }
+
+        .lesson-bubble:disabled {
+          cursor: not-allowed;
+          opacity: 0.72;
+          background: rgba(255, 255, 255, 0.55);
+          box-shadow: none;
         }
 
         .eyebrow,
@@ -960,6 +1235,7 @@ export default function MathPractice() {
         }
 
         .hero-copy,
+        .hero-mini,
         .feedback-copy,
         .result-copy,
         .graph-copy,
@@ -973,6 +1249,12 @@ export default function MathPractice() {
           margin: 0 auto;
         }
 
+        .hero-mini {
+          max-width: 44rem;
+          margin: 0.7rem auto 0;
+          font-weight: 700;
+        }
+
         .stack {
           display: grid;
           gap: 1rem;
@@ -983,6 +1265,7 @@ export default function MathPractice() {
         .practice-card,
         .graph-card,
         .table-card,
+        .mapping-card,
         .question-card,
         .result-card,
         .vocab-card {
@@ -1017,6 +1300,7 @@ export default function MathPractice() {
         }
 
         .hint-grid,
+        .learn-grid,
         .vocab-grid,
         .answer-grid,
         .example-grid {
@@ -1033,10 +1317,15 @@ export default function MathPractice() {
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
+        .learn-grid,
         .vocab-grid,
         .answer-grid,
         .example-grid {
           grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .learn-grid {
+          align-items: start;
         }
 
         .hint-card {
@@ -1061,8 +1350,10 @@ export default function MathPractice() {
         }
 
         .graph-card,
+        .learn-card,
         .practice-card,
         .table-card,
+        .mapping-card,
         .question-card,
         .result-card,
         .vocab-card {
@@ -1088,9 +1379,146 @@ export default function MathPractice() {
           color: #1f3252;
         }
 
+        .learn-card {
+          display: block;
+          width: 100%;
+          padding: 1.15rem;
+          border-radius: 1.35rem;
+          text-align: left;
+          background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(241, 249, 255, 0.92) 100%);
+        }
+
+        .learn-card.expanded {
+          background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(236, 253, 245, 0.95) 100%);
+          border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .learn-card-top {
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          gap: 0.8rem;
+        }
+
+        .learn-card h3 {
+          margin: 0.15rem 0 0;
+          font-size: 1.15rem;
+          color: #163b6a;
+        }
+
+        .learn-badge {
+          margin: 0;
+          font-size: 0.75rem;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: #1d4ed8;
+        }
+
+        .learn-toggle {
+          display: inline-flex;
+          justify-content: center;
+          align-items: center;
+          width: 2rem;
+          height: 2rem;
+          border-radius: 999px;
+          background: rgba(219, 234, 254, 0.9);
+          color: #1d4ed8;
+          font-size: 1.3rem;
+          font-weight: 800;
+          flex-shrink: 0;
+        }
+
+        .learn-preview {
+          margin: 0.75rem 0 0;
+          line-height: 1.6;
+          color: #456380;
+          font-weight: 700;
+        }
+
+        .learn-detail {
+          margin-top: 1rem;
+          padding-top: 1rem;
+          border-top: 1px solid rgba(59, 130, 246, 0.12);
+        }
+
+        .learn-list {
+          margin: 0;
+          padding-left: 1.2rem;
+          color: #456380;
+          line-height: 1.7;
+        }
+
+        .mapping-mini {
+          display: grid;
+          gap: 0.7rem;
+          margin-top: 0.9rem;
+        }
+
+        .graph-note {
+          margin-top: 0.9rem;
+          padding: 0.85rem 0.95rem;
+          border-radius: 1rem;
+          background: rgba(219, 234, 254, 0.75);
+          color: #244667;
+          line-height: 1.6;
+        }
+
         .practice-card-live {
           max-width: 42rem;
           margin: 0 auto;
+        }
+
+        .mapping-card {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          background: linear-gradient(180deg, #ffffff 0%, #effaf6 100%);
+        }
+
+        .mapping-head,
+        .mapping-row-item {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+          align-items: center;
+          gap: 0.8rem;
+        }
+
+        .mapping-head {
+          padding-bottom: 0.8rem;
+          font-size: 0.82rem;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: #217260;
+        }
+
+        .mapping-stack {
+          display: grid;
+          gap: 0.8rem;
+        }
+
+        .mapping-pill {
+          display: inline-flex;
+          justify-content: center;
+          align-items: center;
+          min-height: 3rem;
+          padding: 0.6rem 0.85rem;
+          border-radius: 999px;
+          background: rgba(219, 234, 254, 0.9);
+          color: #18457f;
+          font-weight: 800;
+        }
+
+        .mapping-pill.output {
+          background: rgba(220, 252, 231, 0.92);
+          color: #166534;
+        }
+
+        .mapping-arrow {
+          font-size: 1.45rem;
+          font-weight: 800;
+          color: #10b981;
         }
 
         .step-list {
@@ -1346,10 +1774,15 @@ export default function MathPractice() {
           }
 
           .hint-grid,
+          .learn-grid,
           .vocab-grid,
           .answer-grid,
           .example-grid {
             grid-template-columns: 1fr;
+          }
+
+          .lesson-bubble {
+            min-width: min(100%, 18rem);
           }
 
           .section-head {
