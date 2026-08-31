@@ -67,7 +67,6 @@ type MathLesson = {
   mistakeAlerts: string[];
   notationExample: GuidedExample;
   mappingExample: MappingExample;
-  guidedExamples: GuidedExample[];
   practicePrompts: PracticePrompt[];
   vocabulary: VocabularyCard[];
   examplePoints: ExamplePoint[];
@@ -95,7 +94,7 @@ const UNITS: MathUnit[] = [
   {
     key: 'unit-2',
     label: 'Unit 2',
-    title: 'Relations and Functions',
+    title: 'Algebra 2',
     eyebrow: 'Algebra 2 Honors',
     description:
       'Pick your unit first, then choose the lesson you want. Lesson 1 is ready now, and Lesson 2 already has a slot waiting for it.',
@@ -108,7 +107,7 @@ const UNITS: MathUnit[] = [
         content: {
           key: 'relations-functions-lesson-1',
           label: 'Lesson 1',
-          title: 'Relations and Functions',
+          title: 'Algebra 2',
           eyebrow: 'Algebra 2 Honors Unit 2',
           description:
             'This lesson starts from the very beginning. It teaches what the words mean, what to look at first, how to solve the f(x) thing, and how to turn a relation into a mapping.',
@@ -168,50 +167,6 @@ const UNITS: MathUnit[] = [
             ],
             answer: '1 -> 4, 2 -> 5, 3 -> 6',
           },
-          guidedExamples: [
-            {
-              title: 'First learn how to read an ordered pair',
-              steps: [
-                'Look at (3, 8).',
-                'The first number is x, so x = 3.',
-                'The second number is y, so y = 8.',
-                'That means 3 is the input and 8 is the output.',
-              ],
-              answer: 'In (3, 8), input = 3 and output = 8',
-            },
-            {
-              title: 'Now find the domain and range',
-              steps: [
-                'Look at the ordered pairs (1, 4), (2, 5), (3, 6).',
-                'Take only the first numbers: 1, 2, 3.',
-                'Those first numbers are the x-values, so they are the domain.',
-                'Now take the second numbers: 4, 5, 6.',
-                'Those second numbers are the y-values, so they are the range.',
-              ],
-              answer: 'Domain = {1, 2, 3}, Range = {4, 5, 6}',
-            },
-            {
-              title: 'How to tell if it is a function',
-              steps: [
-                'Look at the pairs (2, 7), (3, 8), (2, 9).',
-                'Ignore the y-values for one second and only read the x-values: 2, 3, 2.',
-                'The x-value 2 shows up twice.',
-                'Now check whether it is matched with the same y-value both times. It is not: one goes to 7 and one goes to 9.',
-                'That means one input is trying to have two answers, so it is not a function.',
-              ],
-              answer: 'Not a function',
-            },
-            {
-              title: 'Use the rule y = x - 2',
-              steps: [
-                'Plug in x = 5.',
-                'Subtract 2 from 5.',
-                'That gives y = 3.',
-                'So the ordered pair is (5, 3).',
-              ],
-              answer: '(5, 3)',
-            },
-          ],
           practicePrompts: [
             {
               prompt: 'Find the domain and range of (0, 2), (1, 4), (2, 6).',
@@ -488,91 +443,117 @@ export default function MathPractice() {
     {
       key: 'range-domain',
       title: 'How to find range and domain',
-      preview: 'Grab the x-values for domain and the y-values for range.',
+      preview: 'Domain means all the x-values. Range means all the y-values.',
       badge: 'Start here',
       bullets: [
-        activeLesson.notes[0],
-        activeLesson.notes[2],
-        activeLesson.notes[3],
-        'Example: for (1, 4), (2, 5), (3, 6), domain = {1, 2, 3} and range = {4, 5, 6}.',
+        'Start with the ordered pairs and remember that each pair is written as (x, y). The first number is x and the second number is y.',
+        'Domain is every x-value in the relation. A quick way to think about it is this: domain is what goes in.',
+        'Range is every y-value in the relation. That means the range is what comes out.',
+        'To find the domain, read only the first number in each ordered pair. To find the range, read only the second number in each ordered pair.',
+        'Example: in (1, 4), (2, 5), (3, 6), the domain is {1, 2, 3} because those are the x-values, and the range is {4, 5, 6} because those are the y-values.',
+        'If a value repeats, you usually only list it once in the set.',
       ],
     },
     {
       key: 'map-relations',
       title: 'How to map relations',
-      preview: 'Put inputs on one side, outputs on the other, then draw arrows.',
+      preview: 'Put the inputs on one side, the outputs on the other side, and connect them.',
       badge: 'Mapping',
-      steps: activeLesson.mappingExample.steps,
+      steps: [
+        'Look at each ordered pair one at a time so you do not mix the numbers up.',
+        'Write all of the x-values in one column or oval on the left. These are the inputs.',
+        'Write the y-values in a second column or oval on the right. These are the outputs.',
+        'Draw an arrow from each x-value to the y-value that matches it in the ordered pair.',
+        'For example, if you see (1, 4), the arrow goes from 1 to 4. If you see (2, 5), the arrow goes from 2 to 5.',
+        'When you are done, the mapping should show exactly how every input connects to its output.',
+      ],
       answer: activeLesson.mappingExample.answer,
       pairs: activeLesson.mappingExample.pairs,
     },
     {
       key: 'recognize-function',
       title: 'How to recognize a function',
-      preview: 'One input can only have one output.',
+      preview: 'A relation is a function only if each input has exactly one output.',
       badge: 'Function rule',
       bullets: [
-        activeLesson.notes[4],
-        'Check the x-values first, not the y-values.',
-        'If one x-value matches two different y-values, it is not a function.',
-        'Repeated y-values are okay. Repeated x-values with different outputs are the problem.',
+        'A function follows one main rule: one input can only go to one output.',
+        'Check the x-values first, because the x-values are the inputs. The y-values do not decide it.',
+        'If the same x-value shows up more than once, look closely at the y-values it is paired with.',
+        'If that one x-value points to two different y-values, then it is not a function.',
+        'Repeated y-values are okay. Different inputs are allowed to share the same output.',
+        'Example: (2, 7) and (3, 7) is still a function, but (2, 7) and (2, 9) is not.',
       ],
     },
     {
       key: 'table-of-rules',
       title: 'Creating a table of rules',
-      preview: 'Plug x-values into the rule and fill in the y-column.',
+      preview: 'Use the rule, plug in each x-value, and then write the matching y-value.',
       badge: activeLesson.rule,
       bullets: [
-        'Start with the rule.',
-        'Pick an x-value.',
-        'Substitute the x-value into the rule.',
-        'Solve for y and write the ordered pair in the table.',
+        'A table of rules helps you organize the pattern in a function.',
+        'Start by writing the rule at the top so you remember what math to do each time.',
+        'Pick an x-value from the table and substitute it into the rule.',
+        'Solve carefully to find y.',
+        'Write the x-value and y-value in the same row because they belong together as one ordered pair.',
+        'Repeat the same process for every row in the table.',
       ],
       graphNote: 'Use the rule y = x - 2. If x = 5, then y = 3, so the point is (5, 3).',
     },
     {
       key: 'vertical-line-test',
       title: 'Vertical line test',
-      preview: 'If one vertical line hits the graph twice, it is not a function.',
+      preview: 'If a vertical line touches the graph more than once, the graph is not a function.',
       badge: 'Graph check',
       bullets: [
-        'Imagine a straight vertical line moving across the graph.',
-        'If it touches the graph only once at every spot, it passes.',
-        'If it touches the graph more than once in one place, it fails.',
+        'This is a quick graph trick for checking whether a graph shows a function.',
+        'Imagine drawing a straight up-and-down line and sliding it across the graph.',
+        'If the line only touches the graph one time at every spot, the graph passes the test.',
+        'If the line hits the graph twice in the same place, that means one x-value has two y-values.',
+        'That breaks the rule for functions, so the graph would not be a function.',
         activeLesson.vocabulary.find((card) => card.term === 'Vertical Line Test')?.definition ?? '',
       ].filter(Boolean),
     },
     {
       key: 'writing-functions',
       title: 'Writing functions',
-      preview: 'Write the rule so each input has exactly one output.',
+      preview: 'Write a rule that tells exactly what happens to x every time.',
       badge: 'Rule writing',
       bullets: [
-        'Functions are often written like y = x - 2 or f(x) = x + 4.',
-        'The expression on the right tells you what to do to x.',
-        'After you write the rule, test it with an x-value to make sure it works.',
-        'If the same x would give two different answers, it is not a valid function rule.',
+        'A function rule explains how to turn an input into an output.',
+        'Rules are often written like y = x - 2 or f(x) = x + 4.',
+        'The part on the right tells you what operation to do to x, such as add, subtract, multiply, or divide.',
+        'When you write a rule, make sure it works the same way every time you plug in a value.',
+        'You can test the rule by choosing an x-value and solving for the output.',
+        'If one input could give two different outputs, then the rule would not describe a function.',
       ],
     },
     {
       key: 'function-notation',
       title: 'Function notation',
-      preview: 'f(x) means the output of a function when x goes in.',
+      preview: 'f(x) is another way to name the output when x is the input.',
       badge: 'Read the symbol',
       bullets: [
-        activeLesson.notes[5],
-        'Read f(x) as "f of x."',
-        'The x inside the parentheses is the input.',
-        'The answer you get is the output.',
+        'Read f(x) as "f of x." It does not mean f times x.',
+        'The x inside the parentheses is the input you are using.',
+        'The answer you get after you substitute and solve is the output.',
+        'So if the rule is f(x) = x + 4, the function takes any x-value and adds 4 to it.',
+        'If the problem says f(3), that means the input is 3.',
+        'Function notation is just a compact way to show the rule and the output.',
       ],
     },
     {
       key: 'fx-equations',
       title: 'f(x) equations',
-      preview: 'Replace x with the number you are given, then solve.',
+      preview: 'Take the number inside the parentheses, plug it in for x, and solve step by step.',
       badge: 'Plug it in',
-      steps: activeLesson.notationExample.steps,
+      steps: [
+        'Start with the rule. Example: f(x) = x + 4.',
+        'Look at the value inside the parentheses. If the problem says f(3), then x becomes 3.',
+        'Rewrite the rule using 3 instead of x. That gives you 3 + 4.',
+        'Solve the expression carefully.',
+        'Write the final answer back in function notation, so the answer is f(3) = 7.',
+        'The same idea works for any number. Just replace x with the number you are given and then do the math.',
+      ],
       answer: activeLesson.notationExample.answer,
     },
   ];
@@ -840,30 +821,6 @@ export default function MathPractice() {
 
         {activePanel === 'practice' && (
           <section className="stack">
-            <div className="board">
-              <div className="section-head">
-                <div>
-                  <p className="section-label">Guided Practice</p>
-                  <h2>See the steps before you try it</h2>
-                </div>
-                <div className="rule-pill">Worked examples</div>
-              </div>
-
-              <div className="practice-stack">
-                {activeLesson.guidedExamples.map((example) => (
-                  <article className="practice-card" key={example.title}>
-                    <h3>{example.title}</h3>
-                    <ol className="step-list">
-                      {example.steps.map((step) => (
-                        <li key={step}>{step}</li>
-                      ))}
-                    </ol>
-                    <p className="answer-line"><strong>Answer:</strong> {example.answer}</p>
-                  </article>
-                ))}
-              </div>
-            </div>
-
             <div className="board">
               <div className="section-head">
                 <div>
@@ -1317,15 +1274,15 @@ export default function MathPractice() {
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
-        .learn-grid,
+        .learn-grid {
+          grid-template-columns: minmax(0, 1fr);
+          align-items: start;
+        }
+
         .vocab-grid,
         .answer-grid,
         .example-grid {
           grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-
-        .learn-grid {
-          align-items: start;
         }
 
         .hint-card {
@@ -1382,15 +1339,19 @@ export default function MathPractice() {
         .learn-card {
           display: block;
           width: 100%;
-          padding: 1.15rem;
+          min-height: 9.5rem;
+          padding: 1.4rem 1.5rem;
           border-radius: 1.35rem;
           text-align: left;
           background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(241, 249, 255, 0.92) 100%);
         }
 
         .learn-card.expanded {
+          min-height: 0;
+          padding: 1.7rem 1.8rem 1.8rem;
           background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(236, 253, 245, 0.95) 100%);
           border-color: rgba(16, 185, 129, 0.2);
+          box-shadow: 0 22px 50px rgba(21, 75, 121, 0.16);
         }
 
         .learn-card-top {
@@ -1402,7 +1363,8 @@ export default function MathPractice() {
 
         .learn-card h3 {
           margin: 0.15rem 0 0;
-          font-size: 1.15rem;
+          font-size: 1.45rem;
+          line-height: 1.15;
           color: #163b6a;
         }
 
@@ -1430,15 +1392,16 @@ export default function MathPractice() {
         }
 
         .learn-preview {
-          margin: 0.75rem 0 0;
-          line-height: 1.6;
+          margin: 0.9rem 0 0;
+          font-size: 1.05rem;
+          line-height: 1.75;
           color: #456380;
           font-weight: 700;
         }
 
         .learn-detail {
-          margin-top: 1rem;
-          padding-top: 1rem;
+          margin-top: 1.15rem;
+          padding-top: 1.15rem;
           border-top: 1px solid rgba(59, 130, 246, 0.12);
         }
 
@@ -1446,7 +1409,8 @@ export default function MathPractice() {
           margin: 0;
           padding-left: 1.2rem;
           color: #456380;
-          line-height: 1.7;
+          font-size: 1rem;
+          line-height: 1.85;
         }
 
         .mapping-mini {
@@ -1457,11 +1421,12 @@ export default function MathPractice() {
 
         .graph-note {
           margin-top: 0.9rem;
-          padding: 0.85rem 0.95rem;
+          padding: 1rem 1.05rem;
           border-radius: 1rem;
           background: rgba(219, 234, 254, 0.75);
           color: #244667;
-          line-height: 1.6;
+          font-size: 1rem;
+          line-height: 1.7;
         }
 
         .practice-card-live {
@@ -1525,7 +1490,8 @@ export default function MathPractice() {
           margin: 0.8rem 0 0;
           padding-left: 1.2rem;
           color: #456380;
-          line-height: 1.7;
+          font-size: 1rem;
+          line-height: 1.85;
         }
 
         .practice-number {
@@ -1539,7 +1505,8 @@ export default function MathPractice() {
 
         .answer-line {
           margin: 0.8rem 0 0;
-          line-height: 1.6;
+          font-size: 1rem;
+          line-height: 1.7;
           color: #456380;
         }
 
@@ -1796,6 +1763,27 @@ export default function MathPractice() {
           .result-card,
           .vocab-card {
             border-radius: 1.25rem;
+          }
+
+          .learn-card {
+            min-height: 0;
+            padding: 1.25rem;
+          }
+
+          .learn-card.expanded {
+            padding: 1.45rem;
+          }
+
+          .learn-card h3 {
+            font-size: 1.28rem;
+          }
+
+          .learn-preview,
+          .learn-list,
+          .step-list,
+          .graph-note,
+          .answer-line {
+            font-size: 0.98rem;
           }
         }
       `}</style>
