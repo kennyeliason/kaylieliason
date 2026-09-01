@@ -383,6 +383,13 @@ const studyUnits = [
         margin-top: 1.3rem;
       }
 
+      .hero-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
       .unit-switcher {
         display: flex;
         flex-wrap: wrap;
@@ -466,6 +473,29 @@ const studyUnits = [
         font-size: 1.05rem;
         line-height: 1.4;
         color: rgba(255, 248, 236, 0.88);
+      }
+
+      .stats-launch {
+        flex-shrink: 0;
+        padding: 0.6rem 0.95rem;
+        border: 1px solid rgba(255, 255, 255, 0.16);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff8ec;
+        font-family: 'Nunito', 'Trebuchet MS', sans-serif;
+        font-size: 0.88rem;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+      }
+
+      .stats-launch:hover,
+      .stats-launch.active {
+        transform: translateY(-2px);
+        background: rgba(255, 255, 255, 0.16);
+        border-color: rgba(255, 255, 255, 0.24);
       }
 
       .board {
@@ -805,6 +835,8 @@ const studyUnits = [
       @media (max-width: 760px) {
         main { width: min(100% - 0.75rem, 42rem); padding-top: 0.8rem; }
         .hero { padding: 1.5rem; border-radius: 22px; }
+        .hero-top { flex-direction: column; align-items: stretch; }
+        .stats-launch { align-self: flex-end; }
         .mode-grid { grid-template-columns: 1fr; }
         .board { padding: 0.9rem; border-radius: 22px; }
         .panel { padding: 1rem; }
@@ -822,8 +854,13 @@ const studyUnits = [
           <button class="unit-chip active" data-unit="unit-1" type="button">Unit One • First Peoples + Societies</button>
           <button class="unit-chip" data-unit="unit-2" type="button">Unit Two • 8 Features of Civilizations</button>
         </div>
-        <h1>World History Study Guide</h1>
-        <p class="hero-copy">Choose your unit and study style and start studying!</p>
+        <div class="hero-top">
+          <div>
+            <h1>World History Study Guide</h1>
+            <p class="hero-copy">Choose your unit and study style and start studying!</p>
+          </div>
+          <button class="stats-launch" data-mode="stats" type="button">Stats</button>
+        </div>
         <div class="menu-wrap">
           <p class="menu-label">Choose a mode</p>
           <div class="mode-grid">
@@ -842,10 +879,6 @@ const studyUnits = [
             <button class="mode-card" data-mode="typing" type="button">
               <strong>Typing Quiz</strong>
               <span>Type the answer yourself instead of picking from choices.</span>
-            </button>
-            <button class="mode-card" data-mode="stats" type="button">
-              <strong>Stats</strong>
-              <span>See your subject accuracy and redo questions you missed.</span>
             </button>
           </div>
         </div>
@@ -972,7 +1005,7 @@ const studyUnits = [
       }
 
       function buildMcQuestions() {
-        return currentQuestions().map((item) => ({ ...item, choices: shuffle(item.choices) }));
+        return shuffle(currentQuestions()).map((item) => ({ ...item, choices: shuffle(item.choices) }));
       }
 
       function setActiveUnit(unitId) {
