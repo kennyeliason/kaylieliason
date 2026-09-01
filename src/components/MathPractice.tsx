@@ -136,6 +136,8 @@ const UNITS: MathUnit[] = [
                 'Look at each ordered pair one at a time so you do not mix the numbers up.',
                 'Write all of the x-values in one column or oval on the left. These are the inputs.',
                 'Write the y-values in a second column or oval on the right. These are the outputs.',
+                'You do not have to put the numbers in order from smallest to largest, but some people do that to make the mapping look cleaner and easier to read.',
+                'The most important part is to keep each x-value matched with the correct y-value from the ordered pair.',
                 'Draw an arrow from each x-value to the y-value that matches it in the ordered pair.',
                 'For example, if you see (1, 4), the arrow goes from 1 to 4. If you see (2, 5), the arrow goes from 2 to 5.',
                 'When you are done, the mapping should show exactly how every input connects to its output.',
