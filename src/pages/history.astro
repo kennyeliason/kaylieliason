@@ -916,6 +916,34 @@ const studyUnits = [
         return value.toLowerCase().replace(/[^\w\s]/g, ' ').replace(/\s+/g, ' ').trim();
       }
 
+      function keywordSet(value) {
+        const skipWords = new Set(['a', 'an', 'and', 'are', 'as', 'at', 'be', 'by', 'for', 'from', 'in', 'into', 'is', 'it', 'of', 'on', 'or', 'that', 'the', 'their', 'this', 'to', 'was', 'were', 'with']);
+        return new Set(
+          normalize(value)
+            .split(' ')
+            .filter((word) => word.length > 2 && !skipWords.has(word))
+        );
+      }
+
+      function isLooseMatch(guess, answer, explanation = '') {
+        if (!guess) return false;
+        const combined = normalize(`${answer} ${explanation}`);
+        if (guess === answer || guess.includes(answer) || answer.includes(guess)) return true;
+        if (guess.includes(combined) || combined.includes(guess)) return true;
+
+        const guessWords = keywordSet(guess);
+        const answerWords = keywordSet(combined);
+        if (!guessWords.size || !answerWords.size) return false;
+
+        let overlap = 0;
+        guessWords.forEach((word) => {
+          if (answerWords.has(word)) overlap += 1;
+        });
+
+        const overlapRatio = overlap / answerWords.size;
+        return overlap >= 2 || overlapRatio >= 0.5;
+      }
+
       function currentQuestions() {
         return currentUnit.questions;
       }
@@ -1149,7 +1177,7 @@ const studyUnits = [
         const feedback = root.querySelector('#feedback');
         const feedbackTitle = root.querySelector('#feedback-title');
         const feedbackCopy = root.querySelector('#feedback-copy');
-        const ok = guess === answer || guess.includes(answer) || answer.includes(guess);
+        const ok = isLooseMatch(guess, answer, item.explanation);
         recordAnswer(item, ok);
         if (ok) {
           state.score += 1;
