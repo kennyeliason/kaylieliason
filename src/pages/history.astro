@@ -964,6 +964,11 @@ const studyUnits = [
         localStorage.setItem(statsStorageKey, JSON.stringify(stats));
       }
 
+      function confirmStatsReset() {
+        const typed = window.prompt('Are you sure you want to do this? Type PAST to reset your stats.');
+        return typed === 'PAST';
+      }
+
       function recordAnswer(item, correct) {
         const unitStats = ensureUnitStats(currentUnit.id);
         const categoryStats = unitStats.categories[item.category] || { correct: 0, attempts: 0 };
@@ -1524,6 +1529,7 @@ const studyUnits = [
         }
 
         root.querySelector('#reset-stats-btn').addEventListener('click', () => {
+          if (!confirmStatsReset()) return;
           stats[currentUnit.id] = createEmptyUnitStats(currentUnit);
           saveStats();
           renderStats();
