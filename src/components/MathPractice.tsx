@@ -60,6 +60,7 @@ type MathLesson = {
   title: string;
   eyebrow: string;
   description: string;
+  learnSections: LearnSection[];
   starterTalk: string[];
   rule: string;
   notes: string[];
@@ -97,7 +98,7 @@ const UNITS: MathUnit[] = [
     title: 'Algebra 2',
     eyebrow: 'Algebra 2 Honors',
     description:
-      'Pick your unit first, then choose the lesson you want. Lesson 1 is ready now, and Lesson 2 already has a slot waiting for it.',
+      'Pick your unit first, then choose the lesson you want. Lessons 1 and 2 are both ready now.',
     lessons: [
       {
         key: 'relations-functions-lesson-1',
@@ -111,6 +112,128 @@ const UNITS: MathUnit[] = [
           eyebrow: 'Algebra 2 Honors Unit 2',
           description:
             'This lesson starts from the very beginning. It teaches what the words mean, what to look at first, how to solve the f(x) thing, and how to turn a relation into a mapping.',
+          learnSections: [
+            {
+              key: 'range-domain',
+              title: 'How to find range and domain',
+              preview: 'Domain means all the x-values. Range means all the y-values.',
+              badge: 'Start here',
+              bullets: [
+                'Start with the ordered pairs and remember that each pair is written as (x, y). The first number is x and the second number is y.',
+                'Domain is every x-value in the relation. A quick way to think about it is this: domain is what goes in.',
+                'Range is every y-value in the relation. That means the range is what comes out.',
+                'To find the domain, read only the first number in each ordered pair. To find the range, read only the second number in each ordered pair.',
+                'Example: in (1, 4), (2, 5), (3, 6), the domain is {1, 2, 3} because those are the x-values, and the range is {4, 5, 6} because those are the y-values.',
+                'If a value repeats, you usually only list it once in the set.',
+              ],
+            },
+            {
+              key: 'map-relations',
+              title: 'How to map relations',
+              preview: 'Put the inputs on one side, the outputs on the other side, and connect them.',
+              badge: 'Mapping',
+              steps: [
+                'Look at each ordered pair one at a time so you do not mix the numbers up.',
+                'Write all of the x-values in one column or oval on the left. These are the inputs.',
+                'Write the y-values in a second column or oval on the right. These are the outputs.',
+                'Draw an arrow from each x-value to the y-value that matches it in the ordered pair.',
+                'For example, if you see (1, 4), the arrow goes from 1 to 4. If you see (2, 5), the arrow goes from 2 to 5.',
+                'When you are done, the mapping should show exactly how every input connects to its output.',
+              ],
+              answer: '1 -> 4, 2 -> 5, 3 -> 6',
+              pairs: [
+                { x: 1, y: 4 },
+                { x: 2, y: 5 },
+                { x: 3, y: 6 },
+              ],
+            },
+            {
+              key: 'recognize-function',
+              title: 'How to recognize a function',
+              preview: 'A relation is a function only if each input has exactly one output.',
+              badge: 'Function rule',
+              bullets: [
+                'A function follows one main rule: one input can only go to one output.',
+                'Check the x-values first, because the x-values are the inputs. The y-values do not decide it.',
+                'If the same x-value shows up more than once, look closely at the y-values it is paired with.',
+                'If that one x-value points to two different y-values, then it is not a function.',
+                'Repeated y-values are okay. Different inputs are allowed to share the same output.',
+                'Example: (2, 7) and (3, 7) is still a function, but (2, 7) and (2, 9) is not.',
+              ],
+            },
+            {
+              key: 'table-of-rules',
+              title: 'Creating a table of rules',
+              preview: 'Use the rule, plug in each x-value, and then write the matching y-value.',
+              badge: 'y = x - 2',
+              bullets: [
+                'A table of rules helps you organize the pattern in a function.',
+                'Start by writing the rule at the top so you remember what math to do each time.',
+                'Pick an x-value from the table and substitute it into the rule.',
+                'Solve carefully to find y.',
+                'Write the x-value and y-value in the same row because they belong together as one ordered pair.',
+                'Repeat the same process for every row in the table.',
+              ],
+              graphNote: 'Use the rule y = x - 2. If x = 5, then y = 3, so the point is (5, 3).',
+            },
+            {
+              key: 'vertical-line-test',
+              title: 'Vertical line test',
+              preview: 'If a vertical line touches the graph more than once, the graph is not a function.',
+              badge: 'Graph check',
+              bullets: [
+                'This is a quick graph trick for checking whether a graph shows a function.',
+                'Imagine drawing a straight up-and-down line and sliding it across the graph.',
+                'If the line only touches the graph one time at every spot, the graph passes the test.',
+                'If the line hits the graph twice in the same place, that means one x-value has two y-values.',
+                'That breaks the rule for functions, so the graph would not be a function.',
+                'If a vertical line hits the graph more than once, it is not a function.',
+              ],
+            },
+            {
+              key: 'writing-functions',
+              title: 'Writing functions',
+              preview: 'Write a rule that tells exactly what happens to x every time.',
+              badge: 'Rule writing',
+              bullets: [
+                'A function rule explains how to turn an input into an output.',
+                'Rules are often written like y = x - 2 or f(x) = x + 4.',
+                'The part on the right tells you what operation to do to x, such as add, subtract, multiply, or divide.',
+                'When you write a rule, make sure it works the same way every time you plug in a value.',
+                'You can test the rule by choosing an x-value and solving for the output.',
+                'If one input could give two different outputs, then the rule would not describe a function.',
+              ],
+            },
+            {
+              key: 'function-notation',
+              title: 'Function notation',
+              preview: 'f(x) is another way to name the output when x is the input.',
+              badge: 'Read the symbol',
+              bullets: [
+                'Read f(x) as "f of x." It does not mean f times x.',
+                'The x inside the parentheses is the input you are using.',
+                'The answer you get after you substitute and solve is the output.',
+                'So if the rule is f(x) = x + 4, the function takes any x-value and adds 4 to it.',
+                'If the problem says f(3), that means the input is 3.',
+                'Function notation is just a compact way to show the rule and the output.',
+              ],
+            },
+            {
+              key: 'fx-equations',
+              title: 'f(x) equations',
+              preview: 'Take the number inside the parentheses, plug it in for x, and solve step by step.',
+              badge: 'Plug it in',
+              steps: [
+                'Start with the rule. Example: f(x) = x + 4.',
+                'Look at the value inside the parentheses. If the problem says f(3), then x becomes 3.',
+                'Rewrite the rule using 3 instead of x. That gives you 3 + 4.',
+                'Solve the expression carefully.',
+                'Write the final answer back in function notation, so the answer is f(3) = 7.',
+                'The same idea works for any number. Just replace x with the number you are given and then do the math.',
+              ],
+              answer: 'f(3) = 7',
+            },
+          ],
           starterTalk: [
             'In this unit, most problems are really asking you to match inputs with outputs.',
             'If you can tell what goes in, what comes out, and whether one input is trying to have two answers, you are already doing the important part.',
@@ -363,8 +486,351 @@ const UNITS: MathUnit[] = [
       {
         key: 'relations-functions-lesson-2',
         label: 'Lesson 2',
-        teaser: 'Waiting for the next notes',
-        status: 'soon',
+        teaser: 'Direct variation, constants, and graphing',
+        status: 'available',
+        content: {
+          key: 'relations-functions-lesson-2',
+          label: 'Lesson 2',
+          title: 'Algebra 2',
+          eyebrow: 'Algebra 2 Honors Unit 2',
+          description:
+            'This lesson is all about direct variation. You will learn how to recognize it in tables and equations, find the constant of variation, solve real-life problems, and graph direct variation equations.',
+          learnSections: [
+            {
+              key: 'direct-variation-meaning',
+              title: 'What direct variation means',
+              preview: 'Direct variation means y changes at a constant rate with x.',
+              badge: 'Big idea',
+              bullets: [
+                'In direct variation, y changes directly with x. That means as x changes, y changes by the same ratio.',
+                'The basic equation is y = kx.',
+                'The letter k is called the constant of variation.',
+                'If you divide y by x and keep getting the same number, then the relation is direct variation.',
+                'That constant number is k, and it tells you how fast y changes compared to x.',
+              ],
+            },
+            {
+              key: 'identify-from-table',
+              title: 'How to tell from a table',
+              preview: 'Check whether y divided by x stays the same in every row.',
+              badge: 'Tables',
+              steps: [
+                'Take one ordered pair from the table and divide y by x.',
+                'Do the same thing for the next row.',
+                'If the answer stays the same every time, the table shows direct variation.',
+                'That repeated ratio is the constant of variation k.',
+                'Example: if the table gives (1, 3), (2, 6), and (4, 12), then 3/1 = 3, 6/2 = 3, and 12/4 = 3, so it is direct variation with k = 3.',
+              ],
+              answer: 'If y/x stays the same, it is direct variation.',
+            },
+            {
+              key: 'find-the-rule',
+              title: 'Finding the rule y = kx',
+              preview: 'Once you know k, plug it into y = kx.',
+              badge: 'Write the rule',
+              bullets: [
+                'Start by finding the ratio y/x.',
+                'Use that ratio as the value of k.',
+                'Write the equation as y = kx.',
+                'If k = 3, then the rule is y = 3x.',
+                'If k = -7, then the rule is y = -7x.',
+                'Always check one point from the table to make sure your rule works.',
+              ],
+            },
+            {
+              key: 'check-an-equation',
+              title: 'How to check an equation',
+              preview: 'A direct-variation equation can be rewritten to look like y = kx.',
+              badge: 'Equations',
+              bullets: [
+                'A direct-variation equation must match the form y = kx.',
+                'If the equation has extra numbers added or subtracted, then it is not direct variation.',
+                'Example: 5y = 10x can be divided by 5 to get y = 2x, so it is direct variation with k = 2.',
+                'Example: 4y = 12x + 8 is not direct variation because the +8 does not belong in y = kx.',
+                'Example: y = x/9 is direct variation because it is the same as y = (1/9)x.',
+              ],
+            },
+            {
+              key: 'solve-word-problems',
+              title: 'Solving direct-variation word problems',
+              preview: 'Use the given numbers to find k first, then solve for the missing value.',
+              badge: 'Word problems',
+              steps: [
+                'Write the direct-variation equation y = kx, but match the letters to the problem if it uses different variables.',
+                'Plug in the known values to find k.',
+                'Solve for k first before trying to answer the question.',
+                'After you know k, plug in the new x-value and solve for the new y-value.',
+                'Example: if 95 kg on Earth becomes 38 kg on Mars, then 38 = 95k, so k = 0.4 and a 100 kg person would weigh 40 kg on Mars.',
+              ],
+              answer: 'Find k first, then use it to solve the new part.',
+            },
+            {
+              key: 'graph-direct-variation',
+              title: 'Graphing direct variation',
+              preview: 'Make a small table, plot the points, and draw a straight line through the origin.',
+              badge: 'Graph it',
+              bullets: [
+                'Start with the equation, like y = 3x or y = -(2/3)x.',
+                'Pick a few x-values and use the rule to find the matching y-values.',
+                'Write the ordered pairs in a table before you graph.',
+                'Plot the points carefully on the coordinate plane.',
+                'Draw a straight line through the points.',
+                'A direct-variation graph always goes through the origin because when x = 0, y = 0.',
+              ],
+              graphNote: 'For y = 3x, points like (0, 0), (1, 3), and (2, 6) all lie on the line.',
+            },
+            {
+              key: 'constant-of-variation',
+              title: 'Constant of variation',
+              preview: 'The constant of variation is the fixed number k in y = kx.',
+              badge: 'k value',
+              bullets: [
+                'The constant of variation is just the number that multiplies x.',
+                'In y = 3x, the constant of variation is 3.',
+                'In y = -(2/3)x, the constant of variation is -2/3.',
+                'If the constant is positive, the graph rises from left to right.',
+                'If the constant is negative, the graph falls from left to right.',
+              ],
+            },
+          ],
+          starterTalk: [
+            'Direct variation is mostly about spotting one steady pattern.',
+            'If y divided by x stays the same, you already found the important clue.',
+            'Once you know k, the rest of the problem usually gets much easier.',
+          ],
+          rule: 'Direct variation always uses the rule y = kx.',
+          notes: [
+            'Direct variation has the form y = kx.',
+            'The number k is the constant of variation.',
+            'To test a table, divide y by x.',
+            'If y/x stays the same, the relation varies directly.',
+            'If an equation can be rewritten as y = kx, it is direct variation.',
+            'Direct-variation graphs pass through the origin.',
+          ],
+          checkpoints: [
+            'Step 1: Decide whether the problem gives a table, equation, graph, or word problem.',
+            'Step 2: If it is a table, divide y by x and compare the ratios.',
+            'Step 3: If it is an equation, rewrite it so y is by itself.',
+            'Step 4: Look for the form y = kx.',
+            'Step 5: If it is a word problem, plug in the known numbers to find k.',
+            'Step 6: Use k to write the rule or solve the missing value.',
+            'Step 7: If you need a graph, make a table, plot points, and draw the line through the origin.',
+          ],
+          mistakeAlerts: [
+            'Do not forget to divide y by x, not x by y, when checking a table.',
+            'If the ratio changes from row to row, it is not direct variation.',
+            'An added number like +8 means the equation is not in direct-variation form.',
+            'Find k before solving the second part of a word problem.',
+            'A direct-variation graph must pass through (0, 0).',
+          ],
+          notationExample: {
+            title: 'Find the constant and write the rule',
+            steps: [
+              'Use the point (2, 6).',
+              'Divide y by x, so 6 divided by 2 equals 3.',
+              'That means k = 3.',
+              'Write the direct-variation equation as y = 3x.',
+            ],
+            answer: 'k = 3 and y = 3x',
+          },
+          mappingExample: {
+            title: 'Direct variation table pattern',
+            steps: [
+              'Look at the pairs (1, 3), (2, 6), and (4, 12).',
+              'Each output is 3 times the input.',
+              'That means the same constant works every time.',
+              'So the relation varies directly with rule y = 3x.',
+            ],
+            pairs: [
+              { x: 1, y: 3 },
+              { x: 2, y: 6 },
+              { x: 4, y: 12 },
+            ],
+            answer: 'y = 3x',
+          },
+          practicePrompts: [
+            {
+              prompt: 'Does the table (1, 3), (2, 6), (4, 12) show direct variation?',
+              hint: 'Divide y by x for each pair and compare the ratios.',
+              answer: 'Yes. The ratio y/x is 3 each time.',
+              answerFormat: 'Yes or no, then say why',
+              acceptedAnswers: [
+                'yes',
+                'yes, the ratio y/x is 3 each time',
+                'yes the ratio is 3',
+                'yes because y divided by x stays the same',
+              ],
+              teaching: 'Check the ratio y/x for every pair. If it stays the same, the table is direct variation.',
+            },
+            {
+              prompt: 'For the direct variation table (1, 3), (2, 6), (4, 12), what is the constant of variation k?',
+              hint: 'Use y/x from any one of the points.',
+              answer: '3',
+              answerFormat: 'number only',
+              acceptedAnswers: ['3', 'k = 3'],
+              teaching: 'Pick any point and divide y by x. Since 3/1 = 3, the constant is 3.',
+            },
+            {
+              prompt: 'Write the direct-variation equation for k = 3.',
+              hint: 'Use the form y = kx.',
+              answer: 'y = 3x',
+              answerFormat: 'y = kx',
+              acceptedAnswers: ['y = 3x', 'y=3x'],
+              teaching: 'Direct variation always uses y = kx. Replace k with 3 to get y = 3x.',
+            },
+            {
+              prompt: 'Is 5y = 10x a direct-variation equation?',
+              hint: 'Solve for y first.',
+              answer: 'Yes. It simplifies to y = 2x.',
+              answerFormat: 'Yes or no, then give the simpler equation',
+              acceptedAnswers: [
+                'yes',
+                'yes, it simplifies to y = 2x',
+                'yes y = 2x',
+                'y = 2x',
+              ],
+              teaching: 'Divide both sides by 5. That gives y = 2x, which matches the form y = kx.',
+            },
+            {
+              prompt: 'Is 4y = 12x + 8 a direct-variation equation?',
+              hint: 'A direct-variation equation cannot have an extra added number.',
+              answer: 'No. The +8 means it is not in the form y = kx.',
+              answerFormat: 'No, and say why',
+              acceptedAnswers: [
+                'no',
+                'no, it is not in the form y = kx',
+                'no because of the +8',
+                'not direct variation',
+              ],
+              teaching: 'Direct variation has to look like y = kx after simplifying. The extra +8 breaks that form.',
+            },
+            {
+              prompt: 'On Mars, 95 kg on Earth becomes 38 kg on Mars. How much would 100 kg on Earth weigh on Mars?',
+              hint: 'Find k first by dividing 38 by 95.',
+              answer: '40',
+              answerFormat: 'number only',
+              acceptedAnswers: ['40', '40 kg', 'm = 40'],
+              teaching: 'First find k: 38/95 = 0.4. Then multiply 100 by 0.4 to get 40.',
+            },
+            {
+              prompt: 'If 50 grams of cheese contains 200 calories, how many calories are in 70 grams?',
+              hint: 'Find calories per gram first.',
+              answer: '280',
+              answerFormat: 'number only',
+              acceptedAnswers: ['280', '280 calories', 'c = 280'],
+              teaching: 'Find the constant first: 200/50 = 4 calories per gram. Then multiply 70 by 4 to get 280.',
+            },
+            {
+              prompt: 'For y = 3x, what is y when x = 4?',
+              hint: 'Multiply x by 3.',
+              answer: '12',
+              answerFormat: 'number only',
+              acceptedAnswers: ['12', 'y = 12'],
+              teaching: 'Substitute 4 into y = 3x. Then 3 times 4 equals 12.',
+            },
+          ],
+          vocabulary: [
+            {
+              term: 'Direct Variation',
+              definition: 'A relationship that can be written as y = kx.',
+              clue: 'Look for the form y = kx.',
+            },
+            {
+              term: 'Constant of Variation',
+              definition: 'The fixed number k in y = kx.',
+              clue: 'It is the number multiplying x.',
+            },
+            {
+              term: 'Ratio',
+              definition: 'A comparison of two numbers using division.',
+              clue: 'For tables here, compare y to x.',
+            },
+            {
+              term: 'Proportional Relationship',
+              definition: 'Another way to describe a direct variation relationship.',
+              clue: 'The values grow in the same ratio.',
+            },
+            {
+              term: 'Equation',
+              definition: 'A math sentence that shows two expressions are equal.',
+              clue: 'It has an equals sign.',
+            },
+            {
+              term: 'Origin',
+              definition: 'The point (0, 0) on the graph.',
+              clue: 'A direct-variation line goes through it.',
+            },
+            {
+              term: 'Independent Variable',
+              definition: 'The input value, usually x.',
+              clue: 'It is the value you choose first.',
+            },
+            {
+              term: 'Dependent Variable',
+              definition: 'The output value, usually y.',
+              clue: 'It changes because x changes.',
+            },
+          ],
+          examplePoints: [
+            { x: -3, y: -9 },
+            { x: -2, y: -6 },
+            { x: -1, y: -3 },
+            { x: 0, y: 0 },
+            { x: 1, y: 3 },
+            { x: 2, y: 6 },
+            { x: 3, y: 9 },
+          ],
+          quiz: [
+            {
+              prompt: 'Which equation shows direct variation?',
+              choices: ['y = 3x', 'y = 3x + 2', 'y = x - 4', 'y = x/2 + 1'],
+              answer: 'y = 3x',
+              explanation: 'Direct variation must match the form y = kx with no extra added number.',
+            },
+            {
+              prompt: 'What is the constant of variation in y = 5x?',
+              choices: ['5', 'x', '0', '1/5'],
+              answer: '5',
+              explanation: 'The constant of variation is the number multiplying x.',
+            },
+            {
+              prompt: 'If a table has the same y/x ratio in every row, what does that mean?',
+              choices: ['It is direct variation', 'It is not a function', 'The graph is curved', 'The range is missing'],
+              answer: 'It is direct variation',
+              explanation: 'A constant y/x ratio is the big clue for direct variation.',
+            },
+            {
+              prompt: 'Does 5y = 10x represent direct variation?',
+              choices: ['Yes, because it becomes y = 2x', 'No, because it has two variables', 'No, because the ratio is 5', 'Yes, because x is positive'],
+              answer: 'Yes, because it becomes y = 2x',
+              explanation: 'Divide both sides by 5 and you get y = 2x, which is direct variation.',
+            },
+            {
+              prompt: 'Why is 4y = 12x + 8 not direct variation?',
+              choices: ['Because of the +8', 'Because 12 is too big', 'Because y is on the left', 'Because x should be squared'],
+              answer: 'Because of the +8',
+              explanation: 'Direct variation cannot have an extra added number after simplifying.',
+            },
+            {
+              prompt: 'If y = 3x, what is y when x = 4?',
+              choices: ['7', '12', '1', '16'],
+              answer: '12',
+              explanation: 'Multiply 3 by 4 to get 12.',
+            },
+            {
+              prompt: 'A direct-variation graph always goes through which point?',
+              choices: ['(0, 0)', '(1, 1)', '(0, 1)', '(1, 0)'],
+              answer: '(0, 0)',
+              explanation: 'When x = 0 in y = kx, y is also 0.',
+            },
+            {
+              prompt: 'If 50 grams of cheese has 200 calories, how many calories are in 1 gram?',
+              choices: ['4', '50', '150', '250'],
+              answer: '4',
+              explanation: 'Divide 200 by 50 to get 4 calories per gram.',
+            },
+          ],
+        },
       },
     ],
   },
@@ -386,6 +852,7 @@ function getLessonContent(unit: MathUnit, lessonKey: string) {
 
 const DEFAULT_UNIT = UNITS[0];
 const DEFAULT_LESSON_KEY = getFirstAvailableLessonKey(DEFAULT_UNIT);
+const DEFAULT_LEARN_SECTION_KEY = getLessonContent(DEFAULT_UNIT, DEFAULT_LESSON_KEY).learnSections[0]?.key ?? '';
 
 function shuffle<T>(items: T[]) {
   const copy = [...items];
@@ -400,7 +867,7 @@ export default function MathPractice() {
   const [activeUnitKey, setActiveUnitKey] = useState(DEFAULT_UNIT.key);
   const [activeLessonKey, setActiveLessonKey] = useState(DEFAULT_LESSON_KEY);
   const [activePanel, setActivePanel] = useState<PanelKey>('learn');
-  const [openLearnSection, setOpenLearnSection] = useState('range-domain');
+  const [openLearnSection, setOpenLearnSection] = useState(DEFAULT_LEARN_SECTION_KEY);
   const [vocabReveal, setVocabReveal] = useState<Record<string, boolean>>({});
   const [quizDeck, setQuizDeck] = useState(() =>
     getLessonContent(DEFAULT_UNIT, DEFAULT_LESSON_KEY).quiz.map((question) => ({
@@ -439,124 +906,7 @@ export default function MathPractice() {
   const isCorrect = selectedAnswer === currentQuestion?.answer;
   const progress = quizDeck.length === 0 ? 0 : Math.round((questionIndex / quizDeck.length) * 100);
   const practiceProgress = activeLesson.practicePrompts.length === 0 ? 0 : Math.round((practiceIndex / activeLesson.practicePrompts.length) * 100);
-  const learnSections: LearnSection[] = [
-    {
-      key: 'range-domain',
-      title: 'How to find range and domain',
-      preview: 'Domain means all the x-values. Range means all the y-values.',
-      badge: 'Start here',
-      bullets: [
-        'Start with the ordered pairs and remember that each pair is written as (x, y). The first number is x and the second number is y.',
-        'Domain is every x-value in the relation. A quick way to think about it is this: domain is what goes in.',
-        'Range is every y-value in the relation. That means the range is what comes out.',
-        'To find the domain, read only the first number in each ordered pair. To find the range, read only the second number in each ordered pair.',
-        'Example: in (1, 4), (2, 5), (3, 6), the domain is {1, 2, 3} because those are the x-values, and the range is {4, 5, 6} because those are the y-values.',
-        'If a value repeats, you usually only list it once in the set.',
-      ],
-    },
-    {
-      key: 'map-relations',
-      title: 'How to map relations',
-      preview: 'Put the inputs on one side, the outputs on the other side, and connect them.',
-      badge: 'Mapping',
-      steps: [
-        'Look at each ordered pair one at a time so you do not mix the numbers up.',
-        'Write all of the x-values in one column or oval on the left. These are the inputs.',
-        'Write the y-values in a second column or oval on the right. These are the outputs.',
-        'Draw an arrow from each x-value to the y-value that matches it in the ordered pair.',
-        'For example, if you see (1, 4), the arrow goes from 1 to 4. If you see (2, 5), the arrow goes from 2 to 5.',
-        'When you are done, the mapping should show exactly how every input connects to its output.',
-      ],
-      answer: activeLesson.mappingExample.answer,
-      pairs: activeLesson.mappingExample.pairs,
-    },
-    {
-      key: 'recognize-function',
-      title: 'How to recognize a function',
-      preview: 'A relation is a function only if each input has exactly one output.',
-      badge: 'Function rule',
-      bullets: [
-        'A function follows one main rule: one input can only go to one output.',
-        'Check the x-values first, because the x-values are the inputs. The y-values do not decide it.',
-        'If the same x-value shows up more than once, look closely at the y-values it is paired with.',
-        'If that one x-value points to two different y-values, then it is not a function.',
-        'Repeated y-values are okay. Different inputs are allowed to share the same output.',
-        'Example: (2, 7) and (3, 7) is still a function, but (2, 7) and (2, 9) is not.',
-      ],
-    },
-    {
-      key: 'table-of-rules',
-      title: 'Creating a table of rules',
-      preview: 'Use the rule, plug in each x-value, and then write the matching y-value.',
-      badge: activeLesson.rule,
-      bullets: [
-        'A table of rules helps you organize the pattern in a function.',
-        'Start by writing the rule at the top so you remember what math to do each time.',
-        'Pick an x-value from the table and substitute it into the rule.',
-        'Solve carefully to find y.',
-        'Write the x-value and y-value in the same row because they belong together as one ordered pair.',
-        'Repeat the same process for every row in the table.',
-      ],
-      graphNote: 'Use the rule y = x - 2. If x = 5, then y = 3, so the point is (5, 3).',
-    },
-    {
-      key: 'vertical-line-test',
-      title: 'Vertical line test',
-      preview: 'If a vertical line touches the graph more than once, the graph is not a function.',
-      badge: 'Graph check',
-      bullets: [
-        'This is a quick graph trick for checking whether a graph shows a function.',
-        'Imagine drawing a straight up-and-down line and sliding it across the graph.',
-        'If the line only touches the graph one time at every spot, the graph passes the test.',
-        'If the line hits the graph twice in the same place, that means one x-value has two y-values.',
-        'That breaks the rule for functions, so the graph would not be a function.',
-        activeLesson.vocabulary.find((card) => card.term === 'Vertical Line Test')?.definition ?? '',
-      ].filter(Boolean),
-    },
-    {
-      key: 'writing-functions',
-      title: 'Writing functions',
-      preview: 'Write a rule that tells exactly what happens to x every time.',
-      badge: 'Rule writing',
-      bullets: [
-        'A function rule explains how to turn an input into an output.',
-        'Rules are often written like y = x - 2 or f(x) = x + 4.',
-        'The part on the right tells you what operation to do to x, such as add, subtract, multiply, or divide.',
-        'When you write a rule, make sure it works the same way every time you plug in a value.',
-        'You can test the rule by choosing an x-value and solving for the output.',
-        'If one input could give two different outputs, then the rule would not describe a function.',
-      ],
-    },
-    {
-      key: 'function-notation',
-      title: 'Function notation',
-      preview: 'f(x) is another way to name the output when x is the input.',
-      badge: 'Read the symbol',
-      bullets: [
-        'Read f(x) as "f of x." It does not mean f times x.',
-        'The x inside the parentheses is the input you are using.',
-        'The answer you get after you substitute and solve is the output.',
-        'So if the rule is f(x) = x + 4, the function takes any x-value and adds 4 to it.',
-        'If the problem says f(3), that means the input is 3.',
-        'Function notation is just a compact way to show the rule and the output.',
-      ],
-    },
-    {
-      key: 'fx-equations',
-      title: 'f(x) equations',
-      preview: 'Take the number inside the parentheses, plug it in for x, and solve step by step.',
-      badge: 'Plug it in',
-      steps: [
-        'Start with the rule. Example: f(x) = x + 4.',
-        'Look at the value inside the parentheses. If the problem says f(3), then x becomes 3.',
-        'Rewrite the rule using 3 instead of x. That gives you 3 + 4.',
-        'Solve the expression carefully.',
-        'Write the final answer back in function notation, so the answer is f(3) = 7.',
-        'The same idea works for any number. Just replace x with the number you are given and then do the math.',
-      ],
-      answer: activeLesson.notationExample.answer,
-    },
-  ];
+  const learnSections = activeLesson.learnSections;
 
   function normalizeAnswer(value: string) {
     return value
@@ -586,7 +936,7 @@ export default function MathPractice() {
     setActiveUnitKey(unit.key);
     setActiveLessonKey(lessonKey);
     setActivePanel('learn');
-    setOpenLearnSection('range-domain');
+    setOpenLearnSection(getLessonContent(unit, lessonKey).learnSections[0]?.key ?? '');
     setVocabReveal({});
     restartQuiz(unit.key, lessonKey);
     restartPractice(unit.key, lessonKey);
@@ -600,7 +950,7 @@ export default function MathPractice() {
 
     setActiveLessonKey(lessonKey);
     setActivePanel('learn');
-    setOpenLearnSection('range-domain');
+    setOpenLearnSection(lesson.content.learnSections[0]?.key ?? '');
     setVocabReveal({});
     restartQuiz(activeUnit.key, lessonKey);
     restartPractice(activeUnit.key, lessonKey);
@@ -749,7 +1099,7 @@ export default function MathPractice() {
                   <p className="section-label">Learn It</p>
                   <h2>Tap a topic to open it</h2>
                 </div>
-                <div className="graph-badge">8 lesson sections</div>
+                <div className="graph-badge">{learnSections.length} lesson sections</div>
               </div>
 
               <div className="learn-grid">
@@ -895,7 +1245,7 @@ export default function MathPractice() {
                 <p className="section-label">Vocabulary</p>
                 <h2>Tap a card to reveal the meaning</h2>
               </div>
-              <div className="rule-pill">8 key terms</div>
+              <div className="rule-pill">{activeLesson.vocabulary.length} key terms</div>
             </div>
 
             <div className="vocab-grid">
