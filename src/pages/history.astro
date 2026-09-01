@@ -207,7 +207,7 @@ const studyUnits = [
         category: 'Cities',
         question: 'What happened to some settlements as food supplies grew?',
         choices: ['They turned into cities with larger populations', 'They disappeared completely after farming improved', 'They became smaller villages only over time', 'They moved into mountains away from rivers'],
-        answer: 'They turned into cities',
+        answer: 'They turned into cities with larger populations',
         explanation: 'More food supported larger populations, which helped settlements grow into cities.',
       },
       {
@@ -719,6 +719,89 @@ const studyUnits = [
         line-height: 1.45;
       }
 
+      :global(.stats-grid) {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.9rem;
+      }
+
+      :global(.stats-card) {
+        padding: 1rem 1.05rem;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(84, 27, 22, 0.12);
+        box-shadow: 0 8px 24px rgba(52, 32, 21, 0.08);
+      }
+
+      :global(.stats-card strong) {
+        display: block;
+        color: var(--rust-deep);
+        font-family: 'Cinzel', 'Times New Roman', serif;
+        font-size: 1rem;
+      }
+
+      :global(.stats-card p) {
+        margin: 0.35rem 0 0;
+        color: #5f4d41;
+        font-family: 'Nunito', 'Trebuchet MS', sans-serif;
+        font-size: 0.98rem;
+        font-weight: 700;
+      }
+
+      :global(.stats-percent) {
+        margin-top: 0.5rem;
+        color: #2f241e;
+        font-family: 'Nunito', 'Trebuchet MS', sans-serif;
+        font-size: 1.9rem;
+        font-weight: 900;
+      }
+
+      :global(.stats-missed) {
+        margin-top: 1.1rem;
+        padding-top: 1.1rem;
+        border-top: 1px solid rgba(84, 27, 22, 0.12);
+      }
+
+      :global(.missed-list) {
+        display: grid;
+        gap: 0.8rem;
+        margin-top: 1rem;
+      }
+
+      :global(.missed-item) {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.9rem;
+        padding: 0.95rem 1rem;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(84, 27, 22, 0.12);
+      }
+
+      :global(.missed-tag) {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.28rem 0.6rem;
+        border-radius: 999px;
+        background: rgba(122, 47, 36, 0.1);
+        color: var(--rust-deep);
+        font-family: 'Nunito', 'Trebuchet MS', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+      }
+
+      :global(.missed-question) {
+        margin-top: 0.5rem;
+        color: #2f241e;
+        font-family: 'Nunito', 'Trebuchet MS', sans-serif;
+        font-size: 1rem;
+        font-weight: 800;
+        line-height: 1.45;
+      }
+
       @media (max-width: 760px) {
         main { width: min(100% - 0.75rem, 42rem); padding-top: 0.8rem; }
         .hero { padding: 1.5rem; border-radius: 22px; }
@@ -727,6 +810,8 @@ const studyUnits = [
         .panel { padding: 1rem; }
         :global(.jeopardy-grid) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         :global(.jeopardy-head) { display: none; }
+        :global(.stats-grid) { grid-template-columns: 1fr; }
+        :global(.missed-item) { align-items: flex-start; flex-direction: column; }
       }
     </style>
   </head>
@@ -758,6 +843,10 @@ const studyUnits = [
               <strong>Typing Quiz</strong>
               <span>Type the answer yourself instead of picking from choices.</span>
             </button>
+            <button class="mode-card" data-mode="stats" type="button">
+              <strong>Stats</strong>
+              <span>See your subject accuracy and redo questions you missed.</span>
+            </button>
           </div>
         </div>
       </section>
@@ -775,9 +864,11 @@ const studyUnits = [
       const modeButtons = Array.from(document.querySelectorAll('[data-mode]'));
       const unitButtons = Array.from(document.querySelectorAll('[data-unit]'));
       const prizeLadder = ['$100', '$200', '$300', '$500', '$1,000', '$2,000', '$4,000', '$8,000', '$16,000', '$32,000'];
+      const statsStorageKey = 'history-stats-v1';
       let currentUnit = units[0];
 
       let state = {};
+      let stats = loadStats();
 
       function shuffle(items) {
         const copy = [...items];
@@ -798,6 +889,86 @@ const studyUnits = [
 
       function currentJeopardyCategories() {
         return currentUnit.jeopardyCategories;
+      }
+
+      function questionKey(item) {
+        return `${currentUnit.id}::${item.category}::${item.question}`;
+      }
+
+      function createEmptyUnitStats(unit) {
+        const categories = [...new Set(unit.questions.map((item) => item.category))];
+        return {
+          categories: Object.fromEntries(categories.map((category) => [category, { correct: 0, attempts: 0 }])),
+          missed: {},
+        };
+      }
+
+      function ensureUnitStats(unitId) {
+        if (!stats[unitId]) {
+          const unit = units.find((entry) => entry.id === unitId) || units[0];
+          stats[unitId] = createEmptyUnitStats(unit);
+        }
+
+        const unit = units.find((entry) => entry.id === unitId) || units[0];
+        unit.questions.forEach((item) => {
+          if (!stats[unitId].categories[item.category]) {
+            stats[unitId].categories[item.category] = { correct: 0, attempts: 0 };
+          }
+        });
+
+        return stats[unitId];
+      }
+
+      function loadStats() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(statsStorageKey) || '{}');
+          if (saved && typeof saved === 'object') return saved;
+        } catch {}
+        return {};
+      }
+
+      function saveStats() {
+        localStorage.setItem(statsStorageKey, JSON.stringify(stats));
+      }
+
+      function recordAnswer(item, correct) {
+        const unitStats = ensureUnitStats(currentUnit.id);
+        const categoryStats = unitStats.categories[item.category] || { correct: 0, attempts: 0 };
+        categoryStats.attempts += 1;
+        if (correct) categoryStats.correct += 1;
+        unitStats.categories[item.category] = categoryStats;
+
+        const key = questionKey(item);
+        if (correct) {
+          delete unitStats.missed[key];
+        } else {
+          unitStats.missed[key] = {
+            category: item.category,
+            question: item.question,
+            answer: item.answer,
+            explanation: item.explanation,
+            choices: item.choices,
+          };
+        }
+
+        saveStats();
+      }
+
+      function accuracyPercent(correct, attempts) {
+        if (!attempts) return '0%';
+        return `${Math.round((correct / attempts) * 100)}%`;
+      }
+
+      function currentUnitStats() {
+        return ensureUnitStats(currentUnit.id);
+      }
+
+      function missedQuestions() {
+        return Object.values(currentUnitStats().missed);
+      }
+
+      function buildMissedQuestions() {
+        return missedQuestions().map((item) => ({ ...item, choices: shuffle(item.choices) }));
       }
 
       function buildMcQuestions() {
@@ -867,7 +1038,9 @@ const studyUnits = [
           entry.disabled = true;
           if (entry.textContent === item.answer) entry.classList.add('correct');
         });
-        if (choice === item.answer) {
+        const correct = choice === item.answer;
+        recordAnswer(item, correct);
+        if (correct) {
           state.score += 1;
           button.classList.add('correct');
           feedbackTitle.textContent = 'Correct';
@@ -939,6 +1112,7 @@ const studyUnits = [
         const feedbackTitle = root.querySelector('#feedback-title');
         const feedbackCopy = root.querySelector('#feedback-copy');
         const ok = guess === answer || guess.includes(answer) || answer.includes(guess);
+        recordAnswer(item, ok);
         if (ok) {
           state.score += 1;
           feedbackTitle.textContent = 'Correct';
@@ -1015,7 +1189,9 @@ const studyUnits = [
           entry.disabled = true;
           if (entry.textContent === item.answer) entry.classList.add('correct');
         });
-        if (choice === item.answer) {
+        const correct = choice === item.answer;
+        recordAnswer(item, correct);
+        if (correct) {
           button.classList.add('correct');
           feedbackTitle.textContent = `Correct. You reached ${prizeLadder[state.index]}.`;
           feedbackCopy.textContent = item.explanation;
@@ -1126,7 +1302,9 @@ const studyUnits = [
           if (entry.textContent === item.answer) entry.classList.add('correct');
         });
         state.answered[String(state.activeCell)] = true;
-        if (choice === item.answer) {
+        const correct = choice === item.answer;
+        recordAnswer(item, correct);
+        if (correct) {
           state.score += value;
           button.classList.add('correct');
           feedbackTitle.textContent = `Correct. +$${value}`;
@@ -1162,6 +1340,161 @@ const studyUnits = [
           if (row !== -1) return row;
         }
         return 0;
+      }
+
+      function initStats() {
+        state = { mode: 'stats' };
+        setActiveMode('stats');
+        renderStats();
+      }
+
+      function initMissedPractice() {
+        const deck = buildMissedQuestions();
+        if (!deck.length) {
+          initStats();
+          return;
+        }
+        state = { mode: 'missed', deck, index: 0, score: 0, locked: false };
+        setActiveMode('stats');
+        renderMissedPractice();
+      }
+
+      function renderMissedPractice() {
+        const item = state.deck[state.index];
+        const progress = ((state.index + 1) / state.deck.length) * 100;
+        root.innerHTML = `
+          <div class="panel-top">
+            <div>
+              <h2>Redo Missed Questions</h2>
+              <p>Question ${state.index + 1} of ${state.deck.length}</p>
+            </div>
+            <div class="pill">Score ${state.score}</div>
+          </div>
+          <div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div>
+          <div class="question">${item.question}</div>
+          <div class="choices">
+            ${item.choices.map((choice) => `<button class="choice" data-choice="${escapeHtml(choice)}">${choice}</button>`).join('')}
+          </div>
+          <div class="feedback" id="feedback" hidden>
+            <strong id="feedback-title"></strong>
+            <p id="feedback-copy"></p>
+          </div>
+          <div class="actions">
+            <button class="btn btn-primary" id="next-btn" hidden>${state.index === state.deck.length - 1 ? 'Back to Stats' : 'Next Question'}</button>
+            <button class="btn btn-secondary" id="stats-btn">Back to Stats</button>
+          </div>
+        `;
+
+        root.querySelectorAll('[data-choice]').forEach((button) => {
+          button.addEventListener('click', () => handleMissedChoice(button, button.textContent, item));
+        });
+        root.querySelector('#stats-btn').addEventListener('click', initStats);
+      }
+
+      function handleMissedChoice(button, choice, item) {
+        if (state.locked) return;
+        state.locked = true;
+        const feedback = root.querySelector('#feedback');
+        const feedbackTitle = root.querySelector('#feedback-title');
+        const feedbackCopy = root.querySelector('#feedback-copy');
+        const nextBtn = root.querySelector('#next-btn');
+        root.querySelectorAll('[data-choice]').forEach((entry) => {
+          entry.disabled = true;
+          if (entry.textContent === item.answer) entry.classList.add('correct');
+        });
+        const correct = choice === item.answer;
+        recordAnswer(item, correct);
+        if (correct) {
+          state.score += 1;
+          button.classList.add('correct');
+          feedbackTitle.textContent = 'Correct';
+        } else {
+          button.classList.add('wrong');
+          feedbackTitle.textContent = `Not quite. The answer is ${item.answer}.`;
+        }
+        feedbackCopy.textContent = item.explanation;
+        feedback.hidden = false;
+        nextBtn.hidden = false;
+        nextBtn.addEventListener('click', () => {
+          if (state.index === state.deck.length - 1) {
+            initStats();
+            return;
+          }
+          state.index += 1;
+          state.locked = false;
+          renderMissedPractice();
+        }, { once: true });
+      }
+
+      function renderStats() {
+        const unitStats = currentUnitStats();
+        const categories = Object.entries(unitStats.categories);
+        const missed = missedQuestions();
+        root.innerHTML = `
+          <div class="panel-top">
+            <div>
+              <h2>Stats</h2>
+              <p>${currentUnit.title}</p>
+            </div>
+            <div class="pill">${missed.length} missed</div>
+          </div>
+          <div class="stats-grid">
+            ${categories.map(([category, values]) => `
+              <div class="stats-card">
+                <strong>${category}</strong>
+                <div class="stats-percent">${accuracyPercent(values.correct, values.attempts)}</div>
+                <p>${values.correct} right out of ${values.attempts} tried</p>
+              </div>
+            `).join('')}
+          </div>
+          <div class="stats-missed">
+            <div class="panel-top">
+              <div>
+                <h2>Missed Questions</h2>
+                <p>${missed.length ? 'Tap redo to practice the ones you missed.' : 'Nothing missed right now.'}</p>
+              </div>
+            </div>
+            ${missed.length ? `
+              <div class="actions">
+                <button class="btn btn-primary" id="redo-all-btn">Redo Missed Questions</button>
+                <button class="btn btn-secondary" id="reset-stats-btn">Reset Stats</button>
+              </div>
+              <div class="missed-list">
+                ${missed.map((item, index) => `
+                  <div class="missed-item">
+                    <div>
+                      <div class="missed-tag">${item.category}</div>
+                      <div class="missed-question">${item.question}</div>
+                    </div>
+                    <button class="btn btn-secondary" data-redo-index="${index}">Redo</button>
+                  </div>
+                `).join('')}
+              </div>
+            ` : `
+              <div class="actions">
+                <button class="btn btn-secondary" id="reset-stats-btn">Reset Stats</button>
+              </div>
+            `}
+          </div>
+        `;
+
+        if (missed.length) {
+          root.querySelector('#redo-all-btn').addEventListener('click', initMissedPractice);
+          root.querySelectorAll('[data-redo-index]').forEach((button) => {
+            button.addEventListener('click', () => {
+              const item = missed[Number(button.dataset.redoIndex)];
+              state = { mode: 'missed', deck: [{ ...item, choices: shuffle(item.choices) }], index: 0, score: 0, locked: false };
+              setActiveMode('stats');
+              renderMissedPractice();
+            });
+          });
+        }
+
+        root.querySelector('#reset-stats-btn').addEventListener('click', () => {
+          stats[currentUnit.id] = createEmptyUnitStats(currentUnit);
+          saveStats();
+          renderStats();
+        });
       }
 
       function renderResult(label, score, total, restartFn, customCopy) {
@@ -1201,6 +1534,7 @@ const studyUnits = [
           if (state.mode === 'typing') initTyping();
           if (state.mode === 'millionaire') initMillionaire();
           if (state.mode === 'jeopardy') initJeopardy();
+          if (state.mode === 'stats' || state.mode === 'missed') initStats();
         });
       });
 
@@ -1211,6 +1545,7 @@ const studyUnits = [
           if (mode === 'typing') initTyping();
           if (mode === 'millionaire') initMillionaire();
           if (mode === 'jeopardy') initJeopardy();
+          if (mode === 'stats') initStats();
         });
       });
 
