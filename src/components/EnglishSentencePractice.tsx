@@ -409,6 +409,81 @@ const punctuationQuestions: PunctuationQuestion[] = [
     answers: { 1: ',', 4: ',' },
     explanation: 'The phrase "a patient coach" renames or describes my dad, so commas go around it.',
   },
+  {
+    text: 'The teacher asked a question and the class answered together.',
+    answers: { 4: ',' },
+    explanation: 'And joins two complete sentences, so it needs a comma before it.',
+  },
+  {
+    text: 'While the baby slept Mom folded the laundry and I cleaned the kitchen table.',
+    answers: { 3: ',', 7: ',' },
+    explanation: 'The opener gets a comma, and the two complete thoughts are joined with comma plus and.',
+  },
+  {
+    text: 'If you call me later I will explain the assignment.',
+    answers: { 4: ',' },
+    explanation: 'If starts a dependent clause, so the comma goes after the opening clause.',
+  },
+  {
+    text: 'The cookies were ready and the kitchen smelled amazing.',
+    answers: { 3: ',' },
+    explanation: 'And connects two complete sentences, so add a comma before and.',
+  },
+  {
+    text: 'After we ate dinner Dad washed the dishes and Mom packed lunches.',
+    answers: { 3: ',', 7: ',' },
+    explanation: 'The sentence has an opening dependent clause and then two complete thoughts joined with and.',
+  },
+  {
+    text: 'Noah finished his homework so he turned on the game.',
+    answers: { 3: ',' },
+    explanation: 'So is FANBOYS here, and it joins two complete thoughts.',
+  },
+  {
+    text: 'I studied for the test but I still felt nervous.',
+    answers: { 4: ',' },
+    explanation: 'But joins two complete sentences, so put a comma before it.',
+  },
+  {
+    text: 'Ms. Donnelly my favorite English teacher hopes we pass.',
+    answers: { 1: ',', 5: ',' },
+    explanation: 'The appositive phrase renames Ms. Donnelly, so commas go around it.',
+  },
+  {
+    text: 'Above all else Kayli wanted her essay to make sense.',
+    answers: { 2: ',' },
+    explanation: 'Above all else is an opening phrase, so add a comma after it.',
+  },
+  {
+    text: 'At 3:15pm tomorrow I will go to the dentist.',
+    answers: { 2: ',' },
+    explanation: 'The opening time phrase comes before the main sentence, so add a comma after it.',
+  },
+  {
+    text: 'The draft was messy however the final essay was clear.',
+    answers: { 3: ';', 4: ',' },
+    explanation: 'However needs a semicolon before it and a comma after it between two complete sentences.',
+  },
+  {
+    text: 'The topic sentence was strong but the support was weak.',
+    answers: { 4: ',' },
+    explanation: 'But joins two complete thoughts, so use a comma before it.',
+  },
+  {
+    text: 'Because the paragraph had strong support the essay made more sense.',
+    answers: { 5: ',' },
+    explanation: 'Because starts a dependent clause, so put a comma after that clause.',
+  },
+  {
+    text: 'The attention getter worked the thesis was still unclear.',
+    answers: { 3: ';' },
+    explanation: 'These are two complete sentences, so a semicolon can connect them.',
+  },
+  {
+    text: 'My sister Kayli revised the conclusion.',
+    answers: {},
+    explanation: 'Kayli is needed to tell which sister, so this sentence does not need appositive commas.',
+  },
 ];
 
 const partOfSpeechQuestions: PartOfSpeechQuestion[] = [
@@ -891,6 +966,13 @@ function getPunctuationWords(question?: PunctuationQuestion) {
 
 function getPunctuationAnswer(question: PunctuationQuestion, slotIndex: number): PunctuationMark {
   return question.answers[slotIndex] ?? '';
+}
+
+function getCorrectPunctuationSentence(question: PunctuationQuestion) {
+  const words = getPunctuationWords(question);
+  return words
+    .map((word, wordIndex) => `${word}${getPunctuationAnswer(question, wordIndex)}`)
+    .join(' ');
 }
 
 export default function EnglishSentencePractice() {
@@ -1416,27 +1498,32 @@ export default function EnglishSentencePractice() {
                 <p className="parts-prompt">Add the correct punctuation by clicking between the words.</p>
 
                 <div className="punctuation-builder">
-                  {currentPunctuationWords.map((word, wordIndex) => (
-                    <span key={`${word}-${wordIndex}`} className="punctuation-piece">
-                      <span>{word}</span>
-                      {wordIndex < currentPunctuationWords.length - 1 && (
-                      <button
-                        className={
-                          punctuationSubmitted
-                            ? (punctuationMarks[wordIndex] ?? '') === getPunctuationAnswer(currentPunctuation, wordIndex)
-                              ? 'punctuation-slot correct'
-                              : 'punctuation-slot wrong'
-                            : 'punctuation-slot'
-                        }
-                        onClick={() => cyclePunctuation(wordIndex)}
-                        disabled={punctuationSubmitted}
-                        aria-label={`Punctuation after ${word}`}
-                      >
-                        {punctuationMarks[wordIndex]}
-                      </button>
-                      )}
-                    </span>
-                  ))}
+                  {currentPunctuationWords.map((word, wordIndex) => {
+                    const selectedMark = punctuationMarks[wordIndex] ?? '';
+                    const correctMark = getPunctuationAnswer(currentPunctuation, wordIndex);
+                    const shouldShowFeedback = punctuationSubmitted && (selectedMark !== '' || correctMark !== '');
+                    const slotClass = shouldShowFeedback
+                      ? selectedMark === correctMark
+                        ? 'punctuation-slot correct'
+                        : 'punctuation-slot wrong'
+                      : 'punctuation-slot';
+
+                    return (
+                      <span key={`${word}-${wordIndex}`} className="punctuation-piece">
+                        <span>{word}</span>
+                        {wordIndex < currentPunctuationWords.length - 1 && (
+                          <button
+                            className={slotClass}
+                            onClick={() => cyclePunctuation(wordIndex)}
+                            disabled={punctuationSubmitted}
+                            aria-label={`Punctuation after ${word}`}
+                          >
+                            {selectedMark}
+                          </button>
+                        )}
+                      </span>
+                    );
+                  })}
                 </div>
 
                 {!punctuationSubmitted ? (
@@ -1447,6 +1534,11 @@ export default function EnglishSentencePractice() {
                       {punctuationIsCorrect ? 'Correct' : 'Not quite. Check the punctuation spots.'}
                     </p>
                     <p className="feedback-copy">{currentPunctuation.explanation}</p>
+                    {!punctuationIsCorrect && (
+                      <p className="correct-sentence">
+                        <strong>Correct:</strong> {getCorrectPunctuationSentence(currentPunctuation)}
+                      </p>
+                    )}
                     <button className="primary-btn" onClick={nextPunctuationQuestion}>
                       {punctuationIndex === punctuationDeck.length - 1 ? 'See Score' : 'Next Question'}
                     </button>
@@ -2059,6 +2151,15 @@ export default function EnglishSentencePractice() {
           margin: 0;
           line-height: 1.6;
           color: #5b4330;
+        }
+
+        .correct-sentence {
+          margin: 0.75rem 0 0;
+          padding: 0.8rem;
+          border-radius: 0.8rem;
+          background: rgba(255, 248, 240, 0.9);
+          color: #3c2c1c;
+          line-height: 1.5;
         }
 
         .primary-btn {
