@@ -119,6 +119,7 @@ const QUESTION_COUNT = 24;
 const QUESTIONS_PER_TYPE = QUESTION_COUNT / sentenceTypes.length;
 const FIGURATIVE_QUESTION_COUNT = 20;
 const FIGURATIVE_PER_TYPE = FIGURATIVE_QUESTION_COUNT / figurativeTypes.length;
+const PUNCTUATION_QUESTION_COUNT = 10;
 
 const simpleQuestions: Question[] = [
   { sentence: 'The dog barked at the mail carrier.', answer: 'Simple', explanation: 'One independent clause only.' },
@@ -317,6 +318,96 @@ const punctuationQuestions: PunctuationQuestion[] = [
     text: 'I went to the store and I bought two pairs of shoes.',
     answers: { 4: ',' },
     explanation: 'Use comma plus FANBOYS when joining two complete sentences.',
+  },
+  {
+    text: 'Although the test was hard she stayed calm.',
+    answers: { 4: ',' },
+    explanation: 'When a dependent clause starts the sentence, put a comma after it.',
+  },
+  {
+    text: 'She stayed calm and she finished on time.',
+    answers: { 2: ',' },
+    explanation: 'Use a comma before and when it joins two complete sentences.',
+  },
+  {
+    text: 'The library was closed so we studied at home.',
+    answers: { 3: ',' },
+    explanation: 'So is a coordinating conjunction here, so it needs a comma before it.',
+  },
+  {
+    text: 'I called to postpone because I was running late.',
+    answers: {},
+    explanation: 'Because comes in the middle, so this sentence does not need a comma there.',
+  },
+  {
+    text: 'Since the bus was late we missed the first bell.',
+    answers: { 4: ',' },
+    explanation: 'Since starts a dependent clause, so the comma goes after the opener.',
+  },
+  {
+    text: 'Beau my brother carried the chairs.',
+    answers: { 0: ',', 2: ',' },
+    explanation: 'The appositive "my brother" renames Beau, so commas go around it.',
+  },
+  {
+    text: 'Kayli my favorite student finished the essay.',
+    answers: { 0: ',', 3: ',' },
+    explanation: 'The appositive phrase adds extra description, so it is set off with commas.',
+  },
+  {
+    text: 'I did my homework however I forgot to turn it in.',
+    answers: { 3: ';', 4: ',' },
+    explanation: 'However connects two complete thoughts with a semicolon before it and a comma after it.',
+  },
+  {
+    text: 'The bell rang therefore everyone hurried to class.',
+    answers: { 2: ';', 3: ',' },
+    explanation: 'Therefore needs a semicolon before it and a comma after it when joining two complete sentences.',
+  },
+  {
+    text: 'Before the concert began we found our seats and we bought drinks.',
+    answers: { 3: ',', 7: ',' },
+    explanation: 'The opener gets a comma, and the two complete sentences are joined with comma plus and.',
+  },
+  {
+    text: 'The rain stopped but the sidewalk stayed wet.',
+    answers: { 2: ',' },
+    explanation: 'But joins two complete thoughts, so it needs a comma before it.',
+  },
+  {
+    text: 'During lunch there was a fight.',
+    answers: { 1: ',' },
+    explanation: 'During lunch is an introductory phrase, so it gets a comma after it.',
+  },
+  {
+    text: 'Above everything else she was a good student.',
+    answers: { 2: ',' },
+    explanation: 'The introductory phrase comes first, so put a comma after it.',
+  },
+  {
+    text: 'I set an alarm so I would not miss the bus.',
+    answers: { 3: ',' },
+    explanation: 'So connects two complete thoughts, so use a comma before it.',
+  },
+  {
+    text: 'The movie ended everyone clapped.',
+    answers: { 2: ';' },
+    explanation: 'A semicolon can join two complete sentences without using a conjunction.',
+  },
+  {
+    text: 'I love grammar because punctuation helps readers.',
+    answers: {},
+    explanation: 'Because comes in the middle, so it usually does not need a comma before it.',
+  },
+  {
+    text: 'Next Thursday we will go to the opening of the restaurant.',
+    answers: { 1: ',' },
+    explanation: 'The opening time phrase goes at the start, so add a comma after it.',
+  },
+  {
+    text: 'My dad a patient coach helped me practice.',
+    answers: { 1: ',', 4: ',' },
+    explanation: 'The phrase "a patient coach" renames or describes my dad, so commas go around it.',
   },
 ];
 
@@ -773,6 +864,10 @@ function buildPartsDeck() {
   }));
 }
 
+function buildPunctuationDeck() {
+  return takeRandom(punctuationQuestions, PUNCTUATION_QUESTION_COUNT);
+}
+
 function buildSentenceRulesDeck() {
   return shuffle(sentenceRuleQuestions).map((entry) => ({
     ...entry,
@@ -806,11 +901,9 @@ export default function EnglishSentencePractice() {
   const [selected, setSelected] = useState<SentenceType | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [streak, setStreak] = useState(0);
-  const [punctuationDeck, setPunctuationDeck] = useState(() => punctuationQuestions);
+  const [punctuationDeck, setPunctuationDeck] = useState(() => buildPunctuationDeck());
   const [punctuationIndex, setPunctuationIndex] = useState(0);
-  const [punctuationMarks, setPunctuationMarks] = useState<PunctuationMark[]>(() =>
-    Array(getPunctuationWords(punctuationQuestions[0]).length - 1).fill('') as PunctuationMark[],
-  );
+  const [punctuationMarks, setPunctuationMarks] = useState<PunctuationMark[]>([]);
   const [punctuationSubmitted, setPunctuationSubmitted] = useState(false);
   const [punctuationCorrectCount, setPunctuationCorrectCount] = useState(0);
   const [punctuationStreak, setPunctuationStreak] = useState(0);
@@ -847,7 +940,7 @@ export default function EnglishSentencePractice() {
   const punctuationIsCorrect = currentPunctuation
     ? currentPunctuationWords
       .slice(0, -1)
-      .every((_, slotIndex) => punctuationMarks[slotIndex] === getPunctuationAnswer(currentPunctuation, slotIndex))
+      .every((_, slotIndex) => (punctuationMarks[slotIndex] ?? '') === getPunctuationAnswer(currentPunctuation, slotIndex))
     : false;
   const punctuationProgress =
     punctuationDeck.length === 0 ? 0 : Math.round((punctuationIndex / punctuationDeck.length) * 100);
@@ -903,12 +996,14 @@ export default function EnglishSentencePractice() {
   function cyclePunctuation(slotIndex: number) {
     if (punctuationSubmitted) return;
     const choices: PunctuationMark[] = ['', ',', ';'];
-    setPunctuationMarks((marks) =>
-      marks.map((mark, index) => {
+    setPunctuationMarks((marks) => {
+      const slotCount = Math.max(currentPunctuationWords.length - 1, 0);
+      const paddedMarks = Array.from({ length: slotCount }, (_, index) => marks[index] ?? '') as PunctuationMark[];
+      return paddedMarks.map((mark, index) => {
         if (index !== slotIndex) return mark;
         return choices[(choices.indexOf(mark) + 1) % choices.length];
-      }),
-    );
+      });
+    });
   }
 
   function submitPunctuation() {
@@ -927,15 +1022,15 @@ export default function EnglishSentencePractice() {
     const nextIndex = punctuationIndex + 1;
     const nextQuestion = punctuationDeck[nextIndex];
     setPunctuationIndex(nextIndex);
-    setPunctuationMarks(Array(Math.max(getPunctuationWords(nextQuestion).length - 1, 0)).fill('') as PunctuationMark[]);
+    setPunctuationMarks([]);
     setPunctuationSubmitted(false);
   }
 
   function restartPunctuation() {
-    const nextDeck = shuffle(punctuationQuestions);
+    const nextDeck = buildPunctuationDeck();
     setPunctuationDeck(nextDeck);
     setPunctuationIndex(0);
-    setPunctuationMarks(Array(Math.max(getPunctuationWords(nextDeck[0]).length - 1, 0)).fill('') as PunctuationMark[]);
+    setPunctuationMarks([]);
     setPunctuationSubmitted(false);
     setPunctuationCorrectCount(0);
     setPunctuationStreak(0);
@@ -1328,7 +1423,7 @@ export default function EnglishSentencePractice() {
                       <button
                         className={
                           punctuationSubmitted
-                            ? punctuationMarks[wordIndex] === getPunctuationAnswer(currentPunctuation, wordIndex)
+                            ? (punctuationMarks[wordIndex] ?? '') === getPunctuationAnswer(currentPunctuation, wordIndex)
                               ? 'punctuation-slot correct'
                               : 'punctuation-slot wrong'
                             : 'punctuation-slot'
