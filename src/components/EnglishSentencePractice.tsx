@@ -2,7 +2,27 @@ import { useState } from 'react';
 
 type SentenceType = 'Simple' | 'Compound' | 'Complex' | 'Compound-Complex';
 type FigurativeType = 'Simile' | 'Metaphor' | 'Personification' | 'Hyperbole' | 'Idiom';
-type PracticeTab = 'structure' | 'figurative' | 'vocab';
+type PartOfSpeechType =
+  | 'Noun'
+  | 'Verb'
+  | 'Pronoun'
+  | 'Conjunction'
+  | 'Adjective'
+  | 'Adverb'
+  | 'Preposition'
+  | 'Interjection';
+type EssayType =
+  | 'Personal Narrative'
+  | 'Persuasive/Argumentative'
+  | 'Descriptive'
+  | 'Expository'
+  | 'Compare and Contrast'
+  | 'Attention Getter'
+  | 'Organization'
+  | 'Conventions'
+  | 'Content and Support'
+  | 'Originality';
+type PracticeTab = 'structure' | 'parts' | 'essays' | 'figurative';
 
 type Question = {
   sentence: string;
@@ -29,8 +49,43 @@ type FigurativeQuestion = {
   explanation: string;
 };
 
+type PartOfSpeechQuestion = {
+  sentence: string;
+  prompt: string;
+  answer: PartOfSpeechType;
+  explanation: string;
+};
+
+type EssayQuestion = {
+  sentence: string;
+  answer: EssayType;
+  explanation: string;
+};
+
 const sentenceTypes: SentenceType[] = ['Simple', 'Compound', 'Complex', 'Compound-Complex'];
 const figurativeTypes: FigurativeType[] = ['Simile', 'Metaphor', 'Personification', 'Hyperbole', 'Idiom'];
+const partOfSpeechTypes: PartOfSpeechType[] = [
+  'Noun',
+  'Verb',
+  'Pronoun',
+  'Conjunction',
+  'Adjective',
+  'Adverb',
+  'Preposition',
+  'Interjection',
+];
+const essayTypes: EssayType[] = [
+  'Personal Narrative',
+  'Persuasive/Argumentative',
+  'Descriptive',
+  'Expository',
+  'Compare and Contrast',
+  'Attention Getter',
+  'Organization',
+  'Conventions',
+  'Content and Support',
+  'Originality',
+];
 const QUESTION_COUNT = 24;
 const QUESTIONS_PER_TYPE = QUESTION_COUNT / sentenceTypes.length;
 const FIGURATIVE_QUESTION_COUNT = 20;
@@ -49,6 +104,9 @@ const simpleQuestions: Question[] = [
   { sentence: 'The candles flickered in the dark.', answer: 'Simple', explanation: 'One independent clause only.' },
   { sentence: 'Our team practiced after school.', answer: 'Simple', explanation: 'One independent clause only.' },
   { sentence: 'The students lined up quietly.', answer: 'Simple', explanation: 'One independent clause only.' },
+  { sentence: 'Ouch!', answer: 'Simple', explanation: 'A one-word interjection can be a simple sentence when it expresses a complete thought.' },
+  { sentence: 'The nervous student answered carefully.', answer: 'Simple', explanation: 'One independent clause with a subject and verb.' },
+  { sentence: 'My English teacher explained appositives after lunch.', answer: 'Simple', explanation: 'One complete sentence with no extra dependent or second independent clause.' },
 ];
 
 const compoundQuestions: Question[] = [
@@ -64,6 +122,9 @@ const compoundQuestions: Question[] = [
   { sentence: 'Ava brought the drinks, and Jaden carried the chairs.', answer: 'Compound', explanation: 'Two independent clauses joined by a comma and a coordinating conjunction.' },
   { sentence: 'The hallway was noisy, but she stayed focused.', answer: 'Compound', explanation: 'Two independent clauses joined by a comma and a coordinating conjunction.' },
   { sentence: 'I set an alarm, so I would not miss the bus.', answer: 'Compound', explanation: 'Two independent clauses joined by a comma and a coordinating conjunction.' },
+  { sentence: 'I needed to buy eggs; I stopped at the store.', answer: 'Compound', explanation: 'Two complete sentences can be connected with a semicolon.' },
+  { sentence: 'Kayli studied the notes, and she finished the quiz.', answer: 'Compound', explanation: 'Two independent clauses are connected with a comma plus the coordinating conjunction "and."' },
+  { sentence: 'The paragraph was organized, but the conclusion needed more detail.', answer: 'Compound', explanation: 'Two complete thoughts are joined correctly with a comma and "but."' },
 ];
 
 const complexQuestions: Question[] = [
@@ -79,6 +140,9 @@ const complexQuestions: Question[] = [
   { sentence: 'Unless you hurry, the bus will leave without us.', answer: 'Complex', explanation: 'One dependent clause plus one independent clause.' },
   { sentence: 'When the timer beeped, the cookies were ready.', answer: 'Complex', explanation: 'One dependent clause plus one independent clause.' },
   { sentence: 'Because the power went out, we lit candles in the kitchen.', answer: 'Complex', explanation: 'One dependent clause plus one independent clause.' },
+  { sentence: 'Since I was running late, I called to postpone the meeting.', answer: 'Complex', explanation: 'A subordinating conjunction starts a dependent clause, then the independent clause finishes the thought.' },
+  { sentence: 'I called to postpone the meeting because I was running late.', answer: 'Complex', explanation: 'One independent clause is joined to a dependent clause that starts with "because."' },
+  { sentence: 'After the teacher explained the rule, the comma finally made sense.', answer: 'Complex', explanation: 'The sentence has one dependent clause and one independent clause.' },
 ];
 
 const compoundComplexQuestions: Question[] = [
@@ -94,6 +158,132 @@ const compoundComplexQuestions: Question[] = [
   { sentence: 'Unless you hurry, the bus will leave without us, and we will miss first period.', answer: 'Compound-Complex', explanation: 'It has one dependent clause and two independent clauses.' },
   { sentence: 'When the timer beeped, the cookies were ready, and the whole kitchen smelled amazing.', answer: 'Compound-Complex', explanation: 'It has one dependent clause and two independent clauses.' },
   { sentence: 'Because the power went out, we lit candles in the kitchen, and we played cards by the window.', answer: 'Compound-Complex', explanation: 'It has one dependent clause and two independent clauses.' },
+  { sentence: 'Because I was late, my mom grounded me, so I will not sleep over this weekend.', answer: 'Compound-Complex', explanation: 'It has a dependent clause plus two complete sentences connected with "so."' },
+  { sentence: 'When the essay began, the hook caught my attention, and the thesis explained the topic.', answer: 'Compound-Complex', explanation: 'It has one dependent clause and two independent clauses.' },
+  { sentence: 'Although the draft was messy, Kayli revised the body paragraph, and the essay became clearer.', answer: 'Compound-Complex', explanation: 'It combines a dependent clause with two independent clauses.' },
+];
+
+const partOfSpeechQuestions: PartOfSpeechQuestion[] = [
+  {
+    sentence: 'Jacob carried the notebook to class.',
+    prompt: 'What part of speech is "Jacob"?',
+    answer: 'Noun',
+    explanation: 'Jacob names a person. A noun names a person, place, thing, or idea.',
+  },
+  {
+    sentence: 'The pencil rolled under the desk.',
+    prompt: 'What part of speech is "pencil"?',
+    answer: 'Noun',
+    explanation: 'Pencil names a thing, so it is a noun.',
+  },
+  {
+    sentence: 'Kayli wrote the sentence carefully.',
+    prompt: 'What part of speech is "wrote"?',
+    answer: 'Verb',
+    explanation: 'Wrote is the action in the sentence. Verbs show action or link the subject to more information.',
+  },
+  {
+    sentence: 'The cookies were warm.',
+    prompt: 'What part of speech is "were"?',
+    answer: 'Verb',
+    explanation: 'Were is a linking verb. The notes say linking verbs include am, is, are, was, were, be, being, and been.',
+  },
+  {
+    sentence: 'She finished the essay before dinner.',
+    prompt: 'What part of speech is "She"?',
+    answer: 'Pronoun',
+    explanation: 'She takes the place of a noun, so it is a pronoun.',
+  },
+  {
+    sentence: 'I packed my notes, and I put them in my binder.',
+    prompt: 'What part of speech is "and"?',
+    answer: 'Conjunction',
+    explanation: 'And joins words or sentence parts. It is one of the FANBOYS coordinating conjunctions.',
+  },
+  {
+    sentence: 'Because the quiz was hard, I studied again.',
+    prompt: 'What part of speech is "Because"?',
+    answer: 'Conjunction',
+    explanation: 'Because is a subordinating conjunction. It starts a dependent clause.',
+  },
+  {
+    sentence: 'The bright marker highlighted the rule.',
+    prompt: 'What part of speech is "bright"?',
+    answer: 'Adjective',
+    explanation: 'Bright describes the noun marker. Adjectives describe nouns.',
+  },
+  {
+    sentence: 'The teacher spoke clearly.',
+    prompt: 'What part of speech is "clearly"?',
+    answer: 'Adverb',
+    explanation: 'Clearly describes how the teacher spoke. Adverbs describe verbs and often end in -ly.',
+  },
+  {
+    sentence: 'The paper fell under the binder.',
+    prompt: 'What part of speech is "under"?',
+    answer: 'Preposition',
+    explanation: 'Under begins the phrase "under the binder." Prepositions begin phrases that add detail.',
+  },
+  {
+    sentence: 'Ouch! I stubbed my toe.',
+    prompt: 'What part of speech is "Ouch"?',
+    answer: 'Interjection',
+    explanation: 'Ouch expresses strong feeling and can stand alone with an exclamation point.',
+  },
+  {
+    sentence: 'My teacher, Ms. Donnelly, explained the rubric.',
+    prompt: 'Which word is a noun?',
+    answer: 'Noun',
+    explanation: 'Teacher and Ms. Donnelly are nouns because they name a person or title.',
+  },
+  {
+    sentence: 'The student is focused.',
+    prompt: 'What part of speech is "is"?',
+    answer: 'Verb',
+    explanation: 'Is is a linking verb because it connects the subject to a description.',
+  },
+  {
+    sentence: 'They reviewed their notes after school.',
+    prompt: 'What part of speech is "They"?',
+    answer: 'Pronoun',
+    explanation: 'They replaces a noun, so it is a pronoun.',
+  },
+  {
+    sentence: 'I wanted to go outside, but I finished my homework first.',
+    prompt: 'What part of speech is "but"?',
+    answer: 'Conjunction',
+    explanation: 'But is a coordinating conjunction. It connects two complete thoughts when used with a comma.',
+  },
+  {
+    sentence: 'The long essay needed a stronger conclusion.',
+    prompt: 'What part of speech is "long"?',
+    answer: 'Adjective',
+    explanation: 'Long describes the noun essay.',
+  },
+  {
+    sentence: 'Kayli quickly fixed the comma splice.',
+    prompt: 'What part of speech is "quickly"?',
+    answer: 'Adverb',
+    explanation: 'Quickly describes how Kayli fixed it, so it is an adverb.',
+  },
+  {
+    sentence: 'During lunch, there was a fight.',
+    prompt: 'What part of speech is "During"?',
+    answer: 'Preposition',
+    explanation: 'During starts the phrase "During lunch," which adds detail about time.',
+  },
+  {
+    sentence: 'Wow! That sentence is compound-complex.',
+    prompt: 'What part of speech is "Wow"?',
+    answer: 'Interjection',
+    explanation: 'Wow is an interjection because it shows strong feeling.',
+  },
+  {
+    sentence: 'For, and, nor, but, or, yet, so are FANBOYS.',
+    prompt: 'What part of speech are FANBOYS?',
+    answer: 'Conjunction',
+    explanation: 'FANBOYS are coordinating conjunctions used to connect words or complete sentences.',
+  },
 ];
 
 const figurativeQuestions: FigurativeQuestion[] = [
@@ -117,6 +307,79 @@ const figurativeQuestions: FigurativeQuestion[] = [
   { sentence: 'The old floorboards groaned under our feet.', answer: 'Personification', explanation: 'This is personification because the floorboards are given a human-like action.' },
   { sentence: 'I am starving to death after practice.', answer: 'Hyperbole', explanation: 'This is hyperbole because the speaker exaggerates how hungry they feel.' },
   { sentence: 'When the teacher changed the deadline, the whole class breathed a sigh of relief.', answer: 'Idiom', explanation: 'This is an idiom because the phrase means everyone felt relieved.' },
+];
+
+const essayQuestions: EssayQuestion[] = [
+  {
+    sentence: 'An essay about a real experience from the writer\'s life, told in first person.',
+    answer: 'Personal Narrative',
+    explanation: 'A personal narrative is first person and focuses on a specific real event, experience, or time.',
+  },
+  {
+    sentence: 'An essay that uses logic, evidence, and counterarguments to prove a point.',
+    answer: 'Persuasive/Argumentative',
+    explanation: 'Argumentative writing proves a point with evidence. Persuasive writing tries to convince the reader.',
+  },
+  {
+    sentence: 'An essay that uses imagery and sensory details to show what something is like.',
+    answer: 'Descriptive',
+    explanation: 'Descriptive writing creates a detailed picture using the five senses and vivid language.',
+  },
+  {
+    sentence: 'A factual essay that explains, describes, or informs the reader about a topic.',
+    answer: 'Expository',
+    explanation: 'Expository writing teaches or explains using facts and logical reasoning.',
+  },
+  {
+    sentence: 'An essay that explains similarities and differences between two or more topics.',
+    answer: 'Compare and Contrast',
+    explanation: 'Compare means show similarities. Contrast means show differences.',
+  },
+  {
+    sentence: 'The first sentence of the essay that could be a simile, metaphor, quote, or sourced fact.',
+    answer: 'Attention Getter',
+    explanation: 'The attention getter hooks the reader before the thesis explains the topic.',
+  },
+  {
+    sentence: 'Intro paragraph, body paragraph, and concluding paragraph are part of which rubric area?',
+    answer: 'Organization',
+    explanation: 'Organization is about putting the essay in the correct order and building each paragraph clearly.',
+  },
+  {
+    sentence: 'Grammar, punctuation, word choice, spelling, and avoiding contractions in formal writing.',
+    answer: 'Conventions',
+    explanation: 'Conventions are the correctness rules that make writing clean and readable.',
+  },
+  {
+    sentence: 'Valid facts, evidence, and sources that prove the point of the paragraph.',
+    answer: 'Content and Support',
+    explanation: 'Content and support are the proof. Each body paragraph needs factual support and commentary.',
+  },
+  {
+    sentence: 'Writing in a way that sounds like you and is not just repeating what everyone else says.',
+    answer: 'Originality',
+    explanation: 'Originality means making the essay intelligent, relatable, and your own.',
+  },
+  {
+    sentence: 'The first sentence of every body paragraph that tells what the paragraph will be about.',
+    answer: 'Organization',
+    explanation: 'That is the topic sentence, and it helps organize the body paragraph.',
+  },
+  {
+    sentence: 'Restating the thesis, summarizing the main points, and referring back to the attention getter.',
+    answer: 'Organization',
+    explanation: 'Those are pieces of a concluding paragraph, so they fit under organization.',
+  },
+  {
+    sentence: 'Ethos, pathos, and logos are important to remember for this type of writing.',
+    answer: 'Persuasive/Argumentative',
+    explanation: 'Ethos, pathos, and logos are persuasion and argument tools.',
+  },
+  {
+    sentence: 'The reader should not know what the essay is about until the last sentence of the first paragraph.',
+    answer: 'Attention Getter',
+    explanation: 'The hook catches attention first. The thesis at the end of the intro reveals the exact topic.',
+  },
 ];
 
 const vocabEntries: VocabEntry[] = [
@@ -325,6 +588,23 @@ function buildFigurativeDeck() {
   }));
 }
 
+function buildPartsDeck() {
+  return shuffle(partOfSpeechQuestions).map((entry) => ({
+    ...entry,
+    options: shuffle(partOfSpeechTypes),
+  }));
+}
+
+function buildEssayDeck() {
+  return shuffle(essayQuestions).map((entry) => ({
+    ...entry,
+    options: shuffle([
+      entry.answer,
+      ...shuffle(essayTypes.filter((type) => type !== entry.answer)).slice(0, 3),
+    ]),
+  }));
+}
+
 export default function EnglishSentencePractice() {
   const [activeTab, setActiveTab] = useState<PracticeTab>('structure');
   const [deck, setDeck] = useState(() => buildDeck());
@@ -332,11 +612,16 @@ export default function EnglishSentencePractice() {
   const [selected, setSelected] = useState<SentenceType | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [streak, setStreak] = useState(0);
-  const [vocabDeck, setVocabDeck] = useState(() => buildVocabDeck());
-  const [vocabIndex, setVocabIndex] = useState(0);
-  const [vocabSelected, setVocabSelected] = useState<string | null>(null);
-  const [vocabCorrectCount, setVocabCorrectCount] = useState(0);
-  const [vocabStreak, setVocabStreak] = useState(0);
+  const [partsDeck, setPartsDeck] = useState(() => buildPartsDeck());
+  const [partsIndex, setPartsIndex] = useState(0);
+  const [partsSelected, setPartsSelected] = useState<PartOfSpeechType | null>(null);
+  const [partsCorrectCount, setPartsCorrectCount] = useState(0);
+  const [partsStreak, setPartsStreak] = useState(0);
+  const [essayDeck, setEssayDeck] = useState(() => buildEssayDeck());
+  const [essayIndex, setEssayIndex] = useState(0);
+  const [essaySelected, setEssaySelected] = useState<EssayType | null>(null);
+  const [essayCorrectCount, setEssayCorrectCount] = useState(0);
+  const [essayStreak, setEssayStreak] = useState(0);
   const [figurativeDeck, setFigurativeDeck] = useState(() => buildFigurativeDeck());
   const [figurativeIndex, setFigurativeIndex] = useState(0);
   const [figurativeSelected, setFigurativeSelected] = useState<FigurativeType | null>(null);
@@ -349,11 +634,16 @@ export default function EnglishSentencePractice() {
   const answered = selected !== null;
   const progress = deck.length === 0 ? 0 : Math.round((index / deck.length) * 100);
 
-  const currentVocab = vocabDeck[vocabIndex];
-  const vocabDone = vocabIndex >= vocabDeck.length;
-  const vocabIsCorrect = vocabSelected === currentVocab?.definition;
-  const vocabAnswered = vocabSelected !== null;
-  const vocabProgress = vocabDeck.length === 0 ? 0 : Math.round((vocabIndex / vocabDeck.length) * 100);
+  const currentParts = partsDeck[partsIndex];
+  const partsDone = partsIndex >= partsDeck.length;
+  const partsIsCorrect = partsSelected === currentParts?.answer;
+  const partsAnswered = partsSelected !== null;
+  const partsProgress = partsDeck.length === 0 ? 0 : Math.round((partsIndex / partsDeck.length) * 100);
+  const currentEssay = essayDeck[essayIndex];
+  const essayDone = essayIndex >= essayDeck.length;
+  const essayIsCorrect = essaySelected === currentEssay?.answer;
+  const essayAnswered = essaySelected !== null;
+  const essayProgress = essayDeck.length === 0 ? 0 : Math.round((essayIndex / essayDeck.length) * 100);
   const currentFigurative = figurativeDeck[figurativeIndex];
   const figurativeDone = figurativeIndex >= figurativeDeck.length;
   const figurativeIsCorrect = figurativeSelected === currentFigurative?.answer;
@@ -410,29 +700,54 @@ export default function EnglishSentencePractice() {
     setFigurativeStreak(0);
   }
 
-  function handleVocabAnswer(choice: string) {
-    if (vocabAnswered || !currentVocab) return;
-    setVocabSelected(choice);
-    if (choice === currentVocab.definition) {
-      setVocabCorrectCount((count) => count + 1);
-      setVocabStreak((count) => count + 1);
+  function handlePartsAnswer(choice: PartOfSpeechType) {
+    if (partsAnswered || !currentParts) return;
+    setPartsSelected(choice);
+    if (choice === currentParts.answer) {
+      setPartsCorrectCount((count) => count + 1);
+      setPartsStreak((count) => count + 1);
       return;
     }
-    setVocabStreak(0);
+    setPartsStreak(0);
   }
 
-  function nextVocabQuestion() {
-    if (!vocabAnswered) return;
-    setVocabSelected(null);
-    setVocabIndex((value) => value + 1);
+  function nextPartsQuestion() {
+    if (!partsAnswered) return;
+    setPartsSelected(null);
+    setPartsIndex((value) => value + 1);
   }
 
-  function restartVocab() {
-    setVocabDeck(buildVocabDeck());
-    setVocabIndex(0);
-    setVocabSelected(null);
-    setVocabCorrectCount(0);
-    setVocabStreak(0);
+  function restartParts() {
+    setPartsDeck(buildPartsDeck());
+    setPartsIndex(0);
+    setPartsSelected(null);
+    setPartsCorrectCount(0);
+    setPartsStreak(0);
+  }
+
+  function handleEssayAnswer(choice: EssayType) {
+    if (essayAnswered || !currentEssay) return;
+    setEssaySelected(choice);
+    if (choice === currentEssay.answer) {
+      setEssayCorrectCount((count) => count + 1);
+      setEssayStreak((count) => count + 1);
+      return;
+    }
+    setEssayStreak(0);
+  }
+
+  function nextEssayQuestion() {
+    if (!essayAnswered) return;
+    setEssaySelected(null);
+    setEssayIndex((value) => value + 1);
+  }
+
+  function restartEssay() {
+    setEssayDeck(buildEssayDeck());
+    setEssayIndex(0);
+    setEssaySelected(null);
+    setEssayCorrectCount(0);
+    setEssayStreak(0);
   }
 
   return (
@@ -450,16 +765,22 @@ export default function EnglishSentencePractice() {
               Sentence Structure
             </button>
             <button
+              className={activeTab === 'parts' ? 'tab-bubble active' : 'tab-bubble'}
+              onClick={() => setActiveTab('parts')}
+            >
+              Grammar Basics
+            </button>
+            <button
+              className={activeTab === 'essays' ? 'tab-bubble active' : 'tab-bubble'}
+              onClick={() => setActiveTab('essays')}
+            >
+              Essay Writing
+            </button>
+            <button
               className={activeTab === 'figurative' ? 'tab-bubble active' : 'tab-bubble'}
               onClick={() => setActiveTab('figurative')}
             >
               Figurative Language
-            </button>
-            <button
-              className={activeTab === 'vocab' ? 'tab-bubble active' : 'tab-bubble'}
-              onClick={() => setActiveTab('vocab')}
-            >
-              Vocab Words
             </button>
           </div>
 
@@ -468,21 +789,27 @@ export default function EnglishSentencePractice() {
               ? 'Sentence Structure'
               : activeTab === 'figurative'
                 ? 'Figurative Language'
-                : 'Vocab Words'}
+                : activeTab === 'essays'
+                  ? 'Essay Writing'
+                  : 'Grammar Basics'}
           </div>
           <h1>
             {activeTab === 'structure'
               ? 'Sentence Structure Trainer'
               : activeTab === 'figurative'
                 ? 'Figurative Language Trainer'
-                : 'Vocab Words Trainer'}
+                : activeTab === 'essays'
+                  ? 'Essay Writing Trainer'
+                  : 'Parts of Speech Trainer'}
           </h1>
           <p className="hero-copy">
             {activeTab === 'structure'
-              ? 'Read each sentence and choose whether it is simple, compound, complex, or compound-complex.'
+              ? 'Read each sentence and choose whether it is simple, compound, complex, or compound-complex. Watch for complete sentences, FANBOYS, semicolons, and dependent clauses.'
               : activeTab === 'figurative'
                 ? 'Read each sentence and choose which type of figurative language it uses.'
-                : 'Choose the correct meaning for each word, then use the example sentence to lock it in.'}
+                : activeTab === 'essays'
+                  ? 'Review essay types and rubric pieces like attention getters, organization, conventions, support, and originality.'
+                  : 'Use the notes to spot nouns, verbs, pronouns, conjunctions, adjectives, adverbs, prepositions, and interjections.'}
           </p>
 
           {activeTab === 'structure' && (
@@ -493,15 +820,73 @@ export default function EnglishSentencePractice() {
               </div>
               <div className="hint-card">
                 <strong>Compound</strong>
-                <span>2 independent clauses</span>
+                <span>2 complete sentences joined by a semicolon or comma + FANBOYS</span>
               </div>
               <div className="hint-card">
                 <strong>Complex</strong>
-                <span>1 independent + 1 dependent clause</span>
+                <span>1 independent clause + 1 dependent clause that often starts with a subordinating conjunction</span>
               </div>
               <div className="hint-card">
                 <strong>Compound-Complex</strong>
                 <span>2 independent + 1 dependent clause</span>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'parts' && (
+            <div className="hint-grid parts-hint-grid">
+              <div className="hint-card">
+                <strong>Nouns</strong>
+                <span>People, places, things, or ideas. Common nouns name general things. Proper nouns name specific ones.</span>
+              </div>
+              <div className="hint-card">
+                <strong>Verbs</strong>
+                <span>Action or linking words. Complete sentences need a noun/pronoun and a verb.</span>
+              </div>
+              <div className="hint-card">
+                <strong>Pronouns</strong>
+                <span>Words that replace nouns, like he, she, it, they, we, us, and me.</span>
+              </div>
+              <div className="hint-card">
+                <strong>Conjunctions</strong>
+                <span>Connecting words. FANBOYS are coordinating conjunctions. Because, when, if, and although are subordinating conjunctions.</span>
+              </div>
+              <div className="hint-card">
+                <strong>Adjectives</strong>
+                <span>Words that describe nouns.</span>
+              </div>
+              <div className="hint-card">
+                <strong>Adverbs</strong>
+                <span>Words that describe verbs. They often end in -ly, like quickly or carefully.</span>
+              </div>
+              <div className="hint-card">
+                <strong>Prepositions</strong>
+                <span>Words that begin detail phrases, like during, above, across, after, against, among, and around.</span>
+              </div>
+              <div className="hint-card">
+                <strong>Interjections</strong>
+                <span>Strong-feeling words, often one-word sentences with an exclamation point, like Ouch!</span>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'essays' && (
+            <div className="hint-grid essay-hint-grid">
+              <div className="hint-card">
+                <strong>Essay Types</strong>
+                <span>Personal narrative, persuasive/argumentative, descriptive, expository, and compare/contrast each have a different purpose.</span>
+              </div>
+              <div className="hint-card">
+                <strong>Intro</strong>
+                <span>Start with an attention getter, then build toward a clear thesis at the end of the first paragraph.</span>
+              </div>
+              <div className="hint-card">
+                <strong>Body</strong>
+                <span>Begin with a topic sentence, then use valid support and commentary to prove the thesis.</span>
+              </div>
+              <div className="hint-card">
+                <strong>Conclusion</strong>
+                <span>Restate the thesis, summarize the main points, and connect back to the attention getter.</span>
               </div>
             </div>
           )}
@@ -595,6 +980,69 @@ export default function EnglishSentencePractice() {
               </div>
             )}
           </section>
+        ) : activeTab === 'essays' ? (
+          <section className="board">
+            <div className="stats">
+              <div className="stat-chip">Score: {essayCorrectCount}/{essayDeck.length}</div>
+              <div className="stat-chip">Streak: {essayStreak}</div>
+              <div className="stat-chip">Progress: {essayProgress}%</div>
+            </div>
+
+            <div className="progress-track" aria-hidden="true">
+              <div className="progress-fill" style={{ width: `${essayProgress}%` }} />
+            </div>
+
+            {essayDone ? (
+              <div className="result-card">
+                <p className="result-label">Finished</p>
+                <h2>You got {essayCorrectCount} out of {essayDeck.length}</h2>
+                <p className="result-copy">
+                  {essayCorrectCount === essayDeck.length
+                    ? 'Perfect. You know the essay notes cold.'
+                    : essayCorrectCount >= essayDeck.length * 0.8
+                      ? 'Nice work. The essay types and rubric parts are mostly sticking.'
+                      : 'Run it again and focus on the job each essay part is supposed to do.'}
+                </p>
+                <button className="primary-btn" onClick={restartEssay}>Try Again</button>
+              </div>
+            ) : (
+              <div className="question-card">
+                <div className="question-topline">Question {essayIndex + 1} of {essayDeck.length}</div>
+                <p className="sentence parts-sentence">{currentEssay.sentence}</p>
+
+                <div className="answer-grid answer-grid-essay">
+                  {currentEssay.options.map((option) => {
+                    let className = 'answer-btn';
+                    if (essayAnswered && option === currentEssay.answer) className += ' correct';
+                    if (essayAnswered && essaySelected === option && option !== currentEssay.answer) className += ' wrong';
+
+                    return (
+                      <button
+                        key={option}
+                        className={className}
+                        onClick={() => handleEssayAnswer(option)}
+                        disabled={essayAnswered}
+                      >
+                        {option}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {essayAnswered && (
+                  <div className={essayIsCorrect ? 'feedback success' : 'feedback error'}>
+                    <p className="feedback-title">
+                      {essayIsCorrect ? 'Correct' : `Not quite. The answer is ${currentEssay.answer}.`}
+                    </p>
+                    <p className="feedback-copy">{currentEssay.explanation}</p>
+                    <button className="primary-btn" onClick={nextEssayQuestion}>
+                      {essayIndex === essayDeck.length - 1 ? 'See Score' : 'Next Question'}
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </section>
         ) : activeTab === 'figurative' ? (
           <section className="board">
             <div className="stats">
@@ -661,45 +1109,46 @@ export default function EnglishSentencePractice() {
         ) : (
           <section className="board">
             <div className="stats">
-              <div className="stat-chip">Score: {vocabCorrectCount}/{vocabDeck.length}</div>
-              <div className="stat-chip">Streak: {vocabStreak}</div>
-              <div className="stat-chip">Progress: {vocabProgress}%</div>
+              <div className="stat-chip">Score: {partsCorrectCount}/{partsDeck.length}</div>
+              <div className="stat-chip">Streak: {partsStreak}</div>
+              <div className="stat-chip">Progress: {partsProgress}%</div>
             </div>
 
             <div className="progress-track" aria-hidden="true">
-              <div className="progress-fill" style={{ width: `${vocabProgress}%` }} />
+              <div className="progress-fill" style={{ width: `${partsProgress}%` }} />
             </div>
 
-            {vocabDone ? (
+            {partsDone ? (
               <div className="result-card">
                 <p className="result-label">Finished</p>
-                <h2>You got {vocabCorrectCount} out of {vocabDeck.length}</h2>
+                <h2>You got {partsCorrectCount} out of {partsDeck.length}</h2>
                 <p className="result-copy">
-                  {vocabCorrectCount === vocabDeck.length
-                    ? 'Perfect. You know these words cold.'
-                    : vocabCorrectCount >= vocabDeck.length * 0.8
-                      ? 'Nice work. One more round and these should stick.'
-                      : 'Run it again and pay extra attention to the example sentences.'}
+                  {partsCorrectCount === partsDeck.length
+                    ? 'Perfect. You know these grammar basics cold.'
+                    : partsCorrectCount >= partsDeck.length * 0.8
+                      ? 'Nice work. One more round and the parts of speech should stick.'
+                      : 'Run it again and focus on what job each word is doing in the sentence.'}
                 </p>
-                <button className="primary-btn" onClick={restartVocab}>Try Again</button>
+                <button className="primary-btn" onClick={restartParts}>Try Again</button>
               </div>
             ) : (
               <div className="question-card">
-                <div className="question-topline">Word {vocabIndex + 1} of {vocabDeck.length}</div>
-                <p className="sentence vocab-word">{currentVocab.word}</p>
+                <div className="question-topline">Question {partsIndex + 1} of {partsDeck.length}</div>
+                <p className="parts-prompt">{currentParts.prompt}</p>
+                <p className="sentence parts-sentence">{currentParts.sentence}</p>
 
-                <div className="answer-grid">
-                  {currentVocab.options.map((option) => {
+                <div className="answer-grid answer-grid-parts">
+                  {currentParts.options.map((option) => {
                     let className = 'answer-btn';
-                    if (vocabAnswered && option === currentVocab.definition) className += ' correct';
-                    if (vocabAnswered && vocabSelected === option && option !== currentVocab.definition) className += ' wrong';
+                    if (partsAnswered && option === currentParts.answer) className += ' correct';
+                    if (partsAnswered && partsSelected === option && option !== currentParts.answer) className += ' wrong';
 
                     return (
                       <button
                         key={option}
                         className={className}
-                        onClick={() => handleVocabAnswer(option)}
-                        disabled={vocabAnswered}
+                        onClick={() => handlePartsAnswer(option)}
+                        disabled={partsAnswered}
                       >
                         {option}
                       </button>
@@ -707,14 +1156,14 @@ export default function EnglishSentencePractice() {
                   })}
                 </div>
 
-                {vocabAnswered && (
-                  <div className={vocabIsCorrect ? 'feedback success' : 'feedback error'}>
+                {partsAnswered && (
+                  <div className={partsIsCorrect ? 'feedback success' : 'feedback error'}>
                     <p className="feedback-title">
-                      {vocabIsCorrect ? 'Correct' : `Not quite. ${currentVocab.word} means ${currentVocab.definition}.`}
+                      {partsIsCorrect ? 'Correct' : `Not quite. The answer is ${currentParts.answer}.`}
                     </p>
-                    <p className="feedback-copy"><strong>Example:</strong> {currentVocab.example}</p>
-                    <button className="primary-btn" onClick={nextVocabQuestion}>
-                      {vocabIndex === vocabDeck.length - 1 ? 'See Score' : 'Next Word'}
+                    <p className="feedback-copy">{currentParts.explanation}</p>
+                    <button className="primary-btn" onClick={nextPartsQuestion}>
+                      {partsIndex === partsDeck.length - 1 ? 'See Score' : 'Next Question'}
                     </button>
                   </div>
                 )}
@@ -944,6 +1393,18 @@ export default function EnglishSentencePractice() {
           text-transform: lowercase;
         }
 
+        .parts-prompt {
+          margin: 0.65rem 0 0;
+          font-size: 1.05rem;
+          line-height: 1.5;
+          font-weight: 800;
+          color: #9b4d1f;
+        }
+
+        .parts-sentence {
+          margin-top: 0.45rem;
+        }
+
         .answer-grid {
           display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -952,6 +1413,11 @@ export default function EnglishSentencePractice() {
 
         .answer-grid-figurative {
           grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .answer-grid-parts,
+        .answer-grid-essay {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
         }
 
         .answer-btn,
@@ -1046,7 +1512,9 @@ export default function EnglishSentencePractice() {
 
           .hint-grid,
           .answer-grid,
-          .answer-grid-figurative {
+          .answer-grid-figurative,
+          .answer-grid-parts,
+          .answer-grid-essay {
             grid-template-columns: 1fr;
           }
 
