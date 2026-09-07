@@ -22,7 +22,16 @@ type EssayType =
   | 'Conventions'
   | 'Content and Support'
   | 'Originality';
-type PracticeTab = 'structure' | 'parts' | 'essays' | 'figurative';
+type SentenceRuleAnswer =
+  | 'Comma + FANBOYS'
+  | 'Semicolon'
+  | 'No comma before because'
+  | 'Comma after opener'
+  | 'Appositive commas'
+  | 'Semicolon + transition + comma'
+  | 'Comma splice'
+  | 'Complete sentence';
+type PracticeTab = 'structure' | 'sentenceRules' | 'parts' | 'essays' | 'figurative';
 
 type Question = {
   sentence: string;
@@ -60,6 +69,13 @@ type EssayQuestion = {
   sentence: string;
   answer: EssayType;
   explanation: string;
+};
+
+type SentenceRuleQuestion = {
+  sentence: string;
+  answer: SentenceRuleAnswer;
+  explanation: string;
+  options: SentenceRuleAnswer[];
 };
 
 const sentenceTypes: SentenceType[] = ['Simple', 'Compound', 'Complex', 'Compound-Complex'];
@@ -161,6 +177,81 @@ const compoundComplexQuestions: Question[] = [
   { sentence: 'Because I was late, my mom grounded me, so I will not sleep over this weekend.', answer: 'Compound-Complex', explanation: 'It has a dependent clause plus two complete sentences connected with "so."' },
   { sentence: 'When the essay began, the hook caught my attention, and the thesis explained the topic.', answer: 'Compound-Complex', explanation: 'It has one dependent clause and two independent clauses.' },
   { sentence: 'Although the draft was messy, Kayli revised the body paragraph, and the essay became clearer.', answer: 'Compound-Complex', explanation: 'It combines a dependent clause with two independent clauses.' },
+];
+
+const sentenceRuleQuestions: SentenceRuleQuestion[] = [
+  {
+    sentence: 'I went to the store, for I needed to buy eggs and strawberries.',
+    answer: 'Comma + FANBOYS',
+    explanation: 'For is a coordinating conjunction here. Two complete sentences are connected with a comma plus FANBOYS.',
+    options: ['Comma + FANBOYS', 'No comma before because', 'Comma splice', 'Appositive commas'],
+  },
+  {
+    sentence: 'I needed to buy eggs; I went to the store.',
+    answer: 'Semicolon',
+    explanation: 'A semicolon can correctly connect two complete sentences that are closely related.',
+    options: ['Semicolon', 'Comma + FANBOYS', 'Comma after opener', 'Complete sentence'],
+  },
+  {
+    sentence: 'I went to the store because I needed eggs.',
+    answer: 'No comma before because',
+    explanation: 'The notes say not to put a comma before because when it comes in the middle of the sentence.',
+    options: ['No comma before because', 'Comma + FANBOYS', 'Comma splice', 'Appositive commas'],
+  },
+  {
+    sentence: 'Because I needed eggs, I went to the store.',
+    answer: 'Comma after opener',
+    explanation: 'When a dependent clause comes first, put a comma after it before the independent clause.',
+    options: ['Comma after opener', 'No comma before because', 'Semicolon', 'Complete sentence'],
+  },
+  {
+    sentence: 'Ms. Donnelly, my English teacher, explained the sentence rule.',
+    answer: 'Appositive commas',
+    explanation: 'The phrase "my English teacher" renames Ms. Donnelly, so it is set off with commas.',
+    options: ['Appositive commas', 'Comma splice', 'Comma + FANBOYS', 'No comma before because'],
+  },
+  {
+    sentence: 'I will not do any of my assignments; therefore, I will fail.',
+    answer: 'Semicolon + transition + comma',
+    explanation: 'Transition words like therefore and however need a semicolon before them and a comma after them when joining two complete sentences.',
+    options: ['Semicolon + transition + comma', 'Comma + FANBOYS', 'Comma after opener', 'Comma splice'],
+  },
+  {
+    sentence: 'I love to read; however, I do not always like what is assigned.',
+    answer: 'Semicolon + transition + comma',
+    explanation: 'However is a transition word, so it uses a semicolon before and comma after.',
+    options: ['Semicolon + transition + comma', 'Semicolon', 'No comma before because', 'Complete sentence'],
+  },
+  {
+    sentence: 'I went to the store, I needed eggs.',
+    answer: 'Comma splice',
+    explanation: 'Two complete sentences cannot be connected with only a comma. That mistake is called a comma splice.',
+    options: ['Comma splice', 'Comma + FANBOYS', 'Appositive commas', 'Comma after opener'],
+  },
+  {
+    sentence: 'You farted.',
+    answer: 'Complete sentence',
+    explanation: 'It is short, but it has a noun/pronoun idea and a verb, and it expresses a complete thought.',
+    options: ['Complete sentence', 'Comma splice', 'Appositive commas', 'Semicolon'],
+  },
+  {
+    sentence: 'Tomorrow, at 3:15pm, I will go to the dentist.',
+    answer: 'Comma after opener',
+    explanation: 'Introductory time phrases at the start of a sentence are set off with commas.',
+    options: ['Comma after opener', 'No comma before because', 'Comma + FANBOYS', 'Semicolon'],
+  },
+  {
+    sentence: 'In the Age of Reason, a time period from 1685 to 1815, people valued science over superstition.',
+    answer: 'Appositive commas',
+    explanation: 'The appositive phrase explains the Age of Reason, so commas go around it.',
+    options: ['Appositive commas', 'Comma splice', 'Complete sentence', 'No comma before because'],
+  },
+  {
+    sentence: 'I went to the store, and I bought two pairs of shoes.',
+    answer: 'Comma + FANBOYS',
+    explanation: 'This uses a comma and the coordinating conjunction "and" to join two complete thoughts.',
+    options: ['Comma + FANBOYS', 'Semicolon + transition + comma', 'No comma before because', 'Comma splice'],
+  },
 ];
 
 const partOfSpeechQuestions: PartOfSpeechQuestion[] = [
@@ -595,6 +686,13 @@ function buildPartsDeck() {
   }));
 }
 
+function buildSentenceRulesDeck() {
+  return shuffle(sentenceRuleQuestions).map((entry) => ({
+    ...entry,
+    options: shuffle(entry.options),
+  }));
+}
+
 function buildEssayDeck() {
   return shuffle(essayQuestions).map((entry) => ({
     ...entry,
@@ -612,6 +710,11 @@ export default function EnglishSentencePractice() {
   const [selected, setSelected] = useState<SentenceType | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [streak, setStreak] = useState(0);
+  const [sentenceRulesDeck, setSentenceRulesDeck] = useState(() => buildSentenceRulesDeck());
+  const [sentenceRulesIndex, setSentenceRulesIndex] = useState(0);
+  const [sentenceRulesSelected, setSentenceRulesSelected] = useState<SentenceRuleAnswer | null>(null);
+  const [sentenceRulesCorrectCount, setSentenceRulesCorrectCount] = useState(0);
+  const [sentenceRulesStreak, setSentenceRulesStreak] = useState(0);
   const [partsDeck, setPartsDeck] = useState(() => buildPartsDeck());
   const [partsIndex, setPartsIndex] = useState(0);
   const [partsSelected, setPartsSelected] = useState<PartOfSpeechType | null>(null);
@@ -633,6 +736,13 @@ export default function EnglishSentencePractice() {
   const isCorrect = selected === current?.answer;
   const answered = selected !== null;
   const progress = deck.length === 0 ? 0 : Math.round((index / deck.length) * 100);
+
+  const currentSentenceRule = sentenceRulesDeck[sentenceRulesIndex];
+  const sentenceRulesDone = sentenceRulesIndex >= sentenceRulesDeck.length;
+  const sentenceRulesIsCorrect = sentenceRulesSelected === currentSentenceRule?.answer;
+  const sentenceRulesAnswered = sentenceRulesSelected !== null;
+  const sentenceRulesProgress =
+    sentenceRulesDeck.length === 0 ? 0 : Math.round((sentenceRulesIndex / sentenceRulesDeck.length) * 100);
 
   const currentParts = partsDeck[partsIndex];
   const partsDone = partsIndex >= partsDeck.length;
@@ -673,6 +783,31 @@ export default function EnglishSentencePractice() {
     setSelected(null);
     setCorrectCount(0);
     setStreak(0);
+  }
+
+  function handleSentenceRulesAnswer(choice: SentenceRuleAnswer) {
+    if (sentenceRulesAnswered || !currentSentenceRule) return;
+    setSentenceRulesSelected(choice);
+    if (choice === currentSentenceRule.answer) {
+      setSentenceRulesCorrectCount((count) => count + 1);
+      setSentenceRulesStreak((count) => count + 1);
+      return;
+    }
+    setSentenceRulesStreak(0);
+  }
+
+  function nextSentenceRuleQuestion() {
+    if (!sentenceRulesAnswered) return;
+    setSentenceRulesSelected(null);
+    setSentenceRulesIndex((value) => value + 1);
+  }
+
+  function restartSentenceRules() {
+    setSentenceRulesDeck(buildSentenceRulesDeck());
+    setSentenceRulesIndex(0);
+    setSentenceRulesSelected(null);
+    setSentenceRulesCorrectCount(0);
+    setSentenceRulesStreak(0);
   }
 
   function handleFigurativeAnswer(choice: FigurativeType) {
@@ -765,6 +900,12 @@ export default function EnglishSentencePractice() {
               Sentence Structure
             </button>
             <button
+              className={activeTab === 'sentenceRules' ? 'tab-bubble active' : 'tab-bubble'}
+              onClick={() => setActiveTab('sentenceRules')}
+            >
+              Sentence Rules
+            </button>
+            <button
               className={activeTab === 'parts' ? 'tab-bubble active' : 'tab-bubble'}
               onClick={() => setActiveTab('parts')}
             >
@@ -787,6 +928,8 @@ export default function EnglishSentencePractice() {
           <div className="eyebrow">
             {activeTab === 'structure'
               ? 'Sentence Structure'
+              : activeTab === 'sentenceRules'
+                ? 'Sentence Rules'
               : activeTab === 'figurative'
                 ? 'Figurative Language'
                 : activeTab === 'essays'
@@ -796,6 +939,8 @@ export default function EnglishSentencePractice() {
           <h1>
             {activeTab === 'structure'
               ? 'Sentence Structure Trainer'
+              : activeTab === 'sentenceRules'
+                ? 'Sentence Rules Trainer'
               : activeTab === 'figurative'
                 ? 'Figurative Language Trainer'
                 : activeTab === 'essays'
@@ -805,6 +950,8 @@ export default function EnglishSentencePractice() {
           <p className="hero-copy">
             {activeTab === 'structure'
               ? 'Read each sentence and choose whether it is simple, compound, complex, or compound-complex. Watch for complete sentences, FANBOYS, semicolons, and dependent clauses.'
+              : activeTab === 'sentenceRules'
+                ? 'Choose the grammar or punctuation rule that matches each example sentence.'
               : activeTab === 'figurative'
                 ? 'Read each sentence and choose which type of figurative language it uses.'
                 : activeTab === 'essays'
@@ -829,6 +976,27 @@ export default function EnglishSentencePractice() {
               <div className="hint-card">
                 <strong>Compound-Complex</strong>
                 <span>2 independent + 1 dependent clause</span>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'sentenceRules' && (
+            <div className="hint-grid">
+              <div className="hint-card">
+                <strong>Compound punctuation</strong>
+                <span>Use a semicolon or a comma plus FANBOYS to join two complete sentences.</span>
+              </div>
+              <div className="hint-card">
+                <strong>Complex punctuation</strong>
+                <span>If the dependent clause comes first, put a comma after it. If because comes in the middle, usually leave it alone.</span>
+              </div>
+              <div className="hint-card">
+                <strong>Appositives</strong>
+                <span>Extra naming or describing phrases get commas around them.</span>
+              </div>
+              <div className="hint-card">
+                <strong>Transitions</strong>
+                <span>Therefore and however use a semicolon before and a comma after when connecting two complete sentences.</span>
               </div>
             </div>
           )}
@@ -974,6 +1142,70 @@ export default function EnglishSentencePractice() {
                     <p className="feedback-copy">{current.explanation}</p>
                     <button className="primary-btn" onClick={nextQuestion}>
                       {index === deck.length - 1 ? 'See Score' : 'Next Sentence'}
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+          </section>
+        ) : activeTab === 'sentenceRules' ? (
+          <section className="board">
+            <div className="stats">
+              <div className="stat-chip">Score: {sentenceRulesCorrectCount}/{sentenceRulesDeck.length}</div>
+              <div className="stat-chip">Streak: {sentenceRulesStreak}</div>
+              <div className="stat-chip">Progress: {sentenceRulesProgress}%</div>
+            </div>
+
+            <div className="progress-track" aria-hidden="true">
+              <div className="progress-fill" style={{ width: `${sentenceRulesProgress}%` }} />
+            </div>
+
+            {sentenceRulesDone ? (
+              <div className="result-card">
+                <p className="result-label">Finished</p>
+                <h2>You got {sentenceRulesCorrectCount} out of {sentenceRulesDeck.length}</h2>
+                <p className="result-copy">
+                  {sentenceRulesCorrectCount === sentenceRulesDeck.length
+                    ? 'Perfect. These sentence rules are locked in.'
+                    : sentenceRulesCorrectCount >= sentenceRulesDeck.length * 0.8
+                      ? 'Nice work. The punctuation patterns are getting easier to spot.'
+                      : 'Run it again and focus on what is connecting the sentence parts.'}
+                </p>
+                <button className="primary-btn" onClick={restartSentenceRules}>Try Again</button>
+              </div>
+            ) : (
+              <div className="question-card">
+                <div className="question-topline">Question {sentenceRulesIndex + 1} of {sentenceRulesDeck.length}</div>
+                <p className="parts-prompt">Which sentence rule does this show?</p>
+                <p className="sentence parts-sentence">{currentSentenceRule.sentence}</p>
+
+                <div className="answer-grid answer-grid-rules">
+                  {currentSentenceRule.options.map((option) => {
+                    let className = 'answer-btn';
+                    if (sentenceRulesAnswered && option === currentSentenceRule.answer) className += ' correct';
+                    if (sentenceRulesAnswered && sentenceRulesSelected === option && option !== currentSentenceRule.answer) className += ' wrong';
+
+                    return (
+                      <button
+                        key={option}
+                        className={className}
+                        onClick={() => handleSentenceRulesAnswer(option)}
+                        disabled={sentenceRulesAnswered}
+                      >
+                        {option}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {sentenceRulesAnswered && (
+                  <div className={sentenceRulesIsCorrect ? 'feedback success' : 'feedback error'}>
+                    <p className="feedback-title">
+                      {sentenceRulesIsCorrect ? 'Correct' : `Not quite. The answer is ${currentSentenceRule.answer}.`}
+                    </p>
+                    <p className="feedback-copy">{currentSentenceRule.explanation}</p>
+                    <button className="primary-btn" onClick={nextSentenceRuleQuestion}>
+                      {sentenceRulesIndex === sentenceRulesDeck.length - 1 ? 'See Score' : 'Next Question'}
                     </button>
                   </div>
                 )}
@@ -1416,6 +1648,7 @@ export default function EnglishSentencePractice() {
         }
 
         .answer-grid-parts,
+        .answer-grid-rules,
         .answer-grid-essay {
           grid-template-columns: repeat(2, minmax(0, 1fr));
         }
@@ -1514,6 +1747,7 @@ export default function EnglishSentencePractice() {
           .answer-grid,
           .answer-grid-figurative,
           .answer-grid-parts,
+          .answer-grid-rules,
           .answer-grid-essay {
             grid-template-columns: 1fr;
           }
