@@ -84,8 +84,8 @@ type SentenceRuleQuestion = {
 };
 
 type PunctuationQuestion = {
-  chunks: string[];
-  answers: PunctuationMark[];
+  text: string;
+  answers: Record<number, PunctuationMark>;
   explanation: string;
 };
 
@@ -269,53 +269,53 @@ const sentenceRuleQuestions: SentenceRuleQuestion[] = [
 
 const punctuationQuestions: PunctuationQuestion[] = [
   {
-    chunks: ['I went to the store', 'for I needed to buy eggs and strawberries.'],
-    answers: [','],
+    text: 'I went to the store for I needed to buy eggs and strawberries.',
+    answers: { 4: ',' },
     explanation: 'Use a comma before a coordinating conjunction when it connects two complete sentences.',
   },
   {
-    chunks: ['I needed to buy eggs', 'I went to the store.'],
-    answers: [';'],
+    text: 'I needed to buy eggs I went to the store.',
+    answers: { 4: ';' },
     explanation: 'A semicolon can connect two complete sentences that belong together.',
   },
   {
-    chunks: ['I went to the store', 'because I needed eggs.'],
-    answers: [''],
+    text: 'I went to the store because I needed eggs.',
+    answers: {},
     explanation: 'Do not put a comma before because when it comes in the middle of the sentence.',
   },
   {
-    chunks: ['Because I needed eggs', 'I went to the store.'],
-    answers: [','],
+    text: 'Because I needed eggs I went to the store.',
+    answers: { 3: ',' },
     explanation: 'When a dependent clause comes first, put a comma after it.',
   },
   {
-    chunks: ['Ms. Donnelly', 'my English teacher', 'explained the rule.'],
-    answers: [',', ','],
+    text: 'Ms. Donnelly my English teacher explained the rule.',
+    answers: { 1: ',', 4: ',' },
     explanation: 'An appositive renames a noun, so commas go around it.',
   },
   {
-    chunks: ['I will not do any of my assignments', 'therefore', 'I will fail.'],
-    answers: [';', ','],
+    text: 'I will not do any of my assignments therefore I will fail.',
+    answers: { 7: ';', 8: ',' },
     explanation: 'With transition words like therefore, use a semicolon before the transition and a comma after it.',
   },
   {
-    chunks: ['I love to read', 'however', 'I do not always like what is assigned.'],
-    answers: [';', ','],
+    text: 'I love to read however I do not always like what is assigned.',
+    answers: { 3: ';', 4: ',' },
     explanation: 'However connects two complete sentences with a semicolon before it and a comma after it.',
   },
   {
-    chunks: ['Tomorrow', 'at 3:15pm', 'I will go to the dentist.'],
-    answers: [',', ','],
+    text: 'Tomorrow at 3:15pm I will go to the dentist.',
+    answers: { 0: ',', 3: ',' },
     explanation: 'Introductory time words and phrases at the start of a sentence are set off with commas.',
   },
   {
-    chunks: ['In the Age of Reason', 'a time period from 1685 to 1815', 'people valued science over superstition.'],
-    answers: [',', ','],
+    text: 'In the Age of Reason a time period from 1685 to 1815 people valued science over superstition.',
+    answers: { 4: ',', 11: ',' },
     explanation: 'The appositive phrase explains the Age of Reason, so it gets commas around it.',
   },
   {
-    chunks: ['I went to the store', 'and I bought two pairs of shoes.'],
-    answers: [','],
+    text: 'I went to the store and I bought two pairs of shoes.',
+    answers: { 4: ',' },
     explanation: 'Use comma plus FANBOYS when joining two complete sentences.',
   },
 ];
@@ -790,6 +790,14 @@ function buildEssayDeck() {
   }));
 }
 
+function getPunctuationWords(question?: PunctuationQuestion) {
+  return question?.text.split(' ') ?? [];
+}
+
+function getPunctuationAnswer(question: PunctuationQuestion, slotIndex: number): PunctuationMark {
+  return question.answers[slotIndex] ?? '';
+}
+
 export default function EnglishSentencePractice() {
   const [activeTab, setActiveTab] = useState<PracticeTab>('structure');
   const [structureMode, setStructureMode] = useState<StructureMode>('types');
@@ -801,7 +809,7 @@ export default function EnglishSentencePractice() {
   const [punctuationDeck, setPunctuationDeck] = useState(() => punctuationQuestions);
   const [punctuationIndex, setPunctuationIndex] = useState(0);
   const [punctuationMarks, setPunctuationMarks] = useState<PunctuationMark[]>(() =>
-    Array(punctuationQuestions[0]?.answers.length ?? 0).fill('') as PunctuationMark[],
+    Array(getPunctuationWords(punctuationQuestions[0]).length - 1).fill('') as PunctuationMark[],
   );
   const [punctuationSubmitted, setPunctuationSubmitted] = useState(false);
   const [punctuationCorrectCount, setPunctuationCorrectCount] = useState(0);
@@ -834,9 +842,13 @@ export default function EnglishSentencePractice() {
   const progress = deck.length === 0 ? 0 : Math.round((index / deck.length) * 100);
 
   const currentPunctuation = punctuationDeck[punctuationIndex];
+  const currentPunctuationWords = getPunctuationWords(currentPunctuation);
   const punctuationDone = punctuationIndex >= punctuationDeck.length;
-  const punctuationIsCorrect =
-    currentPunctuation?.answers.every((answer, answerIndex) => punctuationMarks[answerIndex] === answer) ?? false;
+  const punctuationIsCorrect = currentPunctuation
+    ? currentPunctuationWords
+      .slice(0, -1)
+      .every((_, slotIndex) => punctuationMarks[slotIndex] === getPunctuationAnswer(currentPunctuation, slotIndex))
+    : false;
   const punctuationProgress =
     punctuationDeck.length === 0 ? 0 : Math.round((punctuationIndex / punctuationDeck.length) * 100);
 
@@ -915,7 +927,7 @@ export default function EnglishSentencePractice() {
     const nextIndex = punctuationIndex + 1;
     const nextQuestion = punctuationDeck[nextIndex];
     setPunctuationIndex(nextIndex);
-    setPunctuationMarks(Array(nextQuestion?.answers.length ?? 0).fill('') as PunctuationMark[]);
+    setPunctuationMarks(Array(Math.max(getPunctuationWords(nextQuestion).length - 1, 0)).fill('') as PunctuationMark[]);
     setPunctuationSubmitted(false);
   }
 
@@ -923,7 +935,7 @@ export default function EnglishSentencePractice() {
     const nextDeck = shuffle(punctuationQuestions);
     setPunctuationDeck(nextDeck);
     setPunctuationIndex(0);
-    setPunctuationMarks(Array(nextDeck[0]?.answers.length ?? 0).fill('') as PunctuationMark[]);
+    setPunctuationMarks(Array(Math.max(getPunctuationWords(nextDeck[0]).length - 1, 0)).fill('') as PunctuationMark[]);
     setPunctuationSubmitted(false);
     setPunctuationCorrectCount(0);
     setPunctuationStreak(0);
@@ -1211,7 +1223,7 @@ export default function EnglishSentencePractice() {
                 onClick={() => setStructureMode('punctuation')}
               >
                 <strong>Commas and Semicolons</strong>
-                <span>Click the blanks to add commas or semicolons.</span>
+                <span>Click between words to add commas or semicolons.</span>
               </button>
             </div>
 
@@ -1306,25 +1318,26 @@ export default function EnglishSentencePractice() {
             ) : (
               <div className="question-card">
                 <div className="question-topline">Question {punctuationIndex + 1} of {punctuationDeck.length}</div>
-                <p className="parts-prompt">Click each blank until the sentence has the right punctuation.</p>
+                <p className="parts-prompt">Add the correct punctuation by clicking between the words.</p>
 
                 <div className="punctuation-builder">
-                  {currentPunctuation.chunks.map((chunk, chunkIndex) => (
-                    <span key={`${chunk}-${chunkIndex}`} className="punctuation-piece">
-                      <span>{chunk}</span>
-                      {chunkIndex < currentPunctuation.answers.length && (
+                  {currentPunctuationWords.map((word, wordIndex) => (
+                    <span key={`${word}-${wordIndex}`} className="punctuation-piece">
+                      <span>{word}</span>
+                      {wordIndex < currentPunctuationWords.length - 1 && (
                       <button
                         className={
                           punctuationSubmitted
-                            ? punctuationMarks[chunkIndex] === currentPunctuation.answers[chunkIndex]
+                            ? punctuationMarks[wordIndex] === getPunctuationAnswer(currentPunctuation, wordIndex)
                               ? 'punctuation-slot correct'
                               : 'punctuation-slot wrong'
                             : 'punctuation-slot'
                         }
-                        onClick={() => cyclePunctuation(chunkIndex)}
+                        onClick={() => cyclePunctuation(wordIndex)}
                         disabled={punctuationSubmitted}
+                        aria-label={`Punctuation after ${word}`}
                       >
-                        {punctuationMarks[chunkIndex] || 'blank'}
+                        {punctuationMarks[wordIndex]}
                       </button>
                       )}
                     </span>
@@ -1820,7 +1833,7 @@ export default function EnglishSentencePractice() {
           display: flex;
           flex-wrap: wrap;
           align-items: center;
-          gap: 0.55rem;
+          gap: 0.25rem 0.4rem;
           margin: 1.1rem 0 0.2rem;
           font-size: clamp(1.25rem, 3.5vw, 1.75rem);
           line-height: 1.6;
@@ -1831,21 +1844,29 @@ export default function EnglishSentencePractice() {
         .punctuation-piece {
           display: inline-flex;
           align-items: center;
-          gap: 0.45rem;
+          gap: 0.15rem;
           flex-wrap: wrap;
         }
 
         .punctuation-slot {
-          min-width: 4.75rem;
-          min-height: 2.75rem;
-          border-radius: 0.9rem;
-          border: 1px dashed rgba(156, 86, 38, 0.55);
-          background: #fff8f0;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          width: 1.65rem;
+          height: 2.25rem;
+          border-radius: 999px;
+          border: 1px solid rgba(156, 86, 38, 0.18);
+          background: rgba(255, 248, 240, 0.45);
           color: #9b4d1f;
           font: inherit;
-          font-size: 1rem;
+          font-size: 1.35rem;
           font-weight: 900;
           cursor: pointer;
+        }
+
+        .punctuation-slot:hover:enabled {
+          background: #fff8f0;
+          border-color: rgba(156, 86, 38, 0.5);
         }
 
         .punctuation-slot.correct {
