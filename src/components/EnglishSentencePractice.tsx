@@ -219,9 +219,9 @@ const sentenceRuleQuestions: SentenceRuleQuestion[] = [
     options: ['Comma after opener', 'No comma before because', 'Semicolon', 'Complete sentence'],
   },
   {
-    sentence: 'Ms. Donnelly, my English teacher, explained the sentence rule.',
+    sentence: 'Kayli, my classmate, explained the sentence rule.',
     answer: 'Appositive commas',
-    explanation: 'The phrase "my English teacher" renames Ms. Donnelly, so it is set off with commas.',
+    explanation: 'The phrase "my classmate" renames Kayli, so it is set off with commas.',
     options: ['Appositive commas', 'Comma splice', 'Comma + FANBOYS', 'No comma before because'],
   },
   {
@@ -290,8 +290,8 @@ const punctuationQuestions: PunctuationQuestion[] = [
     explanation: 'When a dependent clause comes first, put a comma after it.',
   },
   {
-    text: 'Ms. Donnelly my English teacher explained the rule.',
-    answers: { 1: ',', 4: ',' },
+    text: 'Kayli my classmate explained the rule.',
+    answers: { 0: ',', 2: ',' },
     explanation: 'An appositive renames a noun, so commas go around it.',
   },
   {
@@ -345,9 +345,9 @@ const punctuationQuestions: PunctuationQuestion[] = [
     explanation: 'Since starts a dependent clause, so the comma goes after the opener.',
   },
   {
-    text: 'Beau my brother carried the chairs.',
+    text: 'Eli my brother carried the chairs.',
     answers: { 0: ',', 2: ',' },
-    explanation: 'The appositive "my brother" renames Beau, so commas go around it.',
+    explanation: 'The appositive "my brother" renames Eli, so commas go around it.',
   },
   {
     text: 'Kayli my favorite student finished the essay.',
@@ -445,9 +445,9 @@ const punctuationQuestions: PunctuationQuestion[] = [
     explanation: 'But joins two complete sentences, so put a comma before it.',
   },
   {
-    text: 'Ms. Donnelly my favorite English teacher hopes we pass.',
-    answers: { 1: ',', 5: ',' },
-    explanation: 'The appositive phrase renames Ms. Donnelly, so commas go around it.',
+    text: 'Kayli my favorite study partner hopes we pass.',
+    answers: { 0: ',', 4: ',' },
+    explanation: 'The appositive phrase renames Kayli, so commas go around it.',
   },
   {
     text: 'Above all else Kayli wanted her essay to make sense.',
@@ -483,6 +483,106 @@ const punctuationQuestions: PunctuationQuestion[] = [
     text: 'My sister Kayli revised the conclusion.',
     answers: {},
     explanation: 'Kayli is needed to tell which sister, so this sentence does not need appositive commas.',
+  },
+  {
+    text: 'The nervous student answered carefully.',
+    answers: {},
+    explanation: 'This is a simple sentence with one complete thought, so it does not need added punctuation.',
+  },
+  {
+    text: 'My English teacher explained appositives after lunch.',
+    answers: {},
+    explanation: 'This simple sentence reads correctly without an added comma or semicolon.',
+  },
+  {
+    text: 'After lunch my English teacher explained appositives.',
+    answers: { 1: ',' },
+    explanation: 'After lunch is an introductory phrase, so it gets a comma.',
+  },
+  {
+    text: 'The hallway was noisy but she stayed focused.',
+    answers: { 3: ',' },
+    explanation: 'This compound sentence joins two complete thoughts with but, so it needs a comma.',
+  },
+  {
+    text: 'We could leave now or we could wait for the group.',
+    answers: { 3: ',' },
+    explanation: 'This compound sentence joins two complete thoughts with or, so it needs a comma.',
+  },
+  {
+    text: 'Ava brought the drinks Jaden carried the chairs.',
+    answers: { 3: ';' },
+    explanation: 'A semicolon can connect these two complete sentences.',
+  },
+  {
+    text: 'Although I was tired I finished my homework.',
+    answers: { 4: ',' },
+    explanation: 'Although starts a dependent clause, so the comma goes after that clause.',
+  },
+  {
+    text: 'I finished my homework although I was tired.',
+    answers: {},
+    explanation: 'When the dependent clause comes second, this sentence does not need a comma before although.',
+  },
+  {
+    text: 'When the movie ended we walked to the car.',
+    answers: { 3: ',' },
+    explanation: 'When starts a dependent clause, so add a comma after the opener.',
+  },
+  {
+    text: 'We walked to the car when the movie ended.',
+    answers: {},
+    explanation: 'The independent clause comes first, so this complex sentence does not need a comma before when.',
+  },
+  {
+    text: 'Even though the test was hard she stayed calm and she finished on time.',
+    answers: { 5: ',', 8: ',' },
+    explanation: 'This compound-complex sentence has an opener plus two complete thoughts joined with and.',
+  },
+  {
+    text: 'Since the library was closed we studied at home and we compared answers online.',
+    answers: { 4: ',', 8: ',' },
+    explanation: 'This compound-complex sentence needs a comma after the dependent clause and before and.',
+  },
+  {
+    text: 'If you call me later I will explain the assignment and I will send my notes.',
+    answers: { 4: ',', 9: ',' },
+    explanation: 'This compound-complex sentence has one dependent clause and two complete thoughts.',
+  },
+  {
+    text: 'Because the power went out we lit candles and we played cards.',
+    answers: { 5: ',', 8: ',' },
+    explanation: 'The because clause comes first, and the two complete thoughts are joined with and.',
+  },
+  {
+    text: 'The candles flickered in the dark.',
+    answers: {},
+    explanation: 'This is a simple sentence, so no extra comma or semicolon is needed.',
+  },
+  {
+    text: 'The bell rang everyone hurried to class.',
+    answers: { 2: ';' },
+    explanation: 'These are two complete sentences, so a semicolon is a correct way to connect them.',
+  },
+  {
+    text: 'The paragraph had evidence however it needed better commentary.',
+    answers: { 3: ';', 4: ',' },
+    explanation: 'However connects two complete thoughts with a semicolon before it and comma after it.',
+  },
+  {
+    text: 'The thesis was clear therefore the essay was easier to follow.',
+    answers: { 3: ';', 4: ',' },
+    explanation: 'Therefore needs a semicolon before it and a comma after it between complete thoughts.',
+  },
+  {
+    text: 'My friend Kayli helped me study.',
+    answers: {},
+    explanation: 'Kayli tells which friend, so the sentence does not need appositive commas.',
+  },
+  {
+    text: 'Kayli my friend helped me study.',
+    answers: { 0: ',', 2: ',' },
+    explanation: 'My friend renames Kayli, so commas go around the appositive.',
   },
 ];
 
@@ -554,10 +654,10 @@ const partOfSpeechQuestions: PartOfSpeechQuestion[] = [
     explanation: 'Ouch expresses strong feeling and can stand alone with an exclamation point.',
   },
   {
-    sentence: 'My teacher, Ms. Donnelly, explained the rubric.',
+    sentence: 'My classmate, Kayli, explained the rubric.',
     prompt: 'Which word is a noun?',
     answer: 'Noun',
-    explanation: 'Teacher and Ms. Donnelly are nouns because they name a person or title.',
+    explanation: 'Classmate and Kayli are nouns because they name a person or title.',
   },
   {
     sentence: 'The student is focused.',
@@ -608,7 +708,7 @@ const partOfSpeechQuestions: PartOfSpeechQuestion[] = [
     explanation: 'FANBOYS are coordinating conjunctions used to connect words or complete sentences.',
   },
   {
-    sentence: 'Nouns can name general things like teacher or specific things like Ms. Donnelly.',
+    sentence: 'Nouns can name general things like teacher or specific things like Kayli.',
     prompt: 'What are the two types of nouns?',
     answer: 'Common and Proper Nouns',
     explanation: 'Common nouns name general people, places, things, or ideas. Proper nouns name specific ones.',
