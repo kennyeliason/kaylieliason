@@ -7,6 +7,8 @@ type PartOfSpeechType =
   | 'Verb'
   | 'Pronoun'
   | 'Conjunction'
+  | 'Coordinating Conjunction'
+  | 'Subordinating Conjunction'
   | 'Adjective'
   | 'Adverb'
   | 'Preposition'
@@ -31,7 +33,9 @@ type SentenceRuleAnswer =
   | 'Semicolon + transition + comma'
   | 'Comma splice'
   | 'Complete sentence';
-type PracticeTab = 'structure' | 'sentenceRules' | 'parts' | 'essays' | 'figurative';
+type PracticeTab = 'structure' | 'parts' | 'essays' | 'figurative';
+type StructureMode = 'types' | 'punctuation';
+type PunctuationMark = '' | ',' | ';';
 
 type Question = {
   sentence: string;
@@ -61,8 +65,9 @@ type FigurativeQuestion = {
 type PartOfSpeechQuestion = {
   sentence: string;
   prompt: string;
-  answer: PartOfSpeechType;
+  answer: string;
   explanation: string;
+  options?: string[];
 };
 
 type EssayQuestion = {
@@ -78,6 +83,12 @@ type SentenceRuleQuestion = {
   options: SentenceRuleAnswer[];
 };
 
+type PunctuationQuestion = {
+  chunks: string[];
+  answers: PunctuationMark[];
+  explanation: string;
+};
+
 const sentenceTypes: SentenceType[] = ['Simple', 'Compound', 'Complex', 'Compound-Complex'];
 const figurativeTypes: FigurativeType[] = ['Simile', 'Metaphor', 'Personification', 'Hyperbole', 'Idiom'];
 const partOfSpeechTypes: PartOfSpeechType[] = [
@@ -85,6 +96,8 @@ const partOfSpeechTypes: PartOfSpeechType[] = [
   'Verb',
   'Pronoun',
   'Conjunction',
+  'Coordinating Conjunction',
+  'Subordinating Conjunction',
   'Adjective',
   'Adverb',
   'Preposition',
@@ -254,6 +267,59 @@ const sentenceRuleQuestions: SentenceRuleQuestion[] = [
   },
 ];
 
+const punctuationQuestions: PunctuationQuestion[] = [
+  {
+    chunks: ['I went to the store', 'for I needed to buy eggs and strawberries.'],
+    answers: [','],
+    explanation: 'Use a comma before a coordinating conjunction when it connects two complete sentences.',
+  },
+  {
+    chunks: ['I needed to buy eggs', 'I went to the store.'],
+    answers: [';'],
+    explanation: 'A semicolon can connect two complete sentences that belong together.',
+  },
+  {
+    chunks: ['I went to the store', 'because I needed eggs.'],
+    answers: [''],
+    explanation: 'Do not put a comma before because when it comes in the middle of the sentence.',
+  },
+  {
+    chunks: ['Because I needed eggs', 'I went to the store.'],
+    answers: [','],
+    explanation: 'When a dependent clause comes first, put a comma after it.',
+  },
+  {
+    chunks: ['Ms. Donnelly', 'my English teacher', 'explained the rule.'],
+    answers: [',', ','],
+    explanation: 'An appositive renames a noun, so commas go around it.',
+  },
+  {
+    chunks: ['I will not do any of my assignments', 'therefore', 'I will fail.'],
+    answers: [';', ','],
+    explanation: 'With transition words like therefore, use a semicolon before the transition and a comma after it.',
+  },
+  {
+    chunks: ['I love to read', 'however', 'I do not always like what is assigned.'],
+    answers: [';', ','],
+    explanation: 'However connects two complete sentences with a semicolon before it and a comma after it.',
+  },
+  {
+    chunks: ['Tomorrow', 'at 3:15pm', 'I will go to the dentist.'],
+    answers: [',', ','],
+    explanation: 'Introductory time words and phrases at the start of a sentence are set off with commas.',
+  },
+  {
+    chunks: ['In the Age of Reason', 'a time period from 1685 to 1815', 'people valued science over superstition.'],
+    answers: [',', ','],
+    explanation: 'The appositive phrase explains the Age of Reason, so it gets commas around it.',
+  },
+  {
+    chunks: ['I went to the store', 'and I bought two pairs of shoes.'],
+    answers: [','],
+    explanation: 'Use comma plus FANBOYS when joining two complete sentences.',
+  },
+];
+
 const partOfSpeechQuestions: PartOfSpeechQuestion[] = [
   {
     sentence: 'Jacob carried the notebook to class.',
@@ -288,13 +354,13 @@ const partOfSpeechQuestions: PartOfSpeechQuestion[] = [
   {
     sentence: 'I packed my notes, and I put them in my binder.',
     prompt: 'What part of speech is "and"?',
-    answer: 'Conjunction',
+    answer: 'Coordinating Conjunction',
     explanation: 'And joins words or sentence parts. It is one of the FANBOYS coordinating conjunctions.',
   },
   {
     sentence: 'Because the quiz was hard, I studied again.',
     prompt: 'What part of speech is "Because"?',
-    answer: 'Conjunction',
+    answer: 'Subordinating Conjunction',
     explanation: 'Because is a subordinating conjunction. It starts a dependent clause.',
   },
   {
@@ -342,7 +408,7 @@ const partOfSpeechQuestions: PartOfSpeechQuestion[] = [
   {
     sentence: 'I wanted to go outside, but I finished my homework first.',
     prompt: 'What part of speech is "but"?',
-    answer: 'Conjunction',
+    answer: 'Coordinating Conjunction',
     explanation: 'But is a coordinating conjunction. It connects two complete thoughts when used with a comma.',
   },
   {
@@ -372,8 +438,29 @@ const partOfSpeechQuestions: PartOfSpeechQuestion[] = [
   {
     sentence: 'For, and, nor, but, or, yet, so are FANBOYS.',
     prompt: 'What part of speech are FANBOYS?',
-    answer: 'Conjunction',
+    answer: 'Coordinating Conjunction',
     explanation: 'FANBOYS are coordinating conjunctions used to connect words or complete sentences.',
+  },
+  {
+    sentence: 'Nouns can name general things like teacher or specific things like Ms. Donnelly.',
+    prompt: 'What are the two types of nouns?',
+    answer: 'Common and Proper Nouns',
+    explanation: 'Common nouns name general people, places, things, or ideas. Proper nouns name specific ones.',
+    options: ['Common and Proper Nouns', 'Action and Linking Verbs', 'Coordinating and Subordinating Conjunctions', 'Adjectives and Adverbs'],
+  },
+  {
+    sentence: 'Some verbs show action, and some verbs connect the subject to a description.',
+    prompt: 'What are the two types of verbs?',
+    answer: 'Action and Linking Verbs',
+    explanation: 'Action verbs show what someone or something does. Linking verbs connect the subject to more information.',
+    options: ['Action and Linking Verbs', 'Common and Proper Nouns', 'Coordinating and Subordinating Conjunctions', 'Prepositions and Interjections'],
+  },
+  {
+    sentence: 'For, and, nor, but, or, yet, so are one group. Because, when, if, and although are another group.',
+    prompt: 'What are the two types of conjunctions from the notes?',
+    answer: 'Coordinating and Subordinating Conjunctions',
+    explanation: 'Coordinating conjunctions are FANBOYS. Subordinating conjunctions start dependent clauses.',
+    options: ['Coordinating and Subordinating Conjunctions', 'Common and Proper Nouns', 'Action and Linking Verbs', 'Adjectives and Adverbs'],
   },
 ];
 
@@ -402,72 +489,72 @@ const figurativeQuestions: FigurativeQuestion[] = [
 
 const essayQuestions: EssayQuestion[] = [
   {
-    sentence: 'An essay about a real experience from the writer\'s life, told in first person.',
+    sentence: 'Which essay type tells about a real experience from the writer\'s life in first person?',
     answer: 'Personal Narrative',
     explanation: 'A personal narrative is first person and focuses on a specific real event, experience, or time.',
   },
   {
-    sentence: 'An essay that uses logic, evidence, and counterarguments to prove a point.',
+    sentence: 'Which essay type uses logic, evidence, and counterarguments to prove a point?',
     answer: 'Persuasive/Argumentative',
     explanation: 'Argumentative writing proves a point with evidence. Persuasive writing tries to convince the reader.',
   },
   {
-    sentence: 'An essay that uses imagery and sensory details to show what something is like.',
+    sentence: 'Which essay type uses imagery and sensory details to show what something is like?',
     answer: 'Descriptive',
     explanation: 'Descriptive writing creates a detailed picture using the five senses and vivid language.',
   },
   {
-    sentence: 'A factual essay that explains, describes, or informs the reader about a topic.',
+    sentence: 'Which essay type explains, describes, or informs the reader using facts?',
     answer: 'Expository',
     explanation: 'Expository writing teaches or explains using facts and logical reasoning.',
   },
   {
-    sentence: 'An essay that explains similarities and differences between two or more topics.',
+    sentence: 'Which essay type explains similarities and differences between two or more topics?',
     answer: 'Compare and Contrast',
     explanation: 'Compare means show similarities. Contrast means show differences.',
   },
   {
-    sentence: 'The first sentence of the essay that could be a simile, metaphor, quote, or sourced fact.',
+    sentence: 'What is the first sentence of an essay called when it hooks the reader with a simile, metaphor, quote, or sourced fact?',
     answer: 'Attention Getter',
     explanation: 'The attention getter hooks the reader before the thesis explains the topic.',
   },
   {
-    sentence: 'Intro paragraph, body paragraph, and concluding paragraph are part of which rubric area?',
+    sentence: 'Which rubric area checks that the essay has an intro paragraph, body paragraph, and concluding paragraph?',
     answer: 'Organization',
     explanation: 'Organization is about putting the essay in the correct order and building each paragraph clearly.',
   },
   {
-    sentence: 'Grammar, punctuation, word choice, spelling, and avoiding contractions in formal writing.',
+    sentence: 'Which rubric area covers grammar, punctuation, word choice, spelling, and avoiding contractions in formal writing?',
     answer: 'Conventions',
     explanation: 'Conventions are the correctness rules that make writing clean and readable.',
   },
   {
-    sentence: 'Valid facts, evidence, and sources that prove the point of the paragraph.',
+    sentence: 'Which rubric area means using valid facts, evidence, and sources to prove your point?',
     answer: 'Content and Support',
     explanation: 'Content and support are the proof. Each body paragraph needs factual support and commentary.',
   },
   {
-    sentence: 'Writing in a way that sounds like you and is not just repeating what everyone else says.',
+    sentence: 'Which rubric area means writing in your own way instead of copying what everyone else says?',
     answer: 'Originality',
     explanation: 'Originality means making the essay intelligent, relatable, and your own.',
   },
   {
-    sentence: 'The first sentence of every body paragraph that tells what the paragraph will be about.',
+    sentence: 'The first sentence of every body paragraph tells what the paragraph will be about. Which rubric area does that belong to?',
     answer: 'Organization',
     explanation: 'That is the topic sentence, and it helps organize the body paragraph.',
   },
   {
-    sentence: 'Restating the thesis, summarizing the main points, and referring back to the attention getter.',
+    sentence: 'Which rubric area includes restating the thesis, summarizing the main points, and referring back to the attention getter?',
     answer: 'Organization',
     explanation: 'Those are pieces of a concluding paragraph, so they fit under organization.',
   },
   {
-    sentence: 'Ethos, pathos, and logos are important to remember for this type of writing.',
+    sentence: 'Which essay type uses ethos, pathos, and logos?',
     answer: 'Persuasive/Argumentative',
     explanation: 'Ethos, pathos, and logos are persuasion and argument tools.',
   },
   {
-    sentence: 'The reader should not know what the essay is about until the last sentence of the first paragraph.',
+    sentence: 'Which part of the intro comes before the thesis and should make the reader want to keep reading?',
     answer: 'Attention Getter',
     explanation: 'The hook catches attention first. The thesis at the end of the intro reveals the exact topic.',
   },
@@ -682,7 +769,7 @@ function buildFigurativeDeck() {
 function buildPartsDeck() {
   return shuffle(partOfSpeechQuestions).map((entry) => ({
     ...entry,
-    options: shuffle(partOfSpeechTypes),
+    options: shuffle(entry.options ?? partOfSpeechTypes),
   }));
 }
 
@@ -705,11 +792,20 @@ function buildEssayDeck() {
 
 export default function EnglishSentencePractice() {
   const [activeTab, setActiveTab] = useState<PracticeTab>('structure');
+  const [structureMode, setStructureMode] = useState<StructureMode>('types');
   const [deck, setDeck] = useState(() => buildDeck());
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<SentenceType | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [streak, setStreak] = useState(0);
+  const [punctuationDeck, setPunctuationDeck] = useState(() => punctuationQuestions);
+  const [punctuationIndex, setPunctuationIndex] = useState(0);
+  const [punctuationMarks, setPunctuationMarks] = useState<PunctuationMark[]>(() =>
+    Array(punctuationQuestions[0]?.answers.length ?? 0).fill('') as PunctuationMark[],
+  );
+  const [punctuationSubmitted, setPunctuationSubmitted] = useState(false);
+  const [punctuationCorrectCount, setPunctuationCorrectCount] = useState(0);
+  const [punctuationStreak, setPunctuationStreak] = useState(0);
   const [sentenceRulesDeck, setSentenceRulesDeck] = useState(() => buildSentenceRulesDeck());
   const [sentenceRulesIndex, setSentenceRulesIndex] = useState(0);
   const [sentenceRulesSelected, setSentenceRulesSelected] = useState<SentenceRuleAnswer | null>(null);
@@ -717,7 +813,7 @@ export default function EnglishSentencePractice() {
   const [sentenceRulesStreak, setSentenceRulesStreak] = useState(0);
   const [partsDeck, setPartsDeck] = useState(() => buildPartsDeck());
   const [partsIndex, setPartsIndex] = useState(0);
-  const [partsSelected, setPartsSelected] = useState<PartOfSpeechType | null>(null);
+  const [partsSelected, setPartsSelected] = useState<string | null>(null);
   const [partsCorrectCount, setPartsCorrectCount] = useState(0);
   const [partsStreak, setPartsStreak] = useState(0);
   const [essayDeck, setEssayDeck] = useState(() => buildEssayDeck());
@@ -736,6 +832,13 @@ export default function EnglishSentencePractice() {
   const isCorrect = selected === current?.answer;
   const answered = selected !== null;
   const progress = deck.length === 0 ? 0 : Math.round((index / deck.length) * 100);
+
+  const currentPunctuation = punctuationDeck[punctuationIndex];
+  const punctuationDone = punctuationIndex >= punctuationDeck.length;
+  const punctuationIsCorrect =
+    currentPunctuation?.answers.every((answer, answerIndex) => punctuationMarks[answerIndex] === answer) ?? false;
+  const punctuationProgress =
+    punctuationDeck.length === 0 ? 0 : Math.round((punctuationIndex / punctuationDeck.length) * 100);
 
   const currentSentenceRule = sentenceRulesDeck[sentenceRulesIndex];
   const sentenceRulesDone = sentenceRulesIndex >= sentenceRulesDeck.length;
@@ -783,6 +886,47 @@ export default function EnglishSentencePractice() {
     setSelected(null);
     setCorrectCount(0);
     setStreak(0);
+  }
+
+  function cyclePunctuation(slotIndex: number) {
+    if (punctuationSubmitted) return;
+    const choices: PunctuationMark[] = ['', ',', ';'];
+    setPunctuationMarks((marks) =>
+      marks.map((mark, index) => {
+        if (index !== slotIndex) return mark;
+        return choices[(choices.indexOf(mark) + 1) % choices.length];
+      }),
+    );
+  }
+
+  function submitPunctuation() {
+    if (punctuationSubmitted || !currentPunctuation) return;
+    setPunctuationSubmitted(true);
+    if (punctuationIsCorrect) {
+      setPunctuationCorrectCount((count) => count + 1);
+      setPunctuationStreak((count) => count + 1);
+      return;
+    }
+    setPunctuationStreak(0);
+  }
+
+  function nextPunctuationQuestion() {
+    if (!punctuationSubmitted) return;
+    const nextIndex = punctuationIndex + 1;
+    const nextQuestion = punctuationDeck[nextIndex];
+    setPunctuationIndex(nextIndex);
+    setPunctuationMarks(Array(nextQuestion?.answers.length ?? 0).fill('') as PunctuationMark[]);
+    setPunctuationSubmitted(false);
+  }
+
+  function restartPunctuation() {
+    const nextDeck = shuffle(punctuationQuestions);
+    setPunctuationDeck(nextDeck);
+    setPunctuationIndex(0);
+    setPunctuationMarks(Array(nextDeck[0]?.answers.length ?? 0).fill('') as PunctuationMark[]);
+    setPunctuationSubmitted(false);
+    setPunctuationCorrectCount(0);
+    setPunctuationStreak(0);
   }
 
   function handleSentenceRulesAnswer(choice: SentenceRuleAnswer) {
@@ -835,7 +979,7 @@ export default function EnglishSentencePractice() {
     setFigurativeStreak(0);
   }
 
-  function handlePartsAnswer(choice: PartOfSpeechType) {
+  function handlePartsAnswer(choice: string) {
     if (partsAnswered || !currentParts) return;
     setPartsSelected(choice);
     if (choice === currentParts.answer) {
@@ -900,12 +1044,6 @@ export default function EnglishSentencePractice() {
               Sentence Structure
             </button>
             <button
-              className={activeTab === 'sentenceRules' ? 'tab-bubble active' : 'tab-bubble'}
-              onClick={() => setActiveTab('sentenceRules')}
-            >
-              Sentence Rules
-            </button>
-            <button
               className={activeTab === 'parts' ? 'tab-bubble active' : 'tab-bubble'}
               onClick={() => setActiveTab('parts')}
             >
@@ -928,8 +1066,6 @@ export default function EnglishSentencePractice() {
           <div className="eyebrow">
             {activeTab === 'structure'
               ? 'Sentence Structure'
-              : activeTab === 'sentenceRules'
-                ? 'Sentence Rules'
               : activeTab === 'figurative'
                 ? 'Figurative Language'
                 : activeTab === 'essays'
@@ -939,8 +1075,6 @@ export default function EnglishSentencePractice() {
           <h1>
             {activeTab === 'structure'
               ? 'Sentence Structure Trainer'
-              : activeTab === 'sentenceRules'
-                ? 'Sentence Rules Trainer'
               : activeTab === 'figurative'
                 ? 'Figurative Language Trainer'
                 : activeTab === 'essays'
@@ -950,8 +1084,6 @@ export default function EnglishSentencePractice() {
           <p className="hero-copy">
             {activeTab === 'structure'
               ? 'Read each sentence and choose whether it is simple, compound, complex, or compound-complex. Watch for complete sentences, FANBOYS, semicolons, and dependent clauses.'
-              : activeTab === 'sentenceRules'
-                ? 'Choose the grammar or punctuation rule that matches each example sentence.'
               : activeTab === 'figurative'
                 ? 'Read each sentence and choose which type of figurative language it uses.'
                 : activeTab === 'essays'
@@ -976,27 +1108,6 @@ export default function EnglishSentencePractice() {
               <div className="hint-card">
                 <strong>Compound-Complex</strong>
                 <span>2 independent + 1 dependent clause</span>
-              </div>
-            </div>
-          )}
-
-          {activeTab === 'sentenceRules' && (
-            <div className="hint-grid">
-              <div className="hint-card">
-                <strong>Compound punctuation</strong>
-                <span>Use a semicolon or a comma plus FANBOYS to join two complete sentences.</span>
-              </div>
-              <div className="hint-card">
-                <strong>Complex punctuation</strong>
-                <span>If the dependent clause comes first, put a comma after it. If because comes in the middle, usually leave it alone.</span>
-              </div>
-              <div className="hint-card">
-                <strong>Appositives</strong>
-                <span>Extra naming or describing phrases get commas around them.</span>
-              </div>
-              <div className="hint-card">
-                <strong>Transitions</strong>
-                <span>Therefore and however use a semicolon before and a comma after when connecting two complete sentences.</span>
               </div>
             </div>
           )}
@@ -1087,6 +1198,25 @@ export default function EnglishSentencePractice() {
 
         {activeTab === 'structure' ? (
           <section className="board">
+            <div className="mode-row">
+              <button
+                className={structureMode === 'types' ? 'mode-card active' : 'mode-card'}
+                onClick={() => setStructureMode('types')}
+              >
+                <strong>Sentence Type</strong>
+                <span>Pick simple, compound, complex, or compound-complex.</span>
+              </button>
+              <button
+                className={structureMode === 'punctuation' ? 'mode-card active' : 'mode-card'}
+                onClick={() => setStructureMode('punctuation')}
+              >
+                <strong>Commas and Semicolons</strong>
+                <span>Click the blanks to add commas or semicolons.</span>
+              </button>
+            </div>
+
+            {structureMode === 'types' ? (
+              <>
             <div className="stats">
               <div className="stat-chip">Score: {correctCount}/{deck.length}</div>
               <div className="stat-chip">Streak: {streak}</div>
@@ -1147,69 +1277,76 @@ export default function EnglishSentencePractice() {
                 )}
               </div>
             )}
-          </section>
-        ) : activeTab === 'sentenceRules' ? (
-          <section className="board">
+              </>
+            ) : (
+              <>
             <div className="stats">
-              <div className="stat-chip">Score: {sentenceRulesCorrectCount}/{sentenceRulesDeck.length}</div>
-              <div className="stat-chip">Streak: {sentenceRulesStreak}</div>
-              <div className="stat-chip">Progress: {sentenceRulesProgress}%</div>
+              <div className="stat-chip">Score: {punctuationCorrectCount}/{punctuationDeck.length}</div>
+              <div className="stat-chip">Streak: {punctuationStreak}</div>
+              <div className="stat-chip">Progress: {punctuationProgress}%</div>
             </div>
 
             <div className="progress-track" aria-hidden="true">
-              <div className="progress-fill" style={{ width: `${sentenceRulesProgress}%` }} />
+              <div className="progress-fill" style={{ width: `${punctuationProgress}%` }} />
             </div>
 
-            {sentenceRulesDone ? (
+            {punctuationDone ? (
               <div className="result-card">
                 <p className="result-label">Finished</p>
-                <h2>You got {sentenceRulesCorrectCount} out of {sentenceRulesDeck.length}</h2>
+                <h2>You got {punctuationCorrectCount} out of {punctuationDeck.length}</h2>
                 <p className="result-copy">
-                  {sentenceRulesCorrectCount === sentenceRulesDeck.length
-                    ? 'Perfect. These sentence rules are locked in.'
-                    : sentenceRulesCorrectCount >= sentenceRulesDeck.length * 0.8
+                  {punctuationCorrectCount === punctuationDeck.length
+                    ? 'Perfect. Those punctuation rules are locked in.'
+                    : punctuationCorrectCount >= punctuationDeck.length * 0.8
                       ? 'Nice work. The punctuation patterns are getting easier to spot.'
-                      : 'Run it again and focus on what is connecting the sentence parts.'}
+                      : 'Run it again and focus on where the sentence parts connect.'}
                 </p>
-                <button className="primary-btn" onClick={restartSentenceRules}>Try Again</button>
+                <button className="primary-btn" onClick={restartPunctuation}>Try Again</button>
               </div>
             ) : (
               <div className="question-card">
-                <div className="question-topline">Question {sentenceRulesIndex + 1} of {sentenceRulesDeck.length}</div>
-                <p className="parts-prompt">Which sentence rule does this show?</p>
-                <p className="sentence parts-sentence">{currentSentenceRule.sentence}</p>
+                <div className="question-topline">Question {punctuationIndex + 1} of {punctuationDeck.length}</div>
+                <p className="parts-prompt">Click each blank until the sentence has the right punctuation.</p>
 
-                <div className="answer-grid answer-grid-rules">
-                  {currentSentenceRule.options.map((option) => {
-                    let className = 'answer-btn';
-                    if (sentenceRulesAnswered && option === currentSentenceRule.answer) className += ' correct';
-                    if (sentenceRulesAnswered && sentenceRulesSelected === option && option !== currentSentenceRule.answer) className += ' wrong';
-
-                    return (
+                <div className="punctuation-builder">
+                  {currentPunctuation.chunks.map((chunk, chunkIndex) => (
+                    <span key={`${chunk}-${chunkIndex}`} className="punctuation-piece">
+                      <span>{chunk}</span>
+                      {chunkIndex < currentPunctuation.answers.length && (
                       <button
-                        key={option}
-                        className={className}
-                        onClick={() => handleSentenceRulesAnswer(option)}
-                        disabled={sentenceRulesAnswered}
+                        className={
+                          punctuationSubmitted
+                            ? punctuationMarks[chunkIndex] === currentPunctuation.answers[chunkIndex]
+                              ? 'punctuation-slot correct'
+                              : 'punctuation-slot wrong'
+                            : 'punctuation-slot'
+                        }
+                        onClick={() => cyclePunctuation(chunkIndex)}
+                        disabled={punctuationSubmitted}
                       >
-                        {option}
+                        {punctuationMarks[chunkIndex] || 'blank'}
                       </button>
-                    );
-                  })}
+                      )}
+                    </span>
+                  ))}
                 </div>
 
-                {sentenceRulesAnswered && (
-                  <div className={sentenceRulesIsCorrect ? 'feedback success' : 'feedback error'}>
+                {!punctuationSubmitted ? (
+                  <button className="primary-btn" onClick={submitPunctuation}>Check It</button>
+                ) : (
+                  <div className={punctuationIsCorrect ? 'feedback success' : 'feedback error'}>
                     <p className="feedback-title">
-                      {sentenceRulesIsCorrect ? 'Correct' : `Not quite. The answer is ${currentSentenceRule.answer}.`}
+                      {punctuationIsCorrect ? 'Correct' : 'Not quite. Check the punctuation spots.'}
                     </p>
-                    <p className="feedback-copy">{currentSentenceRule.explanation}</p>
-                    <button className="primary-btn" onClick={nextSentenceRuleQuestion}>
-                      {sentenceRulesIndex === sentenceRulesDeck.length - 1 ? 'See Score' : 'Next Question'}
+                    <p className="feedback-copy">{currentPunctuation.explanation}</p>
+                    <button className="primary-btn" onClick={nextPunctuationQuestion}>
+                      {punctuationIndex === punctuationDeck.length - 1 ? 'See Score' : 'Next Question'}
                     </button>
                   </div>
                 )}
               </div>
+            )}
+              </>
             )}
           </section>
         ) : activeTab === 'essays' ? (
@@ -1573,6 +1710,48 @@ export default function EnglishSentencePractice() {
           margin-bottom: 0.9rem;
         }
 
+        .mode-row {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 0.8rem;
+          margin-bottom: 1rem;
+        }
+
+        .mode-card {
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+          min-height: 5.25rem;
+          padding: 1rem;
+          border-radius: 1.1rem;
+          border: 1px solid rgba(167, 103, 57, 0.16);
+          background: rgba(255, 255, 255, 0.72);
+          color: #7c2d12;
+          font: inherit;
+          text-align: left;
+          cursor: pointer;
+        }
+
+        .mode-card strong {
+          font-size: 1rem;
+        }
+
+        .mode-card span {
+          font-size: 0.9rem;
+          line-height: 1.4;
+          color: #6c4a2e;
+        }
+
+        .mode-card.active {
+          background: linear-gradient(135deg, #ff9d6c 0%, #ffbf7d 100%);
+          color: #fffaf3;
+          box-shadow: 0 12px 24px rgba(155, 77, 31, 0.2);
+        }
+
+        .mode-card.active span {
+          color: #fffaf3;
+        }
+
         .stat-chip {
           padding: 0.65rem 0.9rem;
           border-radius: 999px;
@@ -1635,6 +1814,50 @@ export default function EnglishSentencePractice() {
 
         .parts-sentence {
           margin-top: 0.45rem;
+        }
+
+        .punctuation-builder {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          gap: 0.55rem;
+          margin: 1.1rem 0 0.2rem;
+          font-size: clamp(1.25rem, 3.5vw, 1.75rem);
+          line-height: 1.6;
+          font-weight: 800;
+          color: #3c2c1c;
+        }
+
+        .punctuation-piece {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.45rem;
+          flex-wrap: wrap;
+        }
+
+        .punctuation-slot {
+          min-width: 4.75rem;
+          min-height: 2.75rem;
+          border-radius: 0.9rem;
+          border: 1px dashed rgba(156, 86, 38, 0.55);
+          background: #fff8f0;
+          color: #9b4d1f;
+          font: inherit;
+          font-size: 1rem;
+          font-weight: 900;
+          cursor: pointer;
+        }
+
+        .punctuation-slot.correct {
+          border-style: solid;
+          background: #bbf7d0;
+          color: #166534;
+        }
+
+        .punctuation-slot.wrong {
+          border-style: solid;
+          background: #fecaca;
+          color: #991b1b;
         }
 
         .answer-grid {
@@ -1741,6 +1964,10 @@ export default function EnglishSentencePractice() {
         @media (max-width: 640px) {
           .shell {
             padding: 1rem 0.8rem 2rem;
+          }
+
+          .mode-row {
+            grid-template-columns: 1fr;
           }
 
           .hint-grid,
