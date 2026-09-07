@@ -120,6 +120,12 @@ const QUESTIONS_PER_TYPE = QUESTION_COUNT / sentenceTypes.length;
 const FIGURATIVE_QUESTION_COUNT = 20;
 const FIGURATIVE_PER_TYPE = FIGURATIVE_QUESTION_COUNT / figurativeTypes.length;
 const PUNCTUATION_QUESTION_COUNT = 10;
+const PUNCTUATION_STYLE_TARGETS: Record<SentenceType, number> = {
+  Simple: 2,
+  Compound: 3,
+  Complex: 3,
+  'Compound-Complex': 2,
+};
 
 const simpleQuestions: Question[] = [
   { sentence: 'The dog barked at the mail carrier.', answer: 'Simple', explanation: 'One independent clause only.' },
@@ -1039,8 +1045,46 @@ function buildPartsDeck() {
   }));
 }
 
+function getPunctuationStyle(question: PunctuationQuestion): SentenceType {
+  const explanation = question.explanation.toLowerCase();
+
+  if (explanation.includes('compound-complex')) return 'Compound-Complex';
+  if (
+    explanation.includes('complex sentence') ||
+    explanation.includes('dependent clause') ||
+    explanation.includes('because clause')
+  ) {
+    return 'Complex';
+  }
+  if (
+    explanation.includes('compound sentence') ||
+    explanation.includes('two complete') ||
+    explanation.includes('coordinating conjunction') ||
+    explanation.includes('fanboys') ||
+    explanation.includes('semicolon') ||
+    explanation.includes('however') ||
+    explanation.includes('therefore')
+  ) {
+    return 'Compound';
+  }
+
+  return 'Simple';
+}
+
 function buildPunctuationDeck() {
-  return takeRandom(punctuationQuestions, PUNCTUATION_QUESTION_COUNT);
+  const selected = sentenceTypes.flatMap((type) =>
+    takeRandom(
+      punctuationQuestions.filter((question) => getPunctuationStyle(question) === type),
+      PUNCTUATION_STYLE_TARGETS[type],
+    ),
+  );
+  const selectedTexts = new Set(selected.map((question) => question.text));
+  const backupQuestions = punctuationQuestions.filter((question) => !selectedTexts.has(question.text));
+
+  return shuffle([...selected, ...takeRandom(backupQuestions, PUNCTUATION_QUESTION_COUNT - selected.length)]).slice(
+    0,
+    PUNCTUATION_QUESTION_COUNT,
+  );
 }
 
 function buildSentenceRulesDeck() {
