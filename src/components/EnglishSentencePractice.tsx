@@ -312,7 +312,7 @@ const punctuationQuestions: PunctuationQuestion[] = [
   },
   {
     text: 'Tomorrow at 3:15pm I will go to the dentist.',
-    answers: { 0: ',', 3: ',' },
+    answers: { 0: ',', 2: ',' },
     explanation: 'Introductory time words and phrases at the start of a sentence are set off with commas.',
   },
   {
