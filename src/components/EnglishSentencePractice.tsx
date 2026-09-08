@@ -522,7 +522,7 @@ const punctuationQuestions: PunctuationQuestion[] = [
   },
   {
     text: 'Although I was tired I finished my homework.',
-    answers: { 4: ',' },
+    answers: { 3: ',' },
     explanation: 'Although starts a dependent clause, so the comma goes after that clause.',
   },
   {
@@ -557,7 +557,7 @@ const punctuationQuestions: PunctuationQuestion[] = [
   },
   {
     text: 'Because the power went out we lit candles and we played cards.',
-    answers: { 5: ',', 8: ',' },
+    answers: { 4: ',', 7: ',' },
     explanation: 'The because clause comes first, and the two complete thoughts are joined with and.',
   },
   {
