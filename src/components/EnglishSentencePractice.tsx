@@ -1544,7 +1544,7 @@ export default function EnglishSentencePractice() {
                 onClick={() => setStructureMode('punctuation')}
               >
                 <strong>Commas and Semicolons</strong>
-                <span>Click between words to add commas or semicolons.</span>
+                <span>Click between words to place commas or semicolons.</span>
               </button>
             </div>
 
