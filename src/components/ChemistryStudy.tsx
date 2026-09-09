@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-type Mode = 'learn' | 'quiz' | 'density';
+type Mode = 'learn' | 'quiz' | 'density' | 'stats';
 
 type LearnTopic = {
   title: string;
@@ -23,6 +23,24 @@ type DensityProblem = {
   setup: string;
   answer: string;
 };
+
+type StudyUnit = {
+  id: string;
+  label: string;
+  title: string;
+  description: string;
+  topics: LearnTopic[];
+  questions: QuizQuestion[];
+  hasDensityLab?: boolean;
+};
+
+type UnitStats = {
+  attempts: number;
+  correct: number;
+  categories: Record<string, { attempts: number; correct: number }>;
+};
+
+type StatsRecord = Record<string, UnitStats>;
 
 const learnTopics: LearnTopic[] = [
   {
@@ -403,10 +421,45 @@ const quizQuestions: QuizQuestion[] = [
   },
   {
     category: 'Density Lab',
-    question: 'Which density matches the green liquid table?',
-    choices: ['1.00 g/mL', '1.35 g/mL', '0.70 g/mL', '2.85 g/mL'],
-    answer: '1.00 g/mL',
-    explanation: 'Green has 10 g / 10 mL, 20 g / 20 mL, and 30 g / 30 mL, so density is 1.00 g/mL.',
+    question: 'A liquid has a mass of 40.5 g and a volume of 30.0 mL. What is its density?',
+    choices: ['1.35 g/mL', '0.74 g/mL', '10.5 g/mL', '70.5 g/mL'],
+    answer: '1.35 g/mL',
+    explanation: 'Density = mass / volume, so 40.5 / 30.0 = 1.35 g/mL.',
+  },
+  {
+    category: 'Density Lab',
+    question: 'Blue has mass 27.0 g and volume 20.0 mL. What is its density?',
+    choices: ['1.35 g/mL', '0.74 g/mL', '47.0 g/mL', '7.0 g/mL'],
+    answer: '1.35 g/mL',
+    explanation: 'Density = mass / volume, so 27.0 / 20.0 = 1.35 g/mL.',
+  },
+  {
+    category: 'Density Lab',
+    question: 'Yellow has mass 21.0 g and volume 30.0 mL. What is its density?',
+    choices: ['0.70 g/mL', '1.43 g/mL', '51.0 g/mL', '9.0 g/mL'],
+    answer: '0.70 g/mL',
+    explanation: 'Density = mass / volume, so 21.0 / 30.0 = 0.70 g/mL.',
+  },
+  {
+    category: 'Density Lab',
+    question: 'If a mass vs volume line is steeper, what does that usually mean?',
+    choices: ['The substance has a higher density', 'The substance has no volume', 'The substance is always a gas', 'The substance has lower mass every time'],
+    answer: 'The substance has a higher density',
+    explanation: 'On a mass vs volume graph, slope equals density, so a steeper line means a larger density.',
+  },
+  {
+    category: 'Changes',
+    question: 'Which change would best show a chemical change instead of a physical change?',
+    choices: ['A new gas forms when two liquids are mixed', 'A pencil is snapped in half', 'Water freezes into ice', 'A rock is crushed into smaller pieces'],
+    answer: 'A new gas forms when two liquids are mixed',
+    explanation: 'A gas forming can be evidence that a new substance formed, which points to a chemical change.',
+  },
+  {
+    category: 'Mixtures',
+    question: 'Which example is most likely heterogeneous?',
+    choices: ['Oil and water with visible layers', 'Salt fully dissolved in water', 'Clean air in a room', 'Sugar dissolved in tea'],
+    answer: 'Oil and water with visible layers',
+    explanation: 'Heterogeneous mixtures are not evenly mixed, so visible layers are a clue.',
   },
 ];
 
@@ -434,6 +487,411 @@ const liquidData = [
   { name: 'Yellow', density: '0.70 g/mL', points: '(10, 7.0), (20, 14.0), (30, 21.0)', placement: 'Top layer' },
 ];
 
+const unitThreeTopics: LearnTopic[] = [
+  {
+    title: 'Average Atomic Mass',
+    label: 'Isotopes',
+    summary: 'Average atomic mass is the weighted average of all naturally occurring isotopes of an element.',
+    details: [
+      'Isotopes are atoms of the same element with different numbers of neutrons.',
+      'Different neutrons means different mass numbers.',
+      'To calculate average atomic mass, multiply each isotope mass by its abundance as a decimal, then add the results.',
+    ],
+    example: 'If an isotope is 75%, use 0.75 in the calculation, not 75.',
+  },
+  {
+    title: 'Atomic Number and Mass Number',
+    label: 'Atoms',
+    summary: 'Atomic number tells protons. Mass number tells protons plus neutrons.',
+    details: [
+      'Atomic number = number of protons.',
+      'In a neutral atom, protons = electrons.',
+      'Mass number = protons + neutrons.',
+      'Neutrons = mass number - atomic number.',
+    ],
+    example: 'Carbon-14 has 6 protons and 8 neutrons because 14 - 6 = 8.',
+  },
+  {
+    title: 'Nuclear Chemistry',
+    label: 'Nucleus',
+    summary: 'Nuclear chemistry studies changes in the nucleus of atoms.',
+    details: [
+      'Chemical reactions involve electrons, but nuclear reactions involve the nucleus.',
+      'A nucleus contains protons and neutrons.',
+      'Changing protons changes the identity of the element.',
+    ],
+    example: 'Radioactive decay is nuclear because particles or energy come from the nucleus.',
+  },
+  {
+    title: 'Mass Defect and Binding Energy',
+    label: 'Energy',
+    summary: 'Mass defect is missing mass that becomes nuclear binding energy.',
+    details: [
+      'Nuclear binding energy is the energy holding the nucleus together.',
+      'Mass defect is the difference between the mass before and after the nucleus forms.',
+      'Einstein\'s equation E = mc2 connects mass and energy.',
+    ],
+    example: 'A tiny amount of missing mass can equal a large amount of energy.',
+  },
+  {
+    title: 'Radioactive Decay',
+    label: 'Radiation',
+    summary: 'Unstable nuclei release radiation to become more stable.',
+    details: [
+      'Radiation is released from the nucleus.',
+      'Alpha, beta, and gamma are common types of nuclear radiation.',
+      'A decay series shows an unstable isotope changing until it becomes stable.',
+    ],
+    example: 'A radioactive isotope may go through several decay steps before it becomes stable.',
+  },
+  {
+    title: 'Half-Life',
+    label: 'Radiation',
+    summary: 'Half-life is the time required for half of an unstable isotope sample to decay.',
+    details: [
+      'After one half-life, half the radioactive sample remains.',
+      'After two half-lives, one fourth remains.',
+      'Eventually unstable isotopes decay into stable isotopes.',
+    ],
+    example: 'If 100 g becomes 50 g after one half-life, then 25 g remains after two half-lives.',
+  },
+  {
+    title: 'Alpha, Beta, and Gamma',
+    label: 'Radiation',
+    summary: 'Alpha, beta, and gamma radiation are different in mass, charge, and penetration.',
+    details: [
+      'Alpha radiation is a helium nucleus and has low penetration.',
+      'Beta radiation is an electron emitted when a neutron becomes a proton.',
+      'Gamma radiation is high-energy electromagnetic radiation with no mass or charge.',
+    ],
+    example: 'Beta decay increases the atomic number by 1, but the mass number stays the same.',
+  },
+  {
+    title: 'Practical Uses of Radiation',
+    label: 'Uses',
+    summary: 'Radiation can be used for dating materials and tracing movement.',
+    details: [
+      'Radioactive dating estimates age based on radioactive material present.',
+      'Tracers are radioactive atoms placed into substances so movement can be followed.',
+      'Tracers are widely used in medicine.',
+    ],
+    example: 'A medical tracer can help doctors follow where a substance moves in the body.',
+  },
+  {
+    title: 'Fusion and Fission',
+    label: 'Reactions',
+    summary: 'Fusion combines small nuclei. Fission splits a large nucleus.',
+    details: [
+      'Fusion occurs when two or more small nuclei combine to form a larger nucleus and release energy.',
+      'Fusion powers the Sun as hydrogen nuclei fuse into helium.',
+      'Fission occurs when a large nucleus splits into two smaller nuclei.',
+      'Nuclear power plants use controlled fission to generate electricity.',
+    ],
+    example: 'Control rods in a fission reactor absorb neutrons to slow the reaction.',
+  },
+  {
+    title: 'Electromagnetic Radiation',
+    label: 'Light',
+    summary: 'Electromagnetic radiation travels as a wave moving at the speed of light.',
+    details: [
+      'The electromagnetic spectrum is the continuous range of electromagnetic radiation.',
+      'Think of a rainbow as part of the spectrum.',
+      'Wavelength, frequency, and energy are connected.',
+    ],
+    example: 'Shorter wavelength means higher frequency and higher energy.',
+  },
+  {
+    title: 'Photoelectric Effect',
+    label: 'Light',
+    summary: 'The photoelectric effect is when light causes electrons to leave a metal.',
+    details: [
+      'Light shines on a metal and electrons are emitted.',
+      'Only certain frequencies of light work for certain metals.',
+      'This helped scientists conclude energy comes in packets called quanta or photons.',
+    ],
+    example: 'If the light does not have enough frequency, electrons will not be emitted.',
+  },
+  {
+    title: 'Electron Transitions',
+    label: 'Electrons',
+    summary: 'Electrons move between energy levels by absorbing or releasing specific amounts of energy.',
+    details: [
+      'Energy must be absorbed to move an electron farther from the nucleus.',
+      'Energy is released when an electron returns closer to the nucleus.',
+      'Electron transitions produce bright-line spectra with definite wavelengths.',
+    ],
+    example: 'Higher energy means the electron is farther from the nucleus.',
+  },
+];
+
+const unitThreeQuestions: QuizQuestion[] = [
+  {
+    category: 'Isotopes',
+    question: 'What are isotopes?',
+    choices: ['Atoms of the same element with different numbers of neutrons', 'Atoms of different elements with the same mass', 'Molecules with no protons', 'Electrons that leave a metal'],
+    answer: 'Atoms of the same element with different numbers of neutrons',
+    explanation: 'Isotopes have the same number of protons but different numbers of neutrons.',
+  },
+  {
+    category: 'Isotopes',
+    question: 'Carbon-12, carbon-13, and carbon-14 are isotopes because they have the same number of what?',
+    choices: ['Protons', 'Neutrons', 'Mass numbers', 'Nuclei'],
+    answer: 'Protons',
+    explanation: 'The element stays carbon because the atomic number, or number of protons, stays the same.',
+  },
+  {
+    category: 'Isotopes',
+    question: 'What makes carbon-14 heavier than carbon-12?',
+    choices: ['Carbon-14 has more neutrons', 'Carbon-14 has fewer protons', 'Carbon-14 has no electrons', 'Carbon-14 has a smaller nucleus'],
+    answer: 'Carbon-14 has more neutrons',
+    explanation: 'Isotopes differ by neutrons, so carbon-14 has more neutrons than carbon-12.',
+  },
+  {
+    category: 'Average Atomic Mass',
+    question: 'What is average atomic mass?',
+    choices: ['The weighted average mass of naturally occurring isotopes', 'The mass of only the most common isotope', 'The number of protons in an atom', 'The number of electrons emitted by light'],
+    answer: 'The weighted average mass of naturally occurring isotopes',
+    explanation: 'Average atomic mass uses isotope masses and their natural abundances.',
+  },
+  {
+    category: 'Average Atomic Mass',
+    question: 'When using a percent abundance in an average atomic mass calculation, what should you do first?',
+    choices: ['Convert the percent to a decimal', 'Add it directly as a whole number', 'Ignore isotope mass', 'Divide protons by neutrons'],
+    answer: 'Convert the percent to a decimal',
+    explanation: 'For example, 75% becomes 0.75 before multiplying.',
+  },
+  {
+    category: 'Average Atomic Mass',
+    question: 'If an isotope has a mass of 32 amu and an abundance of 95%, which expression is correct?',
+    choices: ['32 x 0.95', '32 x 95', '95 / 32', '32 + 95'],
+    answer: '32 x 0.95',
+    explanation: 'Use the abundance as a decimal in the weighted average.',
+  },
+  {
+    category: 'Atoms',
+    question: 'What does atomic number tell you?',
+    choices: ['The number of protons', 'The number of protons plus neutrons', 'The number of photons', 'The half-life of the atom'],
+    answer: 'The number of protons',
+    explanation: 'Atomic number equals protons.',
+  },
+  {
+    category: 'Atoms',
+    question: 'What does mass number equal?',
+    choices: ['Protons plus neutrons', 'Protons plus electrons', 'Neutrons minus protons', 'Electrons plus photons'],
+    answer: 'Protons plus neutrons',
+    explanation: 'Mass number counts the particles in the nucleus with significant mass.',
+  },
+  {
+    category: 'Atoms',
+    question: 'How do you find neutrons if you know mass number and atomic number?',
+    choices: ['Mass number - atomic number', 'Atomic number - mass number', 'Mass number + atomic number', 'Atomic number x mass number'],
+    answer: 'Mass number - atomic number',
+    explanation: 'Neutrons = mass number - protons, and atomic number gives protons.',
+  },
+  {
+    category: 'Atoms',
+    question: 'A neutral carbon atom has 6 protons. How many electrons does it have?',
+    choices: ['6', '8', '12', '14'],
+    answer: '6',
+    explanation: 'A neutral atom has the same number of electrons and protons.',
+  },
+  {
+    category: 'Nuclear Chemistry',
+    question: 'What does nuclear chemistry focus on?',
+    choices: ['Changes in the nucleus', 'Only changes in color', 'Only changes in volume', 'The movement of liquids in a test tube'],
+    answer: 'Changes in the nucleus',
+    explanation: 'Nuclear chemistry is about the nucleus, not just electron behavior.',
+  },
+  {
+    category: 'Nuclear Energy',
+    question: 'What is nuclear binding energy?',
+    choices: ['Energy that holds the nucleus together', 'Energy that measures volume', 'Energy that stops all particles from moving', 'Energy from density calculations only'],
+    answer: 'Energy that holds the nucleus together',
+    explanation: 'Binding energy holds protons and neutrons together in the nucleus.',
+  },
+  {
+    category: 'Nuclear Energy',
+    question: 'What is mass defect?',
+    choices: ['The difference between the mass before and after a nucleus forms', 'The total mass of a gas sample', 'The number of electrons in a neutral atom', 'The number of photons in light'],
+    answer: 'The difference between the mass before and after a nucleus forms',
+    explanation: 'Mass defect is connected to nuclear binding energy.',
+  },
+  {
+    category: 'Nuclear Energy',
+    question: 'Which equation connects mass and energy?',
+    choices: ['E = mc2', 'D = m / V', 'V = m / D', 'n = mass - protons'],
+    answer: 'E = mc2',
+    explanation: 'Einstein\'s equation shows that mass can be converted into energy.',
+  },
+  {
+    category: 'Radiation',
+    question: 'What happens during radioactive decay?',
+    choices: ['An unstable nucleus releases radiation to become more stable', 'A liquid always becomes less dense', 'A physical property changes without energy', 'An electron always disappears forever'],
+    answer: 'An unstable nucleus releases radiation to become more stable',
+    explanation: 'Radioactive decay helps unstable nuclei move toward stability.',
+  },
+  {
+    category: 'Radiation',
+    question: 'What is a decay series?',
+    choices: ['A model showing a radioactive isotope changing until it becomes stable', 'A list of density formulas', 'A graph of mass versus volume', 'A list of homogeneous mixtures'],
+    answer: 'A model showing a radioactive isotope changing until it becomes stable',
+    explanation: 'A decay series tracks the steps from unstable isotope to stable isotope.',
+  },
+  {
+    category: 'Radiation',
+    question: 'What is half-life?',
+    choices: ['The time required for half of an unstable isotope sample to decay', 'The time required for a liquid to boil', 'The number of protons in an atom', 'The distance between two wave crests'],
+    answer: 'The time required for half of an unstable isotope sample to decay',
+    explanation: 'Half-life tells how long it takes for half the radioactive material to decay.',
+  },
+  {
+    category: 'Radiation',
+    question: 'If 80 g of an isotope goes through one half-life, how much remains?',
+    choices: ['40 g', '20 g', '80 g', '160 g'],
+    answer: '40 g',
+    explanation: 'One half-life cuts the amount in half.',
+  },
+  {
+    category: 'Radiation',
+    question: 'What is alpha radiation?',
+    choices: ['A helium nucleus', 'A high-energy wave with no mass or charge', 'An electron emitted from the nucleus', 'A proton turning into an electron'],
+    answer: 'A helium nucleus',
+    explanation: 'Alpha particles contain 2 protons and 2 neutrons, like a helium nucleus.',
+  },
+  {
+    category: 'Radiation',
+    question: 'What happens to atomic number during beta decay?',
+    choices: ['It increases by 1', 'It decreases by 2', 'It stays the same while mass increases by 4', 'It becomes zero'],
+    answer: 'It increases by 1',
+    explanation: 'In beta decay, a neutron changes into a proton, so atomic number increases.',
+  },
+  {
+    category: 'Radiation',
+    question: 'What is gamma radiation?',
+    choices: ['High-energy electromagnetic radiation with no mass or charge', 'A helium nucleus', 'A whole atom with no electrons', 'A liquid with high density'],
+    answer: 'High-energy electromagnetic radiation with no mass or charge',
+    explanation: 'Gamma radiation is energy, not a particle with mass.',
+  },
+  {
+    category: 'Radiation Uses',
+    question: 'What does radioactive dating help scientists determine?',
+    choices: ['Approximate age', 'Liquid density only', 'Exact color', 'The shape of a container'],
+    answer: 'Approximate age',
+    explanation: 'Radioactive dating uses radioactive material to estimate age.',
+  },
+  {
+    category: 'Radiation Uses',
+    question: 'What are tracers?',
+    choices: ['Radioactive atoms incorporated into substances so movement can be followed', 'Pieces of metal that block all light', 'Liquids sorted by density', 'Stable atoms with no nucleus'],
+    answer: 'Radioactive atoms incorporated into substances so movement can be followed',
+    explanation: 'Tracers are useful because scientists can follow where they move.',
+  },
+  {
+    category: 'Fusion and Fission',
+    question: 'What is fusion?',
+    choices: ['Small nuclei combine to form a larger nucleus and release energy', 'A large nucleus splits into smaller nuclei', 'A metal emits electrons because light shines on it', 'A sample loses half its mass by density'],
+    answer: 'Small nuclei combine to form a larger nucleus and release energy',
+    explanation: 'Fusion combines nuclei.',
+  },
+  {
+    category: 'Fusion and Fission',
+    question: 'What reaction powers the Sun?',
+    choices: ['Fusion of hydrogen nuclei into helium', 'Fission of uranium in control rods', 'Beta decay of carbon isotopes', 'Photoelectric emission from metals'],
+    answer: 'Fusion of hydrogen nuclei into helium',
+    explanation: 'The Sun is powered by fusion.',
+  },
+  {
+    category: 'Fusion and Fission',
+    question: 'What is fission?',
+    choices: ['A large nucleus splits into two smaller nuclei', 'Two small nuclei combine into one larger nucleus', 'A wave moves at the speed of light', 'An isotope becomes more abundant'],
+    answer: 'A large nucleus splits into two smaller nuclei',
+    explanation: 'Fission means splitting a nucleus.',
+  },
+  {
+    category: 'Fusion and Fission',
+    question: 'What do control rods do in a nuclear reactor?',
+    choices: ['Absorb neutrons to slow the reaction', 'Increase liquid density', 'Make electrons leave metal', 'Turn photons into protons'],
+    answer: 'Absorb neutrons to slow the reaction',
+    explanation: 'Control rods help keep fission reactions controlled.',
+  },
+  {
+    category: 'Light',
+    question: 'How does electromagnetic radiation travel?',
+    choices: ['As a wave moving at the speed of light', 'Only as a liquid through tubes', 'Only as a solid particle with mass', 'As density divided by volume'],
+    answer: 'As a wave moving at the speed of light',
+    explanation: 'Electromagnetic radiation propagates through space as a wave.',
+  },
+  {
+    category: 'Light',
+    question: 'What is the electromagnetic spectrum?',
+    choices: ['A continuous range of frequencies of electromagnetic radiation', 'A list of isotope masses only', 'A graph of mass and volume', 'A series of liquid layers'],
+    answer: 'A continuous range of frequencies of electromagnetic radiation',
+    explanation: 'The spectrum includes a range of electromagnetic radiation frequencies.',
+  },
+  {
+    category: 'Light',
+    question: 'What is the photoelectric effect?',
+    choices: ['Electrons are emitted from a metal when light shines on it', 'A nucleus splits into two nuclei', 'A liquid floats because it is less dense', 'An isotope loses half its sample'],
+    answer: 'Electrons are emitted from a metal when light shines on it',
+    explanation: 'The photoelectric effect helped show that energy comes in packets.',
+  },
+  {
+    category: 'Light',
+    question: 'What did the photoelectric effect help scientists conclude?',
+    choices: ['Energy comes in packets called quanta or photons', 'All atoms have the same mass', 'Density equals volume divided by mass', 'Electrons never move between energy levels'],
+    answer: 'Energy comes in packets called quanta or photons',
+    explanation: 'Only certain frequencies working showed energy is quantized.',
+  },
+  {
+    category: 'Light',
+    question: 'Which relationship is correct?',
+    choices: ['Shorter wavelength means higher frequency and higher energy', 'Shorter wavelength means lower energy', 'Longer wavelength means higher frequency', 'Frequency and energy are never related'],
+    answer: 'Shorter wavelength means higher frequency and higher energy',
+    explanation: 'The study guide notes connect shorter wavelength with higher frequency and higher energy.',
+  },
+  {
+    category: 'Electrons',
+    question: 'What must happen for an electron to move farther from the nucleus?',
+    choices: ['Energy must be absorbed', 'Energy must be released', 'The atom must lose all protons', 'Density must decrease'],
+    answer: 'Energy must be absorbed',
+    explanation: 'Moving an electron away from the nucleus requires energy input.',
+  },
+  {
+    category: 'Electrons',
+    question: 'What happens when an electron returns closer to the nucleus?',
+    choices: ['Energy is released', 'Energy is absorbed', 'The nucleus disappears', 'The atom becomes a liquid'],
+    answer: 'Energy is released',
+    explanation: 'Electrons release energy when they fall back to a lower energy level.',
+  },
+  {
+    category: 'Electrons',
+    question: 'What do electron transitions produce?',
+    choices: ['Bright-line spectra with definite wavelengths', 'Only homogeneous mixtures', 'A density table', 'A layer of liquid in a test tube'],
+    answer: 'Bright-line spectra with definite wavelengths',
+    explanation: 'Electron jumps release or absorb definite amounts of energy, producing specific wavelengths.',
+  },
+];
+
+const studyUnits: StudyUnit[] = [
+  {
+    id: 'unit-2',
+    label: 'Unit 2',
+    title: 'Matter and Density',
+    description: 'Matter, physical and chemical properties, density, mixtures, metric units, states of matter, and the colored-liquid density lab.',
+    topics: learnTopics,
+    questions: quizQuestions,
+    hasDensityLab: true,
+  },
+  {
+    id: 'unit-3',
+    label: 'Unit 3',
+    title: 'Isotopes and Nuclear Chemistry',
+    description: 'Average atomic mass, isotopes, radioactive decay, half-life, fusion, fission, electromagnetic radiation, and electron transitions.',
+    topics: unitThreeTopics,
+    questions: unitThreeQuestions,
+  },
+];
+
 function shuffle<T>(items: T[]) {
   const copy = [...items];
   for (let i = copy.length - 1; i > 0; i -= 1) {
@@ -443,29 +901,90 @@ function shuffle<T>(items: T[]) {
   return copy;
 }
 
-function buildDeck() {
-  return shuffle(quizQuestions).slice(0, 10).map((question) => ({
+function buildDeck(questions: QuizQuestion[]) {
+  return shuffle(questions).slice(0, 10).map((question) => ({
     ...question,
     choices: shuffle(question.choices),
   }));
 }
 
+const statsStorageKey = 'chemistry-stats-v1';
+
+function blankStats(): StatsRecord {
+  return Object.fromEntries(studyUnits.map((unit) => [
+    unit.id,
+    { attempts: 0, correct: 0, categories: {} },
+  ]));
+}
+
+function loadStats(): StatsRecord {
+  if (typeof window === 'undefined') return blankStats();
+  try {
+    return { ...blankStats(), ...JSON.parse(window.localStorage.getItem(statsStorageKey) || '{}') };
+  } catch {
+    return blankStats();
+  }
+}
+
 export default function ChemistryStudy() {
   const [mode, setMode] = useState<Mode>('learn');
+  const [activeUnitId, setActiveUnitId] = useState('unit-2');
   const [openTopic, setOpenTopic] = useState(0);
-  const [deck, setDeck] = useState(buildDeck);
+  const [deck, setDeck] = useState(() => buildDeck(studyUnits[0].questions));
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selected, setSelected] = useState('');
   const [showDensityAnswers, setShowDensityAnswers] = useState(false);
+  const [stats, setStats] = useState<StatsRecord>(loadStats);
 
+  const activeUnit = studyUnits.find((unit) => unit.id === activeUnitId) || studyUnits[0];
   const currentQuestion = deck[currentIndex];
   const isAnswered = selected !== '';
   const isCorrect = selected === currentQuestion.answer;
 
-  function startNewQuiz() {
-    setDeck(buildDeck());
+  function saveStats(nextStats: StatsRecord) {
+    setStats(nextStats);
+    window.localStorage.setItem(statsStorageKey, JSON.stringify(nextStats));
+  }
+
+  function startNewQuiz(unit = activeUnit) {
+    setDeck(buildDeck(unit.questions));
     setCurrentIndex(0);
     setSelected('');
+  }
+
+  function switchUnit(unitId: string) {
+    const nextUnit = studyUnits.find((unit) => unit.id === unitId) || studyUnits[0];
+    setActiveUnitId(nextUnit.id);
+    setMode('learn');
+    setOpenTopic(0);
+    startNewQuiz(nextUnit);
+  }
+
+  function answerQuestion(choice: string) {
+    if (selected) return;
+    const correct = choice === currentQuestion.answer;
+    const unitStats = stats[activeUnit.id] || { attempts: 0, correct: 0, categories: {} };
+    const categoryStats = unitStats.categories[currentQuestion.category] || { attempts: 0, correct: 0 };
+    saveStats({
+      ...stats,
+      [activeUnit.id]: {
+        attempts: unitStats.attempts + 1,
+        correct: unitStats.correct + (correct ? 1 : 0),
+        categories: {
+          ...unitStats.categories,
+          [currentQuestion.category]: {
+            attempts: categoryStats.attempts + 1,
+            correct: categoryStats.correct + (correct ? 1 : 0),
+          },
+        },
+      },
+    });
+    setSelected(choice);
+  }
+
+  function resetStats() {
+    const typed = window.prompt('Are you sure you want to reset chemistry stats? Type CHEM to reset.');
+    if (typed === 'CHEM') saveStats(blankStats());
   }
 
   function nextQuestion() {
@@ -481,24 +1000,36 @@ export default function ChemistryStudy() {
     <div className="chemistry-page">
       <main className="shell">
         <section className="hero">
-          <p className="eyebrow">Chemistry Unit 2</p>
-          <h1>Chemistry Study Guide</h1>
-          <p className="hero-copy">Matter, properties, changes, density, mixtures, states of matter, and the colored-liquid density lab.</p>
+          <div className="hero-top">
+            <div>
+              <p className="eyebrow">Chemistry {activeUnit.label}</p>
+              <h1>Chemistry Study Guide</h1>
+            </div>
+            <button className="stats-button" type="button" onClick={() => setMode('stats')}>Stats</button>
+          </div>
+          <p className="hero-copy">{activeUnit.description}</p>
+          <div className="unit-row">
+            {studyUnits.map((unit) => (
+              <button className={activeUnit.id === unit.id ? 'active' : ''} key={unit.id} type="button" onClick={() => switchUnit(unit.id)}>
+                {unit.label}
+              </button>
+            ))}
+          </div>
           <div className="mode-row">
             <button className={mode === 'learn' ? 'active' : ''} type="button" onClick={() => setMode('learn')}>Learn It</button>
             <button className={mode === 'quiz' ? 'active' : ''} type="button" onClick={() => setMode('quiz')}>Practice It</button>
-            <button className={mode === 'density' ? 'active' : ''} type="button" onClick={() => setMode('density')}>Density Lab</button>
+            {activeUnit.hasDensityLab && <button className={mode === 'density' ? 'active' : ''} type="button" onClick={() => setMode('density')}>Density Lab</button>}
           </div>
         </section>
 
         {mode === 'learn' && (
           <section className="panel">
             <div className="section-heading">
-              <p>Unit 2 Topics</p>
+              <p>{activeUnit.label} Topics</p>
               <h2>Pick a card to study</h2>
             </div>
             <div className="learn-grid">
-              {learnTopics.map((topic, index) => {
+              {activeUnit.topics.map((topic, index) => {
                 const expanded = openTopic === index;
                 return (
                   <button
@@ -545,7 +1076,7 @@ export default function ChemistryStudy() {
                   disabled={isAnswered}
                   key={choice}
                   type="button"
-                  onClick={() => setSelected(choice)}
+                  onClick={() => answerQuestion(choice)}
                 >
                   {choice}
                 </button>
@@ -561,7 +1092,35 @@ export default function ChemistryStudy() {
           </section>
         )}
 
-        {mode === 'density' && (
+        {mode === 'stats' && (
+          <section className="panel">
+            <div className="quiz-top">
+              <div>
+                <p className="eyebrow dark">Chemistry Stats</p>
+                <h2>Progress by unit</h2>
+              </div>
+              <button className="small-button" type="button" onClick={resetStats}>Reset Stats</button>
+            </div>
+            <div className="stats-grid">
+              {studyUnits.map((unit) => {
+                const unitStats = stats[unit.id] || { attempts: 0, correct: 0, categories: {} };
+                const percent = unitStats.attempts ? Math.round((unitStats.correct / unitStats.attempts) * 100) : 0;
+                return (
+                  <article className="stats-card" key={unit.id}>
+                    <p>{unit.label}</p>
+                    <strong>{unitStats.correct}/{unitStats.attempts}</strong>
+                    <span>{percent}% correct</span>
+                    {Object.entries(unitStats.categories).map(([category, categoryStats]) => (
+                      <em key={category}>{category}: {categoryStats.correct}/{categoryStats.attempts}</em>
+                    ))}
+                  </article>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
+        {mode === 'density' && activeUnit.hasDensityLab && (
           <section className="panel">
             <div className="section-heading">
               <p>Density Lab</p>
@@ -647,6 +1206,13 @@ export default function ChemistryStudy() {
           color: #fff9e9;
         }
 
+        .hero-top {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 1rem;
+        }
+
         .eyebrow {
           margin: 0;
           font-size: 0.78rem;
@@ -675,10 +1241,17 @@ export default function ChemistryStudy() {
           color: rgba(255, 249, 233, 0.9);
         }
 
-        .mode-row {
+        .unit-row, .mode-row {
           display: flex;
           flex-wrap: wrap;
           gap: 0.75rem;
+        }
+
+        .unit-row {
+          margin-top: 1.35rem;
+        }
+
+        .mode-row {
           margin-top: 1.5rem;
         }
 
@@ -686,7 +1259,7 @@ export default function ChemistryStudy() {
           font: inherit;
         }
 
-        .mode-row button, .small-button, .feedback button {
+        .unit-row button, .mode-row button, .small-button, .feedback button, .stats-button {
           border: 0;
           border-radius: 999px;
           background: rgba(255, 255, 255, 0.14);
@@ -695,13 +1268,20 @@ export default function ChemistryStudy() {
           font-weight: 900;
         }
 
-        .mode-row button {
+        .unit-row button, .mode-row button {
           padding: 0.85rem 1.2rem;
           border: 1px solid rgba(255,255,255,0.25);
         }
 
-        .mode-row button.active, .small-button {
+        .unit-row button.active, .mode-row button.active, .small-button {
           background: linear-gradient(135deg, #f08a35, #d85621);
+          color: #fff9e9;
+        }
+
+        .stats-button {
+          padding: 0.7rem 0.95rem;
+          background: rgba(255, 249, 233, 0.16);
+          border: 1px solid rgba(255, 255, 255, 0.25);
           color: #fff9e9;
         }
 
@@ -955,14 +1535,57 @@ export default function ChemistryStudy() {
           font-weight: 900;
         }
 
+        .stats-grid {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 0.85rem;
+          margin-top: 1rem;
+        }
+
+        .stats-card {
+          padding: 1rem;
+          border: 1px solid rgba(39, 78, 72, 0.14);
+          border-radius: 18px;
+          background: #fffdf7;
+        }
+
+        .stats-card p {
+          color: #bd6732;
+          font-weight: 900;
+        }
+
+        .stats-card strong, .stats-card span, .stats-card em {
+          display: block;
+        }
+
+        .stats-card strong {
+          margin-top: 0.35rem;
+          font-size: 2rem;
+          line-height: 1;
+        }
+
+        .stats-card span {
+          margin-top: 0.35rem;
+          color: #506158;
+          font-weight: 900;
+        }
+
+        .stats-card em {
+          margin-top: 0.45rem;
+          color: #506158;
+          font-style: normal;
+          line-height: 1.4;
+        }
+
         @media (max-width: 720px) {
           .shell { width: min(100% - 0.85rem, 1040px); padding-top: 0.45rem; }
           .hero, .panel { border-radius: 18px; }
           .hero { padding: 1.25rem; }
           .panel { padding: 1rem; }
+          .hero-top { align-items: flex-start; }
           .mode-row { display: grid; grid-template-columns: 1fr; }
           .quiz-top, .practice-header { align-items: flex-start; flex-direction: column; }
-          .formula-grid, .liquid-grid { grid-template-columns: 1fr; }
+          .formula-grid, .liquid-grid, .stats-grid { grid-template-columns: 1fr; }
           .question { font-size: 1.35rem; }
         }
       `}</style>
