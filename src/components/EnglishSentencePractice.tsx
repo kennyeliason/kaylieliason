@@ -729,7 +729,7 @@ const partOfSpeechQuestions: PartOfSpeechQuestion[] = [
   },
   {
     sentence: 'For, and, nor, but, or, yet, so are one group. Because, when, if, and although are another group.',
-    prompt: 'What are the two types of conjunctions from the notes?',
+    prompt: 'What are the two types of conjunctions?',
     answer: 'Coordinating and Subordinating Conjunctions',
     explanation: 'Coordinating conjunctions are FANBOYS. Subordinating conjunctions start dependent clauses.',
     options: ['Coordinating and Subordinating Conjunctions', 'Common and Proper Nouns', 'Action and Linking Verbs', 'Adjectives and Adverbs'],
