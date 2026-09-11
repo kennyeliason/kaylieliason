@@ -1178,6 +1178,7 @@ const studyUnits = [
       const unitButtons = Array.from(document.querySelectorAll('[data-unit]'));
       const prizeLadder = ['$100', '$200', '$300', '$500', '$1,000', '$2,000', '$4,000', '$8,000', '$16,000', '$32,000'];
       const statsStorageKey = 'history-stats-v1';
+      const rotationStorageKey = 'history-multiple-choice-rotation-v1';
       let currentUnit = units[0];
 
       let state = {};
@@ -1234,6 +1235,22 @@ const studyUnits = [
 
       function questionKey(item) {
         return `${currentUnit.id}::${item.category}::${item.question}`;
+      }
+
+      function rotationQuestionKey(item) {
+        return `${item.category}::${item.question}`;
+      }
+
+      function loadRotationPools() {
+        try {
+          const saved = JSON.parse(localStorage.getItem(rotationStorageKey) || '{}');
+          if (saved && typeof saved === 'object') return saved;
+        } catch {}
+        return {};
+      }
+
+      function saveRotationPools(pools) {
+        localStorage.setItem(rotationStorageKey, JSON.stringify(pools));
       }
 
       function createEmptyUnitStats(unit) {
@@ -1318,7 +1335,32 @@ const studyUnits = [
       }
 
       function buildMcQuestions() {
-        return shuffle(currentQuestions()).map((item) => ({ ...item, choices: shuffle(item.choices) }));
+        const questions = currentQuestions();
+        const questionMap = new Map(questions.map((item) => [rotationQuestionKey(item), item]));
+        const questionKeys = questions.map(rotationQuestionKey);
+        const roundSize = Math.min(10, questionKeys.length);
+        const pools = loadRotationPools();
+        let pool = Array.isArray(pools[currentUnit.id])
+          ? pools[currentUnit.id].filter((key) => questionMap.has(key))
+          : [];
+
+        if (pool.length < roundSize) {
+          const unusedKeys = questionKeys.filter((key) => !pool.includes(key));
+          pool = [...pool, ...shuffle(unusedKeys)];
+        }
+
+        if (pool.length < roundSize) {
+          pool = shuffle(questionKeys);
+        }
+
+        const selectedKeys = pool.slice(0, roundSize);
+        pools[currentUnit.id] = pool.slice(roundSize);
+        saveRotationPools(pools);
+
+        return selectedKeys
+          .map((key) => questionMap.get(key))
+          .filter(Boolean)
+          .map((item) => ({ ...item, choices: shuffle(item.choices) }));
       }
 
       function setActiveUnit(unitId) {
