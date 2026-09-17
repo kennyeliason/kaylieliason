@@ -903,6 +903,191 @@ const UNITS: MathUnit[] = [
   },
 ];
 
+// Test 1.1–1.5 was part of the same Unit 2.0–2.4 test range, so merge its
+// relations/functions material into the direct-variation test rather than
+// making Kayli choose between two separate bubbles.
+const unitTwo = UNITS[0];
+const relationsAndFunctions = unitTwo.lessons.find((test) => test.key === 'relations-functions-lesson-1')?.content!;
+const testTwoToFour = unitTwo.lessons.find((test) => test.key === 'relations-functions-lesson-2')?.content!;
+
+testTwoToFour.learnSections = [...relationsAndFunctions.learnSections, ...testTwoToFour.learnSections];
+testTwoToFour.starterTalk = [...relationsAndFunctions.starterTalk, ...testTwoToFour.starterTalk];
+testTwoToFour.notes = [...relationsAndFunctions.notes, ...testTwoToFour.notes];
+testTwoToFour.checkpoints = [...relationsAndFunctions.checkpoints, ...testTwoToFour.checkpoints];
+testTwoToFour.mistakeAlerts = [...relationsAndFunctions.mistakeAlerts, ...testTwoToFour.mistakeAlerts];
+testTwoToFour.practicePrompts = [...relationsAndFunctions.practicePrompts, ...testTwoToFour.practicePrompts];
+testTwoToFour.vocabulary = [...relationsAndFunctions.vocabulary, ...testTwoToFour.vocabulary];
+testTwoToFour.quiz = [...relationsAndFunctions.quiz, ...testTwoToFour.quiz];
+testTwoToFour.description = 'Study for Test 2.0–2.4: relations, functions, function notation, mapping, domain/range, and direct variation.';
+unitTwo.lessons = unitTwo.lessons.filter((test) => test.key !== 'relations-functions-lesson-1');
+
+const testTwoFiveToSix = unitTwo.lessons.find((test) => test.key === 'test-2-5-2-6')!;
+testTwoFiveToSix.status = 'available';
+testTwoFiveToSix.teaser = 'Piecewise, step functions, regression, and residuals';
+testTwoFiveToSix.content = {
+  key: 'test-2-5-2-6',
+  label: 'Test 2.5–2.6',
+  title: 'Algebra 2',
+  eyebrow: 'Algebra 2 Honors Unit 2',
+  description: 'Study for Test 2.5–2.6: piecewise functions, greatest-integer and step functions, regression lines, slope/intercept meaning, and residuals.',
+  learnSections: [
+    {
+      key: 'evaluate-functions',
+      title: 'Evaluating a function',
+      preview: 'Replace the input with the number, then simplify carefully.',
+      badge: 'Function values',
+      steps: [
+        'Find the number inside the parentheses, such as h(4) or g(-2).',
+        'Replace every x in the rule with that number.',
+        'Use parentheses when you substitute a negative number.',
+        'Follow order of operations and simplify to one answer.',
+      ],
+      answer: 'For h(x) = |2x - 1|, h(4) = |2(4) - 1| = 7.',
+    },
+    {
+      key: 'piecewise-functions',
+      title: 'Piecewise functions',
+      preview: 'Choose the rule whose condition matches the input first.',
+      badge: 'Piecewise',
+      steps: [
+        'Read the input number before doing any math.',
+        'Compare it with each condition, such as x < 2 or x ≥ 2.',
+        'Use only the one rule whose condition is true.',
+        'Substitute the input into that rule and simplify.',
+      ],
+      answer: 'For f(x) = 3x + 1 if x < 2 and x² - 2 if x ≥ 2, f(2) = 2.',
+    },
+    {
+      key: 'greatest-integer',
+      title: 'Greatest-integer functions',
+      preview: 'The greatest integer function rounds down to the next lower integer.',
+      badge: 'Round down',
+      bullets: [
+        'The greatest integer function gives the largest whole number that is not greater than the input.',
+        'For example, ⌊4.8⌋ = 4 and ⌊-1.2⌋ = -2.',
+        'If a is an integer, then ⌊a + 0.7⌋ = a because a + 0.7 is still below a + 1.',
+        'Do not round to the closest integer; this function always goes down.',
+      ],
+    },
+    {
+      key: 'step-functions',
+      title: 'Step-function word problems',
+      preview: '“Each additional ___ or fraction” means you pay for the next whole step.',
+      badge: 'Step costs',
+      steps: [
+        'Start with the base charge.',
+        'Find how many whole or partial intervals happen after the first included interval.',
+        'A partial interval still counts as a full extra interval.',
+        'Multiply the number of extra intervals by the extra charge, then add the base charge.',
+      ],
+      answer: 'A $6 base fee plus $3 for each extra hour or fraction costs $12 for 2.4 hours.',
+    },
+    {
+      key: 'regression-lines',
+      title: 'Regression lines: predict, slope, and intercept',
+      preview: 'Use y = mx + b: m is change per x-unit and b is the value when x = 0.',
+      badge: 'Best fit',
+      bullets: [
+        'To predict y, substitute the given x-value into y = mx + b.',
+        'The slope m tells how y changes when x increases by 1.',
+        'A negative slope means y decreases as x increases.',
+        'The y-intercept b is the predicted y-value when x = 0.',
+      ],
+    },
+    {
+      key: 'residuals',
+      title: 'Residuals',
+      preview: 'Residual = actual value − predicted value.',
+      badge: 'Actual vs. predicted',
+      steps: [
+        'Use the regression equation to find the predicted y-value.',
+        'Take the actual value from the problem.',
+        'Subtract predicted from actual: residual = actual − predicted.',
+        'A positive residual means the actual value was above the line; a negative residual means it was below.',
+      ],
+      answer: 'If the prediction is 72 and the actual score is 78, the residual is 6.',
+    },
+  ],
+  starterTalk: [
+    'These problems look different, but each one has a routine.',
+    'For piecewise functions, pick the correct rule before you plug in.',
+    'For regression, separate prediction, slope, intercept, and residual in your mind.',
+  ],
+  rule: 'Choose the right rule first, then substitute carefully.',
+  notes: [
+    'Evaluate a function by replacing x with the input.',
+    'For a piecewise function, use the rule whose condition is true.',
+    'Greatest integer means round down.',
+    'A step-function fraction still counts as the next full step.',
+    'In y = mx + b, m is slope and b is the y-intercept.',
+    'Residual = actual − predicted.',
+  ],
+  checkpoints: [
+    'Function value: substitute, then simplify.',
+    'Piecewise: check the condition, then use one rule only.',
+    'Step cost: count each partial interval as a full interval.',
+    'Regression prediction: plug x into y = mx + b.',
+    'Residual: actual minus predicted.',
+  ],
+  mistakeAlerts: [
+    'Do not use every piece of a piecewise function—use only the matching one.',
+    'Do not round a greatest-integer value to the nearest whole number.',
+    'For a residual, do not reverse actual and predicted.',
+    'For a step function, do not ignore a partial extra interval.',
+  ],
+  notationExample: {
+    title: 'Evaluate a piecewise function',
+    steps: ['For f(x) = 2x + 3 when x < 1 and x² - 4 when x ≥ 1, find f(3).', 'Since 3 ≥ 1, use x² - 4.', 'Substitute: 3² - 4 = 9 - 4.', 'So f(3) = 5.'],
+    answer: 'f(3) = 5',
+  },
+  mappingExample: {
+    title: 'Use a regression equation',
+    steps: ['Use y = 1.8x + 42.', 'For x = 5, substitute 5 for x.', 'y = 1.8(5) + 42 = 51.', 'The model predicts 51.'],
+    pairs: [{ x: 0, y: 42 }, { x: 5, y: 51 }, { x: 10, y: 60 }],
+    answer: 'At x = 5, y = 51.',
+  },
+  practicePrompts: [
+    { prompt: 'Evaluate h(5) for h(x) = |3x - 4|.', hint: 'Substitute 5 for x first.', answer: '11', answerFormat: 'number only', acceptedAnswers: ['11', 'h(5) = 11'], teaching: 'h(5) = |3(5) - 4| = |11| = 11.' },
+    { prompt: 'For f(x) = 2x + 1 if x < 3 and x² - 5 if x ≥ 3, find f(4).', hint: 'Which condition is true for 4?', answer: '11', answerFormat: 'number only', acceptedAnswers: ['11', 'f(4) = 11'], teaching: 'Because 4 ≥ 3, use x² - 5: 4² - 5 = 11.' },
+    { prompt: 'Find ⌊7.9⌋.', hint: 'Greatest integer means round down.', answer: '7', answerFormat: 'integer only', acceptedAnswers: ['7'], teaching: 'The largest integer not greater than 7.9 is 7.' },
+    { prompt: 'A service costs $8 for the first hour and $4 for each additional hour or fraction. What is the cost for 2.3 hours?', hint: 'After the first hour, 1.3 hours counts as 2 extra hours.', answer: '16', answerFormat: 'number only', acceptedAnswers: ['16', '$16'], teaching: 'Base cost is 8. Two extra intervals cost 2 × 4 = 8, so total cost is 16.' },
+    { prompt: 'Use y = 2.5x + 18 to predict y when x = 6.', hint: 'Substitute 6 for x.', answer: '33', answerFormat: 'number only', acceptedAnswers: ['33', 'y = 33'], teaching: '2.5(6) + 18 = 15 + 18 = 33.' },
+    { prompt: 'A model predicts 64, but the actual value is 59. What is the residual?', hint: 'Actual minus predicted.', answer: '-5', answerFormat: 'number only', acceptedAnswers: ['-5'], teaching: '59 - 64 = -5, so the point is 5 below the prediction.' },
+  ],
+  vocabulary: [
+    { term: 'Piecewise Function', definition: 'A function that uses different rules for different input values.', clue: 'Check the condition before choosing a rule.' },
+    { term: 'Greatest Integer Function', definition: 'A function that rounds down to the next lower integer.', clue: '⌊4.9⌋ is 4.' },
+    { term: 'Step Function', definition: 'A function that changes in jumps instead of smoothly.', clue: 'Partial intervals may count as a whole step.' },
+    { term: 'Regression Line', definition: 'A line that models the trend in data.', clue: 'Often written y = mx + b.' },
+    { term: 'Slope', definition: 'The predicted change in y for each increase of 1 in x.', clue: 'It is m in y = mx + b.' },
+    { term: 'Y-Intercept', definition: 'The predicted y-value when x equals 0.', clue: 'It is b in y = mx + b.' },
+    { term: 'Residual', definition: 'The actual value minus the predicted value.', clue: 'Actual − predicted.' },
+  ],
+  examplePoints: [{ x: 0, y: 42 }, { x: 2, y: 45.6 }, { x: 4, y: 49.2 }, { x: 6, y: 52.8 }],
+  quiz: [
+    { prompt: 'Evaluate p(4) for p(x) = |2x - 5|.', choices: ['3', '8', '11', '13'], answer: '3', explanation: 'p(4) = |2(4) - 5| = |3| = 3.' },
+    { prompt: 'Evaluate q(-2) for q(x) = x² + 4x - 1.', choices: ['-5', '-1', '3', '7'], answer: '-5', explanation: '(-2)² + 4(-2) - 1 = 4 - 8 - 1 = -5.' },
+    { prompt: 'For f(x) = x + 6 if x < 0 and 2x - 1 if x ≥ 0, what is f(-3)?', choices: ['-3', '2', '3', '5'], answer: '3', explanation: 'Because -3 < 0, use x + 6: -3 + 6 = 3.' },
+    { prompt: 'For g(x) = 3x + 2 if x ≤ 1 and x² - 2 if x > 1, what is g(3)?', choices: ['7', '9', '11', '13'], answer: '7', explanation: 'Because 3 > 1, use x² - 2: 9 - 2 = 7.' },
+    { prompt: 'What is ⌊6.4⌋?', choices: ['6', '7', '6.4', '5'], answer: '6', explanation: 'The greatest integer not greater than 6.4 is 6.' },
+    { prompt: 'If a is an integer, what is ⌊a + 0.8⌋?', choices: ['a', 'a + 1', 'a - 1', '0.8a'], answer: 'a', explanation: 'a + 0.8 is still less than a + 1, so it rounds down to a.' },
+    { prompt: 'A parking garage charges $5 up to 2 hours plus $3 for each additional hour or fraction. What is the cost for 3.2 hours?', choices: ['$8', '$11', '$14', '$17'], answer: '$11', explanation: 'After the first 2 hours, 1.2 hours counts as 2 extra hours: 5 + 2(3) = 11.' },
+    { prompt: 'A taxi charges $6 plus $2 for each whole or partial mile. Which function models the cost C for m miles?', choices: ['C(m) = 6 + 2⌈m⌉', 'C(m) = 6 + 2m', 'C(m) = 2 + 6m', 'C(m) = 6m'], answer: 'C(m) = 6 + 2⌈m⌉', explanation: 'Each partial mile counts as a full mile, so a ceiling/step function is needed.' },
+    { prompt: 'A best-fit line is y = -1.2x + 84. What does the slope mean?', choices: ['Each 1-unit increase in x predicts y decreases by 1.2', 'Each 1-unit increase in x predicts y increases by 84', 'The predicted y-value is always negative', 'There are exactly 84 data points'], answer: 'Each 1-unit increase in x predicts y decreases by 1.2', explanation: 'A negative slope means the predicted y-value goes down as x goes up.' },
+    { prompt: 'For y = 1.6x + 57, what does the y-intercept represent?', choices: ['The predicted y-value when x = 0', 'The predicted change in y each time x increases', 'The largest possible y-value in the data', 'The number of points used in the model'], answer: 'The predicted y-value when x = 0', explanation: 'The y-intercept is b, the value of y when x is zero.' },
+    { prompt: 'Use y = 0.75x + 14 to predict y when x = 20.', choices: ['14', '15', '29', '34'], answer: '29', explanation: '0.75(20) + 14 = 15 + 14 = 29.' },
+    { prompt: 'Use y = 3.4x + 9 to predict y when x = 7.', choices: ['12.4', '23.8', '32.8', '39.4'], answer: '32.8', explanation: '3.4(7) + 9 = 23.8 + 9 = 32.8.' },
+    { prompt: 'A model predicts 71 for x = 5, but the actual value is 76. What is the residual?', choices: ['-5', '0', '5', '147'], answer: '5', explanation: 'Residual = actual − predicted = 76 − 71 = 5.' },
+    { prompt: 'A model predicts 42 for x = 3, but the actual value is 38. What is the residual?', choices: ['-4', '4', '38', '80'], answer: '-4', explanation: 'Residual = actual − predicted = 38 − 42 = -4.' },
+    { prompt: 'For y = 4x + 15, which x-value gives a predicted y-value of 47?', choices: ['6', '8', '10', '15'], answer: '8', explanation: '47 = 4x + 15, so 32 = 4x and x = 8.' },
+    { prompt: 'For y = 2.2x + 11, which x-value gives a predicted y-value of 33?', choices: ['5', '8', '10', '12'], answer: '10', explanation: '33 = 2.2x + 11, so 22 = 2.2x and x = 10.' },
+    { prompt: 'Which situation is best modeled by a step function?', choices: ['A charge for every hour or fraction of an hour', 'The exact distance traveled at a constant speed', 'A plant growing smoothly each day', 'Temperature changing continuously over time'], answer: 'A charge for every hour or fraction of an hour', explanation: 'Step functions fit costs that jump at set intervals.' },
+    { prompt: 'Why must you check the condition before evaluating a piecewise function?', choices: ['The input decides which formula you are allowed to use', 'Every formula must be used and then added together', 'The condition tells you how to round the answer', 'Piecewise functions do not use input values'], answer: 'The input decides which formula you are allowed to use', explanation: 'Only one piece applies to each input value.' },
+    { prompt: 'For r(x) = -x if x < 2 and 5 if x ≥ 2, what is r(2)?', choices: ['-2', '0', '2', '5'], answer: '5', explanation: 'Because 2 ≥ 2, use the second rule: r(2) = 5.' },
+    { prompt: 'For s(x) = x - 4 if x ≤ -1 and -2x if x > -1, what is s(3)?', choices: ['-6', '-1', '2', '7'], answer: '-6', explanation: 'Because 3 > -1, use -2x: -2(3) = -6.' },
+  ],
+};
+
 function getFirstAvailableLessonKey(unit: MathUnit) {
   return unit.lessons.find((lesson) => lesson.status === 'available' && lesson.content)?.key ?? '';
 }
