@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-type Mode = 'learn' | 'quiz' | 'density' | 'stats';
+type Mode = 'learn' | 'quiz' | 'density' | 'isotope' | 'stats';
 
 type LearnTopic = {
   title: string;
@@ -41,6 +41,18 @@ type UnitStats = {
 };
 
 type StatsRecord = Record<string, UnitStats>;
+
+type IsotopeLabRow = {
+  id: string;
+  given: string;
+  answers: Record<string, string>;
+};
+
+const isotopeLabRows: IsotopeLabRow[] = [
+  { id: 'calcium', given: 'Calcium-40', answers: { symbol: '⁴⁰Ca', mass: '40', atomic: '20', protons: '20', neutrons: '20', electrons: '20' } },
+  { id: 'chlorine', given: '³⁵Cl', answers: { isotope: 'Chlorine-35', mass: '35', atomic: '17', protons: '17', neutrons: '18', electrons: '17' } },
+  { id: 'iron', given: 'Iron-56', answers: { symbol: '⁵⁶Fe', mass: '56', atomic: '26', protons: '26', neutrons: '30', electrons: '26' } },
+];
 
 const learnTopics: LearnTopic[] = [
   {
@@ -976,6 +988,8 @@ export default function ChemistryStudy() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selected, setSelected] = useState('');
   const [showDensityAnswers, setShowDensityAnswers] = useState(false);
+  const [isotopeInputs, setIsotopeInputs] = useState<Record<string, string>>({});
+  const [isotopeChecked, setIsotopeChecked] = useState(false);
   const [stats, setStats] = useState<StatsRecord>(loadStats);
 
   const activeUnit = studyUnits.find((unit) => unit.id === activeUnitId) || studyUnits[0];
@@ -1038,6 +1052,29 @@ export default function ChemistryStudy() {
     setSelected('');
   }
 
+  function isotopeInputKey(rowId: string, field: string) {
+    return `${rowId}-${field}`;
+  }
+
+  function normalizeLabAnswer(value: string) {
+    return value
+      .toLowerCase()
+      .replace(/⁰/g, '0').replace(/¹/g, '1').replace(/²/g, '2').replace(/³/g, '3').replace(/⁴/g, '4')
+      .replace(/⁵/g, '5').replace(/⁶/g, '6').replace(/⁷/g, '7').replace(/⁸/g, '8').replace(/⁹/g, '9')
+      .replace(/[^a-z0-9]/g, '');
+  }
+
+  function isLabAnswerCorrect(row: IsotopeLabRow, field: string) {
+    const input = isotopeInputs[isotopeInputKey(row.id, field)] || '';
+    const expected = row.answers[field];
+    return normalizeLabAnswer(input) === normalizeLabAnswer(expected);
+  }
+
+  function resetIsotopeLab() {
+    setIsotopeInputs({});
+    setIsotopeChecked(false);
+  }
+
   return (
     <div className="chemistry-page">
       <main className="shell">
@@ -1061,6 +1098,7 @@ export default function ChemistryStudy() {
             <button className={mode === 'learn' ? 'active' : ''} type="button" onClick={() => setMode('learn')}>Learn It</button>
             <button className={mode === 'quiz' ? 'active' : ''} type="button" onClick={() => setMode('quiz')}>Practice It</button>
             {activeUnit.hasDensityLab && <button className={mode === 'density' ? 'active' : ''} type="button" onClick={() => setMode('density')}>Density Lab</button>}
+            {activeUnit.id === 'unit-3' && <button className={mode === 'isotope' ? 'active' : ''} type="button" onClick={() => setMode('isotope')}>Isotope Notation Lab</button>}
           </div>
         </section>
 
@@ -1131,6 +1169,47 @@ export default function ChemistryStudy() {
                 <button type="button" onClick={nextQuestion}>{currentIndex === deck.length - 1 ? 'New Set' : 'Next Question'}</button>
               </div>
             )}
+          </section>
+        )}
+
+        {mode === 'isotope' && activeUnit.id === 'unit-3' && (
+          <section className="panel isotope-lab">
+            <div className="quiz-top">
+              <div>
+                <p className="eyebrow dark">Unit 3 Lab</p>
+                <h2>Isotope Notation Lab</h2>
+                <p className="lab-copy">Fill in the missing information. Remember: atomic number = protons, mass number = protons + neutrons, and a neutral atom has equal protons and electrons.</p>
+              </div>
+              <button className="small-button" type="button" onClick={resetIsotopeLab}>Start Over</button>
+            </div>
+            <div className="isotope-table-wrap">
+              <table className="isotope-table">
+                <thead>
+                  <tr><th>Isotope</th><th>Symbol</th><th>Mass #</th><th>Atomic #</th><th>Protons</th><th>Neutrons</th><th>Electrons</th></tr>
+                </thead>
+                <tbody>
+                  {isotopeLabRows.map((row) => (
+                    <tr key={row.id}>
+                      {(['isotope', 'symbol', 'mass', 'atomic', 'protons', 'neutrons', 'electrons'] as const).map((field) => {
+                        const answer = row.answers[field];
+                        const key = isotopeInputKey(row.id, field);
+                        if (answer) {
+                          return <td key={field} className={isotopeChecked ? (isLabAnswerCorrect(row, field) ? 'right-cell' : 'wrong-cell') : ''}>
+                            <input aria-label={`${row.id} ${field}`} value={isotopeInputs[key] || ''} onChange={(event) => setIsotopeInputs({ ...isotopeInputs, [key]: event.target.value })} placeholder={field === 'isotope' ? row.given.includes('-') ? 'given' : 'type name-number' : field === 'symbol' ? row.given.includes('⁴') || row.given.includes('³') ? 'given' : 'type symbol' : 'type'} />
+                            {isotopeChecked && !isLabAnswerCorrect(row, field) && <small>{answer}</small>}
+                          </td>;
+                        }
+                        return <td className="given-cell" key={field}>{row.given}</td>;
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="lab-actions">
+              <button className="lab-check" type="button" onClick={() => setIsotopeChecked(true)}>Check Lab</button>
+              {isotopeChecked && <p>Green is correct. Red cells show the correct answer underneath.</p>}
+            </div>
           </section>
         )}
 
@@ -1483,6 +1562,27 @@ export default function ChemistryStudy() {
 
         .choice.correct { border-color: #2d8b57; background: rgba(45, 139, 87, 0.12); }
         .choice.wrong { border-color: #c84b41; background: rgba(200, 75, 65, 0.12); }
+
+        .lab-copy {
+          max-width: 48rem;
+          margin: 0.7rem 0 0;
+          color: #405047;
+          font-weight: 700;
+          line-height: 1.5;
+        }
+
+        .isotope-table-wrap { overflow-x: auto; margin-top: 1.25rem; }
+        .isotope-table { width: 100%; min-width: 760px; border-collapse: collapse; background: #fffdf7; }
+        .isotope-table th, .isotope-table td { border: 1px solid rgba(39, 78, 72, 0.2); padding: 0.55rem; text-align: center; }
+        .isotope-table th { background: #10524a; color: #fff9e9; font-size: 0.82rem; }
+        .isotope-table input { width: 100%; min-width: 4.6rem; border: 1px solid rgba(39, 78, 72, 0.25); border-radius: 8px; padding: 0.5rem; color: #17211b; font: inherit; font-weight: 800; text-align: center; }
+        .isotope-table small { display: block; margin-top: 0.35rem; color: #a93d34; font-weight: 900; }
+        .isotope-table .given-cell { background: rgba(240, 138, 53, 0.13); color: #8f421e; font-weight: 900; }
+        .isotope-table .right-cell { background: rgba(45, 139, 87, 0.14); }
+        .isotope-table .wrong-cell { background: rgba(200, 75, 65, 0.12); }
+        .lab-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; }
+        .lab-actions p { margin: 0; color: #405047; font-weight: 800; }
+        .lab-check { border: 0; border-radius: 999px; padding: 0.8rem 1.15rem; background: linear-gradient(135deg, #10524a, #0a3934); color: #fff9e9; cursor: pointer; font-weight: 900; }
 
         .feedback {
           margin-top: 1rem;
