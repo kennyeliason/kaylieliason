@@ -885,10 +885,52 @@ const studyUnits: StudyUnit[] = [
   {
     id: 'unit-3',
     label: 'Unit 3',
-    title: 'Isotopes and Nuclear Chemistry',
-    description: 'Average atomic mass, isotopes, radioactive decay, half-life, fusion, fission, electromagnetic radiation, and electron transitions.',
-    topics: unitThreeTopics,
-    questions: unitThreeQuestions,
+    title: 'Atoms, Elements, and Isotopes',
+    description: 'Periodic-table structure, atomic particles, isotopes, charges, element families, compounds, and average atomic mass.',
+    topics: [
+      { title: 'Periodic Table Layout', label: 'Table', summary: 'Columns are groups or families; rows are periods.', details: ['Elements in a group share similar properties.', 'Periods run across the table from left to right.', 'The periodic table organizes elements so patterns are easier to see.'], example: 'Column 1 is the alkali metals; the far-right column is the noble gases.' },
+      { title: 'Atomic Parts and Charge', label: 'Atoms', summary: 'Protons are positive, neutrons have no charge, and electrons are negative.', details: ['Atomic number equals the number of protons.', 'A neutral atom has the same number of protons and electrons.', 'Mass number equals protons plus neutrons.'], example: 'An atom with 17 protons and 17 electrons is neutral chlorine.' },
+      { title: 'Isotopes', label: 'Isotopes', summary: 'Isotopes are the same element with different numbers of neutrons.', details: ['Same protons means the same element.', 'Different neutrons change the mass number.', 'Neutrons = mass number − atomic number.'], example: 'Chlorine-35 and chlorine-37 both have 17 protons but different neutrons.' },
+      { title: 'Average Atomic Mass', label: 'Average', summary: 'Multiply each isotope mass by its decimal abundance, then add the products.', details: ['Convert every percent to a decimal first.', 'Use all naturally occurring isotopes in the calculation.', 'The final value is a weighted average, so common isotopes affect it more.'], example: '12.00(0.9889) + 13.0034(0.0111) gives carbon’s average atomic mass.' },
+      { title: 'Element Families', label: 'Families', summary: 'Groups on the periodic table contain elements with similar properties.', details: ['Alkali metals are in the first column; alkaline earth metals are in the second.', 'Metalloids sit between metals and nonmetals.', 'Halogens are second from the right; noble gases are on the far right.'], example: 'Metals conduct heat and electricity well, while many nonmetals are poor conductors.' },
+      { title: 'Compounds', label: 'Compounds', summary: 'Compounds use a fixed ratio of different atoms.', details: ['A compound is not a random mixture.', 'The ratio of atoms cannot change and still be the same compound.', 'A chemical formula shows that fixed ratio.'], example: 'H₂O is always two hydrogen atoms for every one oxygen atom.' },
+    ],
+    questions: [
+      { category: 'Periodic Table', question: 'What are the vertical columns on the periodic table called?', choices: ['Groups or families', 'Periods or rows', 'Isotopes or ions', 'Protons or neutrons'], answer: 'Groups or families', explanation: 'Columns are groups, also called families.' },
+      { category: 'Periodic Table', question: 'What are the horizontal rows on the periodic table called?', choices: ['Periods', 'Families', 'Nuclei', 'Isotopes'], answer: 'Periods', explanation: 'Rows run across the table and are called periods.' },
+      { category: 'Atoms', question: 'Why does a neutral atom have no overall electric charge?', choices: ['Its positive protons equal its negative electrons', 'Its neutrons equal its electrons', 'It has no protons in its nucleus', 'It has the same mass as carbon'], answer: 'Its positive protons equal its negative electrons', explanation: 'Positive protons and negative electrons cancel when their counts are equal.' },
+      { category: 'Atoms', question: 'Which particle has a positive charge?', choices: ['Proton', 'Electron', 'Neutron', 'Isotope'], answer: 'Proton', explanation: 'Protons are positive, electrons are negative, and neutrons are neutral.' },
+      { category: 'Atoms', question: 'Which particle has no electrical charge?', choices: ['Neutron', 'Proton', 'Electron', 'Nucleus'], answer: 'Neutron', explanation: 'Neutrons have zero charge.' },
+      { category: 'Atoms', question: 'Which particle has a negative charge?', choices: ['Electron', 'Proton', 'Neutron', 'Mass number'], answer: 'Electron', explanation: 'Electrons are the negatively charged particles in the electron cloud.' },
+      { category: 'Atoms', question: 'What mostly determines an atom’s mass?', choices: ['The protons and neutrons in its nucleus', 'The electrons in its outer cloud', 'The color of the element symbol', 'The row where it appears'], answer: 'The protons and neutrons in its nucleus', explanation: 'Protons and neutrons have nearly all of an atom’s mass.' },
+      { category: 'Atoms', question: 'What mainly determines the size or diameter of an atom?', choices: ['Its electron cloud', 'Its number of neutrons', 'Its atomic mass only', 'Its chemical formula'], answer: 'Its electron cloud', explanation: 'The electron cloud takes up most of an atom’s volume.' },
+      { category: 'Isotopes', question: 'What is an isotope?', choices: ['Same element with a different number of neutrons', 'Different element with the same number of protons', 'Neutral atom with no electrons', 'Compound with a fixed atom ratio'], answer: 'Same element with a different number of neutrons', explanation: 'Isotopes keep the same protons but have different neutrons.' },
+      { category: 'Isotopes', question: 'Why are chlorine-35 and chlorine-37 still both chlorine?', choices: ['They both have 17 protons', 'They both have 35 neutrons', 'They both have 37 electrons', 'They have identical masses'], answer: 'They both have 17 protons', explanation: 'The number of protons determines the element.' },
+      { category: 'Atoms', question: 'What does an element’s atomic number tell you?', choices: ['The number of protons in the nucleus', 'The number of protons plus neutrons', 'The average isotope mass', 'The number of periods'], answer: 'The number of protons in the nucleus', explanation: 'Atomic number equals the number of protons.' },
+      { category: 'Atoms', question: 'What is another name for the mass number?', choices: ['The total number of protons and neutrons', 'The total number of protons and electrons', 'The electron-cloud diameter', 'The average of all periods'], answer: 'The total number of protons and neutrons', explanation: 'Mass number counts the nucleus particles with significant mass.' },
+      { category: 'Atoms', question: 'How do you calculate the number of neutrons?', choices: ['Mass number minus atomic number', 'Atomic number minus mass number', 'Mass number plus atomic number', 'Electrons minus protons'], answer: 'Mass number minus atomic number', explanation: 'Atomic number gives protons, so subtract it from mass number.' },
+      { category: 'Atoms', question: 'A neutral calcium-40 atom has atomic number 20. How many electrons does it have?', choices: ['20 electrons', '40 electrons', '60 electrons', '20 neutrons'], answer: '20 electrons', explanation: 'A neutral atom has the same number of electrons and protons.' },
+      { category: 'Atoms', question: 'How many neutrons are in chlorine-35 if its atomic number is 17?', choices: ['18 neutrons', '17 neutrons', '35 neutrons', '52 neutrons'], answer: '18 neutrons', explanation: '35 − 17 = 18 neutrons.' },
+      { category: 'Atoms', question: 'How many neutrons are in iron-56 if its atomic number is 26?', choices: ['30 neutrons', '26 neutrons', '56 neutrons', '82 neutrons'], answer: '30 neutrons', explanation: '56 − 26 = 30 neutrons.' },
+      { category: 'Average Atomic Mass', question: 'What is the first step when using a percent abundance in an average atomic mass problem?', choices: ['Convert the percent to a decimal', 'Add the percent to the isotope mass', 'Divide the mass by the percent', 'Round every mass to a whole number'], answer: 'Convert the percent to a decimal', explanation: 'For example, 98.89% becomes 0.9889.' },
+      { category: 'Average Atomic Mass', question: 'Which expression correctly finds carbon’s average atomic mass using 12.00 amu at 98.89% and 13.0034 amu at 1.11%?', choices: ['12.00(0.9889) + 13.0034(0.0111)', '12.00(98.89) + 13.0034(1.11)', '12.00 + 13.0034 divided by 2', '98.89 + 1.11 multiplied by 12'], answer: '12.00(0.9889) + 13.0034(0.0111)', explanation: 'Multiply each mass by its decimal abundance, then add.' },
+      { category: 'Average Atomic Mass', question: 'Why does the most abundant isotope affect average atomic mass the most?', choices: ['Its mass is multiplied by the largest decimal abundance', 'It always has the most protons', 'It is the only isotope with electrons', 'It has the smallest mass number'], answer: 'Its mass is multiplied by the largest decimal abundance', explanation: 'The weighted average gives common isotopes more influence.' },
+      { category: 'Average Atomic Mass', question: 'An element has isotopes of 10.0129 amu at 19.80% and 11.0093 amu at 80.20%. Which element is this closest to on the periodic table?', choices: ['Boron', 'Carbon', 'Nitrogen', 'Oxygen'], answer: 'Boron', explanation: 'The weighted average is about 10.81 amu, which matches boron.' },
+      { category: 'Families', question: 'Which group is the first column on the periodic table?', choices: ['Alkali metals', 'Alkaline earth metals', 'Halogens', 'Noble gases'], answer: 'Alkali metals', explanation: 'Alkali metals are in the first column.' },
+      { category: 'Families', question: 'Which group is the second column on the periodic table?', choices: ['Alkaline earth metals', 'Alkali metals', 'Halogens', 'Noble gases'], answer: 'Alkaline earth metals', explanation: 'Alkaline earth metals are in the second column.' },
+      { category: 'Families', question: 'Where are the halogens located on the periodic table?', choices: ['The second column from the right', 'The first column from the left', 'The center transition block', 'The very last row only'], answer: 'The second column from the right', explanation: 'Halogens are immediately left of the noble gases.' },
+      { category: 'Families', question: 'Where are the noble gases located on the periodic table?', choices: ['The far-right column', 'The far-left column', 'The second column from the left', 'The bottom row only'], answer: 'The far-right column', explanation: 'Noble gases form the last group on the right.' },
+      { category: 'Families', question: 'Where are metalloids generally found?', choices: ['Along the boundary between metals and nonmetals', 'Only in the far-right noble-gas column', 'Only in the first alkali-metal column', 'Only below the main periodic table'], answer: 'Along the boundary between metals and nonmetals', explanation: 'Metalloids sit between metals and nonmetals and share some properties of each.' },
+      { category: 'Properties', question: 'Which property best describes most metals?', choices: ['Good conductors of heat and electricity', 'Brittle poor conductors at room temperature', 'Always gases with no shine', 'Always colorless and odorless'], answer: 'Good conductors of heat and electricity', explanation: 'Metals usually conduct heat and electricity well.' },
+      { category: 'Properties', question: 'Which property best describes many nonmetals?', choices: ['Poor conductors that may be brittle or gaseous', 'Strong conductors with metallic shine', 'Always solid at high temperatures', 'Made only of positive protons'], answer: 'Poor conductors that may be brittle or gaseous', explanation: 'Many nonmetals are brittle solids or gases and conduct poorly.' },
+      { category: 'Periodic Table', question: 'How did Mendeleev help develop the periodic table?', choices: ['He predicted properties of undiscovered elements from patterns', 'He discovered every element in the last column', 'He proved all atoms have one isotope', 'He created the first electron cloud'], answer: 'He predicted properties of undiscovered elements from patterns', explanation: 'Mendeleev used atomic-mass patterns to predict missing elements.' },
+      { category: 'Compounds', question: 'What makes a substance a compound?', choices: ['Different elements bonded in a fixed ratio', 'One element with different isotopes', 'A mixture with changing amounts', 'A neutral atom with equal charges'], answer: 'Different elements bonded in a fixed ratio', explanation: 'A compound has a specific ratio of atoms that cannot change.' },
+      { category: 'Compounds', question: 'Why is H₂O always the same compound?', choices: ['It always has two hydrogen atoms for one oxygen atom', 'It can use any number of hydrogen atoms', 'It contains only oxygen atoms', 'It has no ratio shown in its formula'], answer: 'It always has two hydrogen atoms for one oxygen atom', explanation: 'The subscripts show the fixed atom ratio in water.' },
+      { category: 'Compounds', question: 'Which change would make H₂O no longer be water?', choices: ['Changing the ratio of hydrogen to oxygen atoms', 'Writing the formula in lowercase letters', 'Measuring the sample in a larger cup', 'Cooling the sample below room temperature'], answer: 'Changing the ratio of hydrogen to oxygen atoms', explanation: 'A different ratio creates a different substance.' },
+      { category: 'Mixed Review', question: 'An atom has mass number 40 and atomic number 20. Which statement must be true?', choices: ['It has 20 protons and 20 neutrons', 'It has 40 protons and 20 electrons', 'It has 20 protons and 40 neutrons', 'It has 60 particles in the nucleus'], answer: 'It has 20 protons and 20 neutrons', explanation: 'Protons = 20 and neutrons = 40 − 20 = 20.' },
+      { category: 'Mixed Review', question: 'An atom has 26 protons, 30 neutrons, and 26 electrons. Which isotope is it?', choices: ['Iron-56', 'Iron-26', 'Calcium-56', 'Chlorine-56'], answer: 'Iron-56', explanation: '26 protons identifies iron, and 26 + 30 gives mass number 56.' },
+      { category: 'Mixed Review', question: 'Which detail identifies an atom as neutral?', choices: ['Its electron count equals its proton count', 'Its neutron count equals its electron count', 'Its mass number equals its electron count', 'Its isotope name has a hyphen'], answer: 'Its electron count equals its proton count', explanation: 'Equal positive and negative charges make the overall charge zero.' },
+    ],
   },
 ];
 
@@ -1413,12 +1455,14 @@ export default function ChemistryStudy() {
 
         .choices {
           display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 0.75rem;
           margin-top: 1rem;
         }
 
         .choice {
           width: 100%;
+          min-height: 7rem;
           padding: 1rem;
           border: 2px solid rgba(39, 78, 72, 0.12);
           border-radius: 16px;
@@ -1428,6 +1472,13 @@ export default function ChemistryStudy() {
           font-weight: 850;
           line-height: 1.4;
           text-align: left;
+          display: flex;
+          align-items: center;
+        }
+
+        @media (max-width: 640px) {
+          .choices { grid-template-columns: 1fr; }
+          .choice { min-height: 6.25rem; }
         }
 
         .choice.correct { border-color: #2d8b57; background: rgba(45, 139, 87, 0.12); }
