@@ -98,7 +98,7 @@ const UNITS: MathUnit[] = [
     title: 'Algebra 2',
     eyebrow: 'Algebra 2 Honors',
     description:
-      'Pick your unit first, then choose the test range you want to study for. Tests 1.1–1.5 and 2.0–2.4 are ready now.',
+      'Pick your unit first, then choose the test range you want to study for. Tests 2.1–2.4 and 2.5–2.6 are ready now.',
     lessons: [
       {
         key: 'relations-functions-lesson-1',
@@ -487,16 +487,16 @@ const UNITS: MathUnit[] = [
       },
       {
         key: 'relations-functions-lesson-2',
-        label: 'Test 2.0–2.4',
+        label: 'Test 2.1–2.4',
         teaser: 'Direct variation, constants, and graphing',
         status: 'available',
         content: {
           key: 'relations-functions-lesson-2',
-          label: 'Test 2.0–2.4',
+          label: 'Test 2.1–2.4',
           title: 'Algebra 2',
           eyebrow: 'Algebra 2 Honors Unit 2',
           description:
-            'Study for Test 2.0–2.4: direct variation, constants, equations, tables, graphs, and story problems.',
+            'Study for Test 2.1–2.4: direct variation, constants, equations, tables, graphs, and story problems.',
           learnSections: [
             {
               key: 'direct-variation-meaning',
@@ -903,7 +903,7 @@ const UNITS: MathUnit[] = [
   },
 ];
 
-// Test 1.1–1.5 was part of the same Unit 2.0–2.4 test range, so merge its
+// Test 1.1–1.5 was part of the same Unit 2.1–2.4 test range, so merge its
 // relations/functions material into the direct-variation test rather than
 // making Kayli choose between two separate bubbles.
 const unitTwo = UNITS[0];
@@ -918,7 +918,7 @@ testTwoToFour.mistakeAlerts = [...relationsAndFunctions.mistakeAlerts, ...testTw
 testTwoToFour.practicePrompts = [...relationsAndFunctions.practicePrompts, ...testTwoToFour.practicePrompts];
 testTwoToFour.vocabulary = [...relationsAndFunctions.vocabulary, ...testTwoToFour.vocabulary];
 testTwoToFour.quiz = [...relationsAndFunctions.quiz, ...testTwoToFour.quiz];
-testTwoToFour.description = 'Study for Test 2.0–2.4: relations, functions, function notation, mapping, domain/range, and direct variation.';
+testTwoToFour.description = 'Study for Test 2.1–2.4: relations, functions, function notation, mapping, domain/range, and direct variation.';
 unitTwo.lessons = unitTwo.lessons.filter((test) => test.key !== 'relations-functions-lesson-1');
 
 const testTwoFiveToSix = unitTwo.lessons.find((test) => test.key === 'test-2-5-2-6')!;
