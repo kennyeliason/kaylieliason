@@ -48,10 +48,63 @@ type IsotopeLabRow = {
   answers: Record<string, string>;
 };
 
-const isotopeLabRows: IsotopeLabRow[] = [
-  { id: 'calcium', given: { symbol: '⁴⁰Ca', atomic: '20', electrons: '20' }, answers: { isotope: 'Calcium-40', mass: '40', protons: '20', neutrons: '20' } },
-  { id: 'chlorine', given: { symbol: '³⁵Cl', protons: '17', electrons: '17' }, answers: { isotope: 'Chlorine-35', mass: '35', atomic: '17', neutrons: '18' } },
-  { id: 'iron', given: { symbol: '⁵⁶Fe', mass: '56', atomic: '26', electrons: '26' }, answers: { isotope: 'Iron-56', protons: '26', neutrons: '30' } },
+const isotopeLabSets: IsotopeLabRow[][] = [
+  [
+    { id: 'calcium', given: { symbol: '⁴⁰Ca', atomic: '20', electrons: '20' }, answers: { isotope: 'Calcium-40', mass: '40', protons: '20', neutrons: '20' } },
+    { id: 'chlorine', given: { symbol: '³⁵Cl', protons: '17', electrons: '17' }, answers: { isotope: 'Chlorine-35', mass: '35', atomic: '17', neutrons: '18' } },
+    { id: 'iron', given: { symbol: '⁵⁶Fe', mass: '56', atomic: '26', electrons: '26' }, answers: { isotope: 'Iron-56', protons: '26', neutrons: '30' } },
+  ],
+  [
+    { id: 'sodium', given: { symbol: '²³Na', atomic: '11', electrons: '11' }, answers: { isotope: 'Sodium-23', mass: '23', protons: '11', neutrons: '12' } },
+    { id: 'oxygen', given: { symbol: '¹⁸O', protons: '8', electrons: '8' }, answers: { isotope: 'Oxygen-18', mass: '18', atomic: '8', neutrons: '10' } },
+    { id: 'copper', given: { symbol: '⁶⁴Cu', mass: '64', atomic: '29', electrons: '29' }, answers: { isotope: 'Copper-64', protons: '29', neutrons: '35' } },
+  ],
+  [
+    { id: 'magnesium', given: { symbol: '²⁴Mg', atomic: '12', electrons: '12' }, answers: { isotope: 'Magnesium-24', mass: '24', protons: '12', neutrons: '12' } },
+    { id: 'nitrogen', given: { symbol: '¹⁵N', protons: '7', electrons: '7' }, answers: { isotope: 'Nitrogen-15', mass: '15', atomic: '7', neutrons: '8' } },
+    { id: 'zinc', given: { symbol: '⁶⁵Zn', mass: '65', atomic: '30', electrons: '30' }, answers: { isotope: 'Zinc-65', protons: '30', neutrons: '35' } },
+  ],
+  [
+    { id: 'potassium', given: { symbol: '³⁹K', atomic: '19', electrons: '19' }, answers: { isotope: 'Potassium-39', mass: '39', protons: '19', neutrons: '20' } },
+    { id: 'sulfur', given: { symbol: '³²S', protons: '16', electrons: '16' }, answers: { isotope: 'Sulfur-32', mass: '32', atomic: '16', neutrons: '16' } },
+    { id: 'bromine', given: { symbol: '⁸⁰Br', mass: '80', atomic: '35', electrons: '35' }, answers: { isotope: 'Bromine-80', protons: '35', neutrons: '45' } },
+  ],
+];
+
+type AverageMassProblem = {
+  id: string;
+  prompt: string;
+  answer: string;
+};
+
+const averageMassProblems: AverageMassProblem[] = [
+  { id: 'carbon', prompt: '1. Carbon-12 has a mass of 12.00 amu and an abundance of 98.89%. Carbon-13 has a mass of 13.0034 amu and an abundance of 1.11%. Find the average atomic mass. Round to the hundredths place.', answer: '12.01 amu' },
+  { id: 'argon', prompt: '2. Argon-36 has a mass of 35.9675 amu and abundance 0.34%; argon-38 has a mass of 37.9627 amu and abundance 0.063%; argon-40 has a mass of 39.9624 amu and abundance 99.60%. Find the average atomic mass. Round to the hundredths place.', answer: '39.95 amu' },
+  { id: 'boron', prompt: '3. Element Z has isotopes with masses 10.0129 amu (19.80%) and 11.0093 amu (80.20%). Find its average atomic mass and identify the element using the periodic table.', answer: '10.81 amu, boron' },
+  { id: 'silicon', prompt: '4. Silicon has an average atomic mass of 28.08 amu. Silicon-28 is 27.978 amu (92.2%), silicon-29 is 28.978 amu (4.67%), and the third isotope is 3.10%. Find the mass of the third isotope.', answer: '30.00 amu' },
+];
+
+// These prompts mirror the numbered Unit 3 study guide, followed by five
+// small review questions for extra practice.
+const unitThreePracticeQuestions: QuizQuestion[] = [
+  { category: '1. Periodic Table', question: 'What are the names of the columns and rows of the periodic table?', choices: ['Columns are groups/families; rows are periods', 'Columns are periods; rows are groups/families', 'Columns are isotopes; rows are compounds', 'Columns are protons; rows are electrons'], answer: 'Columns are groups/families; rows are periods', explanation: 'This is exactly the organization named in the study guide.' },
+  { category: '2. Neutral Atoms', question: 'Why is an atom electrically neutral?', choices: ['Positive protons equal negative electrons', 'Protons always equal neutrons', 'Electrons have no electric charge', 'The mass number is always even'], answer: 'Positive protons equal negative electrons', explanation: 'Equal positive and negative charges cancel out.' },
+  { category: '3. Atomic Size', question: 'Which subatomic particles determine the size of an atom?', choices: ['The electrons in the electron cloud', 'The protons in the nucleus', 'The neutrons in the nucleus', 'The mass number alone'], answer: 'The electrons in the electron cloud', explanation: 'Protons and neutrons determine mass, while the electron cloud determines diameter.' },
+  { category: '4. Isotopes', question: 'What is an isotope?', choices: ['An atom of the same element with a different number of neutrons', 'An atom of a new element with the same electrons', 'A compound made from the same element twice', 'A neutral atom with zero protons'], answer: 'An atom of the same element with a different number of neutrons', explanation: 'Same protons means the same element; different neutrons means a different isotope.' },
+  { category: '5. Average Atomic Mass', question: 'How is the average atomic mass of an element calculated?', choices: ['Add each isotope mass multiplied by its decimal abundance', 'Add all isotope masses and divide by the number of periods', 'Subtract protons from each isotope mass', 'Use only the most common isotope mass'], answer: 'Add each isotope mass multiplied by its decimal abundance', explanation: 'Average atomic mass is a weighted average of naturally occurring isotopes.' },
+  { category: '6. Particle Charges', question: 'What are the charges of a proton, neutron, and electron?', choices: ['Proton positive, neutron no charge, electron negative', 'Proton negative, neutron positive, electron no charge', 'Proton no charge, neutron negative, electron positive', 'All three particles have a positive charge'], answer: 'Proton positive, neutron no charge, electron negative', explanation: 'That is the charge pattern from the guide.' },
+  { category: '7. Atomic Number', question: 'What does the atomic number of an element signify?', choices: ['The number of protons in its nucleus', 'The number of neutrons in its nucleus', 'The number of electrons lost in a reaction', 'The average mass of all isotopes'], answer: 'The number of protons in its nucleus', explanation: 'The proton count identifies the element.' },
+  { category: '8. Mass Number', question: 'What does the atomic mass number signify?', choices: ['The number of protons and neutrons in the nucleus', 'The number of protons and electrons in the atom', 'The total electrons in the electron cloud', 'The group number on the periodic table'], answer: 'The number of protons and neutrons in the nucleus', explanation: 'Mass number is the total of protons plus neutrons.' },
+  { category: '9. Isotope Review', question: 'What is common to all isotopes of an element?', choices: ['The same number of protons in the nucleus', 'The same number of neutrons in the nucleus', 'The same mass number for every isotope', 'The same number of energy levels'], answer: 'The same number of protons in the nucleus', explanation: 'Isotopes differ by neutrons, not by protons.' },
+  { category: '10. Element Families', question: 'Which statement correctly places element families on the periodic table?', choices: ['Alkali metals first column; halogens second from right; noble gases last column', 'Halogens first column; noble gases second from right; alkali metals last column', 'Metalloids fill only the far-right column; all metals are in the bottom row', 'Alkaline earth metals are in the last column; noble gases are in the first'], answer: 'Alkali metals first column; halogens second from right; noble gases last column', explanation: 'Alkaline earth metals are in the second column, and metalloids sit between metals and nonmetals.' },
+  { category: '11. Metals and Nonmetals', question: 'Which comparison of metals and nonmetals is correct?', choices: ['Metals conduct heat/electricity well; nonmetals are often poor conductors', 'Metals are always gases; nonmetals are always shiny solids', 'Metals have no luster; nonmetals are always ductile', 'Metals and nonmetals always have identical properties'], answer: 'Metals conduct heat/electricity well; nonmetals are often poor conductors', explanation: 'Metals are usually malleable, ductile, lustrous conductors; nonmetals are often brittle and poor conductors.' },
+  { category: '12. Mendeleev', question: 'Who arranged elements into a table based on properties and predicted new elements?', choices: ['Dmitri Mendeleev', 'J. J. Thomson', 'Ernest Rutherford', 'John Dalton'], answer: 'Dmitri Mendeleev', explanation: 'Mendeleev used patterns to predict properties of undiscovered elements.' },
+  { category: '13. Compounds', question: 'What must be true about a compound such as H₂O?', choices: ['Its elements are combined in a fixed ratio that cannot change', 'Its elements can be mixed in any ratio and stay the same compound', 'It contains only one kind of atom', 'It has the same mass number as every isotope'], answer: 'Its elements are combined in a fixed ratio that cannot change', explanation: 'Changing the ratio makes a different substance, such as hydrogen peroxide rather than water.' },
+  { category: 'Extra Review', question: 'A neutral atom has atomic number 17 and mass number 35. How many neutrons does it have?', choices: ['18 neutrons', '17 neutrons', '35 neutrons', '52 neutrons'], answer: '18 neutrons', explanation: 'Neutrons = 35 − 17 = 18.' },
+  { category: 'Extra Review', question: 'A neutral iron-56 atom has atomic number 26. How many electrons does it have?', choices: ['26 electrons', '30 electrons', '56 electrons', '82 electrons'], answer: '26 electrons', explanation: 'Neutral atoms have equal numbers of protons and electrons.' },
+  { category: 'Extra Review', question: 'Why do isotopes of one element have different masses?', choices: ['They have different numbers of neutrons', 'They have different numbers of protons', 'They have different element symbols', 'They have different group numbers'], answer: 'They have different numbers of neutrons', explanation: 'The neutron count changes mass number while the proton count stays the same.' },
+  { category: 'Extra Review', question: 'Which calculation shows the correct beginning of a weighted-average problem?', choices: ['Isotope mass × decimal abundance', 'Isotope mass + percent abundance', 'Atomic number ÷ mass number', 'Protons + electrons'], answer: 'Isotope mass × decimal abundance', explanation: 'Convert percent to decimal first, then multiply each isotope mass by that decimal.' },
+  { category: 'Extra Review', question: 'A material is shiny, malleable, and conducts electricity. What type of element is it most likely?', choices: ['A metal', 'A nonmetal', 'A noble gas', 'An isotope'], answer: 'A metal', explanation: 'Those are common metal properties.' },
 ];
 
 const learnTopics: LearnTopic[] = [
@@ -946,6 +999,10 @@ const studyUnits: StudyUnit[] = [
   },
 ];
 
+// Unit 3 Practice It follows the numbered study guide rather than the older
+// question bank above.
+studyUnits.find((unit) => unit.id === 'unit-3')!.questions = unitThreePracticeQuestions;
+
 function shuffle<T>(items: T[]) {
   const copy = [...items];
   for (let i = copy.length - 1; i > 0; i -= 1) {
@@ -990,6 +1047,9 @@ export default function ChemistryStudy() {
   const [showDensityAnswers, setShowDensityAnswers] = useState(false);
   const [isotopeInputs, setIsotopeInputs] = useState<Record<string, string>>({});
   const [isotopeChecked, setIsotopeChecked] = useState(false);
+  const [isotopeSetIndex, setIsotopeSetIndex] = useState(0);
+  const [averageInputs, setAverageInputs] = useState<Record<string, string>>({});
+  const [averageChecked, setAverageChecked] = useState(false);
   const [stats, setStats] = useState<StatsRecord>(loadStats);
 
   const activeUnit = studyUnits.find((unit) => unit.id === activeUnitId) || studyUnits[0];
@@ -1070,9 +1130,19 @@ export default function ChemistryStudy() {
     return normalizeLabAnswer(input) === normalizeLabAnswer(expected);
   }
 
+  function isAverageAnswerCorrect(problem: AverageMassProblem) {
+    const input = normalizeLabAnswer(averageInputs[problem.id] || '');
+    if (problem.id === 'boron') return input.includes('1081') && input.includes('boron');
+    const expected = normalizeLabAnswer(problem.answer.replace('amu', ''));
+    return input === expected || input === `${expected}amu`;
+  }
+
   function resetIsotopeLab() {
     setIsotopeInputs({});
     setIsotopeChecked(false);
+    setAverageInputs({});
+    setAverageChecked(false);
+    setIsotopeSetIndex((index) => (index + 1) % isotopeLabSets.length);
   }
 
   return (
@@ -1188,7 +1258,7 @@ export default function ChemistryStudy() {
                   <tr><th>Isotope</th><th>Symbol</th><th>Mass #</th><th>Atomic #</th><th>Protons</th><th>Neutrons</th><th>Electrons</th></tr>
                 </thead>
                 <tbody>
-                  {isotopeLabRows.map((row) => (
+                  {isotopeLabSets[isotopeSetIndex].map((row) => (
                     <tr key={row.id}>
                       {(['isotope', 'symbol', 'mass', 'atomic', 'protons', 'neutrons', 'electrons'] as const).map((field) => {
                         const answer = row.answers[field];
@@ -1214,6 +1284,37 @@ export default function ChemistryStudy() {
               <button className="lab-check" type="button" onClick={() => setIsotopeChecked(true)}>Check Lab</button>
               {isotopeChecked && <p>Green is correct. Red cells show the correct answer underneath.</p>}
             </div>
+            <section className="average-mass-section">
+              <div className="section-heading compact-heading">
+                <p>Average Atomic Mass</p>
+                <h3>Questions 1–4</h3>
+              </div>
+              <p className="lab-copy">Use <strong>isotope mass × decimal abundance</strong> for each isotope, then add the results. Type the final answer only.</p>
+              <div className="average-problem-grid">
+                {averageMassProblems.map((problem) => (
+                  <article className="average-problem" key={problem.id}>
+                    <p>{problem.prompt}</p>
+                    <label>
+                      Your answer
+                      <input
+                        aria-label={`Average atomic mass ${problem.id}`}
+                        value={averageInputs[problem.id] || ''}
+                        onChange={(event) => setAverageInputs({ ...averageInputs, [problem.id]: event.target.value })}
+                        placeholder={problem.id === 'boron' ? 'Example: 10.81 amu, boron' : 'Example: 12.01 amu'}
+                      />
+                    </label>
+                    {averageChecked && (
+                      <strong className={isAverageAnswerCorrect(problem) ? 'average-right' : 'average-wrong'}>
+                        {isAverageAnswerCorrect(problem) ? 'Correct' : `Correct answer: ${problem.answer}`}
+                      </strong>
+                    )}
+                  </article>
+                ))}
+              </div>
+              <div className="lab-actions">
+                <button className="lab-check" type="button" onClick={() => setAverageChecked(true)}>Check Average Mass Answers</button>
+              </div>
+            </section>
           </section>
         )}
 
@@ -1594,6 +1695,21 @@ export default function ChemistryStudy() {
         .lab-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; }
         .lab-actions p { margin: 0; color: #405047; font-weight: 800; }
         .lab-check { border: 0; border-radius: 999px; padding: 0.8rem 1.15rem; background: linear-gradient(135deg, #10524a, #0a3934); color: #fff9e9; cursor: pointer; font-weight: 900; }
+        .average-mass-section { margin-top: 2rem; padding-top: 1.6rem; border-top: 2px solid rgba(39, 78, 72, 0.14); }
+        .compact-heading { margin-bottom: 0.3rem; }
+        .compact-heading h3 { margin: 0; color: #17211b; font-size: clamp(1.35rem, 3vw, 1.8rem); }
+        .average-problem-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1.2rem; }
+        .average-problem { padding: 1rem; border: 1px solid rgba(39, 78, 72, 0.16); border-radius: 16px; background: #fffdf7; }
+        .average-problem p { margin: 0; color: #17211b; font-family: Arial, Helvetica, sans-serif; font-size: 1rem; font-weight: 700; line-height: 1.55; }
+        .average-problem label { display: grid; gap: 0.4rem; margin-top: 0.9rem; color: #405047; font-family: Arial, Helvetica, sans-serif; font-size: 0.88rem; font-weight: 800; }
+        .average-problem input { border: 1px solid rgba(39, 78, 72, 0.3); border-radius: 10px; padding: 0.65rem; color: #17211b; font: 700 1rem Arial, Helvetica, sans-serif; }
+        .average-problem strong { display: block; margin-top: 0.7rem; font-family: Arial, Helvetica, sans-serif; }
+        .average-right { color: #167444; }
+        .average-wrong { color: #a93d34; }
+
+        @media (max-width: 640px) {
+          .average-problem-grid { grid-template-columns: 1fr; }
+        }
 
         .feedback {
           margin-top: 1rem;
