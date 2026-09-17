@@ -98,20 +98,20 @@ const UNITS: MathUnit[] = [
     title: 'Algebra 2',
     eyebrow: 'Algebra 2 Honors',
     description:
-      'Pick your unit first, then choose the lesson you want. Lessons 1 and 2 are both ready now.',
+      'Pick your unit first, then choose the test range you want to study for. Tests 1.1–1.5 and 2.0–2.4 are ready now.',
     lessons: [
       {
         key: 'relations-functions-lesson-1',
-        label: 'Lesson 1',
+        label: 'Test 1.1–1.5',
         teaser: 'Basics, function notation, and relation mapping',
         status: 'available',
         content: {
           key: 'relations-functions-lesson-1',
-          label: 'Lesson 1',
+          label: 'Test 1.1–1.5',
           title: 'Algebra 2',
           eyebrow: 'Algebra 2 Honors Unit 2',
           description:
-            'This lesson starts from the very beginning. It teaches what the words mean, what to look at first, how to solve the f(x) thing, and how to turn a relation into a mapping.',
+            'Study for Test 1.1–1.5: relations, functions, function notation, and mapping.',
           learnSections: [
             {
               key: 'range-domain',
@@ -487,16 +487,16 @@ const UNITS: MathUnit[] = [
       },
       {
         key: 'relations-functions-lesson-2',
-        label: 'Lesson 2',
+        label: 'Test 2.0–2.4',
         teaser: 'Direct variation, constants, and graphing',
         status: 'available',
         content: {
           key: 'relations-functions-lesson-2',
-          label: 'Lesson 2',
+          label: 'Test 2.0–2.4',
           title: 'Algebra 2',
           eyebrow: 'Algebra 2 Honors Unit 2',
           description:
-            'This lesson is all about direct variation. You will learn how to recognize it in tables and equations, find the constant of variation, solve real-life problems, and graph direct variation equations.',
+            'Study for Test 2.0–2.4: direct variation, constants, equations, tables, graphs, and story problems.',
           learnSections: [
             {
               key: 'direct-variation-meaning',
@@ -893,6 +893,12 @@ const UNITS: MathUnit[] = [
           ],
         },
       },
+      {
+        key: 'test-2-5-2-6',
+        label: 'Test 2.5–2.6',
+        teaser: 'Coming soon',
+        status: 'soon',
+      },
     ],
   },
 ];
@@ -1160,7 +1166,7 @@ export default function MathPractice() {
                   <p className="section-label">Learn It</p>
                   <h2>Tap a topic to open it</h2>
                 </div>
-                <div className="graph-badge">{learnSections.length} lesson sections</div>
+                <div className="graph-badge">{learnSections.length} study sections</div>
               </div>
 
               <div className="learn-grid">
