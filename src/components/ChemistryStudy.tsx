@@ -44,14 +44,14 @@ type StatsRecord = Record<string, UnitStats>;
 
 type IsotopeLabRow = {
   id: string;
-  given: string;
+  given: Record<string, string>;
   answers: Record<string, string>;
 };
 
 const isotopeLabRows: IsotopeLabRow[] = [
-  { id: 'calcium', given: 'Calcium-40', answers: { symbol: '⁴⁰Ca', mass: '40', atomic: '20', protons: '20', neutrons: '20', electrons: '20' } },
-  { id: 'chlorine', given: '³⁵Cl', answers: { isotope: 'Chlorine-35', mass: '35', atomic: '17', protons: '17', neutrons: '18', electrons: '17' } },
-  { id: 'iron', given: 'Iron-56', answers: { symbol: '⁵⁶Fe', mass: '56', atomic: '26', protons: '26', neutrons: '30', electrons: '26' } },
+  { id: 'calcium', given: { symbol: '⁴⁰Ca', atomic: '20', electrons: '20' }, answers: { isotope: 'Calcium-40', mass: '40', protons: '20', neutrons: '20' } },
+  { id: 'chlorine', given: { symbol: '³⁵Cl', protons: '17', electrons: '17' }, answers: { isotope: 'Chlorine-35', mass: '35', atomic: '17', neutrons: '18' } },
+  { id: 'iron', given: { symbol: '⁵⁶Fe', mass: '56', atomic: '26', electrons: '26' }, answers: { isotope: 'Iron-56', protons: '26', neutrons: '30' } },
 ];
 
 const learnTopics: LearnTopic[] = [
@@ -1192,14 +1192,18 @@ export default function ChemistryStudy() {
                     <tr key={row.id}>
                       {(['isotope', 'symbol', 'mass', 'atomic', 'protons', 'neutrons', 'electrons'] as const).map((field) => {
                         const answer = row.answers[field];
+                        const given = row.given[field];
                         const key = isotopeInputKey(row.id, field);
+                        if (given) {
+                          return <td className="given-cell" key={field}>{given}</td>;
+                        }
                         if (answer) {
                           return <td key={field} className={isotopeChecked ? (isLabAnswerCorrect(row, field) ? 'right-cell' : 'wrong-cell') : ''}>
-                            <input aria-label={`${row.id} ${field}`} value={isotopeInputs[key] || ''} onChange={(event) => setIsotopeInputs({ ...isotopeInputs, [key]: event.target.value })} placeholder={field === 'isotope' ? row.given.includes('-') ? 'given' : 'type name-number' : field === 'symbol' ? row.given.includes('⁴') || row.given.includes('³') ? 'given' : 'type symbol' : 'type'} />
+                            <input aria-label={`${row.id} ${field}`} value={isotopeInputs[key] || ''} onChange={(event) => setIsotopeInputs({ ...isotopeInputs, [key]: event.target.value })} placeholder={field === 'isotope' ? 'name-number' : 'type'} />
                             {isotopeChecked && !isLabAnswerCorrect(row, field) && <small>{answer}</small>}
                           </td>;
                         }
-                        return <td className="given-cell" key={field}>{row.given}</td>;
+                        return <td key={field} />;
                       })}
                     </tr>
                   ))}
