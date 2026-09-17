@@ -1423,6 +1423,8 @@ export default function ChemistryStudy() {
           margin-top: 0.25rem;
           font-size: clamp(1.6rem, 3vw, 2.3rem);
           letter-spacing: 0;
+          font-family: Arial, Helvetica, sans-serif;
+          font-weight: 700;
         }
 
         .learn-grid {
@@ -1527,9 +1529,11 @@ export default function ChemistryStudy() {
 
         .question {
           margin-top: 1rem;
-          font-size: 1.55rem;
-          line-height: 1.35;
-          font-weight: 900;
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 1.62rem;
+          line-height: 1.45;
+          font-weight: 700;
+          letter-spacing: 0;
         }
 
         .choices {
@@ -1548,8 +1552,11 @@ export default function ChemistryStudy() {
           background: #fffdf7;
           color: #17211b;
           cursor: pointer;
-          font-weight: 850;
-          line-height: 1.4;
+          font-family: Arial, Helvetica, sans-serif;
+          font-size: 1.12rem;
+          font-weight: 700;
+          line-height: 1.5;
+          letter-spacing: 0;
           text-align: left;
           display: flex;
           align-items: center;
