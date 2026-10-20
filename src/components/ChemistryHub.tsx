@@ -39,7 +39,7 @@ const unit5Questions: Question[] = [
   {question:'Which statement correctly compares wavelength and frequency?',choices:['Wavelength measures distance; frequency measures cycles per second','Both measure time','Both measure distance','Frequency measures mass'],answer:'Wavelength measures distance; frequency measures cycles per second',explanation:'Wavelength is a length; frequency counts waves each second.'},
 ];
 
-const games = [['Flashcards','Flip to reveal'],['Quiz','Multiple choice'],['Learn','Spaced repetition'],['Match','Pair Q&A'],['Speed Round','60 seconds'],['Millionaire','Rising stakes'],['Jeopardy','Pick points'],['Bomb','Defuse or boom!'],['Practice Test','Canvas format'],['Challenge','3 strikes, timed'],['Snake','Eat & grow'],['My Stats','See progress']];
+const games = [['Flashcards','Flip to reveal'],['Quiz','Multiple choice'],['Learn','Spaced repetition'],['Match','Pair Q&A'],['Speed Round','60 seconds'],['Millionaire','Rising stakes'],['Jeopardy','Pick points'],['Bomb','Defuse or boom!'],['Snake','Eat & grow'],['My Stats','See progress']];
 
 const jeopardyBoard = [
   { title: 'EM WAVES', indexes: [0, 1, 2, 3, 4] },
