@@ -3,7 +3,6 @@ import { useState } from 'react';
 const games = [
   ['Flashcards', 'Flip to reveal'],
   ['Quiz', 'Multiple choice'],
-  ['Typing Quiz', 'Type the answer'],
   ['Learn', 'Spaced repetition'],
   ['Match', 'Pair Q&A'],
   ['Speed Round', '60 seconds'],
