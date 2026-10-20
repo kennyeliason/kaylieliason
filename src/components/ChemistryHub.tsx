@@ -30,15 +30,14 @@ export default function ChemistryHub() {
 
       <section style={styles.shell}>
         <header style={styles.header}>
-          <div style={styles.badge}>CHEMISTRY</div>
-          <h1 style={styles.title}>Study Hub</h1>
-          <p style={styles.subtitle}>Your games are ready. Send your study guide whenever you’re ready to fill them in.</p>
+          <h1 style={styles.title}>Chemistry Study Guide</h1>
         </header>
 
         <div style={styles.unitRow}>
           <button style={styles.unitButton}>Unit 1</button>
           <button style={styles.unitButton}>Unit 2</button>
           <button style={styles.unitButton}>Unit 3</button>
+          <button style={styles.unitButton}>Unit 4</button>
         </div>
 
         <section style={styles.grid} aria-label="Chemistry games">
@@ -47,10 +46,10 @@ export default function ChemistryHub() {
               className="chem-game-card"
               key={name}
               onClick={() => setSelectedGame(name)}
-              style={{ ...styles.card, ...(index >= 6 ? styles.darkCard : {}) }}
+              style={{ ...styles.card, ...(index >= 5 ? styles.darkCard : {}) }}
             >
-              <span style={{ ...styles.cardTitle, ...(index >= 6 ? styles.lightText : {}) }}>{name}</span>
-              <span style={{ ...styles.cardDetail, ...(index >= 6 ? styles.darkCardDetail : {}) }}>{detail}</span>
+              <span style={{ ...styles.cardTitle, ...(index >= 5 ? styles.lightText : {}) }}>{name}</span>
+              <span style={{ ...styles.cardDetail, ...(index >= 5 ? styles.darkCardDetail : {}) }}>{detail}</span>
             </button>
           ))}
         </section>
