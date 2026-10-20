@@ -55,7 +55,7 @@ export default function ChemistryHub() {
   const next = () => {setQuestionIndex((i)=>(i+1)%questions.length);setShowAnswer(false);setChoice(null);setChecked(false);};
 
   return <main style={styles.page}>
-    <style>{`@import url('https://fonts.googleapis.com/css2?family=Londrina+Solid:wght@400;900&family=Montserrat:wght@300;400;500;600;700;800;900&display=swap');*{box-sizing:border-box}.chem-game-card:hover{transform:translateY(-5px);box-shadow:0 18px 34px rgba(13,148,136,.25)!important}.chem-game-card:focus-visible{outline:4px solid #99f6e4;outline-offset:3px}`}</style>
+    <style>{`*{box-sizing:border-box}.chem-game-card:hover{transform:translateY(-5px);box-shadow:0 18px 34px rgba(13,148,136,.25)!important}.chem-game-card:focus-visible{outline:4px solid #99f6e4;outline-offset:3px}`}</style>
     {!selectedGame ? <section style={styles.shell}>
       <header style={styles.header}><h1 style={styles.title}>Chemistry Study Guide</h1></header>
       <div style={styles.unitRow}>{['Unit 1','Unit 2','Unit 3','Unit 4','Unit 5'].map(unit=><button key={unit} onClick={()=>setSelectedUnit(unit)} style={{...styles.unitButton,...(selectedUnit===unit?styles.activeUnit:{})}}>{unit}</button>)}</div>
@@ -73,7 +73,7 @@ export default function ChemistryHub() {
 }
 
 const styles:Record<string,React.CSSProperties>={
-  page:{minHeight:'100vh',padding:'48px 20px 64px',color:'#123b3a',fontFamily:'Montserrat, Avenir Next, Avenir, Inter, ui-sans-serif, system-ui, sans-serif',background:'radial-gradient(circle at top left,#ccfbf1 0%,transparent 34%),linear-gradient(135deg,#ecfdf5 0%,#ecfeff 48%,#d1fae5 100%)'},
+  page:{minHeight:'100vh',padding:'48px 20px 64px',color:'#123b3a',fontFamily:'"Montserrat", sans-serif',background:'radial-gradient(circle at top left,#ccfbf1 0%,transparent 34%),linear-gradient(135deg,#ecfdf5 0%,#ecfeff 48%,#d1fae5 100%)'},
   shell:{width:'min(1080px,100%)',margin:'0 auto'},header:{textAlign:'center',margin:'8px auto 28px'},title:{margin:0,fontFamily:'Londrina Solid, Impact, sans-serif',fontWeight:900,fontSize:'clamp(42px,7vw,72px)',lineHeight:1,letterSpacing:'1px',color:'#115e59'},
   unitRow:{display:'flex',flexWrap:'wrap',justifyContent:'center',gap:10,margin:'0 auto 10px'},unitButton:{padding:'10px 20px',borderRadius:999,border:'2px solid #99f6e4',background:'rgba(255,255,255,.78)',color:'#0f766e',fontWeight:800,fontSize:14,cursor:'pointer'},activeUnit:{background:'#0f766e',borderColor:'#0f766e',color:'#fff'},unitStatus:{textAlign:'center',color:'#40706c',fontSize:13,fontWeight:700,minHeight:30},
   grid:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(190px,1fr))',gap:14},card:{minHeight:130,padding:20,border:0,borderRadius:22,textAlign:'left',cursor:'pointer',transition:'transform .2s ease,box-shadow .2s ease',background:'linear-gradient(140deg,#fff 0%,#f0fdfa 100%)',boxShadow:'0 7px 18px rgba(13,148,136,.13)',display:'flex',flexDirection:'column',justifyContent:'end'},darkCard:{background:'linear-gradient(140deg,#115e59 0%,#0f766e 56%,#0891b2 100%)',boxShadow:'0 7px 18px rgba(15,118,110,.25)'},cardTitle:{color:'#0f766e',fontSize:22,fontWeight:900,letterSpacing:'-.5px'},lightText:{color:'#fff'},cardDetail:{marginTop:5,color:'#5f7f7c',fontSize:14,fontWeight:600},darkCardDetail:{color:'#bff7ef'},
