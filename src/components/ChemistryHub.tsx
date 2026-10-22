@@ -86,6 +86,7 @@ const jeopardyBoard = [
 const millionaireLevels = ['$100','$200','$300','$500','$1,000','$2,000','$4,000','$8,000','$16,000','$32,000','$64,000','$125,000','$250,000','$500,000','$1,000,000'];
 
 const makeBombSet = () => [...exactUnit5Questions].sort(() => Math.random() - .5).slice(0, 10);
+const makeGameSet = () => [...exactUnit5Questions].sort(() => Math.random() - .5);
 
 function BombGame({question, questionIndex, choice, checked, onChoose, onCheck, onNext, onExpire}:{question:Question;questionIndex:number;choice:string|null;checked:boolean;onChoose:(answer:string)=>void;onCheck:()=>void;onNext:()=>void;onExpire:(timedOut?:boolean)=>void}) {
   const [seconds,setSeconds] = useState(30);
@@ -152,6 +153,7 @@ export default function ChemistryHub() {
   const [jeopardyQuestion,setJeopardyQuestion] = useState<number|null>(null);
   const [jeopardyUsed,setJeopardyUsed] = useState<number[]>([]);
   const [bombSet,setBombSet] = useState<Question[]>([]);
+  const [gameQuestionSet,setGameQuestionSet] = useState<Question[]>([]);
   const [bombComplete,setBombComplete] = useState(false);
   const [bombExploded,setBombExploded] = useState(false);
   const [gameComplete,setGameComplete] = useState(false);
@@ -160,9 +162,9 @@ export default function ChemistryHub() {
   const [resetStatsOpen,setResetStatsOpen] = useState(false);
   const [resetCode,setResetCode] = useState('');
   const questions = selectedUnit === 'Unit 5' ? exactUnit5Questions : [];
-  const currentQuestion = questions[questionIndex % Math.max(questions.length,1)];
+  const currentQuestion = selectedGame && selectedGame !== 'Bomb' ? gameQuestionSet[questionIndex] : questions[questionIndex % Math.max(questions.length,1)];
   const playable = selectedGame !== 'My Stats';
-  const openGame = (game:string) => {setSelectedGame(game);setQuestionIndex(0);setShowAnswer(false);setChoice(null);setChecked(false);setJeopardyQuestion(null);setJeopardyUsed([]);setBombComplete(false);setBombExploded(false);setGameComplete(false);setCorrectCount(0);setAttemptCount(0);if(game==='Bomb' && selectedUnit==='Unit 5')setBombSet(makeBombSet());};
+  const openGame = (game:string) => {setSelectedGame(game);setQuestionIndex(0);setShowAnswer(false);setChoice(null);setChecked(false);setJeopardyQuestion(null);setJeopardyUsed([]);setBombComplete(false);setBombExploded(false);setGameComplete(false);setCorrectCount(0);setAttemptCount(0);if(selectedUnit==='Unit 5')setGameQuestionSet(makeGameSet());if(game==='Bomb' && selectedUnit==='Unit 5')setBombSet(makeBombSet());};
   const next = () => {const limit = selectedGame === 'Millionaire' ? 15 : 10;if(questionIndex >= limit - 1){setGameComplete(true);setChoice(null);setChecked(false);return;}setQuestionIndex((i)=>(i+1)%questions.length);setShowAnswer(false);setChoice(null);setChecked(false);};
   const recordResult = (game:string, isCorrect:boolean) => setGameStats(current => ({...current,[game]:{correct:(current[game]?.correct || 0) + (isCorrect ? 1 : 0),attempts:(current[game]?.attempts || 0) + 1}}));
   const checkAnswer = () => {
