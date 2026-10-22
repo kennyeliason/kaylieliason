@@ -631,7 +631,6 @@ const exactUnit5Questions: Question[] = [
 const games = [
   ["Flashcards", "Flip to reveal"],
   ["Quiz", "Multiple choice"],
-  ["Learn", "Spaced repetition"],
   ["Orbital Lab", "Build electron arrows"],
   ["Match", "Pair Q&A"],
   ["Millionaire", "Rising stakes"],
