@@ -2717,20 +2717,22 @@ export default function ChemistryHub() {
             {(selectedUnit === "Unit 5"
               ? games
               : games.filter(([name]) => name !== "Orbital Lab")
-            ).map(([name, detail], index) => (
+            ).map(([name, detail]) => {
+              const darkTealGame = ["Millionaire", "Jeopardy"].includes(name);
+              return (
               <button
                 className="chem-game-card"
                 key={name}
                 onClick={() => openGame(name)}
                 style={{
                   ...styles.card,
-                  ...(index >= 5 ? styles.darkCard : {}),
+                  ...(darkTealGame ? styles.darkCard : {}),
                 }}
               >
                 <span
                   style={{
                     ...styles.cardTitle,
-                    ...(index >= 5 ? styles.lightText : {}),
+                    ...(darkTealGame ? styles.lightText : {}),
                   }}
                 >
                   {name}
@@ -2738,13 +2740,14 @@ export default function ChemistryHub() {
                 <span
                   style={{
                     ...styles.cardDetail,
-                    ...(index >= 5 ? styles.darkCardDetail : {}),
+                    ...(darkTealGame ? styles.darkCardDetail : {}),
                   }}
                 >
                   {detail}
                 </span>
               </button>
-            ))}
+              );
+            })}
           </section>
         </section>
       ) : (
