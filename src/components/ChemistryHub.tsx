@@ -2476,6 +2476,37 @@ function GameEndScreen({
   );
 }
 
+function EquationCheatSheet({ open, onToggle }: { open: boolean; onToggle: () => void }) {
+  const rows = [
+    ["Frequency", "Wavelength", "λ = c / ν"],
+    ["Wavelength", "Frequency", "ν = c / λ"],
+    ["Frequency", "Energy", "E = hν"],
+    ["Energy", "Frequency", "ν = E / h"],
+    ["Wavelength", "Energy", "E = hc / λ"],
+    ["Energy", "Wavelength", "λ = hc / E"],
+  ];
+  return (
+    <div style={styles.cheatDock}>
+      {open && (
+        <aside style={styles.cheatSheet} aria-label="Equation cheat sheet">
+          <strong style={styles.cheatTitle}>Equation Cheat Sheet</strong>
+          <div style={styles.cheatHeader}>
+            <span>Given</span><span>Find</span><span>Equation</span>
+          </div>
+          {rows.map(([given, find, equation]) => (
+            <div key={equation} style={styles.cheatRow}>
+              <span>{given}</span><span>{find}</span><em>{equation}</em>
+            </div>
+          ))}
+        </aside>
+      )}
+      <button style={styles.cheatButton} onClick={onToggle}>
+        {open ? "Close Cheat Sheet" : "Equation Cheat Sheet"}
+      </button>
+    </div>
+  );
+}
+
 export default function ChemistryHub() {
   const [selectedUnit, setSelectedUnit] = useState("Unit 1");
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
@@ -2497,6 +2528,7 @@ export default function ChemistryHub() {
   const [statsLoaded, setStatsLoaded] = useState(false);
   const [resetStatsOpen, setResetStatsOpen] = useState(false);
   const [resetCode, setResetCode] = useState("");
+  const [cheatSheetOpen, setCheatSheetOpen] = useState(false);
   const questions = selectedUnit === "Unit 5" ? exactUnit5Questions : [];
   const currentQuestion =
     selectedGame && selectedGame !== "Bomb"
@@ -2619,7 +2651,7 @@ export default function ChemistryHub() {
             {["Unit 1", "Unit 2", "Unit 3", "Unit 4", "Unit 5"].map((unit) => (
               <button
                 key={unit}
-                onClick={() => setSelectedUnit(unit)}
+                onClick={() => { setSelectedUnit(unit); setCheatSheetOpen(false); }}
                 style={{
                   ...styles.unitButton,
                   ...(selectedUnit === unit ? styles.activeUnit : {}),
@@ -2992,6 +3024,12 @@ export default function ChemistryHub() {
             ) : null}
           </section>
         </section>
+      )}
+      {selectedUnit === "Unit 5" && (
+        <EquationCheatSheet
+          open={cheatSheetOpen}
+          onToggle={() => setCheatSheetOpen((open) => !open)}
+        />
       )}
     </main>
   );
@@ -3685,5 +3723,62 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: "center",
     gap: 12,
     flexWrap: "wrap",
+  },
+  cheatDock: {
+    position: "fixed",
+    right: 20,
+    bottom: 20,
+    zIndex: 31,
+    display: "grid",
+    justifyItems: "end",
+    gap: 10,
+  },
+  cheatButton: {
+    border: 0,
+    borderRadius: 999,
+    padding: "12px 17px",
+    background: "linear-gradient(135deg,#0f766e,#0891b2)",
+    color: "#fff",
+    fontFamily: "Montserrat,sans-serif",
+    fontWeight: 850,
+    fontSize: 14,
+    cursor: "pointer",
+    boxShadow: "0 10px 24px rgba(15,118,110,.28)",
+  },
+  cheatSheet: {
+    width: "min(470px,calc(100vw - 40px))",
+    padding: 16,
+    borderRadius: 18,
+    background: "#fff",
+    border: "2px solid #99f6e4",
+    boxShadow: "0 18px 48px rgba(4,47,46,.26)",
+    color: "#163f3b",
+  },
+  cheatTitle: {
+    display: "block",
+    fontFamily: "Londrina Solid,Impact,sans-serif",
+    fontSize: 24,
+    color: "#115e59",
+    marginBottom: 10,
+  },
+  cheatHeader: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr 1fr",
+    gap: 8,
+    padding: "7px 0",
+    borderBottom: "2px solid #ccfbf1",
+    color: "#0f766e",
+    fontWeight: 850,
+    fontSize: 12,
+  },
+  cheatRow: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr 1fr",
+    gap: 8,
+    alignItems: "center",
+    padding: "8px 0",
+    borderBottom: "1px solid #d9f5ef",
+    fontSize: 13,
+    lineHeight: 1.25,
   },
 };
