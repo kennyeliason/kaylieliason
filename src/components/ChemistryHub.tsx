@@ -629,11 +629,11 @@ const exactUnit5Questions: Question[] = [
 ];
 
 const games = [
-  ["My Stats", "See progress"],
   ["Flashcards", "Flip to reveal"],
   ["Quiz", "Multiple choice"],
   ["Orbital Lab", "Build electron arrows"],
   ["Match", "Pair Q&A"],
+  ["My Stats", "See progress"],
   ["Millionaire", "Rising stakes"],
   ["Jeopardy", "Pick points"],
   ["Bomb", "Defuse or boom!"],
