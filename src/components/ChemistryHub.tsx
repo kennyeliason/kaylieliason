@@ -3727,7 +3727,7 @@ const styles: Record<string, React.CSSProperties> = {
   cheatDock: {
     position: "fixed",
     right: 20,
-    bottom: 20,
+    top: 20,
     zIndex: 31,
     display: "grid",
     justifyItems: "end",
