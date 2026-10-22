@@ -306,7 +306,7 @@ export default function ChemistryHub() {
       <header style={styles.header}><h1 style={styles.title}>Chemistry Study Guide</h1></header>
       <div style={styles.unitRow}>{['Unit 1','Unit 2','Unit 3','Unit 4','Unit 5'].map(unit=><button key={unit} onClick={()=>setSelectedUnit(unit)} style={{...styles.unitButton,...(selectedUnit===unit?styles.activeUnit:{})}}>{unit}</button>)}</div>
       <div style={styles.unitStatus}>{selectedUnit} · {selectedUnit==='Unit 5'?`${exactUnit5Questions.length} questions ready`:'Study guide coming soon'}</div>
-      <section style={styles.grid}>{games.map(([name,detail],index)=><button className="chem-game-card" key={name} onClick={()=>openGame(name)} style={{...styles.card,...(index>=5?styles.darkCard:{})}}><span style={{...styles.cardTitle,...(index>=5?styles.lightText:{})}}>{name}</span><span style={{...styles.cardDetail,...(index>=5?styles.darkCardDetail:{})}}>{detail}</span></button>)}</section>
+      <section style={styles.grid}>{(selectedUnit === 'Unit 5' ? games : games.filter(([name]) => name !== 'Orbital Lab')).map(([name,detail],index)=><button className="chem-game-card" key={name} onClick={()=>openGame(name)} style={{...styles.card,...(index>=5?styles.darkCard:{})}}><span style={{...styles.cardTitle,...(index>=5?styles.lightText:{})}}>{name}</span><span style={{...styles.cardDetail,...(index>=5?styles.darkCardDetail:{})}}>{detail}</span></button>)}</section>
     </section> : <section style={styles.gameScreen}>
       <button style={styles.backArrow} onClick={()=>setSelectedGame(null)}>← Back to Home</button>
       <section style={styles.modal}>
