@@ -789,6 +789,51 @@ function BombGame({
   );
 }
 
+function MatchGame({ questions, onComplete }: { questions: Question[]; onComplete: (matches: number, attempts: number) => void }) {
+  const [cards] = useState(() => shuffle(questions.slice(0, 10).flatMap((question, id) => [
+    { id, side: "question", text: question.question },
+    { id, side: "answer", text: question.answer },
+  ])));
+  const [selected, setSelected] = useState<number[]>([]);
+  const [matched, setMatched] = useState<number[]>([]);
+  const [locked, setLocked] = useState(false);
+  const [attempts, setAttempts] = useState(0);
+
+  const chooseCard = (index: number) => {
+    if (locked || selected.includes(index) || matched.includes(cards[index].id)) return;
+    const nextSelected = [...selected, index];
+    setSelected(nextSelected);
+    if (nextSelected.length !== 2) return;
+    setLocked(true);
+    setAttempts(current => current + 1);
+    const [first, second] = nextSelected.map(cardIndex => cards[cardIndex]);
+    window.setTimeout(() => {
+      if (first.id === second.id && first.side !== second.side) {
+        setMatched(current => {
+          const next = [...current, first.id];
+          if (next.length === 10) onComplete(10, attempts + 1);
+          return next;
+        });
+      }
+      setSelected([]);
+      setLocked(false);
+    }, 850);
+  };
+
+  return <>
+    <div style={styles.gameName}>MATCH</div>
+    <p style={styles.modalText}>Flip two cards to match each question with its answer.</p>
+    <div style={styles.matchProgress}>{matched.length} of 10 matches · {attempts} tries</div>
+    <div style={styles.matchGrid}>{cards.map((card, index) => {
+      const isMatched = matched.includes(card.id);
+      const isOpen = selected.includes(index) || isMatched;
+      return <button key={`${card.id}-${card.side}`} onClick={() => chooseCard(index)} style={{...styles.matchCard,...(isOpen ? styles.matchCardOpen : {}),...(isMatched ? styles.matchCardMatched : {})}}>
+        {isOpen ? <><small style={styles.matchSide}>{card.side === "question" ? "QUESTION" : "ANSWER"}</small><span>{card.text}</span></> : <strong style={styles.matchBack}>?</strong>}
+      </button>;
+    })}</div>
+  </>;
+}
+
 function MillionaireGame({
   question,
   questionIndex,
@@ -2519,6 +2564,7 @@ export default function ChemistryHub() {
   const [jeopardyUsed, setJeopardyUsed] = useState<number[]>([]);
   const [bombSet, setBombSet] = useState<Question[]>([]);
   const [gameQuestionSet, setGameQuestionSet] = useState<Question[]>([]);
+  const [matchRound, setMatchRound] = useState(0);
   const [jeopardySet, setJeopardySet] = useState<Question[]>([]);
   const [bombComplete, setBombComplete] = useState(false);
   const [bombExploded, setBombExploded] = useState(false);
@@ -2548,6 +2594,7 @@ export default function ChemistryHub() {
     setGameComplete(false);
     setCorrectCount(0);
     setAttemptCount(0);
+    if (game === "Match") setMatchRound((round) => round + 1);
     if (selectedUnit === "Unit 5") {
       setGameQuestionSet(makeGameSet());
       setJeopardySet(exactUnit5Questions.map(shuffleChoices));
@@ -2869,6 +2916,16 @@ export default function ChemistryHub() {
                   })()
                 )}
               </>
+            ) : selectedGame === "Match" && questions.length ? (
+              <MatchGame
+                key={matchRound}
+                questions={makeGameSet()}
+                onComplete={(matches, tries) => {
+                  setCorrectCount(matches);
+                  setAttemptCount(tries);
+                  setGameComplete(true);
+                }}
+              />
             ) : selectedGame === "Millionaire" && questions.length ? (
               <MillionaireGame
                 question={currentQuestion!}
@@ -3173,6 +3230,13 @@ const styles: Record<string, React.CSSProperties> = {
     margin: "20px 0 26px",
   },
   choices: { display: "grid", gap: 12, textAlign: "left" },
+  matchProgress: { color: "#0f766e", fontWeight: 850, margin: "-10px 0 16px" },
+  matchGrid: { display: "grid", gridTemplateColumns: "repeat(4,minmax(0,1fr))", gap: 10 },
+  matchCard: { minHeight: 118, border: 0, borderRadius: 14, padding: "11px", background: "linear-gradient(145deg,#115e59,#0f766e)", color: "#d1fae5", cursor: "pointer", display: "grid", alignContent: "center", gap: 7, textAlign: "left", fontFamily: "Montserrat,sans-serif", fontSize: 13, fontWeight: 750, lineHeight: 1.3 },
+  matchCardOpen: { background: "#f0fdfa", color: "#163f3b", border: "2px solid #99f6e4" },
+  matchCardMatched: { background: "#dcfce7", color: "#166534", border: "2px solid #22c55e", cursor: "default" },
+  matchBack: { display: "grid", placeItems: "center", fontFamily: "Londrina Solid,Impact,sans-serif", fontSize: 42, textAlign: "center" },
+  matchSide: { color: "#0f766e", fontSize: 10, letterSpacing: 1.1, fontWeight: 900 },
   choice: {
     cursor: "pointer",
     background: "#f0fdfa",
