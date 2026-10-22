@@ -87,7 +87,7 @@ const millionaireLevels = ['$100','$200','$300','$500','$1,000','$2,000','$4,000
 
 const makeBombSet = () => [...exactUnit5Questions].sort(() => Math.random() - .5).slice(0, 10);
 
-function BombGame({question, questionIndex, choice, checked, onChoose, onCheck, onNext, onExpire}:{question:Question;questionIndex:number;choice:string|null;checked:boolean;onChoose:(answer:string)=>void;onCheck:()=>void;onNext:()=>void;onExpire:()=>void}) {
+function BombGame({question, questionIndex, choice, checked, onChoose, onCheck, onNext, onExpire}:{question:Question;questionIndex:number;choice:string|null;checked:boolean;onChoose:(answer:string)=>void;onCheck:()=>void;onNext:()=>void;onExpire:(timedOut?:boolean)=>void}) {
   const [seconds,setSeconds] = useState(30);
   useEffect(() => {
     if (checked) return;
@@ -95,7 +95,7 @@ function BombGame({question, questionIndex, choice, checked, onChoose, onCheck, 
     const timer = window.setInterval(() => setSeconds(current => {
       if (current <= 1) {
         window.clearInterval(timer);
-        window.setTimeout(onExpire, 0);
+        window.setTimeout(() => onExpire(true), 0);
         return 0;
       }
       return current - 1;
@@ -156,6 +156,7 @@ export default function ChemistryHub() {
   const [bombExploded,setBombExploded] = useState(false);
   const [gameComplete,setGameComplete] = useState(false);
   const [gameStats,setGameStats] = useState<Record<string,GameStat>>({});
+  const [statsLoaded,setStatsLoaded] = useState(false);
   const [resetStatsOpen,setResetStatsOpen] = useState(false);
   const [resetCode,setResetCode] = useState('');
   const questions = selectedUnit === 'Unit 5' ? exactUnit5Questions : [];
@@ -179,11 +180,24 @@ export default function ChemistryHub() {
     if (choice === bombQuestion.answer) setCorrectCount((count) => count + 1);
     recordResult('Bomb', choice === bombQuestion.answer);
   };
-  const nextBomb = () => {
+  const nextBomb = (timedOut=false) => {
+    if (timedOut) { setBombExploded(true); setChoice(null); setChecked(false); return; }
     if (questionIndex === 9) { setBombComplete(true); setChoice(null); setChecked(false); return; }
     next();
   };
   const explodeBomb = () => {setBombExploded(true);setChoice(null);setChecked(false);};
+  useEffect(() => {
+    if (selectedGame === 'Jeopardy' && jeopardyUsed.length === 25) setGameComplete(true);
+    if (selectedGame === 'Millionaire' && questionIndex === 14 && checked) setGameComplete(true);
+  }, [selectedGame, jeopardyUsed.length, questionIndex, checked]);
+  useEffect(() => {
+    const saved = window.localStorage.getItem('chemistry-game-stats');
+    if (saved) setGameStats(JSON.parse(saved));
+    setStatsLoaded(true);
+  }, []);
+  useEffect(() => {
+    if (statsLoaded) window.localStorage.setItem('chemistry-game-stats', JSON.stringify(gameStats));
+  }, [gameStats, statsLoaded]);
 
   return <main style={styles.page}>
     <style>{`*{box-sizing:border-box}.chem-game-card:hover{transform:translateY(-5px);box-shadow:0 18px 34px rgba(13,148,136,.25)!important}.chem-game-card:focus-visible{outline:4px solid #99f6e4;outline-offset:3px}`}</style>
@@ -196,6 +210,7 @@ export default function ChemistryHub() {
       <button style={styles.backArrow} onClick={()=>setSelectedGame(null)}>← Back to Home</button>
       <section style={styles.modal}>
       <div style={styles.modalLabel}>{selectedUnit.toUpperCase()} · {selectedGame.toUpperCase()}</div>
+      {(gameComplete || bombComplete || bombExploded) && <div style={styles.gameEndOverlay}><div style={styles.endCard}><GameEndScreen game={selectedGame || 'Game'} correct={correctCount} attempts={attemptCount} exploded={bombExploded} onPlayAgain={() => openGame(selectedGame!)} onBackHome={() => setSelectedGame(null)} /></div></div>}
       {selectedGame==='Jeopardy' && selectedUnit==='Unit 5' ? <>{jeopardyQuestion === null ? <><h2 style={styles.gameName}>JEOPARDY</h2><p style={styles.modalText}>Pick a point value.</p><div style={styles.jeopardyBoard}>{jeopardyBoard.map((category) => <div key={category.title} style={styles.jeopardyColumn}><div style={styles.jeopardyHeader}>{category.title}</div>{category.indexes.map((index, row) => { const value = (row + 1) * 100; const used = jeopardyUsed.includes(index); return <button key={index} disabled={used} onClick={() => { setJeopardyQuestion(index); setChoice(null); setChecked(false); }} style={{...styles.jeopardyTile, ...(used ? styles.jeopardyUsed : {})}}>{used ? '' : `$${value}`}</button>; })}</div>)}</div></> : (() => { const question = exactUnit5Questions[jeopardyQuestion]; return <><button style={styles.boardArrow} onClick={() => { setJeopardyQuestion(null); setChoice(null); setChecked(false); }}>← Back to Board</button><div style={styles.gameName}>JEOPARDY</div><div style={styles.progress}>${(jeopardyBoard.flatMap(c => c.indexes).indexOf(jeopardyQuestion) % 5 + 1) * 100} QUESTION</div><h2 style={styles.question}>{question.question}</h2><div style={styles.choices}>{question.choices.map(answer => <button key={answer} onClick={() => !checked && setChoice(answer)} style={{...styles.choice,...(choice === answer ? (checked ? (answer === question.answer ? styles.correct : styles.incorrect) : styles.selected) : {})}}>{answer}</button>)}{checked && choice && <p style={styles.explanation}>{choice === question.answer ? 'Correct! ' : <>Not quite. <strong>Correct answer: {question.answer}.</strong> </>}{question.explanation}</p>}{!checked ? <button disabled={!choice} style={{...styles.closeButton,opacity:choice?1:.45,cursor:choice?'pointer':'default'}} onClick={() => { if (!choice) return; setChecked(true); setAttemptCount(count => count + 1); if (choice === question.answer) setCorrectCount(count => count + 1); recordResult('Jeopardy', choice === question.answer); }}>Check Answer</button> : <button style={styles.closeButton} onClick={() => { setJeopardyUsed(used => [...used, jeopardyQuestion]); setJeopardyQuestion(null); }}>Back to Board</button>}</div></>; })()}</> : selectedGame==='Millionaire' && questions.length ? <MillionaireGame question={currentQuestion!} questionIndex={questionIndex} choice={choice} checked={checked} onChoose={setChoice} onCheck={checkAnswer} onNext={() => questionIndex === millionaireLevels.length - 1 ? (setQuestionIndex(0),setChoice(null),setChecked(false)) : next()} /> : selectedGame==='Bomb' && bombQuestion ? (bombComplete ? <><h2 style={styles.modalTitle}>Bomb round complete!</h2><p style={styles.modalText}>You made it through all 10 questions.</p><button style={styles.closeButton} onClick={() => { setBombSet(makeBombSet()); setBombComplete(false); setQuestionIndex(0); setChoice(null); setChecked(false); }}>New 10 questions</button></> : <BombGame question={bombQuestion} questionIndex={questionIndex} choice={choice} checked={checked} onChoose={setChoice} onCheck={checkBombAnswer} onNext={nextBomb} onExpire={nextBomb} />) : selectedGame==='My Stats'?<StatsScreen stats={gameStats} resetOpen={resetStatsOpen} resetCode={resetCode} onCodeChange={setResetCode} onOpenReset={() => setResetStatsOpen(true)} onCancelReset={() => {setResetStatsOpen(false);setResetCode('')}} onReset={() => {setGameStats({});setResetStatsOpen(false);setResetCode('')}}/>:questions.length===0?<><h2 style={styles.modalTitle}>Ready for your study guide</h2><p style={styles.modalText}>There aren’t any questions in this unit yet.</p></>:playable&&currentQuestion?<><div style={styles.gameName}>{selectedGame}</div><div style={styles.progress}>Question {questionIndex+1} of {questions.length}</div><h2 style={styles.question}>{currentQuestion.question}</h2>
         {selectedGame==='Flashcards'?<><button style={styles.flipButton} onClick={()=>setShowAnswer(!showAnswer)}>{showAnswer?currentQuestion.answer:'Tap to flip'}</button>{showAnswer&&<><p style={styles.explanation}>{currentQuestion.explanation}</p><button style={styles.closeButton} onClick={next}>Next question</button></>}</>:<div style={styles.choices}>{currentQuestion.choices.map(answer=><button key={answer} onClick={()=>!checked&&setChoice(answer)} style={{...styles.choice,...(choice===answer?(checked?(answer===currentQuestion.answer?styles.correct:styles.incorrect):styles.selected):{})}}>{answer}</button>)}{checked&&choice&&<p style={styles.explanation}>{choice===currentQuestion.answer?'Correct! ': <>Not quite. <strong>Correct answer: {currentQuestion.answer}.</strong> </>}{currentQuestion.explanation}</p>}{!checked?<button disabled={!choice} style={{...styles.closeButton,opacity:choice?1:.45,cursor:choice?'pointer':'default'}} onClick={checkAnswer}>Check Answer</button>:<button style={styles.closeButton} onClick={next}>Next question</button>}</div>}
         </>:null}
@@ -212,4 +227,5 @@ const styles:Record<string,React.CSSProperties>={
   millionaireLayout:{display:'grid',gridTemplateColumns:'230px minmax(0,1fr)',gap:36,alignItems:'center',textAlign:'left'},moneyLadder:{background:'linear-gradient(160deg,#064e3b,#115e59 55%,#0f766e)',borderRadius:22,padding:'15px 14px',display:'grid',gap:3,boxShadow:'inset 0 1px rgba(255,255,255,.18)'},moneyStep:{display:'flex',justifyContent:'space-between',alignItems:'center',borderRadius:9,padding:'5px 12px',color:'#d1fae5',fontSize:15,fontWeight:800},moneyMilestone:{color:'#fef08a'},moneyStepActive:{background:'#2dd4bf',color:'#073b35',boxShadow:'0 4px 12px rgba(0,0,0,.18)'},millionaireQuestion:{minWidth:0},
   bombTimer:{fontFamily:'Londrina Solid,Impact,sans-serif',margin:'12px auto 0',width:82,height:82,borderRadius:'50%',display:'grid',placeItems:'center',background:'#dc2626',color:'#fff',fontSize:32,boxShadow:'0 7px 16px rgba(220,38,38,.28)'},
   statsGrid:{display:'grid',gridTemplateColumns:'repeat(auto-fit,minmax(160px,1fr))',gap:12,textAlign:'left'},statCard:{padding:16,borderRadius:16,border:'2px solid #ccfbf1',background:'#f0fdfa',display:'grid',gap:6,color:'#115e59'},statPercent:{fontFamily:'Londrina Solid,Impact,sans-serif',fontSize:36,lineHeight:1,color:'#0f766e'},resetStatsButton:{marginTop:24,border:'2px solid #0f766e',borderRadius:12,padding:'11px 16px',background:'#fff',color:'#0f766e',fontWeight:900,fontSize:15,cursor:'pointer'},resetBubble:{margin:'24px auto 0',padding:22,borderRadius:18,background:'#ecfdf5',border:'2px solid #99f6e4',maxWidth:440},resetTitle:{margin:'0 0 8px',fontFamily:'Londrina Solid,Impact,sans-serif',fontSize:28,color:'#115e59'},resetInput:{width:'100%',border:'2px solid #99f6e4',borderRadius:10,padding:'12px 14px',fontFamily:'Montserrat,sans-serif',fontSize:16,outline:'none'},resetActions:{display:'flex',justifyContent:'center',gap:10,marginTop:14},cancelButton:{border:0,borderRadius:10,padding:'11px 14px',background:'#d1fae5',color:'#115e59',fontWeight:800,cursor:'pointer'},resetConfirmButton:{border:0,borderRadius:10,padding:'11px 14px',background:'#dc2626',color:'#fff',fontWeight:800,cursor:'pointer'},
+  gameEndOverlay:{position:'fixed',inset:0,zIndex:20,display:'grid',placeItems:'center',padding:20,background:'rgba(4,47,46,.38)'},endCard:{width:'min(480px,100%)',padding:'42px 32px',borderRadius:28,background:'#fff',textAlign:'center',boxShadow:'0 24px 64px rgba(4,47,46,.32)'},endActions:{display:'flex',justifyContent:'center',alignItems:'center',gap:12,flexWrap:'wrap'},
 };
