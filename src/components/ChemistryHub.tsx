@@ -1078,9 +1078,14 @@ function ExponentBubbles({
 }
 
 function WorksheetOrbitalLab() {
-  const [setIndex, setSetIndex] = useState(() =>
-    Math.floor(Math.random() * orbitalElements.length),
-  );
+  const [setIndex, setSetIndex] = useState(() => {
+    const lastIndex = Number(window.sessionStorage.getItem("orbital-lab-last"));
+    const nextIndex = Number.isInteger(lastIndex)
+      ? (lastIndex + 1) % orbitalElements.length
+      : 1;
+    window.sessionStorage.setItem("orbital-lab-last", String(nextIndex));
+    return nextIndex;
+  });
   const [selected, setSelected] = useState<Record<string, boolean>>({});
   const [longhandBubbles, setLonghandBubbles] = useState<
     Record<string, string>
