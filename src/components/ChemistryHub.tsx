@@ -634,7 +634,6 @@ const games = [
   ["Learn", "Spaced repetition"],
   ["Orbital Lab", "Build electron arrows"],
   ["Match", "Pair Q&A"],
-  ["Speed Round", "60 seconds"],
   ["Millionaire", "Rising stakes"],
   ["Jeopardy", "Pick points"],
   ["Bomb", "Defuse or boom!"],
