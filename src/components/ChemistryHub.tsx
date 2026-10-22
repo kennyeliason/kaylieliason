@@ -956,6 +956,38 @@ const orbitalElements: OrbitalElement[] = [
     ion: "Cl⁻",
     configuration: "1s² 2s² 2p⁶ 3s² 3p⁶",
   },
+  {
+    name: "Bromine",
+    symbol: "Br",
+    dots: 7,
+    dotPositions: [
+      "dotTopA",
+      "dotTopB",
+      "dotLeftA",
+      "dotRightA",
+      "dotRightB",
+      "dotBottomA",
+      "dotBottomB",
+    ],
+    longhand: "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁵",
+    noble: "[Ar] 4s² 3d¹⁰ 4p⁵",
+    initial: [["↑", "↓"], ["↑", "↓"], ["↑"]],
+    gain: 1,
+    ion: "Br⁻",
+    configuration: "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶",
+  },
+  {
+    name: "Rubidium",
+    symbol: "Rb",
+    dots: 1,
+    dotPositions: ["dotTopA"],
+    longhand: "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶ 5s¹",
+    noble: "[Kr] 5s¹",
+    initial: [["↑"]],
+    gain: 1,
+    ion: "Rb⁺",
+    configuration: "1s² 2s² 2p⁶ 3s² 3p⁶ 4s² 3d¹⁰ 4p⁶",
+  },
 ];
 
 function LewisDot({ element }: { element: OrbitalElement }) {
@@ -986,8 +1018,9 @@ const orbitalOrder = [
   ["4s", 1],
   ["3d", 5],
   ["4p", 3],
+  ["5s", 1],
 ] as const;
-const atomicElectrons: Record<string, number> = { N: 7, O: 8, Cl: 17 };
+const atomicElectrons: Record<string, number> = { N: 7, O: 8, Cl: 17, Br: 35, Rb: 37 };
 const normalizeElectronAnswer = (value: string) =>
   value
     .toLowerCase()
@@ -1137,30 +1170,40 @@ function WorksheetOrbitalLab() {
     setNewConfiguration("");
     setChecked(false);
   };
-  const outerPLabel = element.symbol === "Cl" ? "3p" : "2p";
-  const longhandLabels =
-    element.symbol === "Cl"
-      ? ["1s", "2s", "2p", "3s", "3p"]
-      : ["1s", "2s", "2p"];
-  const longhandExpected =
-    element.symbol === "N"
-      ? ["2", "2", "3"]
-      : element.symbol === "O"
-        ? ["2", "2", "4"]
-        : ["2", "2", "6", "2", "5"];
-  const nobleLabels = element.symbol === "Cl" ? ["3s", "3p"] : ["2s", "2p"];
-  const nobleExpected =
-    element.symbol === "N"
-      ? ["2", "3"]
-      : element.symbol === "O"
-        ? ["2", "4"]
-        : ["2", "5"];
-  const finalLabels =
-    element.symbol === "Cl"
-      ? ["1s", "2s", "2p", "3s", "3p"]
-      : ["1s", "2s", "2p"];
-  const finalExpected =
-    element.symbol === "Cl" ? ["2", "2", "6", "2", "6"] : ["2", "2", "6"];
+  const isRb = element.symbol === "Rb";
+  const isBr = element.symbol === "Br";
+  const outerPLabel = isRb ? "5s" : isBr ? "4p" : element.symbol === "Cl" ? "3p" : "2p";
+  const longhandLabels = isRb
+    ? ["1s", "2s", "2p", "3s", "3p", "4s", "3d", "4p", "5s"]
+    : isBr
+      ? ["1s", "2s", "2p", "3s", "3p", "4s", "3d", "4p"]
+      : element.symbol === "Cl"
+        ? ["1s", "2s", "2p", "3s", "3p"]
+        : ["1s", "2s", "2p"];
+  const longhandExpected = isRb
+    ? ["2", "2", "6", "2", "6", "2", "10", "6", "1"]
+    : isBr
+      ? ["2", "2", "6", "2", "6", "2", "10", "5"]
+      : element.symbol === "N"
+        ? ["2", "2", "3"]
+        : element.symbol === "O"
+          ? ["2", "2", "4"]
+          : ["2", "2", "6", "2", "5"];
+  const nobleCoreExpected = isRb ? "kr" : isBr ? "ar" : element.symbol === "Cl" ? "ne" : "he";
+  const nobleLabels = isRb ? ["5s"] : isBr ? ["4s", "3d", "4p"] : element.symbol === "Cl" ? ["3s", "3p"] : ["2s", "2p"];
+  const nobleExpected = isRb ? ["1"] : isBr ? ["2", "10", "5"] : element.symbol === "N" ? ["2", "3"] : element.symbol === "O" ? ["2", "4"] : ["2", "5"];
+  const finalLabels = isRb
+    ? ["1s", "2s", "2p", "3s", "3p", "4s", "3d", "4p"]
+    : isBr
+      ? ["1s", "2s", "2p", "3s", "3p", "4s", "3d", "4p"]
+      : element.symbol === "Cl"
+        ? ["1s", "2s", "2p", "3s", "3p"]
+        : ["1s", "2s", "2p"];
+  const finalExpected = isRb || isBr
+    ? ["2", "2", "6", "2", "6", "2", "10", "6"]
+    : element.symbol === "Cl"
+      ? ["2", "2", "6", "2", "6"]
+      : ["2", "2", "6"];
   const bubblesMatch = (
     values: Record<string, string>,
     labels: string[],
@@ -1175,12 +1218,12 @@ function WorksheetOrbitalLab() {
     longhandExpected,
   );
   const nobleCorrect =
-    nobleCore.toLowerCase() === (element.symbol === "Cl" ? "ne" : "he") &&
+    nobleCore.toLowerCase() === nobleCoreExpected &&
     bubblesMatch(nobleBubbles, nobleLabels, nobleExpected);
   const finalCorrect = bubblesMatch(finalBubbles, finalLabels, finalExpected);
   const questionChecks = [
     partThree === outerPLabel,
-    gainLose === "gain",
+    gainLose === (isRb ? "lose" : "gain"),
     amount === String(element.gain),
     ion === element.ion,
   ];
@@ -1271,7 +1314,7 @@ function WorksheetOrbitalLab() {
               <b>b)</b>
               <span>Noble gas:</span>
               <ExponentBubbles
-                core={element.symbol === "Cl" ? "Ne" : "He"}
+                core={`${nobleCoreExpected[0].toUpperCase()}${nobleCoreExpected.slice(1)}`}
                 coreValue={nobleCore}
                 onCoreChange={(value) => !checked && setNobleCore(value)}
                 labels={nobleLabels}
@@ -1396,9 +1439,9 @@ function WorksheetOrbitalLab() {
             {[
               ["a) Longhand", longhandCorrect, element.longhand],
               ["b) Noble gas", nobleCorrect, element.noble],
-              ["c) Orbital notation", isCorrect, "Use one ↑ in each p line before adding ↓ arrows."],
+              ["c) Orbital notation", isCorrect, "Use one ↑ in each orbital line before adding ↓ arrows."],
               ["3", questionChecks[0], outerPLabel],
-              ["4", questionChecks[1], "gain"],
+              ["4", questionChecks[1], isRb ? "lose" : "gain"],
               ["5", questionChecks[2], String(element.gain)],
               ["6", questionChecks[3], element.ion],
               ["7", finalCorrect, element.configuration],
