@@ -1118,7 +1118,9 @@ function WorksheetOrbitalLab() {
   });
   const isCorrect =
     Object.keys(expected).every((key) => Boolean(selected[key])) &&
-    Object.keys(selected).every((key) => expected[key]);
+    Object.entries(selected)
+      .filter(([, isSelected]) => isSelected)
+      .every(([key]) => expected[key]);
   const reset = (next: number) => {
     setSetIndex(next);
     setSelected({});
