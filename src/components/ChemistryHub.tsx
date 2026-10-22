@@ -2718,7 +2718,12 @@ export default function ChemistryHub() {
               ? games
               : games.filter(([name]) => name !== "Orbital Lab")
             ).map(([name, detail]) => {
-              const darkTealGame = ["Millionaire", "Jeopardy"].includes(name);
+              const darkTealGame = [
+                "Millionaire",
+                "Jeopardy",
+                "Bomb",
+                "Snake",
+              ].includes(name);
               return (
               <button
                 className="chem-game-card"
