@@ -2602,7 +2602,7 @@ export default function ChemistryHub() {
     if (game === "Bomb" && selectedUnit === "Unit 5") setBombSet(makeBombSet());
   };
   const next = () => {
-    const limit = selectedGame === "Millionaire" ? 15 : 10;
+    const limit = selectedGame === "Quiz" ? questions.length : selectedGame === "Millionaire" ? 15 : 10;
     if (questionIndex >= limit - 1) {
       setGameComplete(true);
       setChoice(null);
