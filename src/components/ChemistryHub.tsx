@@ -1136,7 +1136,7 @@ function ExponentBubbles({
             <input
               aria-label={`${label} exponent`}
               inputMode="numeric"
-              maxLength={1}
+              maxLength={2}
               value={exponent}
               onChange={(event) =>
                 onChange(
@@ -3622,7 +3622,7 @@ const styles: Record<string, React.CSSProperties> = {
     outline: "none",
   },
   exponentBubble: {
-    width: 29,
+    width: 36,
     height: 27,
     border: "2px solid #99f6e4",
     borderRadius: 8,
