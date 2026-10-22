@@ -629,6 +629,7 @@ const exactUnit5Questions: Question[] = [
 ];
 
 const games = [
+  ["My Stats", "See progress"],
   ["Flashcards", "Flip to reveal"],
   ["Quiz", "Multiple choice"],
   ["Orbital Lab", "Build electron arrows"],
@@ -637,7 +638,6 @@ const games = [
   ["Jeopardy", "Pick points"],
   ["Bomb", "Defuse or boom!"],
   ["Snake", "Eat & grow"],
-  ["My Stats", "See progress"],
 ];
 
 const jeopardyBoard = [
