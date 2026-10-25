@@ -33,7 +33,7 @@ type SentenceRuleAnswer =
   | 'Semicolon + transition + comma'
   | 'Comma splice'
   | 'Complete sentence';
-type PracticeTab = 'structure' | 'parts' | 'essays' | 'figurative';
+type PracticeTab = 'structure' | 'parts' | 'vocab' | 'essays' | 'figurative';
 type StructureMode = 'types' | 'punctuation';
 type PunctuationMark = '' | ',' | ';';
 
@@ -87,6 +87,11 @@ type PunctuationQuestion = {
   text: string;
   answers: Record<number, PunctuationMark>;
   explanation: string;
+};
+
+type VocabularyQuestion = {
+  word: string;
+  definition: string;
 };
 
 const sentenceTypes: SentenceType[] = ['Simple', 'Compound', 'Complex', 'Compound-Complex'];
@@ -832,6 +837,19 @@ const essayQuestions: EssayQuestion[] = [
   },
 ];
 
+const lessonSixVocabulary: VocabularyQuestion[] = [
+  { word: 'condone', definition: 'to forgive or overlook an offense by treating the wrongdoer as if nothing were wrong' },
+  { word: 'connive', definition: 'to cooperate secretly in a wrongdoing' },
+  { word: 'connoisseur', definition: 'an expert; an authority' },
+  { word: 'contrite', definition: 'showing regret and sorrow, usually for having committed some wrongdoing' },
+  { word: 'copious', definition: 'abundant; large in number or quantity' },
+  { word: 'crass', definition: 'coarse, stupid, or tasteless' },
+  { word: 'credence', definition: 'belief or trust' },
+  { word: 'culinary', definition: 'having to do with the kitchen or cooking' },
+  { word: 'culmination', definition: 'the apex, highest point, completion, or finish' },
+  { word: 'cult', definition: 'a fad-like devotion to a person, thing, or idea; a group bound together by the same thing, person, or ideal' },
+];
+
 const vocabEntries: VocabEntry[] = [
   {
     word: 'jaded',
@@ -1024,6 +1042,20 @@ function buildVocabDeck() {
   });
 }
 
+function buildLessonSixVocabDeck() {
+  return shuffle(lessonSixVocabulary).map((entry) => ({
+    ...entry,
+    options: shuffle([
+      entry.definition,
+      ...shuffle(
+        lessonSixVocabulary
+          .filter((candidate) => candidate.word !== entry.word)
+          .map((candidate) => candidate.definition),
+      ).slice(0, 3),
+    ]),
+  }));
+}
+
 function buildFigurativeDeck() {
   const grouped = figurativeTypes.flatMap((type) =>
     takeRandom(
@@ -1143,6 +1175,11 @@ export default function EnglishSentencePractice() {
   const [partsSelected, setPartsSelected] = useState<string | null>(null);
   const [partsCorrectCount, setPartsCorrectCount] = useState(0);
   const [partsStreak, setPartsStreak] = useState(0);
+  const [vocabDeck, setVocabDeck] = useState(() => buildLessonSixVocabDeck());
+  const [vocabIndex, setVocabIndex] = useState(0);
+  const [vocabSelected, setVocabSelected] = useState<string | null>(null);
+  const [vocabCorrectCount, setVocabCorrectCount] = useState(0);
+  const [vocabStreak, setVocabStreak] = useState(0);
   const [essayDeck, setEssayDeck] = useState(() => buildEssayDeck());
   const [essayIndex, setEssayIndex] = useState(0);
   const [essaySelected, setEssaySelected] = useState<EssayType | null>(null);
@@ -1183,6 +1220,11 @@ export default function EnglishSentencePractice() {
   const partsIsCorrect = partsSelected === currentParts?.answer;
   const partsAnswered = partsSelected !== null;
   const partsProgress = partsDeck.length === 0 ? 0 : Math.round((partsIndex / partsDeck.length) * 100);
+  const currentVocab = vocabDeck[vocabIndex];
+  const vocabDone = vocabIndex >= vocabDeck.length;
+  const vocabIsCorrect = vocabSelected === currentVocab?.definition;
+  const vocabAnswered = vocabSelected !== null;
+  const vocabProgress = vocabDeck.length === 0 ? 0 : Math.round((vocabIndex / vocabDeck.length) * 100);
   const currentEssay = essayDeck[essayIndex];
   const essayDone = essayIndex >= essayDeck.length;
   const essayIsCorrect = essaySelected === currentEssay?.answer;
@@ -1337,6 +1379,31 @@ export default function EnglishSentencePractice() {
     setPartsStreak(0);
   }
 
+  function handleVocabAnswer(choice: string) {
+    if (vocabAnswered || !currentVocab) return;
+    setVocabSelected(choice);
+    if (choice === currentVocab.definition) {
+      setVocabCorrectCount((count) => count + 1);
+      setVocabStreak((count) => count + 1);
+      return;
+    }
+    setVocabStreak(0);
+  }
+
+  function nextVocabQuestion() {
+    if (!vocabAnswered) return;
+    setVocabSelected(null);
+    setVocabIndex((value) => value + 1);
+  }
+
+  function restartVocab() {
+    setVocabDeck(buildLessonSixVocabDeck());
+    setVocabIndex(0);
+    setVocabSelected(null);
+    setVocabCorrectCount(0);
+    setVocabStreak(0);
+  }
+
   function handleEssayAnswer(choice: EssayType) {
     if (essayAnswered || !currentEssay) return;
     setEssaySelected(choice);
@@ -1383,22 +1450,18 @@ export default function EnglishSentencePractice() {
               Grammar Basics
             </button>
             <button
-              className={activeTab === 'essays' ? 'tab-bubble active' : 'tab-bubble'}
-              onClick={() => setActiveTab('essays')}
+              className={activeTab === 'vocab' ? 'tab-bubble active' : 'tab-bubble'}
+              onClick={() => setActiveTab('vocab')}
             >
-              Essay Writing
-            </button>
-            <button
-              className={activeTab === 'figurative' ? 'tab-bubble active' : 'tab-bubble'}
-              onClick={() => setActiveTab('figurative')}
-            >
-              Figurative Language
+              Vocabulary
             </button>
           </div>
 
           <div className="eyebrow">
             {activeTab === 'structure'
               ? 'Sentence Structure'
+              : activeTab === 'vocab'
+                ? 'Lesson 6 Vocabulary'
               : activeTab === 'figurative'
                 ? 'Figurative Language'
                 : activeTab === 'essays'
@@ -1408,6 +1471,8 @@ export default function EnglishSentencePractice() {
           <h1>
             {activeTab === 'structure'
               ? 'Sentence Structure Trainer'
+              : activeTab === 'vocab'
+                ? 'Lesson 6 Vocabulary Quiz'
               : activeTab === 'figurative'
                 ? 'Figurative Language Trainer'
                 : activeTab === 'essays'
@@ -1417,6 +1482,8 @@ export default function EnglishSentencePractice() {
           <p className="hero-copy">
             {activeTab === 'structure'
               ? 'Read each sentence and choose whether it is simple, compound, complex, or compound-complex. Watch for complete sentences, FANBOYS, semicolons, and dependent clauses.'
+              : activeTab === 'vocab'
+                ? 'Choose the definition that matches each Lesson 6 word. All 10 words rotate in a different order each time.'
               : activeTab === 'figurative'
                 ? 'Read each sentence and choose which type of figurative language it uses.'
                 : activeTab === 'essays'
@@ -1691,6 +1758,63 @@ export default function EnglishSentencePractice() {
               </div>
             )}
               </>
+            )}
+          </section>
+        ) : activeTab === 'vocab' ? (
+          <section className="board">
+            <div className="stats">
+              <div className="stat-chip">Score: {vocabCorrectCount}/{vocabDeck.length}</div>
+              <div className="stat-chip">Streak: {vocabStreak}</div>
+              <div className="stat-chip">Progress: {vocabProgress}%</div>
+            </div>
+
+            <div className="progress-track" aria-hidden="true">
+              <div className="progress-fill" style={{ width: `${vocabProgress}%` }} />
+            </div>
+
+            {vocabDone ? (
+              <div className="result-card">
+                <p className="result-label">Lesson 6 Complete</p>
+                <h2>You got {vocabCorrectCount} out of {vocabDeck.length}</h2>
+                <p className="result-copy">Run it again for a new word order and new mixed-up answer choices.</p>
+                <button className="primary-btn" onClick={restartVocab}>Try Again</button>
+              </div>
+            ) : (
+              <div className="question-card">
+                <div className="question-topline">Lesson 6 · Word {vocabIndex + 1} of {vocabDeck.length}</div>
+                <p className="parts-prompt">What does this word mean?</p>
+                <p className="sentence parts-sentence">{currentVocab.word}</p>
+
+                <div className="answer-grid answer-grid-parts">
+                  {currentVocab.options.map((option) => {
+                    let className = 'answer-btn';
+                    if (vocabAnswered && option === currentVocab.definition) className += ' correct';
+                    if (vocabAnswered && vocabSelected === option && option !== currentVocab.definition) className += ' wrong';
+
+                    return (
+                      <button
+                        key={option}
+                        className={className}
+                        onClick={() => handleVocabAnswer(option)}
+                        disabled={vocabAnswered}
+                      >
+                        {option}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {vocabAnswered && (
+                  <div className={vocabIsCorrect ? 'feedback success' : 'feedback error'}>
+                    <p className="feedback-title">
+                      {vocabIsCorrect ? 'Correct' : `Not quite. ${currentVocab.word} means: ${currentVocab.definition}`}
+                    </p>
+                    <button className="primary-btn" onClick={nextVocabQuestion}>
+                      {vocabIndex === vocabDeck.length - 1 ? 'See Score' : 'Next Word'}
+                    </button>
+                  </div>
+                )}
+              </div>
             )}
           </section>
         ) : activeTab === 'essays' ? (
