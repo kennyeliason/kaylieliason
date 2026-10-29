@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Question = {
   question: string;
@@ -2606,7 +2606,33 @@ function GameEndScreen({
   );
 }
 
+function useDraggablePanel() {
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const start = useRef<{ x: number; y: number } | null>(null);
+  const startOffset = useRef({ x: 0, y: 0 });
+  const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    event.currentTarget.setPointerCapture(event.pointerId);
+    start.current = { x: event.clientX, y: event.clientY };
+    startOffset.current = offset;
+  };
+  const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (!start.current) return;
+    setOffset({
+      x: startOffset.current.x + event.clientX - start.current.x,
+      y: startOffset.current.y + event.clientY - start.current.y,
+    });
+  };
+  const onPointerUp = () => {
+    start.current = null;
+  };
+  return {
+    panelStyle: { transform: `translate(${offset.x}px, ${offset.y}px)` },
+    dragProps: { onPointerDown, onPointerMove, onPointerUp },
+  };
+}
+
 function EquationCheatSheet({ open, onToggle }: { open: boolean; onToggle: () => void }) {
+  const { panelStyle, dragProps } = useDraggablePanel();
   const rows = [
     ["Frequency", "Wavelength", "λ = c / ν"],
     ["Wavelength", "Frequency", "ν = c / λ"],
@@ -2618,8 +2644,11 @@ function EquationCheatSheet({ open, onToggle }: { open: boolean; onToggle: () =>
   return (
     <div style={styles.cheatDock}>
       {open && (
-        <aside style={styles.cheatSheet} aria-label="Equation cheat sheet">
-          <strong style={styles.cheatTitle}>Equation Cheat Sheet</strong>
+        <aside style={{ ...styles.cheatSheet, ...panelStyle }} aria-label="Equation cheat sheet">
+          <div style={styles.panelDragHandle} {...dragProps}>
+            <strong style={styles.cheatTitle}>Equation Cheat Sheet</strong>
+            <span style={styles.dragHint}>Drag me</span>
+          </div>
           <div style={styles.cheatHeader}>
             <span>Given</span><span>Find</span><span>Equation</span>
           </div>
@@ -2644,6 +2673,7 @@ function ChemistryCalculator({
   open: boolean;
   onToggle: () => void;
 }) {
+  const { panelStyle, dragProps } = useDraggablePanel();
   const [expression, setExpression] = useState("");
   const [result, setResult] = useState("");
   const add = (value: string) => {
@@ -2670,8 +2700,11 @@ function ChemistryCalculator({
   return (
     <div style={styles.calculatorDock}>
       {open && (
-        <aside style={styles.calculator} aria-label="Chemistry calculator">
-          <strong style={styles.calculatorTitle}>Chem Calculator</strong>
+        <aside style={{ ...styles.calculator, ...panelStyle }} aria-label="Chemistry calculator">
+          <div style={styles.panelDragHandle} {...dragProps}>
+            <strong style={styles.calculatorTitle}>Chem Calculator</strong>
+            <span style={styles.dragHint}>Drag me</span>
+          </div>
           <div style={styles.calculatorDisplay} aria-live="polite">
             <span>{expression || "0"}</span>
             {result && <small>{result}</small>}
@@ -2680,6 +2713,7 @@ function ChemistryCalculator({
             <button style={styles.calcSpecial} onClick={() => add("3*10^8")}>C = 3 × 10⁸</button>
             <button style={styles.calcSpecial} onClick={() => add("6.63*10^-34")}>H = 6.63 × 10⁻³⁴</button>
             <button style={styles.calcSpecial} onClick={() => add("10^(")}>10^()</button>
+            <button style={styles.calcSpecial} onClick={() => add("(")}>(</button>
             <button style={styles.calcSpecial} onClick={() => add(")")}>)</button>
             {keys.map(([label, value]) => (
               <button
@@ -3994,12 +4028,16 @@ const styles: Record<string, React.CSSProperties> = {
   },
   cheatSheet: {
     width: "min(470px,calc(100vw - 40px))",
+    minWidth: 285,
+    minHeight: 220,
     padding: 16,
     borderRadius: 18,
     background: "#fff",
     border: "2px solid #99f6e4",
     boxShadow: "0 18px 48px rgba(4,47,46,.26)",
     color: "#163f3b",
+    resize: "both",
+    overflow: "auto",
   },
   cheatTitle: {
     display: "block",
@@ -4030,12 +4068,34 @@ const styles: Record<string, React.CSSProperties> = {
   },
   calculator: {
     width: "min(330px,calc(100vw - 40px))",
+    minWidth: 285,
+    minHeight: 350,
     padding: 16,
     borderRadius: 18,
     background: "#fff",
     border: "2px solid #99f6e4",
     boxShadow: "0 18px 48px rgba(4,47,46,.26)",
     color: "#163f3b",
+    resize: "both",
+    overflow: "auto",
+  },
+  panelDragHandle: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 12,
+    touchAction: "none",
+    cursor: "grab",
+    userSelect: "none",
+  },
+  dragHint: {
+    flex: "0 0 auto",
+    color: "#0f766e",
+    border: "1px solid #99f6e4",
+    borderRadius: 999,
+    padding: "4px 8px",
+    fontSize: 11,
+    fontWeight: 850,
   },
   calculatorTitle: {
     display: "block",
