@@ -2788,6 +2788,15 @@ function EquationCheatSheet({ open, onToggle }: { open: boolean; onToggle: () =>
       {open && (
         <aside style={{ ...styles.cheatSheet, ...panelStyle }} aria-label="Equation cheat sheet">
           <div style={styles.panelDragHandle} {...dragProps}>
+            <button
+              type="button"
+              aria-label="Close equation cheat sheet"
+              style={styles.panelClose}
+              onPointerDown={(event) => event.stopPropagation()}
+              onClick={onToggle}
+            >
+              ×
+            </button>
             <strong style={styles.cheatTitle}>Equation Cheat Sheet</strong>
             <span style={styles.dragHint}>Drag me</span>
           </div>
@@ -2801,9 +2810,7 @@ function EquationCheatSheet({ open, onToggle }: { open: boolean; onToggle: () =>
           ))}
         </aside>
       )}
-      <button style={styles.cheatButton} onClick={onToggle}>
-        {open ? "Close Cheat Sheet" : "Equation Cheat Sheet"}
-      </button>
+      {!open && <button style={styles.cheatButton} onClick={onToggle}>Equation Cheat Sheet</button>}
     </div>
   );
 }
@@ -2844,6 +2851,15 @@ function ChemistryCalculator({
       {open && (
         <aside style={{ ...styles.calculator, ...panelStyle }} aria-label="Chemistry calculator">
           <div style={styles.panelDragHandle} {...dragProps}>
+            <button
+              type="button"
+              aria-label="Close chemistry calculator"
+              style={styles.panelClose}
+              onPointerDown={(event) => event.stopPropagation()}
+              onClick={onToggle}
+            >
+              ×
+            </button>
             <strong style={styles.calculatorTitle}>Chem Calculator</strong>
             <span style={styles.dragHint}>Drag me</span>
           </div>
@@ -2871,9 +2887,7 @@ function ChemistryCalculator({
           </div>
         </aside>
       )}
-      <button style={styles.cheatButton} onClick={onToggle}>
-        {open ? "Close Calculator" : "Chem Calculator"}
-      </button>
+      {!open && <button style={styles.cheatButton} onClick={onToggle}>Chem Calculator</button>}
     </div>
   );
 }
@@ -4276,6 +4290,7 @@ const styles: Record<string, React.CSSProperties> = {
     overflow: "auto",
   },
   panelDragHandle: {
+    position: "relative",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
@@ -4283,6 +4298,21 @@ const styles: Record<string, React.CSSProperties> = {
     touchAction: "none",
     cursor: "grab",
     userSelect: "none",
+    paddingLeft: 30,
+  },
+  panelClose: {
+    position: "absolute",
+    left: 0,
+    top: "50%",
+    transform: "translateY(-50%)",
+    border: 0,
+    background: "transparent",
+    color: "#0f766e",
+    fontSize: 28,
+    lineHeight: 1,
+    fontWeight: 900,
+    cursor: "pointer",
+    padding: "2px 5px",
   },
   dragHint: {
     flex: "0 0 auto",
