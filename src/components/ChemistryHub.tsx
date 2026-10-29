@@ -2628,6 +2628,8 @@ function OrbitalLab() {
 
 function StatsScreen({
   stats,
+  topics,
+  unit,
   resetOpen,
   resetCode,
   onCodeChange,
@@ -2636,6 +2638,8 @@ function StatsScreen({
   onReset,
 }: {
   stats: Record<string, GameStat>;
+  topics: string[];
+  unit: string;
   resetOpen: boolean;
   resetCode: string;
   onCodeChange: (value: string) => void;
@@ -2645,10 +2649,10 @@ function StatsScreen({
 }) {
   return (
     <>
-      <h2 style={styles.modalTitle}>My Stats</h2>
-      <p style={styles.modalText}>Your score for each topic.</p>
+      <h2 style={styles.modalTitle}>{unit} Stats</h2>
+      <p style={styles.modalText}>Your score for each topic in this unit.</p>
       <div style={styles.statsGrid}>
-        {chemistryTopics.map((name) => {
+        {topics.length ? topics.map((name) => {
           const stat = stats[name] || { correct: 0, attempts: 0 };
           const percent = stat.attempts
             ? Math.round((stat.correct / stat.attempts) * 100)
@@ -2666,7 +2670,7 @@ function StatsScreen({
               </small>
             </div>
           );
-        })}
+        }) : <p style={styles.modalText}>Stats will appear when this unit has study games.</p>}
       </div>
       <button style={styles.resetStatsButton} onClick={onOpenReset}>
         Reset Stats
@@ -2924,6 +2928,12 @@ export default function ChemistryHub() {
         : [];
   const activeJeopardyBoard =
     selectedUnit === "Unit 6" ? unit6JeopardyBoard : jeopardyBoard;
+  const statsTopics =
+    selectedUnit === "Unit 5"
+      ? chemistryTopics.slice(0, 4)
+      : selectedUnit === "Unit 6"
+        ? chemistryTopics.slice(4)
+        : [];
   const currentQuestion =
     selectedGame && selectedGame !== "Bomb"
       ? gameQuestionSet[questionIndex]
@@ -3336,6 +3346,8 @@ export default function ChemistryHub() {
             ) : selectedGame === "My Stats" ? (
               <StatsScreen
                 stats={gameStats}
+                topics={statsTopics}
+                unit={selectedUnit}
                 resetOpen={resetStatsOpen}
                 resetCode={resetCode}
                 onCodeChange={setResetCode}
