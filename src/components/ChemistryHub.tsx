@@ -628,6 +628,56 @@ const exactUnit5Questions: Question[] = [
   },
 ];
 
+type Unit6StudyItem = {
+  prompt: string;
+  answer: string;
+  explanation: string;
+  topic: string;
+};
+
+const unit6Items: Unit6StudyItem[] = [
+  { prompt: "Write the formula for sulfur tetroxide.", answer: "SO₄", explanation: "No prefix on sulfur means 1 sulfur; tetra- means 4 oxygens.", topic: "Molecular Formulas" },
+  { prompt: "Write the formula for phosphorus trifluoride.", answer: "PF₃", explanation: "Tri- means 3 fluorines.", topic: "Molecular Formulas" },
+  { prompt: "Write the formula for iodine monobromide.", answer: "IBr", explanation: "Mono- means 1 bromine.", topic: "Molecular Formulas" },
+  { prompt: "Write the formula for silicon tetrahydride.", answer: "SiH₄", explanation: "Tetra- means 4 hydrogens.", topic: "Molecular Formulas" },
+  { prompt: "Write the formula for selenium dioxide.", answer: "SeO₂", explanation: "Di- means 2 oxygens.", topic: "Molecular Formulas" },
+  { prompt: "Write the formula for oxygen dichloride.", answer: "OCl₂", explanation: "Di- means 2 chlorines.", topic: "Molecular Formulas" },
+  { prompt: "Write the formula for bromine pentachloride.", answer: "BrCl₅", explanation: "Penta- means 5 chlorines.", topic: "Molecular Formulas" },
+  { prompt: "Write the formula for oxygen difluoride.", answer: "OF₂", explanation: "Di- means 2 fluorines.", topic: "Molecular Formulas" },
+  { prompt: "Write the formula for phosphorus pentachloride.", answer: "PCl₅", explanation: "Penta- means 5 chlorines.", topic: "Molecular Formulas" },
+  { prompt: "Write the formula for nitrogen monoxide.", answer: "NO", explanation: "Mono- means 1 oxygen.", topic: "Molecular Formulas" },
+  { prompt: "Write the formula for dinitrogen tetroxide.", answer: "N₂O₄", explanation: "Di- means 2 nitrogens; tetra- means 4 oxygens.", topic: "Molecular Formulas" },
+  { prompt: "Write the formula for diphosphorus pentoxide.", answer: "P₂O₅", explanation: "Di- means 2 phosphorus atoms; penta- means 5 oxygens.", topic: "Molecular Formulas" },
+  { prompt: "Write the formula for disulfur difluoride.", answer: "S₂F₂", explanation: "Di- means 2 of each element.", topic: "Molecular Formulas" },
+  { prompt: "Write the formula for tetraphosphorus trisulfide.", answer: "P₄S₃", explanation: "Tetra- means 4 phosphorus atoms; tri- means 3 sulfurs.", topic: "Molecular Formulas" },
+  { prompt: "Write the formula for dinitrogen tetrachloride.", answer: "N₂Cl₄", explanation: "Di- means 2 nitrogens; tetra- means 4 chlorines.", topic: "Molecular Formulas" },
+  { prompt: "Name the covalent compound CO₂.", answer: "carbon dioxide", explanation: "One carbon does not use mono-. Two oxygens is dioxide.", topic: "Molecular Names" },
+  { prompt: "Name the covalent compound SO₃.", answer: "sulfur trioxide", explanation: "Three oxygens is trioxide.", topic: "Molecular Names" },
+  { prompt: "Name the covalent compound N₂O₃.", answer: "dinitrogen trioxide", explanation: "Di- is 2 nitrogen atoms; tri- is 3 oxygens.", topic: "Molecular Names" },
+  { prompt: "Name the covalent compound N₂O₅.", answer: "dinitrogen pentoxide", explanation: "Di- is 2 nitrogen atoms; penta- plus oxide becomes pentoxide.", topic: "Molecular Names" },
+  { prompt: "Name the covalent compound PCl₃.", answer: "phosphorus trichloride", explanation: "Three chlorines is trichloride.", topic: "Molecular Names" },
+  { prompt: "Name the covalent compound NH₃.", answer: "nitrogen trihydride", explanation: "Three hydrogens is trihydride.", topic: "Molecular Names" },
+  { prompt: "Name the covalent compound SCl₆.", answer: "sulfur hexachloride", explanation: "Six chlorines is hexachloride.", topic: "Molecular Names" },
+  { prompt: "Name the covalent compound P₂O₅.", answer: "diphosphorus pentoxide", explanation: "Di- is 2 phosphorus atoms; penta- plus oxide becomes pentoxide.", topic: "Molecular Names" },
+  { prompt: "Name the covalent compound CCl₄.", answer: "carbon tetrachloride", explanation: "Four chlorines is tetrachloride.", topic: "Molecular Names" },
+  { prompt: "Name the covalent compound SiO₂.", answer: "silicon dioxide", explanation: "Two oxygens is dioxide.", topic: "Molecular Names" },
+  { prompt: "Name the covalent compound CS₂.", answer: "carbon disulfide", explanation: "Two sulfurs is disulfide.", topic: "Molecular Names" },
+  { prompt: "Name the covalent compound PBr₃.", answer: "phosphorus tribromide", explanation: "Three bromines is tribromide.", topic: "Molecular Names" },
+  { prompt: "Name the covalent compound P₄O₁₀.", answer: "tetraphosphorus decoxide", explanation: "Tetra- is 4 phosphorus atoms; deca- plus oxide becomes decoxide.", topic: "Molecular Names" },
+  { prompt: "Name the covalent compound As₂O₃.", answer: "diarsenic trioxide", explanation: "Di- is 2 arsenic atoms; tri- is 3 oxygens.", topic: "Molecular Names" },
+  { prompt: "Name the covalent compound Cl₂O₇.", answer: "dichlorine heptoxide", explanation: "Di- is 2 chlorines; hepta- plus oxide becomes heptoxide.", topic: "Molecular Names" },
+  { prompt: "Name the acid HNO₃.", answer: "nitric acid", explanation: "Nitrate (ending -ate) becomes nitric acid.", topic: "Acid Names" },
+  { prompt: "Name the acid HCl.", answer: "hydrochloric acid", explanation: "A binary acid uses hydro- plus the root chlor- plus -ic acid.", topic: "Acid Names" },
+  { prompt: "Name the acid HC₂H₃O₂.", answer: "acetic acid", explanation: "HC₂H₃O₂ is acetic acid.", topic: "Acid Names" },
+  { prompt: "Name the acid HBr.", answer: "hydrobromic acid", explanation: "A binary acid uses hydro- plus the root brom- plus -ic acid.", topic: "Acid Names" },
+  { prompt: "Name the acid HNO₂.", answer: "nitrous acid", explanation: "Nitrite (ending -ite) becomes nitrous acid.", topic: "Acid Names" },
+  { prompt: "Write the formula for sulfuric acid.", answer: "H₂SO₄", explanation: "Sulfuric acid has the formula H₂SO₄.", topic: "Acid Formulas" },
+  { prompt: "Write the formula for hydrofluoric acid.", answer: "HF", explanation: "Hydrofluoric acid has the formula HF.", topic: "Acid Formulas" },
+  { prompt: "Write the formula for phosphorous acid.", answer: "H₃PO₃", explanation: "Phosphorous acid has the formula H₃PO₃.", topic: "Acid Formulas" },
+  { prompt: "Write the formula for carbonic acid.", answer: "H₂CO₃", explanation: "Carbonic acid has the formula H₂CO₃.", topic: "Acid Formulas" },
+  { prompt: "Write the formula for hydrosulfuric acid.", answer: "H₂S", explanation: "Hydrosulfuric acid has the formula H₂S.", topic: "Acid Formulas" },
+];
+
 const games = [
   ["Flashcards", "Flip to reveal"],
   ["Quiz", "Multiple choice"],
@@ -646,6 +696,14 @@ const jeopardyBoard = [
   { title: "ORBITALS", indexes: [9, 10, 11, 12, 13] },
   { title: "ATOMIC TRENDS", indexes: [14, 15, 16, 17, 18] },
   { title: "IONS & NITROGEN", indexes: [19, 20, 21, 22, 26] },
+];
+
+const unit6JeopardyBoard = [
+  { title: "FORMULAS I", indexes: [0, 1, 2, 3, 4] },
+  { title: "FORMULAS II", indexes: [5, 6, 7, 8, 9] },
+  { title: "COMPOUND NAMES", indexes: [15, 16, 17, 18, 19] },
+  { title: "ACID NAMES", indexes: [30, 31, 32, 33, 34] },
+  { title: "ACID FORMULAS", indexes: [35, 36, 37, 38, 39] },
 ];
 
 const millionaireLevels = [
@@ -671,16 +729,40 @@ const shuffleChoices = (question: Question): Question => ({
   ...question,
   choices: shuffle(question.choices),
 });
-const makeBombSet = () =>
-  shuffle(exactUnit5Questions).slice(0, 10).map(shuffleChoices);
-const makeGameSet = () => shuffle(exactUnit5Questions).map(shuffleChoices);
+const buildMultipleChoiceQuestions = (items: Unit6StudyItem[]): Question[] =>
+  items.map((item) => ({
+    question: item.prompt,
+    answer: item.answer,
+    explanation: item.explanation,
+    choices: [
+      item.answer,
+      ...items
+        .filter(
+          (candidate) =>
+            candidate.topic === item.topic && candidate.answer !== item.answer,
+        )
+        .slice(0, 3)
+        .map((candidate) => candidate.answer),
+    ],
+  }));
+const unit6Questions = buildMultipleChoiceQuestions(unit6Items);
+const makeBombSet = (questionSet: Question[]) =>
+  shuffle(questionSet).slice(0, 10).map(shuffleChoices);
+const makeGameSet = (questionSet: Question[]) =>
+  shuffle(questionSet).map(shuffleChoices);
 const chemistryTopics = [
   "Electromagnetic Energy & Light",
   "Electrons & Energy Levels",
   "Atomic Structure & Trends",
   "Ions & Valence Electrons",
+  "Molecular Formulas",
+  "Molecular Names",
+  "Acid Names",
+  "Acid Formulas",
 ];
 const topicForQuestion = (question: Question) => {
+  const unit6Item = unit6Items.find((item) => item.prompt === question.question);
+  if (unit6Item) return unit6Item.topic;
   const index = exactUnit5Questions.findIndex(
     (item) => item.question === question.question,
   );
@@ -2574,7 +2656,14 @@ export default function ChemistryHub() {
   const [resetStatsOpen, setResetStatsOpen] = useState(false);
   const [resetCode, setResetCode] = useState("");
   const [cheatSheetOpen, setCheatSheetOpen] = useState(false);
-  const questions = selectedUnit === "Unit 5" ? exactUnit5Questions : [];
+  const questions =
+    selectedUnit === "Unit 5"
+      ? exactUnit5Questions
+      : selectedUnit === "Unit 6"
+        ? unit6Questions
+        : [];
+  const activeJeopardyBoard =
+    selectedUnit === "Unit 6" ? unit6JeopardyBoard : jeopardyBoard;
   const currentQuestion =
     selectedGame && selectedGame !== "Bomb"
       ? gameQuestionSet[questionIndex]
@@ -2595,11 +2684,11 @@ export default function ChemistryHub() {
     setCorrectCount(0);
     setAttemptCount(0);
     if (game === "Match") setMatchRound((round) => round + 1);
-    if (selectedUnit === "Unit 5") {
-      setGameQuestionSet(makeGameSet());
-      setJeopardySet(exactUnit5Questions.map(shuffleChoices));
+    if (questions.length) {
+      setGameQuestionSet(makeGameSet(questions));
+      setJeopardySet(questions.map(shuffleChoices));
     }
-    if (game === "Bomb" && selectedUnit === "Unit 5") setBombSet(makeBombSet());
+    if (game === "Bomb" && questions.length) setBombSet(makeBombSet(questions));
   };
   const next = () => {
     const limit = selectedGame === "Quiz" ? questions.length : selectedGame === "Millionaire" ? 15 : 10;
@@ -2694,7 +2783,7 @@ export default function ChemistryHub() {
             <h1 style={styles.title}>Chemistry Study Guide</h1>
           </header>
           <div style={styles.unitRow}>
-            {["Unit 1", "Unit 2", "Unit 3", "Unit 4", "Unit 5"].map((unit) => (
+            {["Unit 1", "Unit 2", "Unit 3", "Unit 4", "Unit 5", "Unit 6"].map((unit) => (
               <button
                 key={unit}
                 onClick={() => { setSelectedUnit(unit); setCheatSheetOpen(false); }}
@@ -2709,8 +2798,8 @@ export default function ChemistryHub() {
           </div>
           <div style={styles.unitStatus}>
             {selectedUnit} ·{" "}
-            {selectedUnit === "Unit 5"
-              ? `${exactUnit5Questions.length} questions ready`
+            {questions.length
+              ? `${questions.length} questions ready`
               : "Study guide coming soon"}
           </div>
           <section style={styles.grid}>
@@ -2782,14 +2871,14 @@ export default function ChemistryHub() {
               </div>
             )}
             {selectedGame === "Orbital Lab" && <OrbitalLab />}
-            {selectedGame === "Jeopardy" && selectedUnit === "Unit 5" ? (
+            {selectedGame === "Jeopardy" && questions.length ? (
               <>
                 {jeopardyQuestion === null ? (
                   <>
                     <h2 style={styles.gameName}>JEOPARDY</h2>
                     <p style={styles.modalText}>Pick a point value.</p>
                     <div style={styles.jeopardyBoard}>
-                      {jeopardyBoard.map((category) => (
+                      {activeJeopardyBoard.map((category) => (
                         <div key={category.title} style={styles.jeopardyColumn}>
                           <div style={styles.jeopardyHeader}>
                             {category.title}
@@ -2823,7 +2912,7 @@ export default function ChemistryHub() {
                   (() => {
                     const question =
                       jeopardySet[jeopardyQuestion] ||
-                      exactUnit5Questions[jeopardyQuestion];
+                      questions[jeopardyQuestion];
                     return (
                       <>
                         <button
@@ -2839,7 +2928,7 @@ export default function ChemistryHub() {
                         <div style={styles.gameName}>JEOPARDY</div>
                         <div style={styles.progress}>
                           $
-                          {((jeopardyBoard
+                          {((activeJeopardyBoard
                             .flatMap((c) => c.indexes)
                             .indexOf(jeopardyQuestion) %
                             5) +
@@ -2927,7 +3016,7 @@ export default function ChemistryHub() {
             ) : selectedGame === "Match" && questions.length ? (
               <MatchGame
                 key={matchRound}
-                questions={makeGameSet()}
+                questions={makeGameSet(questions)}
                 onComplete={(matches, tries) => {
                   setCorrectCount(matches);
                   setAttemptCount(tries);
@@ -2958,7 +3047,7 @@ export default function ChemistryHub() {
                   <button
                     style={styles.closeButton}
                     onClick={() => {
-                      setBombSet(makeBombSet());
+                      setBombSet(makeBombSet(questions));
                       setBombComplete(false);
                       setQuestionIndex(0);
                       setChoice(null);
