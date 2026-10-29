@@ -628,14 +628,43 @@ const exactUnit5Questions: Question[] = [
   },
 ];
 
-type Unit6StudyItem = {
+type StudyItem = {
   prompt: string;
   answer: string;
   explanation: string;
   topic: string;
 };
 
-const unit6Items: Unit6StudyItem[] = [
+const unit2Items: StudyItem[] = [
+  { prompt: "What is a physical property?", answer: "A characteristic that can be observed without changing a substance's identity", explanation: "Examples include color, density, melting point, and state of matter.", topic: "Properties & Changes" },
+  { prompt: "What is a chemical property?", answer: "A description of how a substance can change into a new substance", explanation: "Chemical properties describe a substance's ability to react or form something new.", topic: "Properties & Changes" },
+  { prompt: "What is the difference between a physical change and a chemical change?", answer: "A physical change changes form; a chemical change creates a new substance", explanation: "Melting is physical; burning is chemical.", topic: "Properties & Changes" },
+  { prompt: "What is matter?", answer: "Anything that has mass and takes up space", explanation: "Matter has both mass and volume.", topic: "Properties & Changes" },
+  { prompt: "What does the kinetic-molecular theory say?", answer: "Matter is made of tiny particles that are constantly moving", explanation: "Particles in matter are always in motion.", topic: "Properties & Changes" },
+  { prompt: "What is density?", answer: "The amount of mass packed into a certain volume", explanation: "Density = mass ÷ volume.", topic: "Density & Measurement" },
+  { prompt: "Which formula finds density?", answer: "density = mass ÷ volume", explanation: "Use D = m/V, with grams divided by milliliters.", topic: "Density & Measurement" },
+  { prompt: "Which formula finds mass?", answer: "mass = density × volume", explanation: "Multiply density by volume to find mass.", topic: "Density & Measurement" },
+  { prompt: "Which formula finds volume?", answer: "volume = mass ÷ density", explanation: "Divide mass by density to find volume.", topic: "Density & Measurement" },
+  { prompt: "What are common metric units for mass, volume, and length?", answer: "grams, milliliters (or cm³), and meters", explanation: "Mass is measured in grams, volume in mL or cm³, and length in meters.", topic: "Density & Measurement" },
+  { prompt: "What is the difference between mass and weight?", answer: "Mass is the amount of matter; weight is the force of gravity acting on it", explanation: "Mass does not depend on location, while weight does.", topic: "Density & Measurement" },
+  { prompt: "A sample has a mass of 85.0 g and a volume of 116 mL. What is its density?", answer: "0.733 g/mL", explanation: "85.0 ÷ 116 = 0.733 g/mL.", topic: "Density & Measurement" },
+  { prompt: "What is the mass of 168 mL of a liquid with a density of 0.755 g/mL?", answer: "127 g", explanation: "0.755 × 168 = 126.84 g, which rounds to 127 g.", topic: "Density & Measurement" },
+  { prompt: "A sample has a density of 2.85 g/mL and a mass of 52.0 g. What is its volume?", answer: "18.2 mL", explanation: "52.0 ÷ 2.85 = 18.2 mL.", topic: "Density & Measurement" },
+  { prompt: "What is the difference between extensive and intensive properties?", answer: "Extensive properties depend on amount; intensive properties do not", explanation: "Mass and volume are extensive; density, color, and temperature are intensive.", topic: "Mixtures & States" },
+  { prompt: "What is a heterogeneous mixture?", answer: "A mixture that is not evenly mixed and may have visible different parts", explanation: "The composition varies from place to place.", topic: "Mixtures & States" },
+  { prompt: "What is a homogeneous mixture?", answer: "A mixture that is evenly mixed throughout", explanation: "A homogeneous mixture looks the same throughout.", topic: "Mixtures & States" },
+  { prompt: "What is a compound?", answer: "A substance made of two or more different elements chemically bonded together", explanation: "Compounds have a fixed composition.", topic: "Mixtures & States" },
+  { prompt: "Which description matches a solid?", answer: "It has a fixed shape and fixed volume", explanation: "Solids keep both their shape and volume.", topic: "Mixtures & States" },
+  { prompt: "Which description matches a liquid?", answer: "It has a fixed volume but takes the shape of its container", explanation: "Liquids flow and change shape but keep their volume.", topic: "Mixtures & States" },
+  { prompt: "Which description matches a gas?", answer: "It has no fixed shape or fixed volume", explanation: "Gases spread out to fill their containers.", topic: "Mixtures & States" },
+  { prompt: "In the density lab, what is the density of the blue liquid?", answer: "1.35 g/mL", explanation: "13.5 g ÷ 10.0 mL = 1.35 g/mL.", topic: "Density Lab" },
+  { prompt: "In the density lab, what is the density of the green liquid?", answer: "1.00 g/mL", explanation: "10.0 g ÷ 10.0 mL = 1.00 g/mL.", topic: "Density Lab" },
+  { prompt: "In the density lab, what is the density of the yellow liquid?", answer: "0.70 g/mL", explanation: "7.0 g ÷ 10.0 mL = 0.70 g/mL.", topic: "Density Lab" },
+  { prompt: "On a mass-versus-volume graph, what does the slope represent?", answer: "Density", explanation: "Slope = change in mass ÷ change in volume, which is density.", topic: "Density Lab" },
+  { prompt: "What is the layer order in a test tube, from bottom to top?", answer: "Blue, green, yellow", explanation: "The most dense liquid settles on bottom: blue (1.35), then green (1.00), then yellow (0.70).", topic: "Density Lab" },
+];
+
+const unit6Items: StudyItem[] = [
   { prompt: "Write the formula for sulfur tetroxide.", answer: "SO₄", explanation: "No prefix on sulfur means 1 sulfur; tetra- means 4 oxygens.", topic: "Molecular Formulas" },
   { prompt: "Write the formula for phosphorus trifluoride.", answer: "PF₃", explanation: "Tri- means 3 fluorines.", topic: "Molecular Formulas" },
   { prompt: "Write the formula for iodine monobromide.", answer: "IBr", explanation: "Mono- means 1 bromine.", topic: "Molecular Formulas" },
@@ -706,6 +735,14 @@ const unit6JeopardyBoard = [
   { title: "ACID FORMULAS", indexes: [35, 36, 37, 38, 39] },
 ];
 
+const unit2JeopardyBoard = [
+  { title: "PROPERTIES", indexes: [0, 1, 2, 3, 4] },
+  { title: "DENSITY", indexes: [5, 6, 7, 8, 9] },
+  { title: "MEASUREMENT", indexes: [10, 11, 12, 13, 14] },
+  { title: "MATTER", indexes: [15, 16, 17, 18, 19] },
+  { title: "DENSITY LAB", indexes: [21, 22, 23, 24, 25] },
+];
+
 const millionaireLevels = [
   "$100",
   "$200",
@@ -729,22 +766,27 @@ const shuffleChoices = (question: Question): Question => ({
   ...question,
   choices: shuffle(question.choices),
 });
-const buildMultipleChoiceQuestions = (items: Unit6StudyItem[]): Question[] =>
-  items.map((item) => ({
-    question: item.prompt,
-    answer: item.answer,
-    explanation: item.explanation,
-    choices: [
-      item.answer,
-      ...items
-        .filter(
-          (candidate) =>
-            candidate.topic === item.topic && candidate.answer !== item.answer,
-        )
-        .slice(0, 3)
-        .map((candidate) => candidate.answer),
-    ],
-  }));
+const buildMultipleChoiceQuestions = (items: StudyItem[]): Question[] =>
+  items.map((item) => {
+    const sameTopic = items.filter(
+      (candidate) =>
+        candidate.topic === item.topic && candidate.answer !== item.answer,
+    );
+    const otherItems = items.filter(
+      (candidate) =>
+        candidate.topic !== item.topic && candidate.answer !== item.answer,
+    );
+    const distractors = [...sameTopic, ...otherItems]
+      .slice(0, 3)
+      .map((candidate) => candidate.answer);
+    return {
+      question: item.prompt,
+      answer: item.answer,
+      explanation: item.explanation,
+      choices: [item.answer, ...distractors],
+    };
+  });
+const unit2Questions = buildMultipleChoiceQuestions(unit2Items);
 const unit6Questions = buildMultipleChoiceQuestions(unit6Items);
 const makeBombSet = (questionSet: Question[]) =>
   shuffle(questionSet).slice(0, 10).map(shuffleChoices);
@@ -759,8 +801,14 @@ const chemistryTopics = [
   "Molecular Names",
   "Acid Names",
   "Acid Formulas",
+  "Properties & Changes",
+  "Density & Measurement",
+  "Mixtures & States",
+  "Density Lab",
 ];
 const topicForQuestion = (question: Question) => {
+  const unit2Item = unit2Items.find((item) => item.prompt === question.question);
+  if (unit2Item) return unit2Item.topic;
   const unit6Item = unit6Items.find((item) => item.prompt === question.question);
   if (unit6Item) return unit6Item.topic;
   const index = exactUnit5Questions.findIndex(
@@ -2777,16 +2825,27 @@ function useDraggablePanel() {
   };
 }
 
-function EquationCheatSheet({ open, onToggle }: { open: boolean; onToggle: () => void }) {
-  const { panelStyle, dragProps } = useDraggablePanel();
-  const rows = [
+function EquationCheatSheet({
+  open,
+  onToggle,
+  title = "Equation Cheat Sheet",
+  buttonLabel = "Equation Cheat Sheet",
+  rows = [
     ["Frequency", "Wavelength", "λ = c / ν"],
     ["Wavelength", "Frequency", "ν = c / λ"],
     ["Frequency", "Energy", "E = hν"],
     ["Energy", "Frequency", "ν = E / h"],
     ["Wavelength", "Energy", "E = hc / λ"],
     ["Energy", "Wavelength", "λ = hc / E"],
-  ];
+  ],
+}: {
+  open: boolean;
+  onToggle: () => void;
+  title?: string;
+  buttonLabel?: string;
+  rows?: string[][];
+}) {
+  const { panelStyle, dragProps } = useDraggablePanel();
   return (
     <div style={styles.cheatDock}>
       {open && (
@@ -2794,14 +2853,14 @@ function EquationCheatSheet({ open, onToggle }: { open: boolean; onToggle: () =>
           <div style={styles.panelDragHandle} {...dragProps}>
             <button
               type="button"
-              aria-label="Close equation cheat sheet"
+              aria-label={`Close ${title.toLowerCase()}`}
               style={styles.panelClose}
               onPointerDown={(event) => event.stopPropagation()}
               onClick={onToggle}
             >
               ×
             </button>
-            <strong style={styles.cheatTitle}>Equation Cheat Sheet</strong>
+            <strong style={styles.cheatTitle}>{title}</strong>
             <span style={styles.dragHint}>Drag me</span>
           </div>
           <div style={styles.cheatHeader}>
@@ -2814,7 +2873,7 @@ function EquationCheatSheet({ open, onToggle }: { open: boolean; onToggle: () =>
           ))}
         </aside>
       )}
-      {!open && <button style={styles.cheatButton} onClick={onToggle}>Equation Cheat Sheet</button>}
+      {!open && <button style={styles.cheatButton} onClick={onToggle}>{buttonLabel}</button>}
     </div>
   );
 }
@@ -2896,6 +2955,68 @@ function ChemistryCalculator({
   );
 }
 
+function DensityLab() {
+  const [blue, setBlue] = useState("");
+  const [green, setGreen] = useState("");
+  const [yellow, setYellow] = useState("");
+  const [layers, setLayers] = useState("");
+  const [checked, setChecked] = useState(false);
+  const densityCorrect = (value: string, expected: number) =>
+    Math.abs(Number(value) - expected) < 0.02;
+  const allCorrect =
+    densityCorrect(blue, 1.35) &&
+    densityCorrect(green, 1) &&
+    densityCorrect(yellow, 0.7) &&
+    layers === "Blue, green, yellow";
+  const reset = () => {
+    setBlue("");
+    setGreen("");
+    setYellow("");
+    setLayers("");
+    setChecked(false);
+  };
+  const fieldStyle: React.CSSProperties = {
+    width: 95,
+    border: "2px solid #99f6e4",
+    borderRadius: 10,
+    padding: "10px 12px",
+    font: "700 16px Montserrat,sans-serif",
+    color: "#115e59",
+  };
+  return (
+    <>
+      <div style={styles.gameName}>DENSITY LAB</div>
+      <p style={styles.modalText}>
+        Use density = mass ÷ volume. The slope on a mass-versus-volume graph is density.
+      </p>
+      <div style={styles.densityTable}>
+        <div style={styles.densityHeader}>Liquid</div><div style={styles.densityHeader}>Mass</div><div style={styles.densityHeader}>Volume</div><div style={styles.densityHeader}>Density</div>
+        <strong>Blue</strong><span>13.5 g</span><span>10.0 mL</span><input aria-label="Blue density" value={blue} onChange={(event) => !checked && setBlue(event.target.value)} placeholder="g/mL" style={fieldStyle} />
+        <strong>Green</strong><span>10.0 g</span><span>10.0 mL</span><input aria-label="Green density" value={green} onChange={(event) => !checked && setGreen(event.target.value)} placeholder="g/mL" style={fieldStyle} />
+        <strong>Yellow</strong><span>7.0 g</span><span>10.0 mL</span><input aria-label="Yellow density" value={yellow} onChange={(event) => !checked && setYellow(event.target.value)} placeholder="g/mL" style={fieldStyle} />
+      </div>
+      <p style={{ ...styles.labLabel, marginTop: 22 }}>Choose the layer order from bottom to top.</p>
+      <div style={styles.labOptions}>
+        {["Blue, green, yellow", "Yellow, green, blue", "Green, blue, yellow", "Blue, yellow, green"].map((option) => (
+          <button key={option} onClick={() => !checked && setLayers(option)} style={{ ...styles.labOption, ...(layers === option ? styles.selected : {}) }}>
+            {option}
+          </button>
+        ))}
+      </div>
+      {!checked ? (
+        <button style={styles.closeButton} onClick={() => setChecked(true)}>Check Lab</button>
+      ) : (
+        <div style={allCorrect ? styles.labResults : styles.labResultsBad}>
+          <strong>{allCorrect ? "✓ Great job!" : "Not quite — here are the correct lab results:"}</strong>
+          <p>Blue = 1.35 g/mL · Green = 1.00 g/mL · Yellow = 0.70 g/mL</p>
+          <p>Bottom to top: blue, green, yellow.</p>
+          <button style={styles.closeButton} onClick={reset}>Try Again</button>
+        </div>
+      )}
+    </>
+  );
+}
+
 export default function ChemistryHub() {
   const [selectedUnit, setSelectedUnit] = useState("Unit 1");
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
@@ -2921,15 +3042,23 @@ export default function ChemistryHub() {
   const [cheatSheetOpen, setCheatSheetOpen] = useState(false);
   const [calculatorOpen, setCalculatorOpen] = useState(false);
   const questions =
-    selectedUnit === "Unit 5"
+    selectedUnit === "Unit 2"
+      ? unit2Questions
+      : selectedUnit === "Unit 5"
       ? exactUnit5Questions
       : selectedUnit === "Unit 6"
         ? unit6Questions
         : [];
   const activeJeopardyBoard =
-    selectedUnit === "Unit 6" ? unit6JeopardyBoard : jeopardyBoard;
+    selectedUnit === "Unit 2"
+      ? unit2JeopardyBoard
+      : selectedUnit === "Unit 6"
+        ? unit6JeopardyBoard
+        : jeopardyBoard;
   const statsTopics =
-    selectedUnit === "Unit 5"
+    selectedUnit === "Unit 2"
+      ? chemistryTopics.slice(8)
+      : selectedUnit === "Unit 5"
       ? chemistryTopics.slice(0, 4)
       : selectedUnit === "Unit 6"
         ? chemistryTopics.slice(4)
@@ -2939,7 +3068,9 @@ export default function ChemistryHub() {
       ? gameQuestionSet[questionIndex]
       : questions[questionIndex % Math.max(questions.length, 1)];
   const playable =
-    selectedGame !== "My Stats" && selectedGame !== "Orbital Lab";
+    selectedGame !== "My Stats" &&
+    selectedGame !== "Orbital Lab" &&
+    selectedGame !== "Density Lab";
   const openGame = (game: string) => {
     setSelectedGame(game);
     setQuestionIndex(0);
@@ -3075,9 +3206,14 @@ export default function ChemistryHub() {
               : "Study guide coming soon"}
           </div>
           <section style={styles.grid}>
-            {(selectedUnit === "Unit 5"
-              ? games
-              : games.filter(([name]) => name !== "Orbital Lab")
+            {(selectedUnit === "Unit 2"
+              ? [
+                  ...games.filter(([name]) => name !== "Orbital Lab"),
+                  ["Density Lab", "Calculate & layer"],
+                ]
+              : selectedUnit === "Unit 5"
+                ? games
+                : games.filter(([name]) => name !== "Orbital Lab")
             ).map(([name, detail]) => {
               const darkTealGame = [
                 "Millionaire",
@@ -3143,6 +3279,7 @@ export default function ChemistryHub() {
               </div>
             )}
             {selectedGame === "Orbital Lab" && <OrbitalLab />}
+            {selectedGame === "Density Lab" && <DensityLab />}
             {selectedGame === "Jeopardy" && questions.length ? (
               <>
                 {jeopardyQuestion === null ? (
@@ -3455,17 +3592,30 @@ export default function ChemistryHub() {
         </section>
       )}
       {selectedUnit === "Unit 5" && (
-        <>
-          <EquationCheatSheet
-            open={cheatSheetOpen}
-            onToggle={() => setCheatSheetOpen((open) => !open)}
-          />
-          <ChemistryCalculator
-            open={calculatorOpen}
-            onToggle={() => setCalculatorOpen((open) => !open)}
-          />
-        </>
+        <EquationCheatSheet
+          open={cheatSheetOpen}
+          onToggle={() => setCheatSheetOpen((open) => !open)}
+        />
       )}
+      {selectedUnit === "Unit 2" && (
+        <EquationCheatSheet
+          open={cheatSheetOpen}
+          onToggle={() => setCheatSheetOpen((open) => !open)}
+          title="Density Cheat Sheet"
+          buttonLabel="Density Cheat Sheet"
+          rows={[
+            ["Mass + Volume", "Density", "D = m / V"],
+            ["Density + Volume", "Mass", "m = D × V"],
+            ["Mass + Density", "Volume", "V = m / D"],
+            ["g ÷ mL", "Density unit", "g/mL"],
+            ["Higher density", "Layer position", "Bottom"],
+          ]}
+        />
+      )}
+      <ChemistryCalculator
+        open={calculatorOpen}
+        onToggle={() => setCalculatorOpen((open) => !open)}
+      />
     </main>
   );
 }
@@ -3903,6 +4053,33 @@ const styles: Record<string, React.CSSProperties> = {
     border: "2px solid #ccfbf1",
     borderRadius: 16,
     textAlign: "left",
+  },
+  labResultsBad: {
+    display: "grid",
+    gap: 8,
+    margin: "20px 0 0",
+    padding: 16,
+    border: "2px solid #fbbf24",
+    background: "#fffbeb",
+    borderRadius: 16,
+    textAlign: "left",
+  },
+  densityTable: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr 1fr 1.35fr",
+    gap: 8,
+    alignItems: "center",
+    textAlign: "left",
+    padding: 14,
+    border: "2px solid #ccfbf1",
+    borderRadius: 16,
+    background: "#f8fffe",
+  },
+  densityHeader: {
+    color: "#0f766e",
+    fontSize: 13,
+    fontWeight: 900,
+    textTransform: "uppercase",
   },
   resultGood: { color: "#15803d", fontSize: 17 },
   resultNeedsWork: { color: "#b45309", fontSize: 17 },
