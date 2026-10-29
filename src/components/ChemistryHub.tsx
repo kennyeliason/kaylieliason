@@ -683,11 +683,11 @@ const games = [
   ["Quiz", "Multiple choice"],
   ["Orbital Lab", "Build electron arrows"],
   ["Match", "Pair Q&A"],
-  ["My Stats", "See progress"],
   ["Millionaire", "Rising stakes"],
   ["Jeopardy", "Pick points"],
   ["Bomb", "Defuse or boom!"],
   ["Snake", "Eat & grow"],
+  ["My Stats", "See progress"],
 ];
 
 const jeopardyBoard = [
@@ -878,28 +878,28 @@ function MatchGame({ questions, onComplete }: { questions: Question[]; onComplet
   ])));
   const [selected, setSelected] = useState<number[]>([]);
   const [matched, setMatched] = useState<number[]>([]);
-  const [locked, setLocked] = useState(false);
   const [attempts, setAttempts] = useState(0);
 
   const chooseCard = (index: number) => {
-    if (locked || selected.includes(index) || matched.includes(cards[index].id)) return;
+    if (selected.includes(index) || matched.includes(cards[index].id)) return;
+    // Leave a wrong pair face-up so it can be read. A third tap turns both over
+    // and starts the next try with that card.
+    if (selected.length === 2) {
+      setSelected([index]);
+      return;
+    }
     const nextSelected = [...selected, index];
     setSelected(nextSelected);
     if (nextSelected.length !== 2) return;
-    setLocked(true);
-    setAttempts(current => current + 1);
+    const nextAttempts = attempts + 1;
+    setAttempts(nextAttempts);
     const [first, second] = nextSelected.map(cardIndex => cards[cardIndex]);
-    window.setTimeout(() => {
-      if (first.id === second.id && first.side !== second.side) {
-        setMatched(current => {
-          const next = [...current, first.id];
-          if (next.length === 10) onComplete(10, attempts + 1);
-          return next;
-        });
-      }
+    if (first.id === second.id && first.side !== second.side) {
+      const nextMatches = [...matched, first.id];
+      setMatched(nextMatches);
       setSelected([]);
-      setLocked(false);
-    }, 850);
+      if (nextMatches.length === 10) onComplete(10, 10);
+    }
   };
 
   return <>
@@ -2580,7 +2580,11 @@ function GameEndScreen({
   return (
     <>
       <h2 style={styles.modalTitle}>
-        {exploded ? "💥 Bomb Exploded!" : `${game} Complete!`}
+        {exploded
+          ? "💥 Bomb Exploded!"
+          : game === "Bomb"
+            ? "💣 Bomb Defused!"
+            : `${game} Complete!`}
       </h2>
       <div style={styles.statsNumber}>
         {attempts ? `${correct}/${attempts}` : "10"}
@@ -2795,11 +2799,13 @@ export default function ChemistryHub() {
     if (!choice || checked || !bombQuestion) return;
     setChecked(true);
     setAttemptCount((count) => count + 1);
-    if (choice === bombQuestion.answer) setCorrectCount((count) => count + 1);
+    const isCorrect = choice === bombQuestion.answer;
+    if (isCorrect) setCorrectCount((count) => count + 1);
     recordResult(
       topicForQuestion(bombQuestion),
-      choice === bombQuestion.answer,
+      isCorrect,
     );
+    if (!isCorrect) setBombExploded(true);
   };
   const nextBomb = (timedOut = false) => {
     if (timedOut) {
@@ -3307,12 +3313,12 @@ const styles: Record<string, React.CSSProperties> = {
   },
   grid: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fit,minmax(190px,1fr))",
-    gap: 14,
+    gridTemplateColumns: "repeat(4,minmax(0,1fr))",
+    gap: 16,
   },
   card: {
-    minHeight: 130,
-    padding: 20,
+    minHeight: 175,
+    padding: 24,
     border: 0,
     borderRadius: 22,
     textAlign: "left",
