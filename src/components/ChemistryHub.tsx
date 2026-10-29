@@ -2633,6 +2633,71 @@ function EquationCheatSheet({ open, onToggle }: { open: boolean; onToggle: () =>
   );
 }
 
+function ChemistryCalculator({
+  open,
+  onToggle,
+}: {
+  open: boolean;
+  onToggle: () => void;
+}) {
+  const [expression, setExpression] = useState("");
+  const [result, setResult] = useState("");
+  const add = (value: string) => {
+    setExpression((current) => current + value);
+    setResult("");
+  };
+  const calculate = () => {
+    if (!expression) return;
+    try {
+      if (!/^[0-9+\-*/().^\s]+$/.test(expression)) throw new Error("Invalid input");
+      const value = Function(`"use strict"; return (${expression.replaceAll("^", "**")})`)();
+      if (!Number.isFinite(value)) throw new Error("Invalid result");
+      setResult(Number(value).toExponential(6).replace("e+", " × 10^"));
+    } catch {
+      setResult("Check your equation");
+    }
+  };
+  const keys = [
+    ["7", "7"], ["8", "8"], ["9", "9"], ["÷", "/"],
+    ["4", "4"], ["5", "5"], ["6", "6"], ["×", "*"],
+    ["1", "1"], ["2", "2"], ["3", "3"], ["−", "-"],
+    ["0", "0"], [".", "."], ["+", "+"], ["=", "="],
+  ];
+  return (
+    <div style={styles.calculatorDock}>
+      {open && (
+        <aside style={styles.calculator} aria-label="Chemistry calculator">
+          <strong style={styles.calculatorTitle}>Chem Calculator</strong>
+          <div style={styles.calculatorDisplay} aria-live="polite">
+            <span>{expression || "0"}</span>
+            {result && <small>{result}</small>}
+          </div>
+          <div style={styles.calculatorKeys}>
+            <button style={styles.calcSpecial} onClick={() => add("3*10^8")}>C = 3 × 10⁸</button>
+            <button style={styles.calcSpecial} onClick={() => add("6.63*10^-34")}>H = 6.63 × 10⁻³⁴</button>
+            <button style={styles.calcSpecial} onClick={() => add("10^(")}>10^()</button>
+            <button style={styles.calcSpecial} onClick={() => add(")")}>)</button>
+            {keys.map(([label, value]) => (
+              <button
+                key={label}
+                style={label === "=" ? styles.calcEquals : styles.calcKey}
+                onClick={() => (value === "=" ? calculate() : add(value))}
+              >
+                {label}
+              </button>
+            ))}
+            <button style={styles.calcWideKey} onClick={() => { setExpression(""); setResult(""); }}>Clear</button>
+            <button style={styles.calcWideKey} onClick={() => { setExpression((current) => current.slice(0, -1)); setResult(""); }}>Delete</button>
+          </div>
+        </aside>
+      )}
+      <button style={styles.cheatButton} onClick={onToggle}>
+        {open ? "Close Calculator" : "Chem Calculator"}
+      </button>
+    </div>
+  );
+}
+
 export default function ChemistryHub() {
   const [selectedUnit, setSelectedUnit] = useState("Unit 1");
   const [selectedGame, setSelectedGame] = useState<string | null>(null);
@@ -2656,6 +2721,7 @@ export default function ChemistryHub() {
   const [resetStatsOpen, setResetStatsOpen] = useState(false);
   const [resetCode, setResetCode] = useState("");
   const [cheatSheetOpen, setCheatSheetOpen] = useState(false);
+  const [calculatorOpen, setCalculatorOpen] = useState(false);
   const questions =
     selectedUnit === "Unit 5"
       ? exactUnit5Questions
@@ -2786,7 +2852,7 @@ export default function ChemistryHub() {
             {["Unit 1", "Unit 2", "Unit 3", "Unit 4", "Unit 5", "Unit 6"].map((unit) => (
               <button
                 key={unit}
-                onClick={() => { setSelectedUnit(unit); setCheatSheetOpen(false); }}
+                onClick={() => { setSelectedUnit(unit); setCheatSheetOpen(false); setCalculatorOpen(false); }}
                 style={{
                   ...styles.unitButton,
                   ...(selectedUnit === unit ? styles.activeUnit : {}),
@@ -3179,10 +3245,16 @@ export default function ChemistryHub() {
         </section>
       )}
       {selectedUnit === "Unit 5" && (
-        <EquationCheatSheet
-          open={cheatSheetOpen}
-          onToggle={() => setCheatSheetOpen((open) => !open)}
-        />
+        <>
+          <EquationCheatSheet
+            open={cheatSheetOpen}
+            onToggle={() => setCheatSheetOpen((open) => !open)}
+          />
+          <ChemistryCalculator
+            open={calculatorOpen}
+            onToggle={() => setCalculatorOpen((open) => !open)}
+          />
+        </>
       )}
     </main>
   );
@@ -3893,6 +3965,15 @@ const styles: Record<string, React.CSSProperties> = {
     justifyItems: "end",
     gap: 10,
   },
+  calculatorDock: {
+    position: "fixed",
+    right: 20,
+    top: 72,
+    zIndex: 31,
+    display: "grid",
+    justifyItems: "end",
+    gap: 10,
+  },
   cheatButton: {
     border: 0,
     borderRadius: 999,
@@ -3940,5 +4021,80 @@ const styles: Record<string, React.CSSProperties> = {
     borderBottom: "1px solid #d9f5ef",
     fontSize: 13,
     lineHeight: 1.25,
+  },
+  calculator: {
+    width: "min(330px,calc(100vw - 40px))",
+    padding: 16,
+    borderRadius: 18,
+    background: "#fff",
+    border: "2px solid #99f6e4",
+    boxShadow: "0 18px 48px rgba(4,47,46,.26)",
+    color: "#163f3b",
+  },
+  calculatorTitle: {
+    display: "block",
+    fontFamily: "Londrina Solid,Impact,sans-serif",
+    fontSize: 24,
+    color: "#115e59",
+    marginBottom: 10,
+  },
+  calculatorDisplay: {
+    minHeight: 66,
+    borderRadius: 12,
+    padding: "10px 12px",
+    background: "#ecfdf5",
+    border: "2px solid #ccfbf1",
+    color: "#134e4a",
+    fontFamily: "ui-monospace,SFMono-Regular,Menlo,monospace",
+    fontSize: 18,
+    fontWeight: 800,
+    overflowWrap: "anywhere",
+    display: "grid",
+    alignContent: "center",
+    gap: 4,
+    marginBottom: 10,
+  },
+  calculatorKeys: { display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: 7 },
+  calcKey: {
+    border: "2px solid #ccfbf1",
+    borderRadius: 10,
+    padding: "11px 4px",
+    background: "#f0fdfa",
+    color: "#115e59",
+    fontSize: 17,
+    fontWeight: 900,
+    cursor: "pointer",
+  },
+  calcEquals: {
+    border: 0,
+    borderRadius: 10,
+    padding: "11px 4px",
+    background: "linear-gradient(135deg,#0f766e,#0891b2)",
+    color: "#fff",
+    fontSize: 17,
+    fontWeight: 900,
+    cursor: "pointer",
+  },
+  calcSpecial: {
+    gridColumn: "span 2",
+    border: "2px solid #99f6e4",
+    borderRadius: 10,
+    padding: "9px 5px",
+    background: "#ccfbf1",
+    color: "#115e59",
+    fontSize: 12,
+    fontWeight: 900,
+    cursor: "pointer",
+  },
+  calcWideKey: {
+    gridColumn: "span 2",
+    border: "2px solid #ccfbf1",
+    borderRadius: 10,
+    padding: "9px 5px",
+    background: "#fff",
+    color: "#0f766e",
+    fontSize: 13,
+    fontWeight: 850,
+    cursor: "pointer",
   },
 };
