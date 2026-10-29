@@ -916,6 +916,148 @@ function MatchGame({ questions, onComplete }: { questions: Question[]; onComplet
   </>;
 }
 
+type SnakePoint = { x: number; y: number };
+
+function SnakeGame({ questions }: { questions: Question[] }) {
+  const [body, setBody] = useState<SnakePoint[]>([{ x: 10, y: 10 }]);
+  const [direction, setDirection] = useState<"up" | "down" | "left" | "right">("right");
+  const directionRef = useRef<"up" | "down" | "left" | "right">("right");
+  const [food, setFood] = useState<SnakePoint>({ x: 15, y: 10 });
+  const [running, setRunning] = useState(true);
+  const [gameOver, setGameOver] = useState(false);
+  const [score, setScore] = useState(0);
+  const [questionOpen, setQuestionOpen] = useState(false);
+  const [questionIndex, setQuestionIndex] = useState(0);
+  const [wrongAnswer, setWrongAnswer] = useState(false);
+  const question = questions[questionIndex % questions.length];
+
+  const changeDirection = (next: "up" | "down" | "left" | "right") => {
+    const opposite = { up: "down", down: "up", left: "right", right: "left" } as const;
+    if (opposite[next] === directionRef.current) return;
+    directionRef.current = next;
+    setDirection(next);
+  };
+  const newFood = (snake: SnakePoint[]) => {
+    let next: SnakePoint;
+    do {
+      next = { x: Math.floor(Math.random() * 20), y: Math.floor(Math.random() * 20) };
+    } while (snake.some((part) => part.x === next.x && part.y === next.y));
+    return next;
+  };
+  const restart = () => {
+    const fresh = [{ x: 10, y: 10 }];
+    setBody(fresh);
+    directionRef.current = "right";
+    setDirection("right");
+    setFood({ x: 15, y: 10 });
+    setRunning(true);
+    setGameOver(false);
+    setScore(0);
+    setQuestionOpen(false);
+    setQuestionIndex(0);
+    setWrongAnswer(false);
+  };
+
+  useEffect(() => {
+    if (!running || questionOpen) return;
+    const timer = window.setTimeout(() => {
+      setBody((current) => {
+        const head = current[0];
+        const next = { ...head };
+        if (directionRef.current === "up") next.y -= 1;
+        if (directionRef.current === "down") next.y += 1;
+        if (directionRef.current === "left") next.x -= 1;
+        if (directionRef.current === "right") next.x += 1;
+        if (next.x < 0 || next.x >= 20 || next.y < 0 || next.y >= 20 || current.some((part) => part.x === next.x && part.y === next.y)) {
+          setRunning(false);
+          setGameOver(true);
+          return current;
+        }
+        if (next.x === food.x && next.y === food.y) {
+          setQuestionOpen(true);
+          return [next, ...current];
+        }
+        return [next, ...current.slice(0, -1)];
+      });
+    }, 150);
+    return () => window.clearTimeout(timer);
+  }, [running, body, questionOpen, food]);
+
+  useEffect(() => {
+    const handleKey = (event: KeyboardEvent) => {
+      const controls: Record<string, "up" | "down" | "left" | "right"> = {
+        ArrowUp: "up", w: "up", ArrowDown: "down", s: "down", ArrowLeft: "left", a: "left", ArrowRight: "right", d: "right",
+      };
+      const next = controls[event.key];
+      if (!next || questionOpen || gameOver) return;
+      event.preventDefault();
+      changeDirection(next);
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [questionOpen, gameOver]);
+
+  if (gameOver) {
+    return (
+      <>
+        <div style={styles.gameName}>SNAKE</div>
+        <h2 style={styles.modalTitle}>Game Over!</h2>
+        <p style={styles.modalText}>Score: {score} · Length: {body.length}</p>
+        <button style={styles.closeButton} onClick={restart}>Play Again</button>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <div style={styles.gameName}>SNAKE</div>
+      <div style={styles.snakeScore}><span>Length: <strong>{body.length}</strong></span><span>Score: <strong>{score}</strong></span></div>
+      {questionOpen ? (
+        <div style={styles.snakeQuestion}>
+          <strong style={styles.snakeTag}>Answer to grow!</strong>
+          <h2 style={styles.question}>{question.question}</h2>
+          <div style={styles.choices}>
+            {question.choices.map((answer) => (
+              <button key={answer} style={styles.choice} onClick={() => {
+                if (answer === question.answer) {
+                  setScore((current) => current + 10);
+                  setFood(newFood(body));
+                  setQuestionIndex((current) => current + 1);
+                  setQuestionOpen(false);
+                } else {
+                  setWrongAnswer(true);
+                  setRunning(false);
+                  setGameOver(true);
+                }
+              }}>{answer}</button>
+            ))}
+          </div>
+          {wrongAnswer && <p style={styles.explanation}>Correct answer: {question.answer}</p>}
+        </div>
+      ) : (
+        <>
+          <div style={styles.snakeBoard}>
+            {Array.from({ length: 400 }).map((_, index) => {
+              const x = index % 20;
+              const y = Math.floor(index / 20);
+              const isHead = body[0]?.x === x && body[0]?.y === y;
+              const isBody = body.slice(1).some((part) => part.x === x && part.y === y);
+              const isFood = food.x === x && food.y === y;
+              return <div key={index} style={{ ...styles.snakeCell, ...(isHead ? styles.snakeHead : isBody ? styles.snakeBody : isFood ? styles.snakeFood : {}) }} />;
+            })}
+          </div>
+          <div style={styles.snakeControls}>
+            <span /> <button onClick={() => changeDirection("up")}>↑</button> <span />
+            <button onClick={() => changeDirection("left")}>←</button> <span style={styles.snakeDirection}>{direction[0].toUpperCase()}</span> <button onClick={() => changeDirection("right")}>→</button>
+            <span /> <button onClick={() => changeDirection("down")}>↓</button> <span />
+          </div>
+          <p style={styles.snakeHint}>Use the arrow keys or buttons. Eat the red dot, then answer a question to grow.</p>
+        </>
+      )}
+    </>
+  );
+}
+
 function MillionaireGame({
   question,
   questionIndex,
@@ -3119,6 +3261,8 @@ export default function ChemistryHub() {
                   })()
                 )}
               </>
+            ) : selectedGame === "Snake" && questions.length ? (
+              <SnakeGame questions={makeGameSet(questions)} />
             ) : selectedGame === "Match" && questions.length ? (
               <MatchGame
                 key={matchRound}
@@ -3565,6 +3709,58 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#fff",
     fontSize: 32,
     boxShadow: "0 7px 16px rgba(220,38,38,.28)",
+  },
+  snakeScore: {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    background: "linear-gradient(135deg,#166534,#22c55e)",
+    color: "#dcfce7",
+    padding: "12px 20px",
+    borderRadius: 12,
+    margin: "14px 0 16px",
+    fontSize: 14,
+  },
+  snakeBoard: {
+    display: "grid",
+    gridTemplateColumns: "repeat(20,1fr)",
+    gap: 1,
+    background: "#166534",
+    padding: 4,
+    borderRadius: 8,
+    aspectRatio: "1",
+    width: "min(400px,100%)",
+    margin: "0 auto",
+  },
+  snakeCell: { background: "#dcfce7", borderRadius: 2, aspectRatio: "1" },
+  snakeHead: { background: "#166534", borderRadius: 4 },
+  snakeBody: { background: "#22c55e" },
+  snakeFood: { background: "#ef4444", borderRadius: "50%" },
+  snakeControls: {
+    display: "grid",
+    gridTemplateColumns: "repeat(3,1fr)",
+    gap: 8,
+    maxWidth: 200,
+    margin: "16px auto 0",
+  },
+  snakeDirection: {
+    background: "#166534",
+    borderRadius: 8,
+    display: "grid",
+    placeItems: "center",
+    color: "#fff",
+    fontSize: 14,
+    fontWeight: 800,
+  },
+  snakeHint: { textAlign: "center", color: "#557673", fontSize: 12, marginTop: 8 },
+  snakeQuestion: { background: "#fff", borderRadius: 16, padding: 24, boxShadow: "0 4px 20px rgba(0,0,0,.15)" },
+  snakeTag: {
+    display: "inline-block",
+    background: "#22c55e",
+    color: "#fff",
+    padding: "4px 12px",
+    borderRadius: 12,
+    fontSize: 13,
   },
   orbitalLabGrid: {
     display: "grid",
