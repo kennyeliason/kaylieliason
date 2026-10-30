@@ -64,6 +64,7 @@ export default function DreamPhone() {
   const [turnBusy, setTurnBusy] = useState(false);
   const [isHost, setIsHost] = useState(false);
   const [activeCard, setActiveCard] = useState<ClueCard | null>(null);
+  const [callAnswered, setCallAnswered] = useState(false);
   const [notes, setNotes] = useState<Record<string, NoteState>>({});
   const [message, setMessage] = useState<string | null>(null);
   const peerRef = useRef<Peer | null>(null);
@@ -101,7 +102,7 @@ export default function DreamPhone() {
     setDeck(rest); setDeckCount(rest.length);
     updateTurn(turnRef.current, true, rest.length);
     if (connection) connection.send({ type: 'card', card });
-    else { setActiveCard(card); window.setTimeout(() => speak(card.spoken), 350); }
+    else { setCallAnswered(false); setActiveCard(card); }
   };
   const hostMessage = (connection: DataConnection, payload: any) => {
     if (payload?.type === 'join') {
@@ -116,7 +117,7 @@ export default function DreamPhone() {
     if (payload?.type === 'lobby') setPlayers(payload.players);
     if (payload?.type === 'start') { setPlayers(payload.players); setTurnIndex(payload.currentTurn); setDeckCount(payload.deckCount); setTurnBusy(false); setScreen('game'); }
     if (payload?.type === 'turn') { setTurnIndex(payload.currentTurn); setTurnBusy(payload.busy); setDeckCount(payload.deckCount); }
-    if (payload?.type === 'card') { setActiveCard(payload.card); window.setTimeout(() => speak(payload.card.spoken), 350); }
+    if (payload?.type === 'card') { setCallAnswered(false); setActiveCard(payload.card); }
   };
   const createHostRoom = () => {
     setIsHost(true);
@@ -150,7 +151,7 @@ export default function DreamPhone() {
   const drawCount = clueCards.length - deckCount;
   const begin = () => {
     const shuffled = [...clueCards].sort(() => Math.random() - 0.5);
-    setDeck(shuffled); deckRef.current = shuffled; setDeckCount(shuffled.length); setActiveCard(null); setActiveTab('deck'); setTurnIndex(0); turnRef.current = 0; setTurnBusy(false); setScreen('game');
+    setDeck(shuffled); deckRef.current = shuffled; setDeckCount(shuffled.length); setActiveCard(null); setCallAnswered(false); setActiveTab('deck'); setTurnIndex(0); turnRef.current = 0; setTurnBusy(false); setScreen('game');
     broadcast({ type: 'start', players: playersRef.current, currentTurn: 0, deckCount: shuffled.length });
   };
   const draw = () => {
@@ -172,7 +173,7 @@ export default function DreamPhone() {
   if (screen === 'joinWaiting') return <main className="dream-app"><Lobby title="Waiting for host" subtitle={`You joined game ${roomCode}. The host will start when everyone is ready.`}><div className="waiting-phone">☎</div><p className="waiting-name">You are playing as <b>{name}</b></p><button className="back-button" onClick={() => setScreen('home')}>Leave game</button></Lobby></main>;
 
   const isMyTurn = players[turnIndex] === name;
-  return <main className="dream-app game-shell"><header className="game-header"><button className="brand" onClick={() => setScreen('home')}>☎ DREAM PHONE</button><div className="room-pill"><span>GAME CODE</span><strong>{roomCode}</strong><button onClick={shareCode}>Copy invite</button></div></header><section className="turn-banner"><b>{turnBusy ? `${players[turnIndex] || 'Someone'} is checking a clue…` : `${players[turnIndex] || 'Host'}’s turn`}</b><span>{isMyTurn && !turnBusy ? 'Your turn — draw a card!' : 'You cannot see their clue or their Detective Notes.'}</span></section><section className="game-wrap"><nav className="tabs"><button className={activeTab === 'deck' ? 'active' : ''} onClick={() => setActiveTab('deck')}>☎ Draw pile <em>{drawCount}/24</em></button><button className={activeTab === 'notes' ? 'active' : ''} onClick={() => setActiveTab('notes')}>✎ Detective Notes</button></nav>{activeTab === 'deck' ? <section className="deck-screen"><div className="deck-copy"><p className="eyebrow">SECRET ADMIRER CARDS</p><h2>{isMyTurn && !turnBusy ? 'Pick up the next card.' : 'Wait for your turn.'}</h2><p>Only the player whose turn it is can see the next clue. Your Detective Notes are completely private.</p></div><div className="deck-zone"><button className="card-stack" onClick={draw} disabled={!deckCount || !isMyTurn || turnBusy} aria-label="Draw the next Secret Admirer card"><span className="stack stack-three"></span><span className="stack stack-two"></span><span className="top-card"><i>☎</i><b>SECRET<br/>ADMIRER</b><small>{deckCount ? isMyTurn && !turnBusy ? 'TAP TO DRAW' : 'WAIT' : 'ALL CALLED'}</small></span></button><p>{deckCount ? `${deckCount} cards left in the pile` : 'Every clue card has been drawn!'}</p></div></section> : <Notes notes={notes} onSet={setNote} />}</section>{activeCard && <div className="overlay"><section className="clue-modal"><button className="close" onClick={finishTurn}>×</button><div className="call-phone">☎</div><p className="eyebrow">{activeCard.kind}</p><h2>Your private clue!</h2><blockquote>“{activeCard.clue}”</blockquote><button className="listen-button" onClick={() => speak(activeCard.spoken)}>▶ Play phone call again</button><button className="notes-link" onClick={() => { setActiveTab('notes'); finishTurn(); }}>Finish turn & open Detective Notes →</button></section></div>}{message && <div className="toast">{message}</div>}</main>;
+  return <main className="dream-app game-shell"><header className="game-header"><button className="brand" onClick={() => setScreen('home')}>☎ DREAM PHONE</button><div className="room-pill"><span>GAME CODE</span><strong>{roomCode}</strong><button onClick={shareCode}>Copy invite</button></div></header><section className="turn-banner"><b>{turnBusy ? `${players[turnIndex] || 'Someone'} is checking a clue…` : `${players[turnIndex] || 'Host'}’s turn`}</b><span>{isMyTurn && !turnBusy ? 'Your turn — draw a card!' : 'You cannot see their clue or their Detective Notes.'}</span></section><section className="game-wrap"><nav className="tabs"><button className={activeTab === 'deck' ? 'active' : ''} onClick={() => setActiveTab('deck')}>☎ Draw pile <em>{drawCount}/24</em></button><button className={activeTab === 'notes' ? 'active' : ''} onClick={() => setActiveTab('notes')}>✎ Detective Notes</button></nav>{activeTab === 'deck' ? <section className="deck-screen"><div className="deck-copy"><p className="eyebrow">SECRET ADMIRER CARDS</p><h2>{isMyTurn && !turnBusy ? 'Pick up the next card.' : 'Wait for your turn.'}</h2><p>Only the player whose turn it is can see the next clue. Your Detective Notes are completely private.</p></div><div className="deck-zone"><button className="card-stack" onClick={draw} disabled={!deckCount || !isMyTurn || turnBusy} aria-label="Draw the next Secret Admirer card"><span className="stack stack-three"></span><span className="stack stack-two"></span><span className="top-card"><i>☎</i><b>SECRET<br/>ADMIRER</b><small>{deckCount ? isMyTurn && !turnBusy ? 'TAP TO DRAW' : 'WAIT' : 'ALL CALLED'}</small></span></button><p>{deckCount ? `${deckCount} cards left in the pile` : 'Every clue card has been drawn!'}</p></div></section> : <Notes notes={notes} onSet={setNote} />}</section>{activeCard && <div className="overlay"><section className="clue-modal"><button className="close" onClick={finishTurn}>×</button><div className={`call-phone ${callAnswered ? 'answered' : ''}`}>☎</div><p className="eyebrow">{callAnswered ? activeCard.kind : 'INCOMING PHONE CALL'}</p>{callAnswered ? <><h2>Your private clue!</h2><blockquote>“{activeCard.clue}”</blockquote><button className="listen-button" onClick={() => speak(activeCard.spoken)}>▶ Play phone call again</button><button className="notes-link" onClick={() => { setActiveTab('notes'); finishTurn(); }}>Finish turn & open Detective Notes →</button></> : <><h2>Someone is calling…</h2><p className="answer-instruction">Hold your phone like a call, then tap Answer Call to hear the clue.</p><button className="answer-button" onClick={() => { setCallAnswered(true); speak(activeCard.spoken); }}>☎ Answer Call</button></>}</section></div>}{message && <div className="toast">{message}</div>}</main>;
 }
 
 function Lobby({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) { return <section className="lobby"><div className="sparkles">✦ ✧ ✦</div><p className="eyebrow">DREAM PHONE</p><h1>{title}</h1><p>{subtitle}</p><div className="lobby-fields">{children}</div></section>; }
