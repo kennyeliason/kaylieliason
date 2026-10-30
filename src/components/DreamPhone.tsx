@@ -5,9 +5,11 @@ type NoteState = 'none' | 'circled' | 'crossed';
 type NoteGroup = { label: string; items: string[] };
 type ClueCard = { id: number; kind: string; clue: string; spoken: string };
 
+const guyNames = ['Dave', 'George', 'Dale', 'Alan', 'James', 'Phil', 'Bruce', 'Tyler', 'Jamal', 'Gary', 'Dan', 'Spencer', 'Mark', 'Jason', 'Steven', 'John', 'Paul', 'Tony', 'Wayne', 'Mike', 'Scott', 'Bob', 'Carlos', 'Matt'];
+
 const noteGroups: NoteGroup[] = [
-  { label: 'Secret Admirer', items: ['Dave', 'George', 'Dale', 'Alan', 'James', 'Phil'] },
-  { label: 'Called', items: ['Bruce', 'Tyler', 'Jamal', 'Gary', 'Dan', 'Spencer', 'Mark', 'Jason', 'Steven', 'John', 'Paul', 'Tony', 'Wayne', 'Mike', 'Scott', 'Bob', 'Carlos', 'Matt'] },
+  { label: 'Secret Admirer', items: guyNames },
+  { label: 'Called', items: guyNames },
   { label: 'Hang-Out Clues', items: ['Crosstown Mall', 'Snack Shop', 'Reel Movies', 'Woodland Park', 'High Tide Beach', "Jim's Gym"] },
   { label: 'Sports Clues', items: ['Basketball', 'Skateboarding', 'Volleyball', 'Surfing', 'Tennis'] },
   { label: 'Food Clues', items: ['Ice cream', 'Cookies', 'Hot dogs', 'Pizza', 'Popcorn', 'Candy'] },
@@ -64,6 +66,7 @@ export default function DreamPhone() {
   const [turnBusy, setTurnBusy] = useState(false);
   const [isHost, setIsHost] = useState(false);
   const [activeCard, setActiveCard] = useState<ClueCard | null>(null);
+  const [activeCaller, setActiveCaller] = useState('');
   const [callAnswered, setCallAnswered] = useState(false);
   const [notes, setNotes] = useState<Record<string, NoteState>>({});
   const [message, setMessage] = useState<string | null>(null);
@@ -101,8 +104,9 @@ export default function DreamPhone() {
     const [card, ...rest] = deckRef.current;
     setDeck(rest); setDeckCount(rest.length);
     updateTurn(turnRef.current, true, rest.length);
-    if (connection) connection.send({ type: 'card', card });
-    else { setCallAnswered(false); setActiveCard(card); }
+    const caller = guyNames[Math.floor(Math.random() * guyNames.length)];
+    if (connection) connection.send({ type: 'card', card, caller });
+    else { setActiveCaller(caller); setCallAnswered(false); setActiveCard(card); }
   };
   const hostMessage = (connection: DataConnection, payload: any) => {
     if (payload?.type === 'join') {
@@ -117,7 +121,7 @@ export default function DreamPhone() {
     if (payload?.type === 'lobby') setPlayers(payload.players);
     if (payload?.type === 'start') { setPlayers(payload.players); setTurnIndex(payload.currentTurn); setDeckCount(payload.deckCount); setTurnBusy(false); setScreen('game'); }
     if (payload?.type === 'turn') { setTurnIndex(payload.currentTurn); setTurnBusy(payload.busy); setDeckCount(payload.deckCount); }
-    if (payload?.type === 'card') { setCallAnswered(false); setActiveCard(payload.card); }
+    if (payload?.type === 'card') { setActiveCaller(payload.caller); setCallAnswered(false); setActiveCard(payload.card); }
   };
   const createHostRoom = () => {
     setIsHost(true);
@@ -175,7 +179,7 @@ export default function DreamPhone() {
 
   const isMyTurn = players[turnIndex] === name;
   const turnName = players[turnIndex] || 'the current player';
-  return <main className="dream-app game-shell"><header className="game-header"><button className="brand" onClick={() => setScreen('home')}>☎ DREAM PHONE</button></header><section className="turn-banner"><b>{isMyTurn && !turnBusy ? 'Your turn!' : `Wait for ${turnName} to finish.`}</b><span>{isMyTurn && !turnBusy ? 'Draw a card when you are ready.' : 'You cannot see their clue or their Detective Notes.'}</span></section><section className="game-wrap"><nav className="tabs"><button className={activeTab === 'deck' ? 'active' : ''} onClick={() => setActiveTab('deck')}>☎ Draw pile <em>{drawCount}/24</em></button><button className={activeTab === 'notes' ? 'active' : ''} onClick={() => setActiveTab('notes')}>✎ Detective Notes</button></nav>{activeTab === 'deck' ? <section className="deck-screen"><div className="deck-copy"><p className="eyebrow">SECRET ADMIRER CARDS</p><h2>{isMyTurn && !turnBusy ? 'Pick up the next card.' : `Wait for ${turnName} to finish.`}</h2><p>Only the player whose turn it is can see the next clue. Your Detective Notes are completely private.</p></div><div className="deck-zone"><button className="card-stack" onClick={draw} disabled={!deckCount || !isMyTurn || turnBusy} aria-label="Draw the next Secret Admirer card"><span className="stack stack-three"></span><span className="stack stack-two"></span><span className="top-card"><i>☎</i><b>SECRET<br/>ADMIRER</b><small>{deckCount ? isMyTurn && !turnBusy ? 'TAP TO DRAW' : 'WAIT' : 'ALL CALLED'}</small></span></button><p>{deckCount ? `${deckCount} cards left in the pile` : 'Every clue card has been drawn!'}</p></div></section> : <Notes notes={notes} onSet={setNote} />}</section>{activeCard && <div className="overlay"><section className="clue-modal"><button className="close" onClick={finishTurn}>×</button><div className={`call-phone ${callAnswered ? 'answered' : ''}`}>☎</div><p className="eyebrow">{callAnswered ? activeCard.kind : 'INCOMING PHONE CALL'}</p>{callAnswered ? <><h2>Your private clue!</h2><blockquote>“{activeCard.clue}”</blockquote><button className="listen-button" onClick={() => speak(activeCard.spoken)}>▶ Play phone call again</button><button className="notes-link" onClick={() => { setActiveTab('notes'); finishTurn(); }}>Finish turn & open Detective Notes →</button></> : <><h2>Someone is calling…</h2><p className="answer-instruction">Hold your phone like a call, then tap Answer Call to hear the clue.</p><button className="answer-button" onClick={() => { setCallAnswered(true); speak(activeCard.spoken); }}>☎ Answer Call</button></>}</section></div>}{message && <div className="toast">{message}</div>}</main>;
+  return <main className="dream-app game-shell"><header className="game-header"><button className="brand" onClick={() => setScreen('home')}>☎ DREAM PHONE</button></header><section className="turn-banner"><b>{isMyTurn && !turnBusy ? 'Your turn!' : `Wait for ${turnName} to finish.`}</b><span>{isMyTurn && !turnBusy ? 'Draw a card when you are ready.' : 'You cannot see their clue or their Detective Notes.'}</span></section><section className="game-wrap"><nav className="tabs"><button className={activeTab === 'deck' ? 'active' : ''} onClick={() => setActiveTab('deck')}>☎ Draw pile <em>{drawCount}/24</em></button><button className={activeTab === 'notes' ? 'active' : ''} onClick={() => setActiveTab('notes')}>✎ Detective Notes</button></nav>{activeTab === 'deck' ? <section className="deck-screen"><div className="deck-copy"><p className="eyebrow">SECRET ADMIRER CARDS</p><h2>{isMyTurn && !turnBusy ? 'Pick up the next card.' : `Wait for ${turnName} to finish.`}</h2><p>Only the player whose turn it is can see the next clue. Your Detective Notes are completely private.</p></div><div className="deck-zone"><button className="card-stack" onClick={draw} disabled={!deckCount || !isMyTurn || turnBusy} aria-label="Draw the next Secret Admirer card"><span className="stack stack-three"></span><span className="stack stack-two"></span><span className="top-card"><i>☎</i><b>SECRET<br/>ADMIRER</b><small>{deckCount ? isMyTurn && !turnBusy ? 'TAP TO DRAW' : 'WAIT' : 'ALL CALLED'}</small></span></button><p>{deckCount ? `${deckCount} cards left in the pile` : 'Every clue card has been drawn!'}</p></div></section> : <Notes notes={notes} onSet={setNote} />}</section>{activeCard && <div className="overlay"><section className="clue-modal"><button className="close" onClick={finishTurn}>×</button><div className={`call-phone ${callAnswered ? 'answered' : ''}`}>☎</div><p className="eyebrow">{callAnswered ? activeCard.kind : 'INCOMING PHONE CALL'}</p>{callAnswered ? <><h2>{activeCaller} called!</h2><blockquote>“{activeCard.clue}”</blockquote><button className="listen-button" onClick={() => speak(activeCard.spoken)}>▶ Play phone call again</button><button className="notes-link" onClick={() => { setActiveTab('notes'); finishTurn(); }}>Finish turn & open Detective Notes →</button></> : <><h2>{activeCaller || 'Someone'} is calling…</h2><p className="answer-instruction">Hold your phone like a call, then tap Answer Call to hear the clue.</p><button className="answer-button" onClick={() => { setCallAnswered(true); speak(activeCard.spoken); }}>☎ Answer Call</button></>}</section></div>}{message && <div className="toast">{message}</div>}</main>;
 }
 
 function Lobby({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) { return <section className="lobby"><div className="sparkles">✦ ✧ ✦</div><p className="eyebrow">DREAM PHONE</p><h1>{title}</h1><p>{subtitle}</p><div className="lobby-fields">{children}</div></section>; }
