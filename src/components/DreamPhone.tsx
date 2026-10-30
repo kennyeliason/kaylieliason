@@ -17,6 +17,7 @@ const guyProfiles = guyNames.map((name, index) => ({
   food: name === 'Jamal' ? 'Candy' : foods[index % foods.length],
   outfit: name === 'Jamal' ? 'Anything yellow' : outfits[index % outfits.length],
 }));
+const secretAdmirer = 'Jamal';
 
 const noteGroups: NoteGroup[] = [
   { label: 'Secret Admirer', items: guyNames },
@@ -78,6 +79,7 @@ export default function DreamPhone() {
   const [lastCaller, setLastCaller] = useState('');
   const [callAnswered, setCallAnswered] = useState(false);
   const [notes, setNotes] = useState<Record<string, NoteState>>({});
+  const [gameFinished, setGameFinished] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const peerRef = useRef<Peer | null>(null);
   const hostConnection = useRef<DataConnection | null>(null);
@@ -102,16 +104,24 @@ export default function DreamPhone() {
     setTurnIndex(nextIndex); setTurnBusy(busy); setDeckCount(count);
     broadcast({ type: 'turn', currentTurn: nextIndex, busy, deckCount: count });
   };
+  const finishGame = () => {
+    setTurnBusy(false);
+    setGameFinished(true);
+    broadcast({ type: 'gameOver', winner: secretAdmirer });
+  };
   const finishTurn = () => {
     setActiveCard(null);
-    if (isHost) updateTurn((turnRef.current + 1) % playersRef.current.length, false);
+    if (isHost) {
+      if (deckRef.current.length === 0) finishGame();
+      else updateTurn((turnRef.current + 1) % playersRef.current.length, false);
+    }
     else hostConnection.current?.send({ type: 'finish' });
   };
   const serveDraw = (connection?: DataConnection) => {
     const currentPlayer = playersRef.current[turnRef.current];
     if (!deckRef.current.length || !currentPlayer) return;
     const [card, ...rest] = deckRef.current;
-    setDeck(rest); setDeckCount(rest.length);
+    setDeck(rest); deckRef.current = rest; setDeckCount(rest.length);
     updateTurn(turnRef.current, true, rest.length);
     const caller = guyNames[Math.floor(Math.random() * guyNames.length)];
     if (connection) connection.send({ type: 'card', card, caller });
@@ -124,13 +134,17 @@ export default function DreamPhone() {
       broadcast({ type: 'lobby', players: nextPlayers });
     }
     if (payload?.type === 'draw' && playersRef.current[turnRef.current] === payload.name && !busyRef.current) serveDraw(connection);
-    if (payload?.type === 'finish' && busyRef.current) updateTurn((turnRef.current + 1) % playersRef.current.length, false);
+    if (payload?.type === 'finish' && busyRef.current) {
+      if (deckRef.current.length === 0) finishGame();
+      else updateTurn((turnRef.current + 1) % playersRef.current.length, false);
+    }
   };
   const clientMessage = (payload: any) => {
     if (payload?.type === 'lobby') setPlayers(payload.players);
-    if (payload?.type === 'start') { setPlayers(payload.players); setTurnIndex(payload.currentTurn); setDeckCount(payload.deckCount); setTurnBusy(false); setScreen('game'); }
+    if (payload?.type === 'start') { setPlayers(payload.players); setTurnIndex(payload.currentTurn); setDeckCount(payload.deckCount); setTurnBusy(false); setGameFinished(false); setScreen('game'); }
     if (payload?.type === 'turn') { setTurnIndex(payload.currentTurn); setTurnBusy(payload.busy); setDeckCount(payload.deckCount); }
     if (payload?.type === 'card') { setActiveCaller(payload.caller); setLastCaller(payload.caller); setCallAnswered(false); setActiveCard(payload.card); setLastCard(payload.card); }
+    if (payload?.type === 'gameOver') setGameFinished(true);
   };
   const createHostRoom = () => {
     setIsHost(true);
@@ -164,7 +178,7 @@ export default function DreamPhone() {
   const drawCount = clueCards.length - deckCount;
   const begin = () => {
     const shuffled = [...clueCards].sort(() => Math.random() - 0.5);
-    setDeck(shuffled); deckRef.current = shuffled; setDeckCount(shuffled.length); setActiveCard(null); setLastCard(null); setCallAnswered(false); setActiveTab('deck'); setTurnIndex(0); turnRef.current = 0; setTurnBusy(false); setScreen('game');
+    setDeck(shuffled); deckRef.current = shuffled; setDeckCount(shuffled.length); setActiveCard(null); setLastCard(null); setCallAnswered(false); setActiveTab('deck'); setTurnIndex(0); turnRef.current = 0; setTurnBusy(false); setGameFinished(false); setNotes({}); setScreen('game');
     broadcast({ type: 'start', players: playersRef.current, currentTurn: 0, deckCount: shuffled.length });
   };
   const draw = () => {
@@ -187,10 +201,14 @@ export default function DreamPhone() {
 
   const isMyTurn = players[turnIndex] === name;
   const turnName = players[turnIndex] || 'the current player';
+  if (gameFinished) return <WinnerScreen winner={secretAdmirer} canPlayAgain={isHost} onPlayAgain={begin} onHome={() => setScreen('home')} />;
   return <main className="dream-app game-shell"><header className="game-header"><button className="brand" onClick={() => setScreen('home')}>☎ DREAM PHONE</button></header><section className="turn-banner"><b>{isMyTurn && !turnBusy ? 'Your turn!' : `Wait for ${turnName} to finish.`}</b><span>{isMyTurn && !turnBusy ? 'Draw a card when you are ready.' : 'You cannot see their clue or their Detective Notes.'}</span></section><section className="game-wrap"><nav className="tabs"><button className={activeTab === 'deck' ? 'active' : ''} onClick={() => setActiveTab('deck')}>☎ Draw pile <em>{drawCount}/24</em></button><button className={activeTab === 'notes' ? 'active' : ''} onClick={() => setActiveTab('notes')}>✎ Detective Notes</button></nav>{activeTab === 'deck' ? <section className="deck-screen"><div className="deck-copy"><p className="eyebrow">SECRET ADMIRER CARDS</p><h2>{isMyTurn && !turnBusy ? 'Pick up the next card.' : `Wait for ${turnName} to finish.`}</h2><p>Only the player whose turn it is can see the next clue. Your Detective Notes are completely private.</p></div><div className="deck-zone"><button className="card-stack" onClick={draw} disabled={!deckCount || !isMyTurn || turnBusy} aria-label="Draw the next Secret Admirer card"><span className="stack stack-three"></span><span className="stack stack-two"></span><span className="top-card"><i>☎</i><b>SECRET<br/>ADMIRER</b><small>{deckCount ? isMyTurn && !turnBusy ? 'TAP TO DRAW' : 'WAIT' : 'ALL CALLED'}</small></span></button><p>{deckCount ? `${deckCount} cards left in the pile` : 'Every clue card has been drawn!'}</p></div></section> : <Notes notes={notes} onSet={setNote} lastCard={lastCard} lastCaller={lastCaller} />}</section>{activeCard && <div className="overlay"><section className="clue-modal call-with-notes"><button className="close" onClick={finishTurn}>×</button><div className={`call-phone ${callAnswered ? 'answered' : ''}`}>☎</div><p className="eyebrow">{callAnswered ? activeCard.kind : 'INCOMING PHONE CALL'}</p>{callAnswered ? <><h2>{activeCaller} called!</h2><blockquote>“{activeCard.clue}”</blockquote><button className="listen-button" onClick={() => speak(activeCard.spoken)}>▶ Play phone call again</button><Notes notes={notes} onSet={setNote} lastCard={null} lastCaller="" compact /><button className="notes-link" onClick={finishTurn}>Finish turn →</button></> : <><h2>{activeCaller || 'Someone'} is calling…</h2><p className="answer-instruction">Hold your phone like a call, then tap Answer Call to hear the clue.</p><button className="answer-button" onClick={() => { setCallAnswered(true); speak(activeCard.spoken); }}>☎ Answer Call</button></>}</section></div>}{message && <div className="toast">{message}</div>}</main>;
 }
 
 function Lobby({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) { return <section className="lobby"><div className="sparkles">✦ ✧ ✦</div><p className="eyebrow">DREAM PHONE</p><h1>{title}</h1><p>{subtitle}</p><div className="lobby-fields">{children}</div></section>; }
+function WinnerScreen({ winner, canPlayAgain, onPlayAgain, onHome }: { winner: string; canPlayAgain: boolean; onPlayAgain: () => void; onHome: () => void }) {
+  return <main className="dream-app landing-page"><section className="winner-screen"><div className="confetti" aria-hidden="true">✦　●　✦　◆　●　✦　◆　●　✦</div><p className="eyebrow">🥁 DRUMROLL... 🥁</p><h1>MYSTERY<br/>SOLVED!</h1><p className="winner-label">THE SECRET ADMIRER IS</p><div className="winner-podium"><span>★</span><strong>{winner}</strong><span>★</span></div><p>Give it up for the winner!</p>{canPlayAgain ? <button className="big-button" onClick={onPlayAgain}>Play Again</button> : <button className="big-button" onClick={onHome}>Back to Home</button>}</section></main>;
+}
 function Notes({ notes, onSet, lastCard, lastCaller, compact = false }: { notes: Record<string, NoteState>; onSet: (item: string, state: NoteState) => void; lastCard: ClueCard | null; lastCaller: string; compact?: boolean }) {
   return <section className={`notes-screen ${compact ? 'compact-notes' : ''}`}>{!compact && <div className="notes-title"><div><p className="eyebrow">YOUR CHECKLIST</p><h2>Detective Notes</h2><p>Tap any name or clue to cross it out. Tap it again to undo it. Your notes never show on anyone else’s screen.</p></div></div>}{lastCard && <section className="notes-clue"><p>YOUR LAST PRIVATE CARD · {lastCaller} CALLED</p><b>“{lastCard.clue}”</b></section>}<div className="note-grid">{noteGroups.map((group) => <section className="note-group" key={group.label}><h3>{group.label}</h3>{group.items.map((item) => { const noteKey = `${group.label}:${item}`; const crossed = notes[noteKey] === 'crossed'; return <button key={item} type="button" className={`note-item ${crossed ? 'crossed' : 'none'}`} aria-pressed={crossed} onClick={() => onSet(noteKey, crossed ? 'none' : 'crossed')}><span>{item}</span></button>; })}</section>)}</div><GuyGuide notes={notes} onSet={onSet} embedded /></section>;
 }
@@ -212,4 +230,4 @@ const styles = `
 .guide-screen{min-height:590px;border-radius:23px;background:#fff7f7;color:#44224e;box-shadow:0 12px 0 #210b34;padding:clamp(25px,5vw,52px)}.guide-in-notes{margin-top:28px;padding-top:25px;border-top:2px dashed #e6cddd}.guide-groups{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:25px}.guide-group{padding:15px;border:1px solid #edd6e5;border-radius:15px;background:#fff}.guide-group h3{margin:0 0 9px;color:#743766;font-size:20px}.guide-group details{border-top:1px solid #f0e3e9}.guide-group summary{list-style:none;display:flex;justify-content:space-between;align-items:center;padding:11px 2px;cursor:pointer;color:#512e50;font-weight:600}.guide-group summary::-webkit-details-marker{display:none}.guide-group details[open] summary{color:#be3e85}.guide-group summary span{font-size:18px}.guide-group details p{margin:0;color:#9b6e8a;font-size:11px}.matching-guys{display:flex;flex-wrap:wrap;gap:6px;padding:8px 0 11px}.guide-guy{border:0;padding:5px 8px;border-radius:99px;background:#f8d8e9;color:#792c64;font-size:12px;font-weight:700}.guide-guy.crossed{opacity:.55;text-decoration:line-through}.call-with-notes{max-width:760px;max-height:calc(100vh - 28px);overflow:auto}.compact-notes{min-height:0;box-shadow:none;border-radius:16px;margin-top:22px;padding:22px;background:#fff}.compact-notes .note-grid{grid-template-columns:repeat(2,1fr);margin-top:0}.compact-notes .guide-groups{grid-template-columns:repeat(2,1fr)}@media(max-width:720px){.dream-app{padding:12px}.game-header{align-items:flex-start}.brand{font-size:16px}.room-pill span{display:none}.deck-screen{grid-template-columns:1fr;padding:35px 20px;min-height:0}.deck-copy{text-align:center}.deck-copy>p:last-child{margin:16px auto}.deck-zone{order:-1}.notes-screen{padding:27px 16px}.notes-title{align-items:flex-start;display:block}.note-key{margin-top:14px}.note-grid{grid-template-columns:repeat(2,1fr);gap:9px}.note-group{padding:10px}.note-item{font-size:13px}.card-stack{transform:scale(.88)}.deck-zone>p{margin-top:-5px}.tabs{overflow:auto}.tabs button{white-space:nowrap}.two-buttons{margin-top:18px}.guide-groups{grid-template-columns:1fr;gap:10px}.guide-screen{padding:26px 14px}.guide-group{padding:12px}.compact-notes{padding:15px}.compact-notes .guide-groups{grid-template-columns:1fr}}
 `;
 
-if (typeof document !== 'undefined' && !document.getElementById('dream-phone-styles')) { const tag = document.createElement('style'); tag.id = 'dream-phone-styles'; tag.textContent = `${styles}.note-item{font-weight:800;padding:7px 3px}.note-item.circled,.note-item.circled i{border:0;color:inherit}`; document.head.appendChild(tag); }
+if (typeof document !== 'undefined' && !document.getElementById('dream-phone-styles')) { const tag = document.createElement('style'); tag.id = 'dream-phone-styles'; tag.textContent = `${styles}.note-item{font-weight:800;padding:7px 3px}.note-item.circled,.note-item.circled i{border:0;color:inherit}.winner-screen{width:min(540px,100%);text-align:center;padding:30px 20px}.winner-screen h1{font-size:clamp(55px,12vw,92px);line-height:.83;letter-spacing:-.06em;margin:8px 0;color:#fff;text-shadow:5px 6px 0 #ed5f9f;transform:rotate(-2deg)}.confetti{color:#ffcf56;font-size:26px;letter-spacing:3px;animation:party 1.2s ease-in-out infinite alternate}.winner-label{color:#ffdd6f;font:700 12px 'DM Mono',monospace;letter-spacing:.16em;margin:27px 0 8px}.winner-podium{display:flex;align-items:end;justify-content:center;gap:18px;margin:auto;min-height:150px}.winner-podium strong{display:grid;place-items:center;min-width:240px;min-height:122px;padding:20px;background:linear-gradient(160deg,#ffdb63,#e79836);color:#4b174e;border-radius:22px 22px 7px 7px;box-shadow:0 11px 0 #a95065;font-size:clamp(38px,9vw,66px);letter-spacing:-.06em}.winner-podium span{font-size:39px;color:#ffdd6f;transform:translateY(-44px)}.winner-screen>p:last-of-type{font-size:18px;color:#ffe4ef;margin:27px 0 18px}@keyframes party{to{transform:translateY(-7px) rotate(4deg)}}`; document.head.appendChild(tag); }
