@@ -4,6 +4,8 @@ import Peer, { type DataConnection } from 'peerjs';
 type NoteState = 'none' | 'crossed';
 type NoteGroup = { label: string; items: string[] };
 type ClueCard = { id: number; kind: string; clue: string; spoken: string };
+type PowerCard = 'hangup' | 'speakerphone' | 'secret';
+type Reveal = { card: ClueCard; caller: string; title: string; private: boolean };
 
 const guyNames = ['Dave', 'George', 'Dale', 'Alan', 'James', 'Phil', 'Bruce', 'Tyler', 'Jamal', 'Gary', 'Dan', 'Spencer', 'Mark', 'Jason', 'Steven', 'John', 'Paul', 'Tony', 'Wayne', 'Mike', 'Scott', 'Bob', 'Carlos', 'Matt'];
 const avatarOptions = ['🦋', '🌸', '💖', '🪩', '🌈', '🧸', '🍒', '⭐️'];
@@ -62,6 +64,22 @@ function speak(text: string) {
 }
 
 export default function DreamPhone() {
+  useEffect(() => {
+    if (document.getElementById('dream-phone-power-card-styles')) return;
+    const tag = document.createElement('style');
+    tag.id = 'dream-phone-power-card-styles';
+    tag.textContent = `
+      .power-cards{margin-top:18px;padding:18px;border:2px dashed #ffcf56;border-radius:20px;background:#ffffff16;color:#fff7f7}
+      .power-cards .eyebrow{margin:0 0 4px}.power-cards h3{margin:0;font-size:21px}.power-cards>div>p:last-child{margin:5px 0 0;color:#f6d8e8;font-size:13px}
+      .power-card-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+      .power-card{min-height:138px;padding:12px 9px;border:3px solid #ffd675;border-radius:15px;color:#fff;text-align:center;box-shadow:0 5px 0 #280d3b;transition:transform .15s,opacity .15s}
+      .power-card:hover:not(:disabled){transform:translateY(-3px)}.power-card i{display:block;margin:auto auto 7px;font-style:normal;font-size:31px}.power-card b{display:block;font-size:15px;line-height:1}.power-card small{display:block;margin-top:8px;font-size:11px;line-height:1.15;opacity:.92}
+      .power-card.hangup{background:linear-gradient(145deg,#276f71,#164651)}.power-card.speaker{background:linear-gradient(145deg,#6b3ba2,#3c2374)}.power-card.secret{background:linear-gradient(145deg,#e14d96,#93276f)}.power-card.used{filter:grayscale(1);opacity:.48;box-shadow:none}
+      .reveal-overlay{position:fixed;inset:0;z-index:9;display:grid;place-items:center;padding:20px;background:#180726d9}.reveal-card{width:min(500px,100%);padding:34px 27px;text-align:center;color:#4a214e;background:#fff8fb;border-radius:25px;box-shadow:0 14px 0 #12061e}.reveal-card .eyebrow{color:#b14c7f;margin-top:0}.reveal-icon{display:grid;place-items:center;width:70px;height:70px;margin:10px auto;border-radius:50%;background:#f5d5e8;font-size:36px}.reveal-card h2{margin:9px 0;font-size:clamp(27px,6vw,43px);line-height:.98;letter-spacing:-.05em}.caller-name{margin:18px 0 6px;font-weight:700;color:#9b507c}.reveal-card blockquote{padding:17px;margin:0 0 22px;background:#f4e4ee;border-radius:15px;font-size:20px;font-weight:600;line-height:1.25}
+      @media(max-width:720px){.power-card-row{grid-template-columns:1fr;gap:8px}.power-card{min-height:0;display:grid;grid-template-columns:36px 1fr;column-gap:10px;align-items:center;text-align:left;padding:11px}.power-card i{grid-row:span 2;margin:0}.power-card b{font-size:16px}.power-card small{margin:3px 0 0}.reveal-card{padding:28px 18px}}
+    `;
+    document.head.appendChild(tag);
+  }, []);
   const [screen, setScreen] = useState<'home' | 'host' | 'join' | 'hostWaiting' | 'joinWaiting' | 'game'>('home');
   const [roomCode, setRoomCode] = useState('');
   const [name, setName] = useState('');
@@ -84,6 +102,8 @@ export default function DreamPhone() {
   const [notes, setNotes] = useState<Record<string, NoteState>>({});
   const [gameFinished, setGameFinished] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [usedPowers, setUsedPowers] = useState<Record<PowerCard, boolean>>({ hangup: false, speakerphone: false, secret: false });
+  const [reveal, setReveal] = useState<Reveal | null>(null);
   const peerRef = useRef<Peer | null>(null);
   const hostConnection = useRef<DataConnection | null>(null);
   const connections = useRef<Map<string, DataConnection>>(new Map());
@@ -92,6 +112,8 @@ export default function DreamPhone() {
   const avatarsRef = useRef<Record<string, string>>({});
   const turnRef = useRef(0);
   const busyRef = useRef(false);
+  const currentCardRef = useRef<ClueCard | null>(null);
+  const currentCallerRef = useRef('');
 
   useEffect(() => { deckRef.current = deck; }, [deck]);
   useEffect(() => { playersRef.current = players; }, [players]);
@@ -114,11 +136,18 @@ export default function DreamPhone() {
     setGameFinished(true);
     broadcast({ type: 'gameOver', winner: secretAdmirer });
   };
+  const advanceTurn = () => {
+    currentCardRef.current = null;
+    currentCallerRef.current = '';
+    setActiveCard(null);
+    setCallAnswered(false);
+    if (deckRef.current.length === 0) finishGame();
+    else updateTurn((turnRef.current + 1) % playersRef.current.length, false);
+  };
   const finishTurn = () => {
     setActiveCard(null);
     if (isHost) {
-      if (deckRef.current.length === 0) finishGame();
-      else updateTurn((turnRef.current + 1) % playersRef.current.length, false);
+      advanceTurn();
     }
     else hostConnection.current?.send({ type: 'finish' });
   };
@@ -129,6 +158,8 @@ export default function DreamPhone() {
     setDeck(rest); deckRef.current = rest; setDeckCount(rest.length);
     updateTurn(turnRef.current, true, rest.length);
     const caller = guyNames[Math.floor(Math.random() * guyNames.length)];
+    currentCardRef.current = card;
+    currentCallerRef.current = caller;
     if (connection) connection.send({ type: 'card', card, caller });
     else { setActiveCaller(caller); setLastCaller(caller); setCallAnswered(false); setActiveCard(card); setLastCard(card); }
   };
@@ -140,17 +171,30 @@ export default function DreamPhone() {
       broadcast({ type: 'lobby', players: nextPlayers, avatars: nextAvatars });
     }
     if (payload?.type === 'draw' && playersRef.current[turnRef.current] === payload.name && !busyRef.current) serveDraw(connection);
-    if (payload?.type === 'finish' && busyRef.current) {
-      if (deckRef.current.length === 0) finishGame();
-      else updateTurn((turnRef.current + 1) % playersRef.current.length, false);
+    if (payload?.type === 'finish' && busyRef.current) advanceTurn();
+    if (payload?.type === 'power' && payload.name !== playersRef.current[turnRef.current] && busyRef.current && currentCardRef.current) {
+      const card = currentCardRef.current;
+      const caller = currentCallerRef.current;
+      if (payload.power === 'hangup') {
+        broadcast({ type: 'hungUp', by: payload.name });
+        setMessage(`${payload.name} hung up the call!`); window.setTimeout(() => setMessage(null), 1800);
+        advanceTurn();
+      }
+      if (payload.power === 'speakerphone') {
+        broadcast({ type: 'reveal', card, caller, title: `${payload.name} put ${caller} on speakerphone!`, private: false });
+        setReveal({ card, caller, title: `${payload.name} put ${caller} on speakerphone!`, private: false });
+      }
+      if (payload.power === 'secret') connection.send({ type: 'reveal', card, caller, title: 'Shh… your secret clue', private: true });
     }
   };
   const clientMessage = (payload: any) => {
     if (payload?.type === 'lobby') { setPlayers(payload.players); setAvatars(payload.avatars || {}); }
-    if (payload?.type === 'start') { setPlayers(payload.players); setAvatars(payload.avatars || {}); setTurnIndex(payload.currentTurn); setDeckCount(payload.deckCount); setTurnBusy(false); setGameFinished(false); setScreen('game'); }
+    if (payload?.type === 'start') { setPlayers(payload.players); setAvatars(payload.avatars || {}); setTurnIndex(payload.currentTurn); setDeckCount(payload.deckCount); setTurnBusy(false); setGameFinished(false); setUsedPowers({ hangup: false, speakerphone: false, secret: false }); setReveal(null); setScreen('game'); }
     if (payload?.type === 'turn') { setTurnIndex(payload.currentTurn); setTurnBusy(payload.busy); setDeckCount(payload.deckCount); }
     if (payload?.type === 'card') { setActiveCaller(payload.caller); setLastCaller(payload.caller); setCallAnswered(false); setActiveCard(payload.card); setLastCard(payload.card); }
     if (payload?.type === 'gameOver') setGameFinished(true);
+    if (payload?.type === 'hungUp') { setActiveCard(null); setCallAnswered(false); setMessage(`${payload.by} hung up the call!`); window.setTimeout(() => setMessage(null), 1800); }
+    if (payload?.type === 'reveal') setReveal({ card: payload.card, caller: payload.caller, title: payload.title, private: Boolean(payload.private) });
   };
   const createHostRoom = () => {
     setIsHost(true);
@@ -185,7 +229,7 @@ export default function DreamPhone() {
   const drawCount = clueCards.length - deckCount;
   const begin = () => {
     const shuffled = [...clueCards].sort(() => Math.random() - 0.5);
-    setDeck(shuffled); deckRef.current = shuffled; setDeckCount(shuffled.length); setActiveCard(null); setLastCard(null); setCallAnswered(false); setActiveTab('deck'); setTurnIndex(0); turnRef.current = 0; setTurnBusy(false); setGameFinished(false); setNotes({}); setScreen('game');
+    setDeck(shuffled); deckRef.current = shuffled; setDeckCount(shuffled.length); setActiveCard(null); setLastCard(null); setCallAnswered(false); setActiveTab('deck'); setTurnIndex(0); turnRef.current = 0; setTurnBusy(false); setGameFinished(false); setNotes({}); setUsedPowers({ hangup: false, speakerphone: false, secret: false }); setReveal(null); setScreen('game');
     broadcast({ type: 'start', players: playersRef.current, avatars: avatarsRef.current, currentTurn: 0, deckCount: shuffled.length });
   };
   const draw = () => {
@@ -193,6 +237,18 @@ export default function DreamPhone() {
     if (isHost) serveDraw(); else hostConnection.current?.send({ type: 'draw', name });
   };
   const setNote = (item: string, state: NoteState) => setNotes((old) => ({ ...old, [item]: state }));
+  const usePower = (power: PowerCard) => {
+    if (usedPowers[power] || !turnBusy || isMyTurn) return;
+    setUsedPowers((old) => ({ ...old, [power]: true }));
+    if (isHost && currentCardRef.current) {
+      const card = currentCardRef.current;
+      const caller = currentCallerRef.current;
+      if (power === 'hangup') { broadcast({ type: 'hungUp', by: name }); setMessage('You hung up the call!'); window.setTimeout(() => setMessage(null), 1800); advanceTurn(); }
+      if (power === 'speakerphone') { broadcast({ type: 'reveal', card, caller, title: `📣 ${name} put ${caller} on speakerphone!`, private: false }); setReveal({ card, caller, title: `📣 You put ${caller} on speakerphone!`, private: false }); }
+      if (power === 'secret') setReveal({ card, caller, title: '🤫 Your private secret clue', private: true });
+    }
+    else hostConnection.current?.send({ type: 'power', power, name });
+  };
   const shareCode = async () => {
     const link = `${window.location.origin}/dream-phone?room=${roomCode}`;
     await navigator.clipboard?.writeText(link);
@@ -210,13 +266,24 @@ export default function DreamPhone() {
   const currentPlayerName = players[turnIndex] || 'the current player';
   const turnName = `${avatars[currentPlayerName] || '☎️'} ${currentPlayerName}`;
   if (gameFinished) return <WinnerScreen winner={secretAdmirer} canPlayAgain={isHost} onPlayAgain={begin} onHome={() => setScreen('home')} />;
-  return <main className="dream-app game-shell"><header className="game-header"><button className="brand" onClick={() => setScreen('home')}>☎ DREAM PHONE</button></header><section className="turn-banner"><b>{isMyTurn && !turnBusy ? 'Your turn!' : `Wait for ${turnName} to finish.`}</b><span>{isMyTurn && !turnBusy ? 'Draw a card when you are ready.' : 'You cannot see their clue or their Detective Notes.'}</span></section><section className="game-wrap"><nav className="tabs"><button className={activeTab === 'deck' ? 'active' : ''} onClick={() => setActiveTab('deck')}>☎ Draw pile <em>{drawCount}/24</em></button><button className={activeTab === 'notes' ? 'active' : ''} onClick={() => setActiveTab('notes')}>✎ Detective Notes</button></nav>{activeTab === 'deck' ? <section className="deck-screen"><div className="deck-copy"><p className="eyebrow">SECRET ADMIRER CARDS</p><h2>{isMyTurn && !turnBusy ? 'Pick up the next card.' : `Wait for ${turnName} to finish.`}</h2><p>Only the player whose turn it is can see the next clue. Your Detective Notes are completely private.</p></div><div className="deck-zone"><button className="card-stack" onClick={draw} disabled={!deckCount || !isMyTurn || turnBusy} aria-label="Draw the next Secret Admirer card"><span className="stack stack-three"></span><span className="stack stack-two"></span><span className="top-card"><i>☎</i><b>SECRET<br/>ADMIRER</b><small>{deckCount ? isMyTurn && !turnBusy ? 'TAP TO DRAW' : 'WAIT' : 'ALL CALLED'}</small></span></button><p>{deckCount ? `${deckCount} cards left in the pile` : 'Every clue card has been drawn!'}</p></div></section> : <Notes notes={notes} onSet={setNote} lastCard={lastCard} lastCaller={lastCaller} />}</section>{activeCard && <div className="overlay"><section className="clue-modal call-with-notes"><button className="close" onClick={finishTurn}>×</button><div className={`call-phone ${callAnswered ? 'answered' : ''}`}>☎</div><p className="eyebrow">{callAnswered ? activeCard.kind : 'INCOMING PHONE CALL'}</p>{callAnswered ? <><h2>{activeCaller} called!</h2><blockquote>“{activeCard.clue}”</blockquote><button className="listen-button" onClick={() => speak(activeCard.spoken)}>▶ Play phone call again</button><Notes notes={notes} onSet={setNote} lastCard={null} lastCaller="" compact /><button className="notes-link" onClick={finishTurn}>Finish turn →</button></> : <><h2>{activeCaller || 'Someone'} is calling…</h2><p className="answer-instruction">Hold your phone like a call, then tap Answer Call to hear the clue.</p><button className="answer-button" onClick={() => { setCallAnswered(true); speak(activeCard.spoken); }}>☎ Answer Call</button></>}</section></div>}{message && <div className="toast">{message}</div>}</main>;
+  return <main className="dream-app game-shell"><header className="game-header"><button className="brand" onClick={() => setScreen('home')}>☎ DREAM PHONE</button></header><section className="turn-banner"><b>{isMyTurn && !turnBusy ? 'Your turn!' : `Wait for ${turnName} to finish.`}</b><span>{isMyTurn && !turnBusy ? 'Draw a card when you are ready.' : 'You cannot see their clue or their Detective Notes.'}</span></section><section className="game-wrap"><nav className="tabs"><button className={activeTab === 'deck' ? 'active' : ''} onClick={() => setActiveTab('deck')}>☎ Draw pile <em>{drawCount}/24</em></button><button className={activeTab === 'notes' ? 'active' : ''} onClick={() => setActiveTab('notes')}>✎ Detective Notes</button></nav>{activeTab === 'deck' ? <section className="deck-screen"><div className="deck-copy"><p className="eyebrow">SECRET ADMIRER CARDS</p><h2>{isMyTurn && !turnBusy ? 'Pick up the next card.' : `Wait for ${turnName} to finish.`}</h2><p>Only the player whose turn it is can see the next clue. Your Detective Notes are completely private.</p></div><div className="deck-zone"><button className="card-stack" onClick={draw} disabled={!deckCount || !isMyTurn || turnBusy} aria-label="Draw the next Secret Admirer card"><span className="stack stack-three"></span><span className="stack stack-two"></span><span className="top-card"><i>☎</i><b>SECRET<br/>ADMIRER</b><small>{deckCount ? isMyTurn && !turnBusy ? 'TAP TO DRAW' : 'WAIT' : 'ALL CALLED'}</small></span></button><p>{deckCount ? `${deckCount} cards left in the pile` : 'Every clue card has been drawn!'}</p></div></section> : <Notes notes={notes} onSet={setNote} lastCard={lastCard} lastCaller={lastCaller} />}{turnBusy && !isMyTurn && <PowerCards used={usedPowers} onUse={usePower} />}</section>{reveal && <RevealCard reveal={reveal} onClose={() => setReveal(null)} />}{activeCard && <div className="overlay"><section className="clue-modal call-with-notes"><button className="close" onClick={finishTurn}>×</button><div className={`call-phone ${callAnswered ? 'answered' : ''}`}>☎</div><p className="eyebrow">{callAnswered ? activeCard.kind : 'INCOMING PHONE CALL'}</p>{callAnswered ? <><h2>{activeCaller} called!</h2><blockquote>“{activeCard.clue}”</blockquote><button className="listen-button" onClick={() => speak(activeCard.spoken)}>▶ Play phone call again</button><Notes notes={notes} onSet={setNote} lastCard={null} lastCaller="" compact /><button className="notes-link" onClick={finishTurn}>Finish turn →</button></> : <><h2>{activeCaller || 'Someone'} is calling…</h2><p className="answer-instruction">Hold your phone like a call, then tap Answer Call to hear the clue.</p><button className="answer-button" onClick={() => { setCallAnswered(true); speak(activeCard.spoken); }}>☎ Answer Call</button></>}</section></div>}{message && <div className="toast">{message}</div>}</main>;
 }
 
 function Lobby({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) { return <section className="lobby"><div className="sparkles">✦ ✧ ✦</div><p className="eyebrow">DREAM PHONE</p><h1>{title}</h1><p>{subtitle}</p><div className="lobby-fields">{children}</div></section>; }
 function AvatarPicker({ avatar, onChange }: { avatar: string; onChange: (avatar: string) => void }) { return <section className="avatar-picker"><span>Choose your emoji</span><div>{avatarOptions.map((option) => <button key={option} type="button" className={avatar === option ? 'selected' : ''} aria-label={`Use ${option} as your profile emoji`} onClick={() => onChange(option)}>{option}</button>)}</div></section>; }
 function WinnerScreen({ winner, canPlayAgain, onPlayAgain, onHome }: { winner: string; canPlayAgain: boolean; onPlayAgain: () => void; onHome: () => void }) {
   return <main className="dream-app landing-page"><section className="winner-screen"><div className="confetti" aria-hidden="true">✦　●　✦　◆　●　✦　◆　●　✦</div><p className="eyebrow">🥁 DRUMROLL... 🥁</p><h1>MYSTERY<br/>SOLVED!</h1><p className="winner-label">THE SECRET ADMIRER IS</p><div className="winner-podium"><span>★</span><strong>{winner}</strong><span>★</span></div><p>Give it up for the winner!</p>{canPlayAgain ? <button className="big-button" onClick={onPlayAgain}>Play Again</button> : <button className="big-button" onClick={onHome}>Back to Home</button>}</section></main>;
+}
+function PowerCards({ used, onUse }: { used: Record<PowerCard, boolean>; onUse: (power: PowerCard) => void }) {
+  const cards: { id: PowerCard; title: string; text: string; icon: string; tone: string }[] = [
+    { id: 'hangup', title: 'Mom Says Hang Up', text: 'End this call now.', icon: '☎', tone: 'hangup' },
+    { id: 'speakerphone', title: 'Speakerphone', text: 'Show this clue to everyone.', icon: '📣', tone: 'speaker' },
+    { id: 'secret', title: 'Share a Secret', text: 'See this clue just for you.', icon: '🤫', tone: 'secret' },
+  ];
+  return <section className="power-cards"><div><p className="eyebrow">PHONE POWERS</p><h3>Someone else is on the phone…</h3><p>Each card works once per game.</p></div><div className="power-card-row">{cards.map((card) => <button key={card.id} type="button" disabled={used[card.id]} className={`power-card ${card.tone} ${used[card.id] ? 'used' : ''}`} onClick={() => onUse(card.id)}><i>{used[card.id] ? '✓' : card.icon}</i><b>{card.title}</b><small>{used[card.id] ? 'USED' : card.text}</small></button>)}</div></section>;
+}
+function RevealCard({ reveal, onClose }: { reveal: Reveal; onClose: () => void }) {
+  return <div className="reveal-overlay"><section className="reveal-card"><p className="eyebrow">{reveal.private ? 'PRIVATE PHONE POWER' : 'SPEAKERPHONE'}</p><div className="reveal-icon">{reveal.private ? '🤫' : '📣'}</div><h2>{reveal.title}</h2><p className="caller-name">{reveal.caller} says:</p><blockquote>“{reveal.card.clue}”</blockquote><button className="big-button" onClick={onClose}>Got it</button></section></div>;
 }
 function Notes({ notes, onSet, lastCard, lastCaller, compact = false }: { notes: Record<string, NoteState>; onSet: (item: string, state: NoteState) => void; lastCard: ClueCard | null; lastCaller: string; compact?: boolean }) {
   return <section className={`notes-screen ${compact ? 'compact-notes' : ''}`}>{!compact && <div className="notes-title"><div><p className="eyebrow">YOUR CHECKLIST</p><h2>Detective Notes</h2><p>Tap any name or clue to cross it out. Tap it again to undo it. Your notes never show on anyone else’s screen.</p></div></div>}{lastCard && <section className="notes-clue"><p>YOUR LAST PRIVATE CARD · {lastCaller} CALLED</p><b>“{lastCard.clue}”</b></section>}<div className="note-grid">{noteGroups.map((group) => <section className="note-group" key={group.label}><h3>{group.label}</h3>{group.items.map((item) => { const noteKey = `${group.label}:${item}`; const crossed = notes[noteKey] === 'crossed'; return <button key={item} type="button" className={`note-item ${crossed ? 'crossed' : 'none'}`} aria-pressed={crossed} onClick={() => onSet(noteKey, crossed ? 'none' : 'crossed')}><span>{item}</span></button>; })}</section>)}</div><GuyGuide notes={notes} onSet={onSet} embedded /></section>;
