@@ -6,6 +6,7 @@ type NoteGroup = { label: string; items: string[] };
 type ClueCard = { id: number; kind: string; clue: string; spoken: string };
 
 const guyNames = ['Dave', 'George', 'Dale', 'Alan', 'James', 'Phil', 'Bruce', 'Tyler', 'Jamal', 'Gary', 'Dan', 'Spencer', 'Mark', 'Jason', 'Steven', 'John', 'Paul', 'Tony', 'Wayne', 'Mike', 'Scott', 'Bob', 'Carlos', 'Matt'];
+const avatarOptions = ['🦋', '🌸', '💖', '🪩', '🌈', '🧸', '🍒', '⭐️'];
 const hangouts = ['Crosstown Mall', 'Snack Shop', 'Reel Movies', 'Woodland Park', 'High Tide Beach', "Jim's Gym"];
 const sports = ['Basketball', 'Skateboarding', 'Volleyball', 'Surfing', 'Tennis'];
 const foods = ['Ice cream', 'Cookies', 'Hot dogs', 'Pizza', 'Popcorn', 'Candy'];
@@ -64,12 +65,14 @@ export default function DreamPhone() {
   const [screen, setScreen] = useState<'home' | 'host' | 'join' | 'hostWaiting' | 'joinWaiting' | 'game'>('home');
   const [roomCode, setRoomCode] = useState('');
   const [name, setName] = useState('');
+  const [avatar, setAvatar] = useState('🦋');
   const [joinCode, setJoinCode] = useState('');
   const [hostJoined, setHostJoined] = useState(false);
   const [activeTab, setActiveTab] = useState<'deck' | 'notes'>('deck');
   const [deck, setDeck] = useState<ClueCard[]>([]);
   const [deckCount, setDeckCount] = useState(24);
   const [players, setPlayers] = useState<string[]>([]);
+  const [avatars, setAvatars] = useState<Record<string, string>>({});
   const [turnIndex, setTurnIndex] = useState(0);
   const [turnBusy, setTurnBusy] = useState(false);
   const [isHost, setIsHost] = useState(false);
@@ -86,11 +89,13 @@ export default function DreamPhone() {
   const connections = useRef<Map<string, DataConnection>>(new Map());
   const deckRef = useRef<ClueCard[]>([]);
   const playersRef = useRef<string[]>([]);
+  const avatarsRef = useRef<Record<string, string>>({});
   const turnRef = useRef(0);
   const busyRef = useRef(false);
 
   useEffect(() => { deckRef.current = deck; }, [deck]);
   useEffect(() => { playersRef.current = players; }, [players]);
+  useEffect(() => { avatarsRef.current = avatars; }, [avatars]);
   useEffect(() => { turnRef.current = turnIndex; }, [turnIndex]);
   useEffect(() => { busyRef.current = turnBusy; }, [turnBusy]);
 
@@ -130,8 +135,9 @@ export default function DreamPhone() {
   const hostMessage = (connection: DataConnection, payload: any) => {
     if (payload?.type === 'join') {
       const nextPlayers = playersRef.current.includes(payload.name) ? playersRef.current : [...playersRef.current, payload.name];
-      setPlayers(nextPlayers); playersRef.current = nextPlayers;
-      broadcast({ type: 'lobby', players: nextPlayers });
+      const nextAvatars = { ...avatarsRef.current, [payload.name]: payload.avatar || '☎️' };
+      setPlayers(nextPlayers); playersRef.current = nextPlayers; setAvatars(nextAvatars); avatarsRef.current = nextAvatars;
+      broadcast({ type: 'lobby', players: nextPlayers, avatars: nextAvatars });
     }
     if (payload?.type === 'draw' && playersRef.current[turnRef.current] === payload.name && !busyRef.current) serveDraw(connection);
     if (payload?.type === 'finish' && busyRef.current) {
@@ -140,8 +146,8 @@ export default function DreamPhone() {
     }
   };
   const clientMessage = (payload: any) => {
-    if (payload?.type === 'lobby') setPlayers(payload.players);
-    if (payload?.type === 'start') { setPlayers(payload.players); setTurnIndex(payload.currentTurn); setDeckCount(payload.deckCount); setTurnBusy(false); setGameFinished(false); setScreen('game'); }
+    if (payload?.type === 'lobby') { setPlayers(payload.players); setAvatars(payload.avatars || {}); }
+    if (payload?.type === 'start') { setPlayers(payload.players); setAvatars(payload.avatars || {}); setTurnIndex(payload.currentTurn); setDeckCount(payload.deckCount); setTurnBusy(false); setGameFinished(false); setScreen('game'); }
     if (payload?.type === 'turn') { setTurnIndex(payload.currentTurn); setTurnBusy(payload.busy); setDeckCount(payload.deckCount); }
     if (payload?.type === 'card') { setActiveCaller(payload.caller); setLastCaller(payload.caller); setCallAnswered(false); setActiveCard(payload.card); setLastCard(payload.card); }
     if (payload?.type === 'gameOver') setGameFinished(true);
@@ -164,7 +170,7 @@ export default function DreamPhone() {
     peer.on('open', () => {
       const connection = peer.connect(`dream-phone-${joinCode.trim().toLowerCase()}`);
       hostConnection.current = connection;
-      connection.on('open', () => { connection.send({ type: 'join', name: name.trim() }); setScreen('joinWaiting'); });
+      connection.on('open', () => { connection.send({ type: 'join', name: name.trim(), avatar }); setScreen('joinWaiting'); });
       connection.on('data', clientMessage);
       connection.on('error', () => {});
     });
@@ -173,13 +179,14 @@ export default function DreamPhone() {
   const joinAsHost = () => {
     const hostName = name.trim() || 'Host';
     const nextPlayers = [hostName, ...playersRef.current.filter((player) => player !== hostName)];
-    setName(hostName); setHostJoined(true); setPlayers(nextPlayers); playersRef.current = nextPlayers; broadcast({ type: 'lobby', players: nextPlayers });
+    const nextAvatars = { ...avatarsRef.current, [hostName]: avatar };
+    setName(hostName); setHostJoined(true); setPlayers(nextPlayers); playersRef.current = nextPlayers; setAvatars(nextAvatars); avatarsRef.current = nextAvatars; broadcast({ type: 'lobby', players: nextPlayers, avatars: nextAvatars });
   };
   const drawCount = clueCards.length - deckCount;
   const begin = () => {
     const shuffled = [...clueCards].sort(() => Math.random() - 0.5);
     setDeck(shuffled); deckRef.current = shuffled; setDeckCount(shuffled.length); setActiveCard(null); setLastCard(null); setCallAnswered(false); setActiveTab('deck'); setTurnIndex(0); turnRef.current = 0; setTurnBusy(false); setGameFinished(false); setNotes({}); setScreen('game');
-    broadcast({ type: 'start', players: playersRef.current, currentTurn: 0, deckCount: shuffled.length });
+    broadcast({ type: 'start', players: playersRef.current, avatars: avatarsRef.current, currentTurn: 0, deckCount: shuffled.length });
   };
   const draw = () => {
     if (turnBusy || players[turnIndex] !== name || !deckCount) return;
@@ -194,18 +201,20 @@ export default function DreamPhone() {
 
   if (screen === 'home') return <main className="dream-app landing-page"><section className="landing"><div className="sparkles">✦ ✧ ✦</div><p className="eyebrow">A PHONE-CALL MYSTERY GAME</p><h1>DREAM <span>PHONE</span></h1><div className="phone-hero">☎</div><p className="intro">Pick up clue cards, take detective notes, and figure out the secret admirer.</p><div className="two-buttons"><button className="big-button" onClick={() => { setRoomCode(makeCode()); setHostJoined(false); setScreen('host'); }}>HOST</button><button className="big-button pink-button" onClick={() => setScreen('join')}>JOIN</button></div></section></main>;
 
-  if (screen === 'host') return <main className="dream-app"><Lobby title="Host a game" subtitle="You will get a code to give the other players."><label>Your name<input value={name} onChange={(e) => setName(e.target.value)} placeholder="YOUR NAME" maxLength={18} /></label><button className="big-button" onClick={createHostRoom}>Create game</button><button className="back-button" onClick={() => setScreen('home')}>← Back</button></Lobby></main>;
-  if (screen === 'join') return <main className="dream-app"><Lobby title="Join a game" subtitle="Ask the host for their five-letter game code."><label>Game code<input value={joinCode} onChange={(e) => setJoinCode(e.target.value.toUpperCase())} placeholder="ABCDE" maxLength={5} /></label><label>Your name<input value={name} onChange={(e) => setName(e.target.value)} placeholder="YOUR NAME" maxLength={18} /></label><button className="big-button" disabled={joinCode.trim().length < 5 || !name.trim()} onClick={joinHostRoom}>Join game</button><button className="back-button" onClick={() => setScreen('home')}>← Back</button></Lobby></main>;
+  if (screen === 'host') return <main className="dream-app"><Lobby title="Host a game" subtitle="You will get a code to give the other players."><label>Your name<input value={name} onChange={(e) => setName(e.target.value)} placeholder="YOUR NAME" maxLength={18} /></label><AvatarPicker avatar={avatar} onChange={setAvatar} /><button className="big-button" onClick={createHostRoom}>Create game</button><button className="back-button" onClick={() => setScreen('home')}>← Back</button></Lobby></main>;
+  if (screen === 'join') return <main className="dream-app"><Lobby title="Join a game" subtitle="Ask the host for their five-letter game code."><label>Game code<input value={joinCode} onChange={(e) => setJoinCode(e.target.value.toUpperCase())} placeholder="ABCDE" maxLength={5} /></label><label>Your name<input value={name} onChange={(e) => setName(e.target.value)} placeholder="YOUR NAME" maxLength={18} /></label><AvatarPicker avatar={avatar} onChange={setAvatar} /><button className="big-button" disabled={joinCode.trim().length < 5 || !name.trim()} onClick={joinHostRoom}>Join game</button><button className="back-button" onClick={() => setScreen('home')}>← Back</button></Lobby></main>;
   if (screen === 'hostWaiting') return <main className="dream-app"><Lobby title="Waiting for players" subtitle="Share this code. When everyone is here, start the game."><div className="code-card"><span>GAME CODE</span><strong>{roomCode}</strong><button onClick={shareCode}>Copy invite</button></div><section className="player-room"><div className="room-title"><b>Players</b><span>{players.length} player{players.length === 1 ? '' : 's'}</span></div>{players.map((player, index) => <div className="player-slot filled" key={player}><i>☎</i><b>{player}</b>{index === 0 && <small>HOST</small>}</div>)}{Array.from({ length: Math.max(0, 5 - players.length) }, (_, index) => <div className="player-slot empty" key={index}><i>＋</i><span>Waiting for player…</span></div>)}</section>{!hostJoined ? <><label>Host player name<input value={name} onChange={(e) => setName(e.target.value)} placeholder="YOUR NAME" maxLength={18} /></label><button className="big-button join-host" onClick={joinAsHost}>Join as Host</button></> : <button className="big-button" onClick={begin}>Start game →</button>}</Lobby></main>;
   if (screen === 'joinWaiting') return <main className="dream-app"><Lobby title="Waiting for host" subtitle={`You joined game ${roomCode}. The host will start when everyone is ready.`}><div className="waiting-phone">☎</div><p className="waiting-name">You are playing as <b>{name}</b></p><button className="back-button" onClick={() => setScreen('home')}>Leave game</button></Lobby></main>;
 
   const isMyTurn = players[turnIndex] === name;
-  const turnName = players[turnIndex] || 'the current player';
+  const currentPlayerName = players[turnIndex] || 'the current player';
+  const turnName = `${avatars[currentPlayerName] || '☎️'} ${currentPlayerName}`;
   if (gameFinished) return <WinnerScreen winner={secretAdmirer} canPlayAgain={isHost} onPlayAgain={begin} onHome={() => setScreen('home')} />;
   return <main className="dream-app game-shell"><header className="game-header"><button className="brand" onClick={() => setScreen('home')}>☎ DREAM PHONE</button></header><section className="turn-banner"><b>{isMyTurn && !turnBusy ? 'Your turn!' : `Wait for ${turnName} to finish.`}</b><span>{isMyTurn && !turnBusy ? 'Draw a card when you are ready.' : 'You cannot see their clue or their Detective Notes.'}</span></section><section className="game-wrap"><nav className="tabs"><button className={activeTab === 'deck' ? 'active' : ''} onClick={() => setActiveTab('deck')}>☎ Draw pile <em>{drawCount}/24</em></button><button className={activeTab === 'notes' ? 'active' : ''} onClick={() => setActiveTab('notes')}>✎ Detective Notes</button></nav>{activeTab === 'deck' ? <section className="deck-screen"><div className="deck-copy"><p className="eyebrow">SECRET ADMIRER CARDS</p><h2>{isMyTurn && !turnBusy ? 'Pick up the next card.' : `Wait for ${turnName} to finish.`}</h2><p>Only the player whose turn it is can see the next clue. Your Detective Notes are completely private.</p></div><div className="deck-zone"><button className="card-stack" onClick={draw} disabled={!deckCount || !isMyTurn || turnBusy} aria-label="Draw the next Secret Admirer card"><span className="stack stack-three"></span><span className="stack stack-two"></span><span className="top-card"><i>☎</i><b>SECRET<br/>ADMIRER</b><small>{deckCount ? isMyTurn && !turnBusy ? 'TAP TO DRAW' : 'WAIT' : 'ALL CALLED'}</small></span></button><p>{deckCount ? `${deckCount} cards left in the pile` : 'Every clue card has been drawn!'}</p></div></section> : <Notes notes={notes} onSet={setNote} lastCard={lastCard} lastCaller={lastCaller} />}</section>{activeCard && <div className="overlay"><section className="clue-modal call-with-notes"><button className="close" onClick={finishTurn}>×</button><div className={`call-phone ${callAnswered ? 'answered' : ''}`}>☎</div><p className="eyebrow">{callAnswered ? activeCard.kind : 'INCOMING PHONE CALL'}</p>{callAnswered ? <><h2>{activeCaller} called!</h2><blockquote>“{activeCard.clue}”</blockquote><button className="listen-button" onClick={() => speak(activeCard.spoken)}>▶ Play phone call again</button><Notes notes={notes} onSet={setNote} lastCard={null} lastCaller="" compact /><button className="notes-link" onClick={finishTurn}>Finish turn →</button></> : <><h2>{activeCaller || 'Someone'} is calling…</h2><p className="answer-instruction">Hold your phone like a call, then tap Answer Call to hear the clue.</p><button className="answer-button" onClick={() => { setCallAnswered(true); speak(activeCard.spoken); }}>☎ Answer Call</button></>}</section></div>}{message && <div className="toast">{message}</div>}</main>;
 }
 
 function Lobby({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) { return <section className="lobby"><div className="sparkles">✦ ✧ ✦</div><p className="eyebrow">DREAM PHONE</p><h1>{title}</h1><p>{subtitle}</p><div className="lobby-fields">{children}</div></section>; }
+function AvatarPicker({ avatar, onChange }: { avatar: string; onChange: (avatar: string) => void }) { return <section className="avatar-picker"><span>Choose your emoji</span><div>{avatarOptions.map((option) => <button key={option} type="button" className={avatar === option ? 'selected' : ''} aria-label={`Use ${option} as your profile emoji`} onClick={() => onChange(option)}>{option}</button>)}</div></section>; }
 function WinnerScreen({ winner, canPlayAgain, onPlayAgain, onHome }: { winner: string; canPlayAgain: boolean; onPlayAgain: () => void; onHome: () => void }) {
   return <main className="dream-app landing-page"><section className="winner-screen"><div className="confetti" aria-hidden="true">✦　●　✦　◆　●　✦　◆　●　✦</div><p className="eyebrow">🥁 DRUMROLL... 🥁</p><h1>MYSTERY<br/>SOLVED!</h1><p className="winner-label">THE SECRET ADMIRER IS</p><div className="winner-podium"><span>★</span><strong>{winner}</strong><span>★</span></div><p>Give it up for the winner!</p>{canPlayAgain ? <button className="big-button" onClick={onPlayAgain}>Play Again</button> : <button className="big-button" onClick={onHome}>Back to Home</button>}</section></main>;
 }
@@ -230,4 +239,4 @@ const styles = `
 .guide-screen{min-height:590px;border-radius:23px;background:#fff7f7;color:#44224e;box-shadow:0 12px 0 #210b34;padding:clamp(25px,5vw,52px)}.guide-in-notes{margin-top:28px;padding-top:25px;border-top:2px dashed #e6cddd}.guide-groups{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:25px}.guide-group{padding:15px;border:1px solid #edd6e5;border-radius:15px;background:#fff}.guide-group h3{margin:0 0 9px;color:#743766;font-size:20px}.guide-group details{border-top:1px solid #f0e3e9}.guide-group summary{list-style:none;display:flex;justify-content:space-between;align-items:center;padding:11px 2px;cursor:pointer;color:#512e50;font-weight:600}.guide-group summary::-webkit-details-marker{display:none}.guide-group details[open] summary{color:#be3e85}.guide-group summary span{font-size:18px}.guide-group details p{margin:0;color:#9b6e8a;font-size:11px}.matching-guys{display:flex;flex-wrap:wrap;gap:6px;padding:8px 0 11px}.guide-guy{border:0;padding:5px 8px;border-radius:99px;background:#f8d8e9;color:#792c64;font-size:12px;font-weight:700}.guide-guy.crossed{opacity:.55;text-decoration:line-through}.call-with-notes{max-width:760px;max-height:calc(100vh - 28px);overflow:auto}.compact-notes{min-height:0;box-shadow:none;border-radius:16px;margin-top:22px;padding:22px;background:#fff}.compact-notes .note-grid{grid-template-columns:repeat(2,1fr);margin-top:0}.compact-notes .guide-groups{grid-template-columns:repeat(2,1fr)}@media(max-width:720px){.dream-app{padding:12px}.game-header{align-items:flex-start}.brand{font-size:16px}.room-pill span{display:none}.deck-screen{grid-template-columns:1fr;padding:35px 20px;min-height:0}.deck-copy{text-align:center}.deck-copy>p:last-child{margin:16px auto}.deck-zone{order:-1}.notes-screen{padding:27px 16px}.notes-title{align-items:flex-start;display:block}.note-key{margin-top:14px}.note-grid{grid-template-columns:repeat(2,1fr);gap:9px}.note-group{padding:10px}.note-item{font-size:13px}.card-stack{transform:scale(.88)}.deck-zone>p{margin-top:-5px}.tabs{overflow:auto}.tabs button{white-space:nowrap}.two-buttons{margin-top:18px}.guide-groups{grid-template-columns:1fr;gap:10px}.guide-screen{padding:26px 14px}.guide-group{padding:12px}.compact-notes{padding:15px}.compact-notes .guide-groups{grid-template-columns:1fr}}
 `;
 
-if (typeof document !== 'undefined' && !document.getElementById('dream-phone-styles')) { const tag = document.createElement('style'); tag.id = 'dream-phone-styles'; tag.textContent = `${styles}.note-item{font-weight:800;padding:7px 3px}.note-item.circled,.note-item.circled i{border:0;color:inherit}.winner-screen{width:min(540px,100%);text-align:center;padding:30px 20px}.winner-screen h1{font-size:clamp(55px,12vw,92px);line-height:.83;letter-spacing:-.06em;margin:8px 0;color:#fff;text-shadow:5px 6px 0 #ed5f9f;transform:rotate(-2deg)}.confetti{color:#ffcf56;font-size:26px;letter-spacing:3px;animation:party 1.2s ease-in-out infinite alternate}.winner-label{color:#ffdd6f;font:700 12px 'DM Mono',monospace;letter-spacing:.16em;margin:27px 0 8px}.winner-podium{display:flex;align-items:end;justify-content:center;gap:18px;margin:auto;min-height:150px}.winner-podium strong{display:grid;place-items:center;min-width:240px;min-height:122px;padding:20px;background:linear-gradient(160deg,#ffdb63,#e79836);color:#4b174e;border-radius:22px 22px 7px 7px;box-shadow:0 11px 0 #a95065;font-size:clamp(38px,9vw,66px);letter-spacing:-.06em}.winner-podium span{font-size:39px;color:#ffdd6f;transform:translateY(-44px)}.winner-screen>p:last-of-type{font-size:18px;color:#ffe4ef;margin:27px 0 18px}@keyframes party{to{transform:translateY(-7px) rotate(4deg)}}`; document.head.appendChild(tag); }
+if (typeof document !== 'undefined' && !document.getElementById('dream-phone-styles')) { const tag = document.createElement('style'); tag.id = 'dream-phone-styles'; tag.textContent = `${styles}.note-item{font-weight:800;padding:7px 3px}.note-item.circled,.note-item.circled i{border:0;color:inherit}.turn-banner{max-width:1080px;margin:12px auto 0;padding:10px 14px;border-radius:13px;background:#ffffff19;color:#fff}.turn-banner b,.turn-banner span{display:block}.turn-banner span{margin-top:3px;color:#f7d9ea;font-size:13px}.avatar-picker{display:grid;gap:7px;color:#ffe5f1;font-size:13px;font-weight:600}.avatar-picker>div{display:flex;gap:7px;flex-wrap:wrap}.avatar-picker button{width:38px;height:38px;border:2px solid transparent;border-radius:11px;background:#ffffff19;font-size:21px}.avatar-picker button.selected{border-color:#ffcf56;background:#ffffff36}.winner-screen{width:min(540px,100%);text-align:center;padding:30px 20px}.winner-screen h1{font-size:clamp(55px,12vw,92px);line-height:.83;letter-spacing:-.06em;margin:8px 0;color:#fff;text-shadow:5px 6px 0 #ed5f9f;transform:rotate(-2deg)}.confetti{color:#ffcf56;font-size:26px;letter-spacing:3px;animation:party 1.2s ease-in-out infinite alternate}.winner-label{color:#ffdd6f;font:700 12px 'DM Mono',monospace;letter-spacing:.16em;margin:27px 0 8px}.winner-podium{display:flex;align-items:end;justify-content:center;gap:18px;margin:auto;min-height:150px}.winner-podium strong{display:grid;place-items:center;min-width:240px;min-height:122px;padding:20px;background:linear-gradient(160deg,#ffdb63,#e79836);color:#4b174e;border-radius:22px 22px 7px 7px;box-shadow:0 11px 0 #a95065;font-size:clamp(38px,9vw,66px);letter-spacing:-.06em}.winner-podium span{font-size:39px;color:#ffdd6f;transform:translateY(-44px)}.winner-screen>p:last-of-type{font-size:18px;color:#ffe4ef;margin:27px 0 18px}@keyframes party{to{transform:translateY(-7px) rotate(4deg)}}`; document.head.appendChild(tag); }
