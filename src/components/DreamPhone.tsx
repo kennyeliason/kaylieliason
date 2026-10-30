@@ -178,10 +178,18 @@ export default function DreamPhone() {
 
 function Lobby({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) { return <section className="lobby"><div className="sparkles">✦ ✧ ✦</div><p className="eyebrow">DREAM PHONE</p><h1>{title}</h1><p>{subtitle}</p><div className="lobby-fields">{children}</div></section>; }
 function Notes({ notes, onSet }: { notes: Record<string, NoteState>; onSet: (item: string, state: NoteState) => void }) {
-  const tapTimer = useRef<number | null>(null);
-  const crossOff = (item: string) => { tapTimer.current = window.setTimeout(() => { onSet(item, 'crossed'); tapTimer.current = null; }, 210); };
-  const circle = (item: string) => { if (tapTimer.current) window.clearTimeout(tapTimer.current); tapTimer.current = null; onSet(item, 'circled'); };
-  return <section className="notes-screen"><div className="notes-title"><div><p className="eyebrow">YOUR CHECKLIST</p><h2>Detective Notes</h2><p>Tap once to cross off an option. Double tap to circle it. Your notes never show on anyone else’s screen.</p></div><div className="note-key"><span>✕ one tap</span><span>○ double tap</span></div></div><div className="note-grid">{noteGroups.map((group) => <section className="note-group" key={group.label}><h3>{group.label}</h3>{group.items.map((item) => <button key={item} onClick={() => crossOff(item)} onDoubleClick={() => circle(item)} className={`note-item ${notes[item] || 'none'}`}><i>{notes[item] === 'circled' ? '○' : notes[item] === 'crossed' ? '✕' : ''}</i>{item}</button>)}</section>)}</div></section>;
+  const pendingTap = useRef<{ item: string; timer: number } | null>(null);
+  const tapNote = (item: string) => {
+    if (pendingTap.current?.item === item) {
+      window.clearTimeout(pendingTap.current.timer);
+      pendingTap.current = null;
+      onSet(item, 'circled');
+      return;
+    }
+    if (pendingTap.current) window.clearTimeout(pendingTap.current.timer);
+    pendingTap.current = { item, timer: window.setTimeout(() => { onSet(item, 'crossed'); pendingTap.current = null; }, 280) };
+  };
+  return <section className="notes-screen"><div className="notes-title"><div><p className="eyebrow">YOUR CHECKLIST</p><h2>Detective Notes</h2><p>Tap once to cross off an option. Double tap to circle it. Your notes never show on anyone else’s screen.</p></div><div className="note-key"><span>✕ one tap</span><span>○ double tap</span></div></div><div className="note-grid">{noteGroups.map((group) => <section className="note-group" key={group.label}><h3>{group.label}</h3>{group.items.map((item) => <button key={item} onPointerUp={(event) => { event.preventDefault(); tapNote(item); }} className={`note-item ${notes[item] || 'none'}`}><i>{notes[item] === 'circled' ? '○' : notes[item] === 'crossed' ? '✕' : ''}</i>{item}</button>)}</section>)}</div></section>;
 }
 
 const styles = `
