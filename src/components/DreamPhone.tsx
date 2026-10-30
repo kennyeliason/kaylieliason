@@ -137,15 +137,14 @@ export default function DreamPhone() {
   const createHostRoom = () => {
     setIsHost(true);
     const peer = new Peer(`dream-phone-${roomCode.toLowerCase()}`);
-    let opened = false;
     peerRef.current = peer;
-    peer.on('open', () => { opened = true; setScreen('hostWaiting'); });
+    peer.on('open', () => setScreen('hostWaiting'));
     peer.on('connection', (connection) => {
       connections.current.set(connection.peer, connection);
       connection.on('data', (payload) => hostMessage(connection, payload));
       connection.on('close', () => connections.current.delete(connection.peer));
     });
-    peer.on('error', () => { if (!opened) setMessage('Could not open this room. Try creating a new code.'); });
+    peer.on('error', () => {});
   };
   const joinHostRoom = () => {
     setIsHost(false); setRoomCode(joinCode.trim().toUpperCase());
@@ -155,9 +154,9 @@ export default function DreamPhone() {
       hostConnection.current = connection;
       connection.on('open', () => { connection.send({ type: 'join', name: name.trim() }); setScreen('joinWaiting'); });
       connection.on('data', clientMessage);
-      connection.on('error', () => setMessage('Could not reach that game code. Check it with the host.'));
+      connection.on('error', () => {});
     });
-    peer.on('error', () => setMessage('Could not reach that game code. Check it with the host.'));
+    peer.on('error', () => {});
   };
   const joinAsHost = () => {
     const hostName = name.trim() || 'Host';
@@ -195,19 +194,8 @@ export default function DreamPhone() {
 
 function Lobby({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) { return <section className="lobby"><div className="sparkles">✦ ✧ ✦</div><p className="eyebrow">DREAM PHONE</p><h1>{title}</h1><p>{subtitle}</p><div className="lobby-fields">{children}</div></section>; }
 function Notes({ notes, onSet }: { notes: Record<string, NoteState>; onSet: (item: string, state: NoteState) => void }) {
-  const pendingTap = useRef<{ item: string; time: number; timer: number } | null>(null);
-  const tapNote = (item: string) => {
-    const now = Date.now();
-    if (pendingTap.current?.item === item && now - pendingTap.current.time < 420) {
-      window.clearTimeout(pendingTap.current.timer);
-      pendingTap.current = null;
-      onSet(item, 'circled');
-      return;
-    }
-    if (pendingTap.current) window.clearTimeout(pendingTap.current.timer);
-    pendingTap.current = { item, time: now, timer: window.setTimeout(() => { onSet(item, 'crossed'); pendingTap.current = null; }, 420) };
-  };
-  return <section className="notes-screen"><div className="notes-title"><div><p className="eyebrow">YOUR CHECKLIST</p><h2>Detective Notes</h2><p>Tap once to cross off an option. Double tap to circle it. Your notes never show on anyone else’s screen.</p></div><div className="note-key"><span>✕ one tap</span><span>○ double tap</span></div></div><div className="note-grid">{noteGroups.map((group) => <section className="note-group" key={group.label}><h3>{group.label}</h3>{group.items.map((item) => <button key={item} onPointerDown={(event) => { event.preventDefault(); tapNote(item); }} className={`note-item ${notes[item] || 'none'}`}><i>{notes[item] === 'circled' ? '○' : notes[item] === 'crossed' ? '✕' : ''}</i>{item}</button>)}</section>)}</div></section>;
+  const actionStyle = { width: '25px', height: '25px', border: 0, borderRadius: '50%', fontSize: '17px', fontWeight: 700, lineHeight: 1, cursor: 'pointer' };
+  return <section className="notes-screen"><div className="notes-title"><div><p className="eyebrow">YOUR CHECKLIST</p><h2>Detective Notes</h2><p>Use the buttons beside each option: <b>✕</b> crosses it out and <b>○</b> circles it. Your notes never show on anyone else’s screen.</p></div><div className="note-key"><span>✕ cross off</span><span>○ circle</span></div></div><div className="note-grid">{noteGroups.map((group) => <section className="note-group" key={group.label}><h3>{group.label}</h3>{group.items.map((item) => <div key={item} className={`note-item ${notes[item] || 'none'}`}><span>{item}</span><div className="note-actions" style={{ marginLeft: 'auto', display: 'flex', gap: '4px' }}><button style={{ ...actionStyle, background: '#f6dbe8', color: '#c63f83' }} aria-label={`Cross off ${item}`} onClick={() => onSet(item, 'crossed')}>✕</button><button style={{ ...actionStyle, background: '#e1d7f4', color: '#663caa' }} aria-label={`Circle ${item}`} onClick={() => onSet(item, 'circled')}>○</button></div></div>)}</section>)}</div></section>;
 }
 
 function GuyGuide() {
