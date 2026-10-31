@@ -289,8 +289,9 @@ export default function DreamPhone() {
     const clueDeck = buildClueDeck(admirer);
     fullDeckRef.current = clueDeck;
     const shuffled = [...clueDeck].sort(() => Math.random() - 0.5);
-    setDeck(shuffled); deckRef.current = shuffled; setDeckCount(shuffled.length); setActiveCard(null); setLastCard(null); setCallAnswered(false); setActiveTab('deck'); setTurnIndex(0); turnRef.current = 0; setTurnBusy(false); setGameFinished(false); setGameWinner(''); setRevealedAdmirer(''); setEliminated(false); setEliminatedPlayers([]); eliminatedRef.current = []; setNotes({}); setUsedPowers({ hangup: false, speakerphone: false, secret: false }); setReveal(null); setGuessResult(null); setReshuffling(false); setScreen('game');
-    broadcast({ type: 'start', players: playersRef.current, avatars: avatarsRef.current, currentTurn: 0, deckCount: shuffled.length });
+    const firstTurn = Math.floor(Math.random() * playersRef.current.length);
+    setDeck(shuffled); deckRef.current = shuffled; setDeckCount(shuffled.length); setActiveCard(null); setLastCard(null); setCallAnswered(false); setActiveTab('deck'); setTurnIndex(firstTurn); turnRef.current = firstTurn; setTurnBusy(false); setGameFinished(false); setGameWinner(''); setRevealedAdmirer(''); setEliminated(false); setEliminatedPlayers([]); eliminatedRef.current = []; setNotes({}); setUsedPowers({ hangup: false, speakerphone: false, secret: false }); setReveal(null); setGuessResult(null); setReshuffling(false); setScreen('game');
+    broadcast({ type: 'start', players: playersRef.current, avatars: avatarsRef.current, currentTurn: firstTurn, deckCount: shuffled.length });
   };
   const draw = () => {
     if (eliminated || turnBusy || players[turnIndex] !== name || !deckCount) return;
