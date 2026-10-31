@@ -21,39 +21,29 @@ const guyProfiles = guyNames.map((name, index) => ({
   food: name === 'Jamal' ? 'Candy' : foods[index % foods.length],
   outfit: name === 'Jamal' ? 'Anything yellow' : outfits[index % outfits.length],
 }));
-const secretAdmirer = 'Jamal';
-
 const noteGroups: NoteGroup[] = [
   { label: 'Secret Admirer', items: guyNames },
   { label: 'Called', items: guyNames },
 ];
+const CLUE_COUNT = 24;
 
-const clueCards: ClueCard[] = [
-  { id: 1, kind: 'SECRET ADMIRER', clue: 'I know who it is, but I’m not telling! Ha! Ha!', spoken: 'I know who it is, but I’m not telling! Ha! Ha!' },
-  { id: 2, kind: 'HANG-OUT CLUE', clue: 'I know where he hangs out… but it’s not at Crosstown Mall.', spoken: 'I know where he hangs out, but it’s not at Crosstown Mall.' },
-  { id: 3, kind: 'HANG-OUT CLUE', clue: 'I know where he hangs out… but it’s not at the Snack Shop.', spoken: 'I know where he hangs out, but it’s not at the Snack Shop.' },
-  { id: 4, kind: 'HANG-OUT CLUE', clue: 'I know where he hangs out… but it’s not at Reel Movies.', spoken: 'I know where he hangs out, but it’s not at Reel Movies.' },
-  { id: 5, kind: 'HANG-OUT CLUE', clue: 'I know where he hangs out… but it’s not at Woodland Park.', spoken: 'I know where he hangs out, but it’s not at Woodland Park.' },
-  { id: 6, kind: 'HANG-OUT CLUE', clue: 'I know where he hangs out… but it’s not at High Tide Beach.', spoken: 'I know where he hangs out, but it’s not at High Tide Beach.' },
-  { id: 7, kind: 'SPORTS CLUE', clue: 'He likes most sports… but not basketball.', spoken: 'He likes most sports, but not basketball.' },
-  { id: 8, kind: 'SPORTS CLUE', clue: 'He likes most sports… but not skateboarding.', spoken: 'He likes most sports, but not skateboarding.' },
-  { id: 9, kind: 'SPORTS CLUE', clue: 'He likes most sports… but not volleyball.', spoken: 'He likes most sports, but not volleyball.' },
-  { id: 10, kind: 'SPORTS CLUE', clue: 'He likes most sports… but not surfing.', spoken: 'He likes most sports, but not surfing.' },
-  { id: 11, kind: 'SECRET ADMIRER', clue: 'I know who it is, but I’m not telling! Ha! Ha!', spoken: 'I know who it is, but I’m not telling! Ha! Ha!' },
-  { id: 12, kind: 'FOOD CLUE', clue: 'He’ll eat almost anything, except ice cream.', spoken: 'He will eat almost anything, except ice cream.' },
-  { id: 13, kind: 'FOOD CLUE', clue: 'He’ll eat almost anything, except cookies.', spoken: 'He will eat almost anything, except cookies.' },
-  { id: 14, kind: 'FOOD CLUE', clue: 'He’ll eat almost anything, except hot dogs.', spoken: 'He will eat almost anything, except hot dogs.' },
-  { id: 15, kind: 'FOOD CLUE', clue: 'He’ll eat almost anything, except pizza.', spoken: 'He will eat almost anything, except pizza.' },
-  { id: 16, kind: 'FOOD CLUE', clue: 'He’ll eat almost anything, except popcorn.', spoken: 'He will eat almost anything, except popcorn.' },
-  { id: 17, kind: 'SECRET ADMIRER', clue: 'I know who it is, but I’m not telling! Ha! Ha!', spoken: 'I know who it is, but I’m not telling! Ha! Ha!' },
-  { id: 18, kind: 'CLOTHING CLUE', clue: 'He’s not wearing a hat.', spoken: 'He is not wearing a hat.' },
-  { id: 19, kind: 'CLOTHING CLUE', clue: 'He’s not wearing a tie.', spoken: 'He is not wearing a tie.' },
-  { id: 20, kind: 'CLOTHING CLUE', clue: 'He’s not wearing blue jeans.', spoken: 'He is not wearing blue jeans.' },
-  { id: 21, kind: 'CLOTHING CLUE', clue: 'He’s not wearing a jacket.', spoken: 'He is not wearing a jacket.' },
-  { id: 22, kind: 'CLOTHING CLUE', clue: 'He’s not wearing glasses.', spoken: 'He is not wearing glasses.' },
-  { id: 23, kind: 'SECRET ADMIRER', clue: 'I know who it is, but I’m not telling! Ha! Ha!', spoken: 'I know who it is, but I’m not telling! Ha! Ha!' },
-  { id: 24, kind: 'SECRET ADMIRER', clue: 'I know who it is, but I’m not telling! Ha! Ha!', spoken: 'I know who it is, but I’m not telling! Ha! Ha!' },
-];
+function chooseSecretAdmirer(previous: string) {
+  const choices = guyNames.filter((name) => name !== previous);
+  return choices[Math.floor(Math.random() * choices.length)] || guyNames[0];
+}
+
+function buildClueDeck(admirer: string): ClueCard[] {
+  const target = guyProfiles.find((guy) => guy.name === admirer);
+  if (!target) return [];
+  const cards: Omit<ClueCard, 'id'>[] = [
+    ...hangouts.filter((place) => place !== target.hangout).map((place) => ({ kind: 'HANG-OUT CLUE', clue: `I know where he hangs out… but it’s not at ${place}.`, spoken: `I know where he hangs out, but it is not at ${place}.` })),
+    ...sports.filter((sport) => sport !== target.sport).map((sport) => ({ kind: 'SPORTS CLUE', clue: `He likes most sports… but not ${sport.toLowerCase()}.`, spoken: `He likes most sports, but not ${sport.toLowerCase()}.` })),
+    ...foods.filter((food) => food !== target.food).map((food) => ({ kind: 'FOOD CLUE', clue: `He’ll eat almost anything, except ${food.toLowerCase()}.`, spoken: `He will eat almost anything, except ${food.toLowerCase()}.` })),
+    ...outfits.filter((outfit) => outfit !== target.outfit).map((outfit) => ({ kind: 'CLOTHING CLUE', clue: `He’s not wearing ${outfit.toLowerCase()}.`, spoken: `He is not wearing ${outfit.toLowerCase()}.` })),
+    ...Array.from({ length: 5 }, () => ({ kind: 'SECRET ADMIRER', clue: 'I know who it is, but I’m not telling! Ha! Ha!', spoken: 'I know who it is, but I’m not telling! Ha! Ha!' })),
+  ];
+  return cards.map((card, index) => ({ ...card, id: index + 1 }));
+}
 
 function makeCode() { return Math.random().toString(36).slice(2, 7).toUpperCase(); }
 function speak(text: string) {
@@ -106,6 +96,7 @@ export default function DreamPhone() {
   const [notes, setNotes] = useState<Record<string, NoteState>>({});
   const [gameFinished, setGameFinished] = useState(false);
   const [gameWinner, setGameWinner] = useState('');
+  const [revealedAdmirer, setRevealedAdmirer] = useState('');
   const [eliminated, setEliminated] = useState(false);
   const [eliminatedPlayers, setEliminatedPlayers] = useState<string[]>([]);
   const [message, setMessage] = useState<string | null>(null);
@@ -123,6 +114,8 @@ export default function DreamPhone() {
   const currentCardRef = useRef<ClueCard | null>(null);
   const currentCallerRef = useRef('');
   const eliminatedRef = useRef<string[]>([]);
+  const secretAdmirerRef = useRef('');
+  const lastSecretAdmirerRef = useRef('');
 
   useEffect(() => { deckRef.current = deck; }, [deck]);
   useEffect(() => { playersRef.current = players; }, [players]);
@@ -142,10 +135,12 @@ export default function DreamPhone() {
     broadcast({ type: 'turn', currentTurn: nextIndex, busy, deckCount: count });
   };
   const finishGame = (winner = '') => {
+    const admirer = secretAdmirerRef.current;
     setTurnBusy(false);
     setGameFinished(true);
     setGameWinner(winner);
-    broadcast({ type: 'gameOver', winner });
+    setRevealedAdmirer(admirer);
+    broadcast({ type: 'gameOver', winner, admirer });
   };
   const advanceTurn = () => {
     currentCardRef.current = null;
@@ -202,7 +197,7 @@ export default function DreamPhone() {
       if (payload.power === 'secret') connection.send({ type: 'reveal', card, caller, title: 'Shh… your secret clue', private: true });
     }
     if (payload?.type === 'guess' && playersRef.current.includes(payload.name) && !eliminatedRef.current.includes(payload.name)) {
-      if (payload.guess === secretAdmirer) finishGame(payload.name);
+      if (payload.guess === secretAdmirerRef.current) finishGame(payload.name);
       else {
         const nextEliminated = [...eliminatedRef.current, payload.name];
         setEliminatedPlayers(nextEliminated); eliminatedRef.current = nextEliminated;
@@ -213,11 +208,11 @@ export default function DreamPhone() {
   };
   const clientMessage = (payload: any) => {
     if (payload?.type === 'lobby') { setPlayers(payload.players); setAvatars(payload.avatars || {}); }
-    if (payload?.type === 'start') { setPlayers(payload.players); setAvatars(payload.avatars || {}); setTurnIndex(payload.currentTurn); setDeckCount(payload.deckCount); setTurnBusy(false); setGameFinished(false); setGameWinner(''); setEliminated(false); setEliminatedPlayers([]); eliminatedRef.current = []; setUsedPowers({ hangup: false, speakerphone: false, secret: false }); setReveal(null); setScreen('game'); }
+    if (payload?.type === 'start') { setPlayers(payload.players); setAvatars(payload.avatars || {}); setTurnIndex(payload.currentTurn); setDeckCount(payload.deckCount); setTurnBusy(false); setGameFinished(false); setGameWinner(''); setRevealedAdmirer(''); setEliminated(false); setEliminatedPlayers([]); eliminatedRef.current = []; setUsedPowers({ hangup: false, speakerphone: false, secret: false }); setReveal(null); setGuessResult(null); setScreen('game'); }
     if (payload?.type === 'turn') { setTurnIndex(payload.currentTurn); setTurnBusy(payload.busy); setDeckCount(payload.deckCount); }
     if (payload?.type === 'card') { setActiveCaller(payload.caller); setLastCaller(payload.caller); setCallAnswered(false); setActiveCard(payload.card); setLastCard(payload.card); }
-    if (payload?.type === 'gameOver') { setGameWinner(payload.winner || ''); setGameFinished(true); }
-    if (payload?.type === 'guessWrong') { if (payload.name === name) setEliminated(true); const nextEliminated = payload.eliminated || [...eliminatedRef.current, payload.name]; setEliminatedPlayers(nextEliminated); eliminatedRef.current = nextEliminated; setMessage(`${payload.name} guessed ${payload.guess} and is out!`); window.setTimeout(() => setMessage(null), 2600); }
+    if (payload?.type === 'gameOver') { setGameWinner(payload.winner || ''); setRevealedAdmirer(payload.admirer || ''); setGameFinished(true); }
+    if (payload?.type === 'guessWrong') { if (payload.name === name) { setEliminated(true); setGuessResult({ name: payload.guess, correct: false }); } const nextEliminated = payload.eliminated || [...eliminatedRef.current, payload.name]; setEliminatedPlayers(nextEliminated); eliminatedRef.current = nextEliminated; setMessage(`${payload.name} guessed ${payload.guess} and is out!`); window.setTimeout(() => setMessage(null), 2600); }
     if (payload?.type === 'hungUp') { setActiveCard(null); setCallAnswered(false); setMessage(`${payload.by} hung up the call!`); window.setTimeout(() => setMessage(null), 1800); }
     if (payload?.type === 'reveal') setReveal({ card: payload.card, caller: payload.caller, title: payload.title, private: Boolean(payload.private) });
   };
@@ -251,10 +246,13 @@ export default function DreamPhone() {
     const nextAvatars = { ...avatarsRef.current, [hostName]: avatar };
     setName(hostName); setHostJoined(true); setPlayers(nextPlayers); playersRef.current = nextPlayers; setAvatars(nextAvatars); avatarsRef.current = nextAvatars; broadcast({ type: 'lobby', players: nextPlayers, avatars: nextAvatars });
   };
-  const drawCount = clueCards.length - deckCount;
+  const drawCount = CLUE_COUNT - deckCount;
   const begin = () => {
-    const shuffled = [...clueCards].sort(() => Math.random() - 0.5);
-    setDeck(shuffled); deckRef.current = shuffled; setDeckCount(shuffled.length); setActiveCard(null); setLastCard(null); setCallAnswered(false); setActiveTab('deck'); setTurnIndex(0); turnRef.current = 0; setTurnBusy(false); setGameFinished(false); setGameWinner(''); setEliminated(false); setEliminatedPlayers([]); eliminatedRef.current = []; setNotes({}); setUsedPowers({ hangup: false, speakerphone: false, secret: false }); setReveal(null); setGuessResult(null); setScreen('game');
+    const admirer = chooseSecretAdmirer(lastSecretAdmirerRef.current);
+    lastSecretAdmirerRef.current = admirer;
+    secretAdmirerRef.current = admirer;
+    const shuffled = buildClueDeck(admirer).sort(() => Math.random() - 0.5);
+    setDeck(shuffled); deckRef.current = shuffled; setDeckCount(shuffled.length); setActiveCard(null); setLastCard(null); setCallAnswered(false); setActiveTab('deck'); setTurnIndex(0); turnRef.current = 0; setTurnBusy(false); setGameFinished(false); setGameWinner(''); setRevealedAdmirer(''); setEliminated(false); setEliminatedPlayers([]); eliminatedRef.current = []; setNotes({}); setUsedPowers({ hangup: false, speakerphone: false, secret: false }); setReveal(null); setGuessResult(null); setScreen('game');
     broadcast({ type: 'start', players: playersRef.current, avatars: avatarsRef.current, currentTurn: 0, deckCount: shuffled.length });
   };
   const draw = () => {
@@ -276,16 +274,17 @@ export default function DreamPhone() {
   };
   const makeGuess = (guessedName: string) => {
     if (eliminated || gameFinished) return;
-    setGuessResult({ name: guessedName, correct: guessedName === secretAdmirer });
     if (isHost) {
-      if (guessedName === secretAdmirer) finishGame(name);
+      const correct = guessedName === secretAdmirerRef.current;
+      setGuessResult({ name: guessedName, correct });
+      if (correct) finishGame(name);
       else {
         const nextEliminated = [...eliminatedRef.current, name];
         setEliminated(true); setEliminatedPlayers(nextEliminated); eliminatedRef.current = nextEliminated;
         broadcast({ type: 'guessWrong', name, guess: guessedName, eliminated: nextEliminated });
         if (!busyRef.current && playersRef.current[turnRef.current] === name) advanceTurn();
       }
-    } else hostConnection.current?.send({ type: 'guess', name, guess: guessedName });
+    } else { setMessage('Checking your guess…'); hostConnection.current?.send({ type: 'guess', name, guess: guessedName }); }
   };
   const shareCode = async () => {
     const link = `${window.location.origin}/dream-phone?room=${roomCode}`;
@@ -304,15 +303,15 @@ export default function DreamPhone() {
   const isMyTurn = !eliminated && players[turnIndex] === name;
   const currentPlayerName = players[turnIndex] || 'the current player';
   const turnName = `${avatars[currentPlayerName] || '☎️'} ${currentPlayerName}`;
-  if (gameFinished) return <WinnerScreen winner={gameWinner} canPlayAgain={isHost} onPlayAgain={begin} onHome={() => setScreen('home')} />;
+  if (gameFinished) return <WinnerScreen winner={gameWinner} admirer={revealedAdmirer} canPlayAgain={isHost} onPlayAgain={begin} onHome={() => setScreen('home')} />;
   return <main className="dream-app game-shell"><header className="game-header"><button className="brand" onClick={() => setScreen('home')}>☎ DREAM PHONE</button></header><section className="turn-banner"><b>{eliminated ? 'You are out of this game.' : isMyTurn && !turnBusy ? 'Your turn!' : `Wait for ${turnName} to finish.`}</b><span>{eliminated ? 'Keep watching to see who solves the mystery.' : isMyTurn && !turnBusy ? 'Draw a card when you are ready.' : 'You cannot see their clue or their Detective Notes.'}</span></section><section className="game-wrap"><nav className="tabs"><button className={activeTab === 'deck' ? 'active' : ''} onClick={() => setActiveTab('deck')}>☎ Draw pile <em>{drawCount}/24</em></button><button className={activeTab === 'notes' ? 'active' : ''} onClick={() => setActiveTab('notes')}>✎ Detective Notes</button><button className={activeTab === 'guess' ? 'active' : ''} onClick={() => setActiveTab('guess')}>♥ Guess</button></nav>{activeTab === 'deck' ? <section className="deck-screen"><div className="deck-copy"><p className="eyebrow">SECRET ADMIRER CARDS</p><h2>{eliminated ? 'You are out—keep watching!' : isMyTurn && !turnBusy ? 'Pick up the next card.' : `Wait for ${turnName} to finish.`}</h2><p>Only the player whose turn it is can see the next clue. Your Detective Notes are completely private.</p></div><div className="deck-zone"><button className="card-stack" onClick={draw} disabled={!deckCount || !isMyTurn || turnBusy} aria-label="Draw the next Secret Admirer card"><span className="stack stack-three"></span><span className="stack stack-two"></span><span className="top-card"><i>☎</i><b>SECRET<br/>ADMIRER</b><small>{deckCount ? isMyTurn && !turnBusy ? 'TAP TO DRAW' : 'WAIT' : 'ALL CALLED'}</small></span></button><p>{deckCount ? `${deckCount} cards left in the pile` : 'Every clue card has been drawn!'}</p></div></section> : activeTab === 'notes' ? <Notes notes={notes} onSet={setNote} lastCard={lastCard} lastCaller={lastCaller} /> : <GuessPanel result={guessResult} disabled={eliminated} onGuess={makeGuess} />}{turnBusy && !isMyTurn && !eliminated && <PowerCards used={usedPowers} onUse={usePower} />}</section>{reveal && <RevealCard reveal={reveal} onClose={() => setReveal(null)} />}{activeCard && <div className="overlay"><section className="clue-modal call-with-notes"><button className="close" onClick={finishTurn}>×</button><div className={`call-phone ${callAnswered ? 'answered' : ''}`}>☎</div><p className="eyebrow">{callAnswered ? activeCard.kind : 'INCOMING PHONE CALL'}</p>{callAnswered ? <><h2>{activeCaller} called!</h2><blockquote>“{activeCard.clue}”</blockquote><button className="listen-button" onClick={() => speak(activeCard.spoken)}>▶ Play phone call again</button><Notes notes={notes} onSet={setNote} lastCard={null} lastCaller="" compact /><button className="notes-link" onClick={finishTurn}>Finish turn →</button></> : <><h2>{activeCaller || 'Someone'} is calling…</h2><p className="answer-instruction">Hold your phone like a call, then tap Answer Call to hear the clue.</p><button className="answer-button" onClick={() => { setCallAnswered(true); speak(activeCard.spoken); }}>☎ Answer Call</button></>}</section></div>}{message && <div className="toast">{message}</div>}</main>;
 }
 
 function Lobby({ title, subtitle, children }: { title: string; subtitle: string; children: React.ReactNode }) { return <section className="lobby"><div className="sparkles">✦ ✧ ✦</div><p className="eyebrow">DREAM PHONE</p><h1>{title}</h1><p>{subtitle}</p><div className="lobby-fields">{children}</div></section>; }
 function AvatarPicker({ avatar, onChange }: { avatar: string; onChange: (avatar: string) => void }) { return <section className="avatar-picker"><span>Choose your emoji</span><div>{avatarOptions.map((option) => <button key={option} type="button" className={avatar === option ? 'selected' : ''} aria-label={`Use ${option} as your profile emoji`} onClick={() => onChange(option)}>{option}</button>)}</div></section>; }
-function WinnerScreen({ winner, canPlayAgain, onPlayAgain, onHome }: { winner: string; canPlayAgain: boolean; onPlayAgain: () => void; onHome: () => void }) {
+function WinnerScreen({ winner, admirer, canPlayAgain, onPlayAgain, onHome }: { winner: string; admirer: string; canPlayAgain: boolean; onPlayAgain: () => void; onHome: () => void }) {
   const guessedCorrectly = Boolean(winner);
-  return <main className="dream-app landing-page"><section className="winner-screen"><div className="confetti" aria-hidden="true">✦　●　✦　◆　●　✦　◆　●　✦</div><p className="eyebrow">🥁 DRUMROLL... 🥁</p><h1>{guessedCorrectly ? 'YOU GOT\nIT!' : 'MYSTERY\nSOLVED!'}</h1>{guessedCorrectly && <p className="guess-winner">{winner} guessed it first!</p>}<p className="winner-label">THE SECRET ADMIRER IS</p><div className="winner-podium"><span>★</span><strong>{secretAdmirer}</strong><span>★</span></div><p>{guessedCorrectly ? 'You’re right! I really like you!' : 'Every clue has been revealed!'}</p>{canPlayAgain ? <button className="big-button" onClick={onPlayAgain}>Play Again</button> : <button className="big-button" onClick={onHome}>Back to Home</button>}</section></main>;
+  return <main className="dream-app landing-page"><section className="winner-screen"><div className="confetti" aria-hidden="true">✦　●　✦　◆　●　✦　◆　●　✦</div><p className="eyebrow">🥁 DRUMROLL... 🥁</p><h1>{guessedCorrectly ? 'YOU GOT IT!' : 'MYSTERY SOLVED!'}</h1>{guessedCorrectly && <p className="guess-winner">{winner} guessed it first!</p>}<p className="winner-label">THE SECRET ADMIRER IS</p><div className="winner-podium"><span>★</span><strong>{admirer}</strong><span>★</span></div><p>{guessedCorrectly ? 'You’re right! I really like you!' : 'Every clue has been revealed!'}</p>{canPlayAgain ? <button className="big-button" onClick={onPlayAgain}>Play Again</button> : <button className="big-button" onClick={onHome}>Back to Home</button>}</section></main>;
 }
 function GuessPanel({ result, disabled, onGuess }: { result: { name: string; correct: boolean } | null; disabled: boolean; onGuess: (name: string) => void }) {
   return <section className="guess-panel"><p className="eyebrow">MAKE YOUR MOVE</p><h2>Who is the secret admirer?</h2><p>Choose carefully—if you guess wrong, you are out of the game.</p>{disabled ? <div className="guess-result wrong"><b>You’re out!</b><span>Keep watching to see who solves the mystery.</span></div> : result ? <div className={`guess-result ${result.correct ? 'right' : 'wrong'}`}><b>{result.correct ? 'You’re right! I really like you!' : 'Nice try… but it’s not me!'}</b><span>{result.correct ? `${result.name} was the secret admirer.` : `${result.name} was not the secret admirer, so you are out.`}</span></div> : <div className="guess-grid">{guyNames.map((guy) => <button key={guy} type="button" onClick={() => onGuess(guy)}>{guy}</button>)}</div>}</section>
