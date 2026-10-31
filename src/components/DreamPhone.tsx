@@ -212,8 +212,11 @@ export default function DreamPhone() {
         advanceTurn();
       }
       if (payload.power === 'speakerphone') {
-        broadcast({ type: 'reveal', card, caller, title: `${payload.name} put ${caller} on speakerphone!`, private: false });
-        setReveal({ card, caller, title: `${payload.name} put ${caller} on speakerphone!`, private: false });
+        const activePlayer = playersRef.current[turnRef.current];
+        const title = `${payload.name} put ${caller} on speakerphone!`;
+        broadcast({ type: 'speakerphone', card, caller, title, by: payload.name, activePlayer });
+        if (activePlayer === name) { setMessage(`${payload.name} put your call on speakerphone!`); window.setTimeout(() => setMessage(null), 2600); }
+        else setReveal({ card, caller, title, private: false });
       }
       if (payload.power === 'secret') connection.send({ type: 'reveal', card, caller, title: 'Shh… your secret clue', private: true });
     }
@@ -236,6 +239,10 @@ export default function DreamPhone() {
     if (payload?.type === 'guessWrong') { if (payload.name === name) { setEliminated(true); setGuessResult({ name: payload.guess, correct: false }); } const nextEliminated = payload.eliminated || [...eliminatedRef.current, payload.name]; setEliminatedPlayers(nextEliminated); eliminatedRef.current = nextEliminated; setMessage(`${payload.name} guessed ${payload.guess} and is out!`); window.setTimeout(() => setMessage(null), 2600); }
     if (payload?.type === 'hungUp') { setActiveCard(null); setCallAnswered(false); setMessage(`${payload.by} hung up the call!`); window.setTimeout(() => setMessage(null), 1800); }
     if (payload?.type === 'reveal') setReveal({ card: payload.card, caller: payload.caller, title: payload.title, private: Boolean(payload.private) });
+    if (payload?.type === 'speakerphone') {
+      if (payload.activePlayer === name) { setMessage(`${payload.by} put your call on speakerphone!`); window.setTimeout(() => setMessage(null), 2600); }
+      else setReveal({ card: payload.card, caller: payload.caller, title: payload.title, private: false });
+    }
     if (payload?.type === 'reshuffling') setReshuffling(true);
   };
   const createHostRoom = () => {
@@ -291,7 +298,7 @@ export default function DreamPhone() {
       const card = currentCardRef.current;
       const caller = currentCallerRef.current;
       if (power === 'hangup') { broadcast({ type: 'hungUp', by: name }); setMessage('You hung up the call!'); window.setTimeout(() => setMessage(null), 1800); advanceTurn(); }
-      if (power === 'speakerphone') { broadcast({ type: 'reveal', card, caller, title: `📣 ${name} put ${caller} on speakerphone!`, private: false }); setReveal({ card, caller, title: `📣 You put ${caller} on speakerphone!`, private: false }); }
+      if (power === 'speakerphone') { const activePlayer = playersRef.current[turnRef.current]; const title = `📣 ${name} put ${caller} on speakerphone!`; broadcast({ type: 'speakerphone', card, caller, title, by: name, activePlayer }); if (activePlayer === name) { setMessage('Your call is on speakerphone!'); window.setTimeout(() => setMessage(null), 2600); } else setReveal({ card, caller, title: `📣 You put ${caller} on speakerphone!`, private: false }); }
       if (power === 'secret') setReveal({ card, caller, title: '🤫 Your private secret clue', private: true });
     }
     else hostConnection.current?.send({ type: 'power', power, name });
