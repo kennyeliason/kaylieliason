@@ -4,3 +4,10 @@
 
 [build.environment]
   NODE_VERSION = "22.23.4"
+
+# Dream Phone moved to its own site. Query strings (?room=CODE) pass through.
+[[redirects]]
+  from = "/dream-phone"
+  to = "https://dreamphone.app/"
+  status = 301
+  force = true
