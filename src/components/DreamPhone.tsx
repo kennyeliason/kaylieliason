@@ -26,6 +26,7 @@ const noteGroups: NoteGroup[] = [
   { label: 'Called', items: guyNames },
 ];
 const CLUE_COUNT = 24;
+const SESSION_KEY = 'dream-phone-room-v1';
 
 function chooseSecretAdmirer(previous: string) {
   const choices = guyNames.filter((name) => name !== previous);
@@ -105,6 +106,7 @@ export default function DreamPhone() {
   const [guessResult, setGuessResult] = useState<{ name: string; correct: boolean } | null>(null);
   const [reshuffling, setReshuffling] = useState(false);
   const [showHowToPlay, setShowHowToPlay] = useState(false);
+  const [sessionReady, setSessionReady] = useState(false);
   const peerRef = useRef<Peer | null>(null);
   const hostConnection = useRef<DataConnection | null>(null);
   const connections = useRef<Map<string, DataConnection>>(new Map());
@@ -119,6 +121,10 @@ export default function DreamPhone() {
   const eliminatedRef = useRef<string[]>([]);
   const secretAdmirerRef = useRef('');
   const lastSecretAdmirerRef = useRef('');
+  const callerDeckRef = useRef<string[]>([]);
+  const lastCallerRef = useRef('');
+  const gameActiveRef = useRef(false);
+  const restoredSessionRef = useRef(false);
 
   useEffect(() => { deckRef.current = deck; }, [deck]);
   useEffect(() => { playersRef.current = players; }, [players]);
@@ -128,9 +134,13 @@ export default function DreamPhone() {
   useEffect(() => { eliminatedRef.current = eliminatedPlayers; }, [eliminatedPlayers]);
 
   useEffect(() => {
-    const param = new URLSearchParams(window.location.search).get('room');
-    if (param) { setJoinCode(param.toUpperCase()); setScreen('join'); }
-  }, []);
+    if (!sessionReady || typeof window === 'undefined') return;
+    if (screen === 'home' || !roomCode || !name.trim()) {
+      window.sessionStorage.removeItem(SESSION_KEY);
+      return;
+    }
+    window.sessionStorage.setItem(SESSION_KEY, JSON.stringify({ roomCode, name, avatar, isHost }));
+  }, [sessionReady, screen, roomCode, name, avatar, isHost]);
 
   const broadcast = (payload: unknown) => connections.current.forEach((connection) => connection.open && connection.send(payload));
   const updateTurn = (nextIndex: number, busy: boolean, count = deckRef.current.length) => {
@@ -143,6 +153,7 @@ export default function DreamPhone() {
     setGameFinished(true);
     setGameWinner(winner);
     setRevealedAdmirer(admirer);
+    gameActiveRef.current = false;
     broadcast({ type: 'gameOver', winner, admirer });
   };
   const nextActivePlayer = () => Array.from(
@@ -188,7 +199,13 @@ export default function DreamPhone() {
     const [card, ...rest] = deckRef.current;
     setDeck(rest); deckRef.current = rest; setDeckCount(rest.length);
     updateTurn(turnRef.current, true, rest.length);
-    const caller = guyNames[Math.floor(Math.random() * guyNames.length)];
+    if (!callerDeckRef.current.length) {
+      callerDeckRef.current = guyNames
+        .filter((guy) => guy !== lastCallerRef.current)
+        .sort(() => Math.random() - 0.5);
+    }
+    const caller = callerDeckRef.current.shift() || guyNames[0];
+    lastCallerRef.current = caller;
     currentCardRef.current = card;
     currentCallerRef.current = caller;
     if (connection) connection.send({ type: 'card', card, caller });
@@ -200,6 +217,10 @@ export default function DreamPhone() {
       const nextAvatars = { ...avatarsRef.current, [payload.name]: payload.avatar || '☎️' };
       setPlayers(nextPlayers); playersRef.current = nextPlayers; setAvatars(nextAvatars); avatarsRef.current = nextAvatars;
       broadcast({ type: 'lobby', players: nextPlayers, avatars: nextAvatars });
+      if (gameActiveRef.current) {
+        connection.send({ type: 'start', players: nextPlayers, avatars: nextAvatars, currentTurn: turnRef.current, deckCount: deckRef.current.length });
+        connection.send({ type: 'turn', currentTurn: turnRef.current, busy: busyRef.current, deckCount: deckRef.current.length });
+      }
     }
     if (payload?.type === 'draw' && playersRef.current[turnRef.current] === payload.name && !busyRef.current) serveDraw(connection);
     if (payload?.type === 'finish' && busyRef.current) advanceTurn();
@@ -245,15 +266,16 @@ export default function DreamPhone() {
     if (payload?.type === 'hungUp') { setActiveCard(null); setCallAnswered(false); setMessage(`${payload.by} hung up the call!`); window.setTimeout(() => setMessage(null), 1800); }
     if (payload?.type === 'reveal') setReveal({ card: payload.card, caller: payload.caller, title: payload.title, private: Boolean(payload.private) });
     if (payload?.type === 'speakerphone') {
-      if (payload.activePlayer === name) { setMessage(`${payload.by} put your call on speakerphone!`); window.setTimeout(() => setMessage(null), 2600); }
-      else setReveal({ card: payload.card, caller: payload.caller, title: payload.title, private: false });
+      setMessage(`📣 ${payload.by} put ${payload.caller} on speakerphone!`); window.setTimeout(() => setMessage(null), 3200);
+      if (payload.activePlayer !== name) setReveal({ card: payload.card, caller: payload.caller, title: payload.title, private: false });
     }
     if (payload?.type === 'secretUsed' && payload.activePlayer === name) { setMessage(`${payload.by} got a private peek at your clue.`); window.setTimeout(() => setMessage(null), 2600); }
     if (payload?.type === 'reshuffling') setReshuffling(true);
   };
-  const createHostRoom = () => {
+  const createHostRoom = (savedCode = roomCode) => {
     setIsHost(true);
-    const peer = new Peer(`dream-phone-${roomCode.toLowerCase()}`);
+    setRoomCode(savedCode);
+    const peer = new Peer(`dream-phone-${savedCode.toLowerCase()}`);
     peerRef.current = peer;
     peer.on('open', () => setScreen('hostWaiting'));
     peer.on('connection', (connection) => {
@@ -263,13 +285,16 @@ export default function DreamPhone() {
     });
     peer.on('error', () => {});
   };
-  const joinHostRoom = () => {
-    setIsHost(false); setRoomCode(joinCode.trim().toUpperCase());
+  const joinHostRoom = (saved?: { roomCode: string; name: string; avatar: string }) => {
+    const code = (saved?.roomCode || joinCode).trim().toUpperCase();
+    const playerName = (saved?.name || name).trim();
+    const playerAvatar = saved?.avatar || avatar;
+    setIsHost(false); setRoomCode(code); setName(playerName); setAvatar(playerAvatar);
     const peer = new Peer(); peerRef.current = peer;
     peer.on('open', () => {
-      const connection = peer.connect(`dream-phone-${joinCode.trim().toLowerCase()}`);
+      const connection = peer.connect(`dream-phone-${code.toLowerCase()}`);
       hostConnection.current = connection;
-      connection.on('open', () => { connection.send({ type: 'join', name: name.trim(), avatar }); setScreen('joinWaiting'); });
+      connection.on('open', () => { connection.send({ type: 'join', name: playerName, avatar: playerAvatar }); setScreen('joinWaiting'); });
       connection.on('data', clientMessage);
       connection.on('error', () => {});
     });
@@ -289,10 +314,29 @@ export default function DreamPhone() {
     const clueDeck = buildClueDeck(admirer);
     fullDeckRef.current = clueDeck;
     const shuffled = [...clueDeck].sort(() => Math.random() - 0.5);
+    callerDeckRef.current = [...guyNames].sort(() => Math.random() - 0.5);
+    lastCallerRef.current = '';
+    gameActiveRef.current = true;
     const firstTurn = Math.floor(Math.random() * playersRef.current.length);
     setDeck(shuffled); deckRef.current = shuffled; setDeckCount(shuffled.length); setActiveCard(null); setLastCard(null); setCallAnswered(false); setActiveTab('deck'); setTurnIndex(firstTurn); turnRef.current = firstTurn; setTurnBusy(false); setGameFinished(false); setGameWinner(''); setRevealedAdmirer(''); setEliminated(false); setEliminatedPlayers([]); eliminatedRef.current = []; setNotes({}); setUsedPowers({ hangup: false, speakerphone: false, secret: false }); setReveal(null); setGuessResult(null); setReshuffling(false); setScreen('game');
     broadcast({ type: 'start', players: playersRef.current, avatars: avatarsRef.current, currentTurn: firstTurn, deckCount: shuffled.length });
   };
+  useEffect(() => {
+    if (restoredSessionRef.current || typeof window === 'undefined') return;
+    restoredSessionRef.current = true;
+    const inviteCode = new URLSearchParams(window.location.search).get('room');
+    if (inviteCode) { setJoinCode(inviteCode.toUpperCase()); setScreen('join'); setSessionReady(true); return; }
+    try {
+      const saved = JSON.parse(window.sessionStorage.getItem(SESSION_KEY) || 'null') as { roomCode?: string; name?: string; avatar?: string; isHost?: boolean } | null;
+      if (!saved?.roomCode || !saved.name) { setSessionReady(true); return; }
+      setRoomCode(saved.roomCode); setName(saved.name); setAvatar(saved.avatar || '🦋');
+      window.setTimeout(() => {
+        if (saved.isHost) createHostRoom(saved.roomCode);
+        else joinHostRoom({ roomCode: saved.roomCode!, name: saved.name!, avatar: saved.avatar || '🦋' });
+      }, 0);
+    } catch { /* A bad saved game should never block the start screen. */ }
+    setSessionReady(true);
+  }, []);
   const draw = () => {
     if (eliminated || turnBusy || players[turnIndex] !== name || !deckCount) return;
     if (isHost) serveDraw(); else hostConnection.current?.send({ type: 'draw', name });
