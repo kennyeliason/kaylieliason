@@ -11,3 +11,8 @@
   to = "https://dreamphone.app/"
   status = 301
   force = true
+
+[[redirects]]
+  from = "/api/party-room"
+  to = "/.netlify/functions/party-room"
+  status = 200

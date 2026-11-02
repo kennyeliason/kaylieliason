@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-type Screen = 'home' | 'lobby' | 'play' | 'results';
-
+type Side = 'left' | 'right';
+type Player = { token: string; name: string };
+type Room = { code: string; hostToken: string; phase: 'lobby' | 'play' | 'results'; round: number; players: Player[]; votes: Record<string, Side> };
 const prompts = [
   ['Would you rather', 'have a personal theme song whenever you enter a room', 'or glow neon whenever you are nervous?'],
   ['Pick your chaos', 'always send texts with one tiny typo', 'or have every sneeze sound like an air horn?'],
@@ -9,123 +10,21 @@ const prompts = [
   ['Important science', 'be able to talk to dogs', 'or understand every language except your own?'],
   ['Choose wisely', 'live in a tree house with perfect Wi-Fi', 'or a castle with a secret slide?'],
 ];
-
-function roomCode() {
-  return Math.random().toString(36).slice(2, 6).toUpperCase();
-}
+const tokenFor = () => { const saved = localStorage.getItem('sidequest-player-token'); if (saved) return saved; const token = crypto.randomUUID(); localStorage.setItem('sidequest-player-token', token); return token; };
 
 export default function PartyHub() {
-  const [screen, setScreen] = useState<Screen>('home');
-  const [code, setCode] = useState(roomCode);
-  const [name, setName] = useState('');
-  const [players, setPlayers] = useState<string[]>([]);
-  const [turn, setTurn] = useState(0);
-  const [round, setRound] = useState(0);
-  const [votes, setVotes] = useState<Array<'left' | 'right'>>([]);
-  const [joinCode, setJoinCode] = useState('');
-  const prompt = prompts[round % prompts.length];
-  const leftVotes = votes.filter((vote) => vote === 'left').length;
-  const rightVotes = votes.length - leftVotes;
-  const voteTotal = Math.max(votes.length, 1);
-  const leftPercent = Math.round((leftVotes / voteTotal) * 100);
+  const [name, setName] = useState(''); const [joinCode, setJoinCode] = useState(''); const [room, setRoom] = useState<Room | null>(null); const [token, setToken] = useState(''); const [error, setError] = useState(''); const [busy, setBusy] = useState(false);
+  const prompt = room ? prompts[room.round % prompts.length] : prompts[0]; const myVote = room?.votes[token]; const leftVotes = room ? Object.values(room.votes).filter((vote) => vote === 'left').length : 0; const rightVotes = room ? Object.values(room.votes).filter((vote) => vote === 'right').length : 0; const leftPercent = Math.round((leftVotes / Math.max(leftVotes + rightVotes, 1)) * 100); const isHost = room?.hostToken === token;
+  useEffect(() => { setToken(tokenFor()); }, []);
+  useEffect(() => { if (!room) return; const refresh = async () => { const response = await fetch(`/api/party-room?code=${room.code}`); if (response.ok) { const data = await response.json(); setRoom(data.room); } }; const timer = window.setInterval(refresh, 1500); return () => window.clearInterval(timer); }, [room?.code]);
+  async function request(body: Record<string, unknown>) { setBusy(true); setError(''); try { const response = await fetch('/api/party-room', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...body, token }) }); const data = await response.json(); if (!response.ok) throw new Error(data.error || 'Could not update the room.'); setRoom(data.room); } catch (caught) { setError(caught instanceof Error ? caught.message : 'Could not update the room.'); } finally { setBusy(false); } }
+  function startRoom() { if (token) request({ action: 'create', name }); } function joinRoom() { if (token && joinCode.length === 4) request({ action: 'join', roomCode: joinCode, name }); } function leaveRoom() { setRoom(null); setError(''); setJoinCode(''); }
+  const lobbyCopy = useMemo(() => !room ? '' : room.players.length === 1 ? 'Share the QR code or room code with your people.' : `${room.players.length} players are ready for questionable decisions.`, [room]);
 
-  const subline = useMemo(() => {
-    if (!players.length) return 'Add the people in the room, then start the nonsense.';
-    if (players.length === 1) return 'One more person makes it a party.';
-    return `${players.length} players are ready for questionable decisions.`;
-  }, [players]);
-
-  function startRoom() {
-    setCode(roomCode());
-    setPlayers(name.trim() ? [name.trim()] : []);
-    setScreen('lobby');
-  }
-
-  function addPlayer() {
-    const cleanName = name.trim();
-    if (!cleanName || players.some((player) => player.toLowerCase() === cleanName.toLowerCase())) return;
-    setPlayers((current) => [...current, cleanName]);
-    setName('');
-  }
-
-  function beginGame() {
-    if (players.length < 2) return;
-    setTurn(0);
-    setVotes([]);
-    setScreen('play');
-  }
-
-  function choose(side: 'left' | 'right') {
-    const newVotes = [...votes, side];
-    setVotes(newVotes);
-    if (turn + 1 === players.length) {
-      setScreen('results');
-    } else {
-      setTurn((current) => current + 1);
-    }
-  }
-
-  function nextRound() {
-    setRound((current) => current + 1);
-    setTurn(0);
-    setVotes([]);
-    setScreen('play');
-  }
-
-  return (
-    <main className="party-shell">
-      <div className="party-glow glow-one" />
-      <div className="party-glow glow-two" />
-      <nav className="party-nav"><a href="/">KAYLI</a><span>GAME NIGHT</span></nav>
-
-      {screen === 'home' && <section className="party-home">
-        <p className="party-eyebrow">A tiny party in your browser</p>
-        <h1>Side<span>Quest</span></h1>
-        <p className="party-lede">Original mini-games for loud opinions, weird choices, and whoever is sitting next to you.</p>
-        <div className="party-card home-card">
-          <label>Your name <input value={name} onChange={(event) => setName(event.target.value)} onKeyDown={(event) => event.key === 'Enter' && startRoom()} placeholder="Type your name" maxLength={18} /></label>
-          <button className="party-primary" onClick={startRoom}>Start a game <b>→</b></button>
-          <div className="party-divider"><span>or</span></div>
-          <div className="party-join"><input value={joinCode} onChange={(event) => setJoinCode(event.target.value.toUpperCase().slice(0, 4))} placeholder="ROOM CODE" maxLength={4} /><button onClick={() => joinCode.length === 4 && setScreen('lobby')}>Join</button></div>
-        </div>
-        <p className="party-note">First game: <strong>Pick a Side</strong> · Pass-the-phone friendly</p>
-      </section>}
-
-      {screen === 'lobby' && <section className="party-panel">
-        <p className="party-eyebrow">Your room is open</p>
-        <h2>Get the crew in here.</h2>
-        <div className="room-code"><small>ROOM CODE</small><strong>{joinCode || code}</strong></div>
-        <div className="room-qr">
-          <img src="/sidequest-qr.png" alt="QR code to open SideQuest" />
-          <p><strong>Scan to open SideQuest</strong><br />Then type the room code above.</p>
-        </div>
-        <p className="lobby-copy">{subline}</p>
-        <div className="player-entry"><input value={name} onChange={(event) => setName(event.target.value)} onKeyDown={(event) => event.key === 'Enter' && addPlayer()} placeholder="Add a player" maxLength={18} /><button onClick={addPlayer}>Add</button></div>
-        <div className="player-list">{players.length ? players.map((player, index) => <span key={player}><i>{['✦', '●', '▲', '♥', '◆', '☀'][index % 6]}</i>{player}</span>) : <em>Waiting for players…</em>}</div>
-        <button className="party-primary" disabled={players.length < 2} onClick={beginGame}>{players.length < 2 ? 'Need 2 players' : 'Play Pick a Side →'}</button>
-        <button className="party-text" onClick={() => setScreen('home')}>Leave room</button>
-      </section>}
-
-      {screen === 'play' && <section className="party-panel game-panel">
-        <div className="round-top"><span>ROUND {round + 1}</span><span>{turn + 1} / {players.length}</span></div>
-        <p className="party-eyebrow">Hand the phone to <strong>{players[turn]}</strong></p>
-        <h2>{prompt[0]}</h2>
-        <p className="game-instruction">Pick one. No explaining yourself until the reveal.</p>
-        <div className="choice-grid">
-          <button className="choice choice-left" onClick={() => choose('left')}><small>OPTION A</small>{prompt[1]}<b>←</b></button>
-          <button className="choice choice-right" onClick={() => choose('right')}><small>OPTION B</small>{prompt[2]}<b>→</b></button>
-        </div>
-      </section>}
-
-      {screen === 'results' && <section className="party-panel result-panel">
-        <p className="party-eyebrow">The room has spoken</p>
-        <h2>{leftVotes === rightVotes ? 'It’s a split decision.' : leftVotes > rightVotes ? 'Option A wins.' : 'Option B wins.'}</h2>
-        <div className="result-choices"><div><small>OPTION A</small><b>{leftPercent}%</b><p>{prompt[1]}</p></div><div><small>OPTION B</small><b>{100 - leftPercent}%</b><p>{prompt[2]}</p></div></div>
-        <div className="vote-bar"><span style={{ width: `${leftPercent}%` }} /></div>
-        <p className="result-caption">{leftVotes} picked A · {rightVotes} picked B</p>
-        <button className="party-primary" onClick={nextRound}>Next question <b>→</b></button>
-        <button className="party-text" onClick={() => setScreen('lobby')}>Back to room</button>
-      </section>}
-    </main>
-  );
+  return <main className="party-shell"><div className="party-glow glow-one" /><div className="party-glow glow-two" /><nav className="party-nav"><a href="/">KAYLI</a><span>GAME NIGHT</span></nav>
+    {!room && <section className="party-home"><p className="party-eyebrow">A tiny party in your browser</p><h1>Side<span>Quest</span></h1><p className="party-lede">Original mini-games for loud opinions, weird choices, and whoever is holding a phone.</p><div className="party-card home-card"><label>Your name <input value={name} onChange={(event) => setName(event.target.value)} onKeyDown={(event) => event.key === 'Enter' && startRoom()} placeholder="Type your name" maxLength={18} /></label><button className="party-primary" disabled={!name.trim() || !token || busy} onClick={startRoom}>Start a game <b>→</b></button><div className="party-divider"><span>or</span></div><div className="party-join"><input value={joinCode} onChange={(event) => setJoinCode(event.target.value.toUpperCase().slice(0, 4))} placeholder="ROOM CODE" maxLength={4} /><button disabled={!name.trim() || joinCode.length !== 4 || busy} onClick={joinRoom}>Join</button></div></div>{error && <p className="party-error">{error}</p>}<p className="party-note">First game: <strong>Pick a Side</strong> · real rooms, real phones</p></section>}
+    {room?.phase === 'lobby' && <section className="party-panel"><p className="party-eyebrow">Your room is open</p><h2>Get the crew in here.</h2><div className="room-code"><small>ROOM CODE</small><strong>{room.code}</strong></div><div className="room-qr"><img src="/sidequest-qr.png" alt="QR code to open SideQuest" /><p><strong>Scan to open SideQuest</strong><br />Then type <b>{room.code}</b> to join.</p></div><p className="lobby-copy">{lobbyCopy}</p><div className="player-list">{room.players.map((player, index) => <span key={player.token}><i>{['✦', '●', '▲', '♥', '◆', '☀'][index % 6]}</i>{player.name}{player.token === room.hostToken ? ' (host)' : ''}</span>)}</div>{isHost ? <button className="party-primary" disabled={room.players.length < 2 || busy} onClick={() => request({ action: 'start', roomCode: room.code })}>{room.players.length < 2 ? 'Need 2 players' : 'Play Pick a Side →'}</button> : <p className="waiting">Waiting for the host to start…</p>}{error && <p className="party-error">{error}</p>}<button className="party-text" onClick={leaveRoom}>Leave room</button></section>}
+    {room?.phase === 'play' && <section className="party-panel game-panel"><div className="round-top"><span>ROUND {room.round + 1}</span><span>{Object.keys(room.votes).length} / {room.players.length} PICKED</span></div><p className="party-eyebrow">Make your secret choice</p><h2>{prompt[0]}</h2><p className="game-instruction">Pick one. Results appear when everybody has voted.</p><div className="choice-grid"><button className="choice choice-left" disabled={Boolean(myVote)} onClick={() => request({ action: 'vote', roomCode: room.code, side: 'left' })}><small>OPTION A</small>{prompt[1]}<b>←</b></button><button className="choice choice-right" disabled={Boolean(myVote)} onClick={() => request({ action: 'vote', roomCode: room.code, side: 'right' })}><small>OPTION B</small>{prompt[2]}<b>→</b></button></div>{myVote && <p className="waiting">Locked in. Waiting for {room.players.length - Object.keys(room.votes).length} player{room.players.length - Object.keys(room.votes).length === 1 ? '' : 's'}…</p>}{error && <p className="party-error">{error}</p>}</section>}
+    {room?.phase === 'results' && <section className="party-panel result-panel"><p className="party-eyebrow">The room has spoken</p><h2>{leftVotes === rightVotes ? 'It’s a split decision.' : leftVotes > rightVotes ? 'Option A wins.' : 'Option B wins.'}</h2><div className="result-choices"><div><small>OPTION A</small><b>{leftPercent}%</b><p>{prompt[1]}</p></div><div><small>OPTION B</small><b>{100 - leftPercent}%</b><p>{prompt[2]}</p></div></div><div className="vote-bar"><span style={{ width: `${leftPercent}%` }} /></div><p className="result-caption">{leftVotes} picked A · {rightVotes} picked B</p>{isHost ? <button className="party-primary" disabled={busy} onClick={() => request({ action: 'next', roomCode: room.code })}>Next question <b>→</b></button> : <p className="waiting">Waiting for the host’s next question…</p>}{error && <p className="party-error">{error}</p>}</section>}
+  </main>;
 }
