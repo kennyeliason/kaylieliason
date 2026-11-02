@@ -16,3 +16,8 @@
   from = "/api/party-room"
   to = "/.netlify/functions/party-room"
   status = 200
+
+[[redirects]]
+  from = "/api/bluff-room"
+  to = "/.netlify/functions/bluff-room"
+  status = 200
