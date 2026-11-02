@@ -2894,6 +2894,7 @@ function EquationCheatSheet({
   onToggle,
   title = "Equation Cheat Sheet",
   buttonLabel = "Equation Cheat Sheet",
+  headers = ["Given", "Find", "Equation"],
   rows = [
     ["Frequency", "Wavelength", "λ = c / ν"],
     ["Wavelength", "Frequency", "ν = c / λ"],
@@ -2907,6 +2908,7 @@ function EquationCheatSheet({
   onToggle: () => void;
   title?: string;
   buttonLabel?: string;
+  headers?: [string, string, string];
   rows?: string[][];
 }) {
   const { panelStyle, dragProps } = useDraggablePanel();
@@ -2928,7 +2930,7 @@ function EquationCheatSheet({
             <span style={styles.dragHint}>Drag me</span>
           </div>
           <div style={styles.cheatHeader}>
-            <span>Given</span><span>Find</span><span>Equation</span>
+            <span>{headers[0]}</span><span>{headers[1]}</span><span>{headers[2]}</span>
           </div>
           {rows.map(([given, find, equation]) => (
             <div key={equation} style={styles.cheatRow}>
@@ -3639,6 +3641,23 @@ export default function ChemistryHub() {
             ["Mass + Density", "Volume", "V = m / D"],
             ["g ÷ mL", "Density unit", "g/mL"],
             ["Higher density", "Layer position", "Bottom"],
+          ]}
+        />
+      )}
+      {selectedUnit === "Unit 6" && (
+        <EquationCheatSheet
+          open={cheatSheetOpen}
+          onToggle={() => setCheatSheetOpen((open) => !open)}
+          title="Naming Cheat Sheet"
+          buttonLabel="Naming Cheat Sheet"
+          headers={["Rule", "Meaning", "Example"]}
+          rows={[
+            ["-ate ion", "ends in -ic acid", "nitrate → nitric acid"],
+            ["-ite ion", "ends in -ous acid", "nitrite → nitrous acid"],
+            ["Binary acid", "hydro- + root + -ic", "HCl → hydrochloric acid"],
+            ["No first prefix", "means 1", "CO₂ → carbon dioxide"],
+            ["Second element", "always ends in -ide", "PCl₃ → trichloride"],
+            ["2–5 prefixes", "di, tri, tetra, penta", "N₂O₅ → dinitrogen pentoxide"],
           ]}
         />
       )}
