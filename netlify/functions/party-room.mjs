@@ -1,6 +1,7 @@
 import { getStore } from '@netlify/blobs';
 
-const store = getStore('sidequest-rooms');
+// Party rooms need each phone to see updates immediately, not edge-cached state.
+const store = getStore('sidequest-rooms', { consistency: 'strong' });
 const CODE = /^[A-HJ-NP-Z2-9]{4}$/;
 const cleanName = (value) => String(value ?? '').replace(/[^\p{L}\p{N} ._-]/gu, '').trim().slice(0, 18);
 const code = () => Array.from({ length: 4 }, () => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random() * 32)]).join('');
