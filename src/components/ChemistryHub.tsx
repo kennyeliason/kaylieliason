@@ -5,6 +5,7 @@ type Question = {
   choices: string[];
   answer: string;
   explanation: string;
+  answerMode?: "choice" | "type";
 };
 type GameStat = { correct: number; attempts: number };
 
@@ -766,8 +767,11 @@ const shuffleChoices = (question: Question): Question => ({
   ...question,
   choices: shuffle(question.choices),
 });
-const buildMultipleChoiceQuestions = (items: StudyItem[]): Question[] =>
-  items.map((item) => {
+const buildMultipleChoiceQuestions = (
+  items: StudyItem[],
+  mixedAnswerModes = false,
+): Question[] =>
+  items.map((item, index) => {
     const sameTopic = items.filter(
       (candidate) =>
         candidate.topic === item.topic && candidate.answer !== item.answer,
@@ -784,14 +788,36 @@ const buildMultipleChoiceQuestions = (items: StudyItem[]): Question[] =>
       answer: item.answer,
       explanation: item.explanation,
       choices: [item.answer, ...distractors],
+      answerMode: mixedAnswerModes && index % 2 === 1 ? "type" : "choice",
     };
   });
 const unit2Questions = buildMultipleChoiceQuestions(unit2Items);
-const unit6Questions = buildMultipleChoiceQuestions(unit6Items);
+const unit6Questions = buildMultipleChoiceQuestions(unit6Items, true);
+const isTypedQuestion = (question: Question) => question.answerMode === "type";
+const normalizeAnswer = (value: string) =>
+  value
+    .toLowerCase()
+    .trim()
+    .replace(/[₀₁₂₃₄₅₆₇₈₉]/g, (digit) => "₀₁₂₃₄₅₆₇₈₉".indexOf(digit).toString())
+    .replace(/[^a-z0-9]/g, "");
+const answersMatch = (answer: string, expected: string) =>
+  normalizeAnswer(answer) === normalizeAnswer(expected);
+/** Keeps every Unit 6 game as close to half typed and half multiple choice as possible. */
+const mixQuestionModes = (questions: Question[], count = questions.length) => {
+  const typed = shuffle(questions.filter(isTypedQuestion));
+  const choice = shuffle(questions.filter((question) => !isTypedQuestion(question)));
+  if (!typed.length || !choice.length) return shuffle(questions).slice(0, count);
+  const mixed: Question[] = [];
+  while (mixed.length < count && (typed.length || choice.length)) {
+    if (choice.length) mixed.push(choice.shift()!);
+    if (mixed.length < count && typed.length) mixed.push(typed.shift()!);
+  }
+  return mixed;
+};
 const makeBombSet = (questionSet: Question[]) =>
-  shuffle(questionSet).slice(0, 10).map(shuffleChoices);
+  mixQuestionModes(questionSet, 10).map(shuffleChoices);
 const makeGameSet = (questionSet: Question[]) =>
-  shuffle(questionSet).map(shuffleChoices);
+  mixQuestionModes(questionSet).map(shuffleChoices);
 const chemistryTopics = [
   "Electromagnetic Energy & Light",
   "Electrons & Energy Levels",
@@ -819,6 +845,54 @@ const topicForQuestion = (question: Question) => {
   if (index <= 18) return "Atomic Structure & Trends";
   return "Ions & Valence Electrons";
 };
+
+function AnswerChoices({
+  question,
+  value,
+  checked,
+  onChange,
+}: {
+  question: Question;
+  value: string | null;
+  checked: boolean;
+  onChange: (answer: string) => void;
+}) {
+  if (isTypedQuestion(question)) {
+    const right = value ? answersMatch(value, question.answer) : false;
+    return <input
+      autoCapitalize="none"
+      autoComplete="off"
+      disabled={checked}
+      placeholder="Type your answer"
+      value={value || ""}
+      onChange={(event) => onChange(event.target.value)}
+      style={{
+        ...styles.textAnswer,
+        ...(checked ? right ? styles.correctInput : styles.incorrectInput : {}),
+      }}
+    />;
+  }
+  return <>
+    {question.choices.map((answer) => (
+      <button
+        key={answer}
+        onClick={() => !checked && onChange(answer)}
+        style={{
+          ...styles.choice,
+          ...(value === answer
+            ? checked
+              ? answer === question.answer
+                ? styles.correct
+                : styles.incorrect
+              : styles.selected
+            : {}),
+        }}
+      >
+        {answer}
+      </button>
+    ))}
+  </>;
+}
 
 function BombGame({
   question,
@@ -866,27 +940,10 @@ function BombGame({
       </div>
       <h2 style={styles.question}>{question.question}</h2>
       <div style={styles.choices}>
-        {question.choices.map((answer) => (
-          <button
-            key={answer}
-            onClick={() => !checked && onChoose(answer)}
-            style={{
-              ...styles.choice,
-              ...(choice === answer
-                ? checked
-                  ? answer === question.answer
-                    ? styles.correct
-                    : styles.incorrect
-                  : styles.selected
-                : {}),
-            }}
-          >
-            {answer}
-          </button>
-        ))}
+        <AnswerChoices question={question} value={choice} checked={checked} onChange={onChoose} />
         {checked && choice && (
           <p style={styles.explanation}>
-            {choice === question.answer ? (
+            {answersMatch(choice, question.answer) ? (
               "Defused! "
             ) : (
               <>
@@ -977,6 +1034,7 @@ function SnakeGame({ questions }: { questions: Question[] }) {
   const [questionOpen, setQuestionOpen] = useState(false);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [wrongAnswer, setWrongAnswer] = useState(false);
+  const [typedAnswer, setTypedAnswer] = useState("");
   const question = questions[questionIndex % questions.length];
 
   const changeDirection = (next: "up" | "down" | "left" | "right") => {
@@ -1004,6 +1062,7 @@ function SnakeGame({ questions }: { questions: Question[] }) {
     setQuestionOpen(false);
     setQuestionIndex(0);
     setWrongAnswer(false);
+    setTypedAnswer("");
   };
 
   useEffect(() => {
@@ -1065,7 +1124,29 @@ function SnakeGame({ questions }: { questions: Question[] }) {
           <strong style={styles.snakeTag}>Answer to grow!</strong>
           <h2 style={styles.question}>{question.question}</h2>
           <div style={styles.choices}>
-            {question.choices.map((answer) => (
+            {isTypedQuestion(question) ? <>
+              <input
+                autoCapitalize="none"
+                autoComplete="off"
+                placeholder="Type your answer"
+                value={typedAnswer}
+                onChange={(event) => setTypedAnswer(event.target.value)}
+                style={styles.textAnswer}
+              />
+              <button style={styles.closeButton} disabled={!typedAnswer.trim()} onClick={() => {
+                if (answersMatch(typedAnswer, question.answer)) {
+                  setScore((current) => current + 10);
+                  setFood(newFood(body));
+                  setQuestionIndex((current) => current + 1);
+                  setTypedAnswer("");
+                  setQuestionOpen(false);
+                } else {
+                  setWrongAnswer(true);
+                  setRunning(false);
+                  setGameOver(true);
+                }
+              }}>Check Answer</button>
+            </> : question.choices.map((answer) => (
               <button key={answer} style={styles.choice} onClick={() => {
                 if (answer === question.answer) {
                   setScore((current) => current + 10);
@@ -1151,27 +1232,10 @@ function MillionaireGame({
         <div style={styles.progress}>Question {questionIndex + 1} of 15</div>
         <h2 style={styles.question}>{question.question}</h2>
         <div style={styles.choices}>
-          {question.choices.map((answer) => (
-            <button
-              key={answer}
-              onClick={() => !checked && onChoose(answer)}
-              style={{
-                ...styles.choice,
-                ...(choice === answer
-                  ? checked
-                    ? answer === question.answer
-                      ? styles.correct
-                      : styles.incorrect
-                    : styles.selected
-                  : {}),
-              }}
-            >
-              {answer}
-            </button>
-          ))}
+          <AnswerChoices question={question} value={choice} checked={checked} onChange={onChoose} />
           {checked && choice && (
             <p style={styles.explanation}>
-              {choice === question.answer ? (
+              {answersMatch(choice, question.answer) ? (
                 "Correct! "
               ) : (
                 <>
@@ -3116,13 +3180,13 @@ export default function ChemistryHub() {
     if (!choice || checked) return;
     setChecked(true);
     setAttemptCount((count) => count + 1);
-    if (choice === currentQuestion.answer)
+    if (answersMatch(choice, currentQuestion.answer))
       setCorrectCount((count) => count + 1);
     recordResult(
       topicForQuestion(currentQuestion),
-      choice === currentQuestion.answer,
+      answersMatch(choice, currentQuestion.answer),
     );
-    if (selectedGame === "Millionaire" && choice !== currentQuestion.answer)
+    if (selectedGame === "Millionaire" && !answersMatch(choice, currentQuestion.answer))
       setGameComplete(true);
   };
   const bombQuestion = bombSet[questionIndex];
@@ -3130,7 +3194,7 @@ export default function ChemistryHub() {
     if (!choice || checked || !bombQuestion) return;
     setChecked(true);
     setAttemptCount((count) => count + 1);
-    const isCorrect = choice === bombQuestion.answer;
+    const isCorrect = answersMatch(choice, bombQuestion.answer);
     if (isCorrect) setCorrectCount((count) => count + 1);
     recordResult(
       topicForQuestion(bombQuestion),
@@ -3347,27 +3411,10 @@ export default function ChemistryHub() {
                         </div>
                         <h2 style={styles.question}>{question.question}</h2>
                         <div style={styles.choices}>
-                          {question.choices.map((answer) => (
-                            <button
-                              key={answer}
-                              onClick={() => !checked && setChoice(answer)}
-                              style={{
-                                ...styles.choice,
-                                ...(choice === answer
-                                  ? checked
-                                    ? answer === question.answer
-                                      ? styles.correct
-                                      : styles.incorrect
-                                    : styles.selected
-                                  : {}),
-                              }}
-                            >
-                              {answer}
-                            </button>
-                          ))}
+                          <AnswerChoices question={question} value={choice} checked={checked} onChange={setChoice} />
                           {checked && choice && (
                             <p style={styles.explanation}>
-                              {choice === question.answer ? (
+                              {answersMatch(choice, question.answer) ? (
                                 "Correct! "
                               ) : (
                                 <>
@@ -3392,11 +3439,11 @@ export default function ChemistryHub() {
                                 if (!choice) return;
                                 setChecked(true);
                                 setAttemptCount((count) => count + 1);
-                                if (choice === question.answer)
+                                if (answersMatch(choice, question.answer))
                                   setCorrectCount((count) => count + 1);
                                 recordResult(
                                   topicForQuestion(question),
-                                  choice === question.answer,
+                                  answersMatch(choice, question.answer),
                                 );
                               }}
                             >
@@ -3534,27 +3581,10 @@ export default function ChemistryHub() {
                   </>
                 ) : (
                   <div style={styles.choices}>
-                    {currentQuestion.choices.map((answer) => (
-                      <button
-                        key={answer}
-                        onClick={() => !checked && setChoice(answer)}
-                        style={{
-                          ...styles.choice,
-                          ...(choice === answer
-                            ? checked
-                              ? answer === currentQuestion.answer
-                                ? styles.correct
-                                : styles.incorrect
-                              : styles.selected
-                            : {}),
-                        }}
-                      >
-                        {answer}
-                      </button>
-                    ))}
+                    <AnswerChoices question={currentQuestion} value={choice} checked={checked} onChange={setChoice} />
                     {checked && choice && (
                       <p style={styles.explanation}>
-                        {choice === currentQuestion.answer ? (
+                        {answersMatch(choice, currentQuestion.answer) ? (
                           "Correct! "
                         ) : (
                           <>
@@ -3780,6 +3810,21 @@ const styles: Record<string, React.CSSProperties> = {
   selected: { background: "#ccfbf1", borderColor: "#0f766e" },
   correct: { background: "#dcfce7", borderColor: "#22c55e" },
   incorrect: { background: "#fee2e2", borderColor: "#f87171" },
+  textAnswer: {
+    width: "100%",
+    minHeight: 56,
+    border: "2px solid #99f6e4",
+    borderRadius: 14,
+    padding: "14px 16px",
+    background: "#f0fdfa",
+    color: "#17433f",
+    fontFamily: "Montserrat,sans-serif",
+    fontSize: 18,
+    fontWeight: 650,
+    outline: "none",
+  },
+  correctInput: { background: "#dcfce7", borderColor: "#22c55e" },
+  incorrectInput: { background: "#fee2e2", borderColor: "#f87171" },
   flipButton: {
     width: "100%",
     border: "2px solid #99f6e4",
