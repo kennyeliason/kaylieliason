@@ -95,6 +95,10 @@ export default function PartyHub() {
         <p className="party-eyebrow">Your room is open</p>
         <h2>Get the crew in here.</h2>
         <div className="room-code"><small>ROOM CODE</small><strong>{joinCode || code}</strong></div>
+        <div className="room-qr">
+          <img src="/sidequest-qr.png" alt="QR code to open SideQuest" />
+          <p><strong>Scan to open SideQuest</strong><br />Then type the room code above.</p>
+        </div>
         <p className="lobby-copy">{subline}</p>
         <div className="player-entry"><input value={name} onChange={(event) => setName(event.target.value)} onKeyDown={(event) => event.key === 'Enter' && addPlayer()} placeholder="Add a player" maxLength={18} /><button onClick={addPlayer}>Add</button></div>
         <div className="player-list">{players.length ? players.map((player, index) => <span key={player}><i>{['✦', '●', '▲', '♥', '◆', '☀'][index % 6]}</i>{player}</span>) : <em>Waiting for players…</em>}</div>
