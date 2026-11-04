@@ -3040,13 +3040,26 @@ const lanthanides = ["La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy",
 const actinides = ["Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr"];
 const nonmetals = new Set(["H", "C", "N", "O", "P", "S", "Se", "F", "Cl", "Br", "I", "At", "Ts", "He", "Ne", "Ar", "Kr", "Xe", "Rn", "Og"]);
 const metalloids = new Set(["B", "Si", "Ge", "As", "Sb", "Te", "Po"]);
+const elementList = [
+  ["H", "Hydrogen"], ["He", "Helium"], ["Li", "Lithium"], ["Be", "Beryllium"], ["B", "Boron"], ["C", "Carbon"], ["N", "Nitrogen"], ["O", "Oxygen"], ["F", "Fluorine"], ["Ne", "Neon"],
+  ["Na", "Sodium"], ["Mg", "Magnesium"], ["Al", "Aluminum"], ["Si", "Silicon"], ["P", "Phosphorus"], ["S", "Sulfur"], ["Cl", "Chlorine"], ["Ar", "Argon"],
+  ["K", "Potassium"], ["Ca", "Calcium"], ["Sc", "Scandium"], ["Ti", "Titanium"], ["V", "Vanadium"], ["Cr", "Chromium"], ["Mn", "Manganese"], ["Fe", "Iron"], ["Co", "Cobalt"], ["Ni", "Nickel"], ["Cu", "Copper"], ["Zn", "Zinc"], ["Ga", "Gallium"], ["Ge", "Germanium"], ["As", "Arsenic"], ["Se", "Selenium"], ["Br", "Bromine"], ["Kr", "Krypton"],
+  ["Rb", "Rubidium"], ["Sr", "Strontium"], ["Y", "Yttrium"], ["Zr", "Zirconium"], ["Nb", "Niobium"], ["Mo", "Molybdenum"], ["Tc", "Technetium"], ["Ru", "Ruthenium"], ["Rh", "Rhodium"], ["Pd", "Palladium"], ["Ag", "Silver"], ["Cd", "Cadmium"], ["In", "Indium"], ["Sn", "Tin"], ["Sb", "Antimony"], ["Te", "Tellurium"], ["I", "Iodine"], ["Xe", "Xenon"],
+  ["Cs", "Cesium"], ["Ba", "Barium"], ["La", "Lanthanum"], ["Ce", "Cerium"], ["Pr", "Praseodymium"], ["Nd", "Neodymium"], ["Pm", "Promethium"], ["Sm", "Samarium"], ["Eu", "Europium"], ["Gd", "Gadolinium"], ["Tb", "Terbium"], ["Dy", "Dysprosium"], ["Ho", "Holmium"], ["Er", "Erbium"], ["Tm", "Thulium"], ["Yb", "Ytterbium"], ["Lu", "Lutetium"], ["Hf", "Hafnium"], ["Ta", "Tantalum"], ["W", "Tungsten"], ["Re", "Rhenium"], ["Os", "Osmium"], ["Ir", "Iridium"], ["Pt", "Platinum"], ["Au", "Gold"], ["Hg", "Mercury"], ["Tl", "Thallium"], ["Pb", "Lead"], ["Bi", "Bismuth"], ["Po", "Polonium"], ["At", "Astatine"], ["Rn", "Radon"],
+  ["Fr", "Francium"], ["Ra", "Radium"], ["Ac", "Actinium"], ["Th", "Thorium"], ["Pa", "Protactinium"], ["U", "Uranium"], ["Np", "Neptunium"], ["Pu", "Plutonium"], ["Am", "Americium"], ["Cm", "Curium"], ["Bk", "Berkelium"], ["Cf", "Californium"], ["Es", "Einsteinium"], ["Fm", "Fermium"], ["Md", "Mendelevium"], ["No", "Nobelium"], ["Lr", "Lawrencium"], ["Rf", "Rutherfordium"], ["Db", "Dubnium"], ["Sg", "Seaborgium"], ["Bh", "Bohrium"], ["Hs", "Hassium"], ["Mt", "Meitnerium"], ["Ds", "Darmstadtium"], ["Rg", "Roentgenium"], ["Cn", "Copernicium"], ["Nh", "Nihonium"], ["Fl", "Flerovium"], ["Mc", "Moscovium"], ["Lv", "Livermorium"], ["Ts", "Tennessine"], ["Og", "Oganesson"],
+] as const;
+const elementInfo = new Map(elementList.map(([symbol, name], index) => [symbol, { name, number: index + 1 }]));
 
 function PeriodicTable({ open, onToggle }: { open: boolean; onToggle: () => void }) {
   const { panelStyle, dragProps } = useDraggablePanel();
+  const [activeElement, setActiveElement] = useState("H");
+  const activeInfo = elementInfo.get(activeElement) || { name: activeElement, number: 0 };
   const elementStyle = (element: string): React.CSSProperties => ({
     ...styles.element,
+    ...(activeElement === element ? styles.elementActive : {}),
     ...(nonmetals.has(element) ? styles.nonmetal : metalloids.has(element) ? styles.metalloid : {}),
   });
+  const elementButton = (element: string, key: string) => <button key={key} type="button" aria-label={`${elementInfo.get(element)?.name || element}, atomic number ${elementInfo.get(element)?.number || ""}`} onMouseEnter={() => setActiveElement(element)} onFocus={() => setActiveElement(element)} onClick={() => setActiveElement(element)} style={elementStyle(element)}>{element}</button>;
   return <div style={styles.periodicDock}>
     {open && <aside style={{ ...styles.periodicPanel, ...panelStyle }} aria-label="Periodic table">
       <div style={styles.panelDragHandle} {...dragProps}>
@@ -3055,9 +3068,10 @@ function PeriodicTable({ open, onToggle }: { open: boolean; onToggle: () => void
         <span style={styles.dragHint}>Drag me</span>
       </div>
       <div style={styles.periodicLegend}><span style={styles.legendMetal}>Metal</span><span style={styles.legendNonmetal}>Nonmetal</span><span style={styles.legendMetalloid}>Metalloid</span></div>
-      <div style={styles.periodicGrid}>{periodicRows.flatMap((row, rowIndex) => row.map((element, columnIndex) => element ? <span key={`${rowIndex}-${columnIndex}`} style={elementStyle(element)}>{element}</span> : <span key={`${rowIndex}-${columnIndex}`} />))}</div>
-      <div style={styles.periodicSeries}><small>Lanthanides</small>{lanthanides.map((element) => <span key={element} style={styles.element}>{element}</span>)}</div>
-      <div style={styles.periodicSeries}><small>Actinides</small>{actinides.map((element) => <span key={element} style={styles.element}>{element}</span>)}</div>
+      <div style={styles.elementPreview}><span>{activeInfo.number}</span><strong>{activeElement}</strong><b>{activeInfo.name}</b></div>
+      <div style={styles.periodicGrid}>{periodicRows.flatMap((row, rowIndex) => row.map((element, columnIndex) => element ? elementButton(element, `${rowIndex}-${columnIndex}`) : <span key={`${rowIndex}-${columnIndex}`} />))}</div>
+      <div style={styles.periodicSeries}><small>Lanthanides</small>{lanthanides.map((element) => elementButton(element, `lan-${element}`))}</div>
+      <div style={styles.periodicSeries}><small>Actinides</small>{actinides.map((element) => elementButton(element, `act-${element}`))}</div>
     </aside>}
     {!open && <button style={styles.cheatButton} onClick={onToggle}>Periodic Table</button>}
   </div>;
@@ -4617,7 +4631,9 @@ const styles: Record<string, React.CSSProperties> = {
   legendMetalloid: { background: "#fef3c7", color: "#92400e", borderRadius: 999, padding: "4px 8px", fontSize: 11, fontWeight: 800 },
   periodicGrid: { display: "grid", gridTemplateColumns: "repeat(18,minmax(29px,1fr))", gap: 3, minWidth: 600 },
   periodicSeries: { display: "grid", gridTemplateColumns: "82px repeat(15,minmax(29px,1fr))", gap: 3, marginTop: 8, minWidth: 600, alignItems: "center" },
-  element: { display: "grid", placeItems: "center", minHeight: 31, border: "1px solid #99f6e4", borderRadius: 5, background: "#ecfdf5", color: "#115e59", fontSize: 12, fontWeight: 850 },
+  elementPreview: { display: "grid", gridTemplateColumns: "auto auto 1fr", alignItems: "center", columnGap: 10, minHeight: 76, margin: "0 0 14px", padding: "10px 14px", borderRadius: 14, background: "#ecfdf5", color: "#115e59", textAlign: "left" },
+  element: { display: "grid", placeItems: "center", minHeight: 31, padding: 2, border: "1px solid #99f6e4", borderRadius: 5, background: "#ecfdf5", color: "#115e59", fontFamily: "Montserrat,sans-serif", fontSize: 12, fontWeight: 850, cursor: "pointer" },
+  elementActive: { outline: "3px solid #0f766e", outlineOffset: 1, transform: "scale(1.13)", zIndex: 1 },
   nonmetal: { background: "#fce7f3", borderColor: "#f9a8d4", color: "#9d174d" },
   metalloid: { background: "#fef3c7", borderColor: "#fcd34d", color: "#92400e" },
   panelDragHandle: {
