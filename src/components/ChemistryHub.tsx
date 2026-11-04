@@ -3711,6 +3711,7 @@ export default function ChemistryHub() {
           title="Naming Cheat Sheet"
           buttonLabel="Naming Cheat Sheet"
           headers={["Rule", "Meaning", "Example"]}
+          notice="YOU’LL NEED YOUR POLYATOMIC ION CHART TO PRACTICE THIS UNIT."
           rows={[
             ["-ate ion", "ends in -ic acid", "nitrate → nitric acid"],
             ["-ite ion", "ends in -ous acid", "nitrite → nitrous acid"],
@@ -3728,7 +3729,6 @@ export default function ChemistryHub() {
           title="Naming Cheat Sheet"
           buttonLabel="Naming Cheat Sheet"
           headers={["Rule", "Meaning", "Example"]}
-          notice="YOU’LL NEED YOUR POLYATOMIC ION CHART TO PRACTICE THIS UNIT."
           rows={[
             ["Positive ion", "say the cation name first", "Na⁺ → sodium"],
             ["Negative ion", "say the anion name second", "Cl⁻ → chloride"],
