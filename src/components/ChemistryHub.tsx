@@ -799,9 +799,11 @@ const normalizeAnswer = (value: string) =>
     .toLowerCase()
     .trim()
     .replace(/[₀₁₂₃₄₅₆₇₈₉]/g, (digit) => "₀₁₂₃₄₅₆₇₈₉".indexOf(digit).toString())
+    .replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹]/g, (digit) => "⁰¹²³⁴⁵⁶⁷⁸⁹".indexOf(digit).toString())
     .replace(/[^a-z0-9]/g, "");
 const answersMatch = (answer: string, expected: string) =>
   normalizeAnswer(answer) === normalizeAnswer(expected);
+const isFormulaAnswer = (answer: string) => /[₀₁₂₃₄₅₆₇₈₉0-9]/.test(answer);
 /** Keeps every Unit 6 game as close to half typed and half multiple choice as possible. */
 const mixQuestionModes = (questions: Question[], count = questions.length) => {
   const typed = shuffle(questions.filter(isTypedQuestion));
@@ -859,18 +861,22 @@ function AnswerChoices({
 }) {
   if (isTypedQuestion(question)) {
     const right = value ? answersMatch(value, question.answer) : false;
-    return <input
-      autoCapitalize="none"
-      autoComplete="off"
-      disabled={checked}
-      placeholder="Type your answer"
-      value={value || ""}
-      onChange={(event) => onChange(event.target.value)}
-      style={{
-        ...styles.textAnswer,
-        ...(checked ? right ? styles.correctInput : styles.incorrectInput : {}),
-      }}
-    />;
+    return <>
+      <input
+        autoCapitalize="none"
+        autoComplete="off"
+        spellCheck={false}
+        disabled={checked}
+        placeholder={isFormulaAnswer(question.answer) ? "Type formula (ex: H2SO4)" : "Type your answer"}
+        value={value || ""}
+        onChange={(event) => onChange(event.target.value)}
+        style={{
+          ...styles.textAnswer,
+          ...(checked ? right ? styles.correctInput : styles.incorrectInput : {}),
+        }}
+      />
+      {isFormulaAnswer(question.answer) && <small style={styles.formulaHint}>Use regular keyboard numbers — H2SO4 counts as H₂SO₄.</small>}
+    </>;
   }
   return <>
     {question.choices.map((answer) => (
@@ -3842,6 +3848,7 @@ const styles: Record<string, React.CSSProperties> = {
     fontWeight: 650,
     outline: "none",
   },
+  formulaHint: { color: "#40706c", fontSize: 13, fontWeight: 700, marginTop: -4 },
   correctInput: { background: "#dcfce7", borderColor: "#22c55e" },
   incorrectInput: { background: "#fee2e2", borderColor: "#f87171" },
   flipButton: {
