@@ -3722,22 +3722,6 @@ export default function ChemistryHub() {
           ]}
         />
       )}
-      {selectedUnit === "Unit 4" && (
-        <EquationCheatSheet
-          open={cheatSheetOpen}
-          onToggle={() => setCheatSheetOpen((open) => !open)}
-          title="Naming Cheat Sheet"
-          buttonLabel="Naming Cheat Sheet"
-          headers={["Rule", "Meaning", "Example"]}
-          rows={[
-            ["Positive ion", "say the cation name first", "Na⁺ → sodium"],
-            ["Negative ion", "say the anion name second", "Cl⁻ → chloride"],
-            ["Polyatomic ion", "keep its name", "NO₃⁻ → nitrate"],
-            ["Roman numeral", "shows metal charge", "FeCl₃ → iron(III) chloride"],
-            ["-ate ion", "stays -ate in ionic names", "CaSO₄ → calcium sulfate"],
-          ]}
-        />
-      )}
       <ChemistryCalculator
         open={calculatorOpen}
         onToggle={() => setCalculatorOpen((open) => !open)}
