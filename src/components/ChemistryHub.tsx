@@ -2901,6 +2901,7 @@ function EquationCheatSheet({
   title = "Equation Cheat Sheet",
   buttonLabel = "Equation Cheat Sheet",
   headers = ["Given", "Find", "Equation"],
+  notice,
   rows = [
     ["Frequency", "Wavelength", "λ = c / ν"],
     ["Wavelength", "Frequency", "ν = c / λ"],
@@ -2915,6 +2916,7 @@ function EquationCheatSheet({
   title?: string;
   buttonLabel?: string;
   headers?: [string, string, string];
+  notice?: string;
   rows?: string[][];
 }) {
   const { panelStyle, dragProps } = useDraggablePanel();
@@ -2935,6 +2937,7 @@ function EquationCheatSheet({
             <strong style={styles.cheatTitle}>{title}</strong>
             <span style={styles.dragHint}>Drag me</span>
           </div>
+          {notice && <p style={styles.cheatNotice}>{notice}</p>}
           <div style={styles.cheatHeader}>
             <span>{headers[0]}</span><span>{headers[1]}</span><span>{headers[2]}</span>
           </div>
@@ -3715,6 +3718,23 @@ export default function ChemistryHub() {
             ["No first prefix", "means 1", "CO₂ → carbon dioxide"],
             ["Second element", "always ends in -ide", "PCl₃ → trichloride"],
             ["2–5 prefixes", "di, tri, tetra, penta", "N₂O₅ → dinitrogen pentoxide"],
+          ]}
+        />
+      )}
+      {selectedUnit === "Unit 4" && (
+        <EquationCheatSheet
+          open={cheatSheetOpen}
+          onToggle={() => setCheatSheetOpen((open) => !open)}
+          title="Naming Cheat Sheet"
+          buttonLabel="Naming Cheat Sheet"
+          headers={["Rule", "Meaning", "Example"]}
+          notice="YOU’LL NEED YOUR POLYATOMIC ION CHART TO PRACTICE THIS UNIT."
+          rows={[
+            ["Positive ion", "say the cation name first", "Na⁺ → sodium"],
+            ["Negative ion", "say the anion name second", "Cl⁻ → chloride"],
+            ["Polyatomic ion", "keep its name", "NO₃⁻ → nitrate"],
+            ["Roman numeral", "shows metal charge", "FeCl₃ → iron(III) chloride"],
+            ["-ate ion", "stays -ate in ionic names", "CaSO₄ → calcium sulfate"],
           ]}
         />
       )}
@@ -4579,6 +4599,17 @@ const styles: Record<string, React.CSSProperties> = {
     fontSize: 24,
     color: "#115e59",
     marginBottom: 10,
+  },
+  cheatNotice: {
+    margin: "0 0 11px",
+    padding: "9px 11px",
+    borderRadius: 10,
+    background: "#fee2e2",
+    border: "1px solid #fca5a5",
+    color: "#b91c1c",
+    fontSize: 12,
+    fontWeight: 900,
+    lineHeight: 1.3,
   },
   cheatHeader: {
     display: "grid",
