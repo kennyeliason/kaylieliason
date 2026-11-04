@@ -3027,6 +3027,42 @@ function ChemistryCalculator({
   );
 }
 
+const periodicRows = [
+  ["H", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "He"],
+  ["Li", "Be", "", "", "", "", "", "", "", "", "", "", "B", "C", "N", "O", "F", "Ne"],
+  ["Na", "Mg", "", "", "", "", "", "", "", "", "", "", "Al", "Si", "P", "S", "Cl", "Ar"],
+  ["K", "Ca", "Sc", "Ti", "V", "Cr", "Mn", "Fe", "Co", "Ni", "Cu", "Zn", "Ga", "Ge", "As", "Se", "Br", "Kr"],
+  ["Rb", "Sr", "Y", "Zr", "Nb", "Mo", "Tc", "Ru", "Rh", "Pd", "Ag", "Cd", "In", "Sn", "Sb", "Te", "I", "Xe"],
+  ["Cs", "Ba", "La", "Hf", "Ta", "W", "Re", "Os", "Ir", "Pt", "Au", "Hg", "Tl", "Pb", "Bi", "Po", "At", "Rn"],
+  ["Fr", "Ra", "Ac", "Rf", "Db", "Sg", "Bh", "Hs", "Mt", "Ds", "Rg", "Cn", "Nh", "Fl", "Mc", "Lv", "Ts", "Og"],
+];
+const lanthanides = ["La", "Ce", "Pr", "Nd", "Pm", "Sm", "Eu", "Gd", "Tb", "Dy", "Ho", "Er", "Tm", "Yb", "Lu"];
+const actinides = ["Ac", "Th", "Pa", "U", "Np", "Pu", "Am", "Cm", "Bk", "Cf", "Es", "Fm", "Md", "No", "Lr"];
+const nonmetals = new Set(["H", "C", "N", "O", "P", "S", "Se", "F", "Cl", "Br", "I", "At", "Ts", "He", "Ne", "Ar", "Kr", "Xe", "Rn", "Og"]);
+const metalloids = new Set(["B", "Si", "Ge", "As", "Sb", "Te", "Po"]);
+
+function PeriodicTable({ open, onToggle }: { open: boolean; onToggle: () => void }) {
+  const { panelStyle, dragProps } = useDraggablePanel();
+  const elementStyle = (element: string): React.CSSProperties => ({
+    ...styles.element,
+    ...(nonmetals.has(element) ? styles.nonmetal : metalloids.has(element) ? styles.metalloid : {}),
+  });
+  return <div style={styles.periodicDock}>
+    {open && <aside style={{ ...styles.periodicPanel, ...panelStyle }} aria-label="Periodic table">
+      <div style={styles.panelDragHandle} {...dragProps}>
+        <button type="button" aria-label="Close periodic table" style={styles.panelClose} onPointerDown={(event) => event.stopPropagation()} onClick={onToggle}>×</button>
+        <strong style={styles.calculatorTitle}>Periodic Table</strong>
+        <span style={styles.dragHint}>Drag me</span>
+      </div>
+      <div style={styles.periodicLegend}><span style={styles.legendMetal}>Metal</span><span style={styles.legendNonmetal}>Nonmetal</span><span style={styles.legendMetalloid}>Metalloid</span></div>
+      <div style={styles.periodicGrid}>{periodicRows.flatMap((row, rowIndex) => row.map((element, columnIndex) => element ? <span key={`${rowIndex}-${columnIndex}`} style={elementStyle(element)}>{element}</span> : <span key={`${rowIndex}-${columnIndex}`} />))}</div>
+      <div style={styles.periodicSeries}><small>Lanthanides</small>{lanthanides.map((element) => <span key={element} style={styles.element}>{element}</span>)}</div>
+      <div style={styles.periodicSeries}><small>Actinides</small>{actinides.map((element) => <span key={element} style={styles.element}>{element}</span>)}</div>
+    </aside>}
+    {!open && <button style={styles.cheatButton} onClick={onToggle}>Periodic Table</button>}
+  </div>;
+}
+
 function DensityLab() {
   const [blue, setBlue] = useState("");
   const [green, setGreen] = useState("");
@@ -3113,6 +3149,7 @@ export default function ChemistryHub() {
   const [resetCode, setResetCode] = useState("");
   const [cheatSheetOpen, setCheatSheetOpen] = useState(false);
   const [calculatorOpen, setCalculatorOpen] = useState(false);
+  const [periodicTableOpen, setPeriodicTableOpen] = useState(false);
   const questions =
     selectedUnit === "Unit 2"
       ? unit2Questions
@@ -3670,6 +3707,10 @@ export default function ChemistryHub() {
       <ChemistryCalculator
         open={calculatorOpen}
         onToggle={() => setCalculatorOpen((open) => !open)}
+      />
+      <PeriodicTable
+        open={periodicTableOpen}
+        onToggle={() => setPeriodicTableOpen((open) => !open)}
       />
     </main>
   );
@@ -4484,6 +4525,15 @@ const styles: Record<string, React.CSSProperties> = {
     justifyItems: "end",
     gap: 10,
   },
+  periodicDock: {
+    position: "fixed",
+    right: 20,
+    top: 124,
+    zIndex: 31,
+    display: "grid",
+    justifyItems: "end",
+    gap: 10,
+  },
   cheatButton: {
     border: 0,
     borderRadius: 999,
@@ -4549,6 +4599,27 @@ const styles: Record<string, React.CSSProperties> = {
     resize: "both",
     overflow: "auto",
   },
+  periodicPanel: {
+    width: "min(820px,calc(100vw - 40px))",
+    minWidth: 300,
+    padding: 16,
+    borderRadius: 18,
+    background: "#fff",
+    border: "2px solid #99f6e4",
+    boxShadow: "0 18px 48px rgba(4,47,46,.26)",
+    color: "#163f3b",
+    resize: "both",
+    overflow: "auto",
+  },
+  periodicLegend: { display: "flex", gap: 8, flexWrap: "wrap", margin: "0 0 12px" },
+  legendMetal: { background: "#d1fae5", color: "#115e59", borderRadius: 999, padding: "4px 8px", fontSize: 11, fontWeight: 800 },
+  legendNonmetal: { background: "#fce7f3", color: "#9d174d", borderRadius: 999, padding: "4px 8px", fontSize: 11, fontWeight: 800 },
+  legendMetalloid: { background: "#fef3c7", color: "#92400e", borderRadius: 999, padding: "4px 8px", fontSize: 11, fontWeight: 800 },
+  periodicGrid: { display: "grid", gridTemplateColumns: "repeat(18,minmax(29px,1fr))", gap: 3, minWidth: 600 },
+  periodicSeries: { display: "grid", gridTemplateColumns: "82px repeat(15,minmax(29px,1fr))", gap: 3, marginTop: 8, minWidth: 600, alignItems: "center" },
+  element: { display: "grid", placeItems: "center", minHeight: 31, border: "1px solid #99f6e4", borderRadius: 5, background: "#ecfdf5", color: "#115e59", fontSize: 12, fontWeight: 850 },
+  nonmetal: { background: "#fce7f3", borderColor: "#f9a8d4", color: "#9d174d" },
+  metalloid: { background: "#fef3c7", borderColor: "#fcd34d", color: "#92400e" },
   panelDragHandle: {
     position: "relative",
     display: "flex",
