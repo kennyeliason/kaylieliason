@@ -3710,9 +3710,19 @@ export default function ChemistryHub() {
           onToggle={() => setCheatSheetOpen((open) => !open)}
           title="Naming Cheat Sheet"
           buttonLabel="Naming Cheat Sheet"
-          headers={["Rule", "Meaning", "Example"]}
+          headers={["Number / Rule", "Prefix / Meaning", "Example"]}
           notice="YOU’LL NEED YOUR POLYATOMIC ION CHART TO PRACTICE THIS UNIT."
           rows={[
+            ["1", "mono-", "CO → carbon monoxide"],
+            ["2", "di-", "CO₂ → carbon dioxide"],
+            ["3", "tri-", "PCl₃ → phosphorus trichloride"],
+            ["4", "tetra-", "CCl₄ → carbon tetrachloride"],
+            ["5", "penta-", "N₂O₅ → dinitrogen pentoxide"],
+            ["6", "hexa-", "SF₆ → sulfur hexafluoride"],
+            ["7", "hepta-", "I₂O₇ → diiodine heptoxide"],
+            ["8", "octa-", "N₂O₈ → dinitrogen octoxide"],
+            ["9", "nona-", "P₄O₉ → tetraphosphorus nonoxide"],
+            ["10", "deca-", "P₄O₁₀ → tetraphosphorus decoxide"],
             ["-ate ion", "ends in -ic acid", "nitrate → nitric acid"],
             ["-ite ion", "ends in -ous acid", "nitrite → nitrous acid"],
             ["Binary acid", "hydro- + root + -ic", "HCl → hydrochloric acid"],
