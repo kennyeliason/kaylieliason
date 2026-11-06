@@ -1040,7 +1040,7 @@ function BombGame({
   choice: string | null;
   checked: boolean;
   onChoose: (answer: string) => void;
-  onCheck: () => void;
+  onCheck: (answer?: string) => void;
   onNext: () => void;
   onExpire: (timedOut?: boolean) => void;
 }) {
@@ -1093,7 +1093,7 @@ function BombGame({
               opacity: choice ? 1 : 0.45,
               cursor: choice ? "pointer" : "default",
             }}
-            onClick={onCheck}
+            onClick={() => onCheck()}
           >
             Check Answer
           </button>
@@ -1361,7 +1361,7 @@ function MillionaireGame({
   choice: string | null;
   checked: boolean;
   onChoose: (answer: string) => void;
-  onCheck: () => void;
+  onCheck: (answer?: string) => void;
   onNext: () => void;
 }) {
   return (
@@ -1392,7 +1392,7 @@ function MillionaireGame({
         <div style={styles.progress}>Question {questionIndex + 1} of 15</div>
         <h2 style={styles.question}>{question.question}</h2>
         <div style={styles.choices}>
-          <AnswerChoices question={question} value={choice} checked={checked} onChange={onChoose} />
+          <AnswerChoices question={question} value={choice} checked={checked} onChange={onChoose} onEnter={onCheck} />
           {checked && choice && (
             <p style={styles.explanation}>
               {answersMatch(choice, question.answer) ? (
@@ -1414,7 +1414,7 @@ function MillionaireGame({
                 opacity: choice ? 1 : 0.45,
                 cursor: choice ? "pointer" : "default",
               }}
-              onClick={onCheck}
+              onClick={() => onCheck()}
             >
               Check Answer
             </button>
@@ -3469,9 +3469,9 @@ export default function ChemistryHub() {
         attempts: (current[game]?.attempts || 0) + 1,
       },
     }));
-  const checkAnswer = (submittedAnswer = choice) => {
-    if (!submittedAnswer || checked) return;
-    const answer = submittedAnswer.trim();
+  const checkAnswer = (submittedAnswer?: string) => {
+    const answer = (typeof submittedAnswer === "string" ? submittedAnswer : choice)?.trim();
+    if (!answer || checked) return;
     if (!answer) return;
     if (answer !== choice) setChoice(answer);
     setChecked(true);
@@ -3488,9 +3488,9 @@ export default function ChemistryHub() {
       setGameComplete(true);
   };
   const bombQuestion = bombSet[questionIndex];
-  const checkBombAnswer = (submittedAnswer = choice) => {
-    if (!submittedAnswer || checked || !bombQuestion) return;
-    const answer = submittedAnswer.trim();
+  const checkBombAnswer = (submittedAnswer?: string) => {
+    const answer = (typeof submittedAnswer === "string" ? submittedAnswer : choice)?.trim();
+    if (!answer || checked || !bombQuestion) return;
     if (!answer) return;
     if (answer !== choice) setChoice(answer);
     setChecked(true);
@@ -3911,7 +3911,7 @@ export default function ChemistryHub() {
                           opacity: choice ? 1 : 0.45,
                           cursor: choice ? "pointer" : "default",
                         }}
-                        onClick={checkAnswer}
+                        onClick={() => checkAnswer()}
                       >
                         Check Answer
                       </button>
