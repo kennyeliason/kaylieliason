@@ -820,20 +820,26 @@ const makeBombSet = (questionSet: Question[]) =>
   mixQuestionModes(questionSet, 10).map(shuffleChoices);
 const makeGameSet = (questionSet: Question[]) =>
   mixQuestionModes(questionSet).map(shuffleChoices);
-const chemistryTopics = [
-  "Electromagnetic Energy & Light",
-  "Electrons & Energy Levels",
-  "Atomic Structure & Trends",
-  "Ions & Valence Electrons",
-  "Molecular Formulas",
-  "Molecular Names",
-  "Acid Names",
-  "Acid Formulas",
-  "Properties & Changes",
-  "Density & Measurement",
-  "Mixtures & States",
-  "Density Lab",
-];
+const unitTopicGroups: Record<string, string[]> = {
+  "Unit 2": [
+    "Properties & Changes",
+    "Density & Measurement",
+    "Mixtures & States",
+    "Density Lab",
+  ],
+  "Unit 5": [
+    "Electromagnetic Energy & Light",
+    "Electrons & Energy Levels",
+    "Atomic Structure & Trends",
+    "Ions & Valence Electrons",
+  ],
+  "Unit 6": [
+    "Molecular Formulas",
+    "Molecular Names",
+    "Acid Names",
+    "Acid Formulas",
+  ],
+};
 const topicForQuestion = (question: Question) => {
   const unit2Item = unit2Items.find((item) => item.prompt === question.question);
   if (unit2Item) return unit2Item.topic;
@@ -842,10 +848,11 @@ const topicForQuestion = (question: Question) => {
   const index = exactUnit5Questions.findIndex(
     (item) => item.question === question.question,
   );
-  if (index <= 7 || index >= 20) return "Electromagnetic Energy & Light";
-  if (index <= 14) return "Electrons & Energy Levels";
-  if (index <= 18) return "Atomic Structure & Trends";
-  return "Ions & Valence Electrons";
+  if ([3, 10, 11, 12, 13, 14].includes(index))
+    return "Electrons & Energy Levels";
+  if ([8, 9, 15, 16].includes(index)) return "Atomic Structure & Trends";
+  if ([17, 18, 19].includes(index)) return "Ions & Valence Electrons";
+  return "Electromagnetic Energy & Light";
 };
 
 function AnswerChoices({
@@ -3220,14 +3227,7 @@ export default function ChemistryHub() {
       : selectedUnit === "Unit 6"
         ? unit6JeopardyBoard
         : jeopardyBoard;
-  const statsTopics =
-    selectedUnit === "Unit 2"
-      ? chemistryTopics.slice(8)
-      : selectedUnit === "Unit 5"
-      ? chemistryTopics.slice(0, 4)
-      : selectedUnit === "Unit 6"
-        ? chemistryTopics.slice(4)
-        : [];
+  const statsTopics = unitTopicGroups[selectedUnit] || [];
   const currentQuestion =
     selectedGame && selectedGame !== "Bomb"
       ? gameQuestionSet[questionIndex]
