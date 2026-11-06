@@ -2309,7 +2309,7 @@ function OrbitalLab() {
         </p>
       </div>
       <div style={styles.orbitalLabGrid}>
-        <div>
+        <div style={styles.totalStatsDetails}>
           <h2 style={styles.orbitalHeading}>{element.name} · Lewis Dot</h2>
           <LewisDot element={element} />
           <p style={styles.orbitalHint}>
@@ -4299,6 +4299,10 @@ const styles: Record<string, React.CSSProperties> = {
     justifyItems: "end",
     gap: 3,
     textAlign: "right",
+  },
+  totalStatsDetails: {
+    display: "grid",
+    gap: 4,
   },
   statCard: {
     padding: 16,
