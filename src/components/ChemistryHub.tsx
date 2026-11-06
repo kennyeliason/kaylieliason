@@ -698,6 +698,45 @@ const unit3Items: StudyItem[] = [
   { prompt: "Can a compound keep the same properties if its element ratio changes?", answer: "No, changing the ratio makes a different substance", explanation: "Compounds have fixed ratios; a different ratio creates a different substance.", topic: "Compounds" },
 ];
 
+const unit4Items: StudyItem[] = [
+  { prompt: "In isotope notation, where is the mass number written?", answer: "At the upper left of the symbol", explanation: "The mass number is the superscript on the left of an element symbol.", topic: "Isotope Notation" },
+  { prompt: "In isotope notation, where is the atomic number written?", answer: "At the lower left of the symbol", explanation: "The atomic number is the subscript on the left of an element symbol.", topic: "Isotope Notation" },
+  { prompt: "What does the mass number equal?", answer: "Protons plus neutrons", explanation: "Mass number counts the protons and neutrons in the nucleus.", topic: "Isotope Notation" },
+  { prompt: "What does the atomic number equal?", answer: "The number of protons", explanation: "An element is defined by its proton count.", topic: "Isotope Notation" },
+  { prompt: "What is the mass defect?", answer: "Mass lost when nucleons form a nucleus", explanation: "A nucleus has slightly less mass than its separate protons and neutrons added together.", topic: "Nuclear Energy" },
+  { prompt: "What equation is used to calculate energy from a mass defect?", answer: "E = mc²", explanation: "Einstein’s equation relates a small amount of mass to a large amount of energy.", topic: "Nuclear Energy" },
+  { prompt: "What is nuclear binding energy?", answer: "Energy released when a nucleus forms", explanation: "Binding energy is released as nucleons join to make a stable nucleus.", topic: "Nuclear Energy" },
+  { prompt: "What proton-to-neutron ratio tends to make light isotopes stable?", answer: "About 1 proton to 1 neutron", explanation: "Light stable nuclei usually have nearly equal numbers of protons and neutrons.", topic: "Nuclear Energy" },
+  { prompt: "What kind of reaction changes an isotope’s nucleus?", answer: "A nuclear reaction", explanation: "Nuclear reactions change the nucleus, unlike chemical reactions involving electrons.", topic: "Nuclear Energy" },
+  { prompt: "What happens when an unstable isotope undergoes nuclear decay?", answer: "It changes into a more stable nucleus", explanation: "An unstable nucleus emits radiation and becomes a daughter isotope or a more stable nucleus.", topic: "Radioactivity" },
+  { prompt: "What is radioactive decay?", answer: "The spontaneous disintegration of an unstable nucleus", explanation: "Radioactive decay happens naturally when an unstable nucleus changes.", topic: "Radioactivity" },
+  { prompt: "What are the mass number and charge of a proton?", answer: "Mass 1 and charge +1", explanation: "A proton is written as ¹₁p.", topic: "Nuclear Particles" },
+  { prompt: "What are the mass number and charge of a neutron?", answer: "Mass 1 and charge 0", explanation: "A neutron is written as ¹₀n.", topic: "Nuclear Particles" },
+  { prompt: "What is the symbol for an alpha particle?", answer: "⁴₂He", explanation: "An alpha particle is a helium nucleus with 2 protons and 2 neutrons.", topic: "Nuclear Particles" },
+  { prompt: "What is the symbol for beta-negative emission?", answer: "⁰₋₁e", explanation: "A beta-negative particle is an electron emitted from the nucleus.", topic: "Nuclear Particles" },
+  { prompt: "What is the symbol for beta-positive emission?", answer: "⁰₊₁e", explanation: "A beta-positive particle is a positron emitted from the nucleus.", topic: "Nuclear Particles" },
+  { prompt: "What particle is used in electron capture?", answer: "⁰₋₁e", explanation: "The nucleus captures an inner electron, written as ⁰₋₁e on the reactant side.", topic: "Nuclear Particles" },
+  { prompt: "What is the symbol for gamma radiation?", answer: "⁰₀γ", explanation: "Gamma radiation has no mass number and no charge.", topic: "Nuclear Particles" },
+  { prompt: "What are gamma rays?", answer: "High-energy electromagnetic radiation", explanation: "Gamma rays are energy waves emitted by a nucleus; they have no mass or charge.", topic: "Radioactivity" },
+  { prompt: "Radon-222 decays to polonium-218. What particle was emitted?", answer: "An alpha particle", explanation: "The mass drops by 4 and atomic number drops by 2, which is alpha decay.", topic: "Nuclear Equations" },
+  { prompt: "Copper-61 emits a beta-positive particle. What is the daughter isotope?", answer: "Nickel-61", explanation: "Beta-positive emission lowers the atomic number by 1: Cu-61 becomes Ni-61.", topic: "Nuclear Equations" },
+  { prompt: "Iodine-123 captures an electron. What is the daughter isotope?", answer: "Tellurium-123", explanation: "Electron capture lowers the atomic number by 1: I-123 becomes Te-123.", topic: "Nuclear Equations" },
+  { prompt: "Uranium-238 emits an alpha particle. What is the daughter isotope?", answer: "Thorium-234", explanation: "Subtract 4 from mass number and 2 from atomic number: U-238 becomes Th-234.", topic: "Nuclear Equations" },
+  { prompt: "Phosphorus-32 emits a beta-negative particle. What is the daughter isotope?", answer: "Sulfur-32", explanation: "Beta-negative emission increases the atomic number by 1: P-32 becomes S-32.", topic: "Nuclear Equations" },
+  { prompt: "Oxygen-15 emits a beta-positive particle. What is the daughter isotope?", answer: "Nitrogen-15", explanation: "Beta-positive emission lowers the atomic number by 1: O-15 becomes N-15.", topic: "Nuclear Equations" },
+  { prompt: "What is a decay series?", answer: "A sequence of decays from parent to stable isotope", explanation: "A radioactive parent may decay through several daughters before reaching stability.", topic: "Half-Life & Dating" },
+  { prompt: "What is a half-life?", answer: "The time for half a radioactive sample to decay", explanation: "After each half-life, half of the unstable nuclei remain.", topic: "Half-Life & Dating" },
+  { prompt: "What is the parent isotope?", answer: "The original unstable isotope", explanation: "The parent is the isotope that begins a radioactive decay.", topic: "Half-Life & Dating" },
+  { prompt: "What is the daughter isotope?", answer: "The isotope produced by decay", explanation: "A daughter isotope forms when a parent isotope decays.", topic: "Half-Life & Dating" },
+  { prompt: "What is usually produced at the end of a decay series?", answer: "A stable isotope", explanation: "The series ends once the nucleus no longer needs to decay.", topic: "Half-Life & Dating" },
+  { prompt: "What information is needed for radioactive dating?", answer: "A half-life and parent-to-daughter amounts", explanation: "Scientists compare the amount of parent and daughter material using the known half-life.", topic: "Half-Life & Dating" },
+  { prompt: "Why are radioactive tracers useful?", answer: "They let scientists follow substances through a system", explanation: "Radiation can be detected, so tracers can show where a substance travels.", topic: "Half-Life & Dating" },
+  { prompt: "A 100 g sample has a 3.8-day half-life. How much remains after 15.2 days?", answer: "6.25 g", explanation: "15.2 ÷ 3.8 = 4 half-lives: 100 → 50 → 25 → 12.5 → 6.25 g.", topic: "Half-Life Problems" },
+  { prompt: "Four half-lives leave 25.0 mg of a sample. How much was present at the beginning?", answer: "400 mg", explanation: "Work backward four times: 25 → 50 → 100 → 200 → 400 mg.", topic: "Half-Life Problems" },
+  { prompt: "A sample drops from 200.0 g to 6.25 g in 13.5 days. What is its half-life?", answer: "2.7 days", explanation: "200 → 100 → 50 → 25 → 12.5 → 6.25 is 5 half-lives, so 13.5 ÷ 5 = 2.7 days.", topic: "Half-Life Problems" },
+  { prompt: "A 1000.0 g sample decays to 125 g. If its half-life is 80 hours, how much time passed?", answer: "240 hours", explanation: "1000 → 500 → 250 → 125 is 3 half-lives; 3 × 80 = 240 hours.", topic: "Half-Life Problems" },
+];
+
 const unit6Items: StudyItem[] = [
   { prompt: "Write the formula for sulfur tetroxide.", answer: "SO₄", explanation: "No prefix on sulfur means 1 sulfur; tetra- means 4 oxygens.", topic: "Molecular Formulas" },
   { prompt: "Write the formula for phosphorus trifluoride.", answer: "PF₃", explanation: "Tri- means 3 fluorines.", topic: "Molecular Formulas" },
@@ -785,6 +824,14 @@ const unit3JeopardyBoard = [
   { title: "FAMILIES", indexes: [22, 23, 24, 25, 26] },
 ];
 
+const unit4JeopardyBoard = [
+  { title: "NUCLEAR BASICS", indexes: [0, 1, 2, 3, 4] },
+  { title: "NUCLEAR ENERGY", indexes: [5, 6, 7, 8, 9] },
+  { title: "PARTICLES", indexes: [11, 12, 13, 14, 15] },
+  { title: "DECAY EQUATIONS", indexes: [19, 20, 21, 22, 23] },
+  { title: "HALF-LIFE", indexes: [26, 27, 28, 32, 33] },
+];
+
 const millionaireLevels = [
   "$100",
   "$200",
@@ -834,6 +881,7 @@ const buildMultipleChoiceQuestions = (
   });
 const unit2Questions = buildMultipleChoiceQuestions(unit2Items);
 const unit3Questions = buildMultipleChoiceQuestions(unit3Items);
+const unit4Questions = buildMultipleChoiceQuestions(unit4Items);
 const unit6Questions = buildMultipleChoiceQuestions(unit6Items, true);
 const isTypedQuestion = (question: Question) => question.answerMode === "type";
 const normalizeAnswer = (value: string) =>
@@ -876,6 +924,15 @@ const unitTopicGroups: Record<string, string[]> = {
     "Element Families",
     "Compounds",
   ],
+  "Unit 4": [
+    "Isotope Notation",
+    "Nuclear Energy",
+    "Radioactivity",
+    "Nuclear Particles",
+    "Nuclear Equations",
+    "Half-Life & Dating",
+    "Half-Life Problems",
+  ],
   "Unit 5": [
     "Electromagnetic Energy & Light",
     "Electrons & Energy Levels",
@@ -894,6 +951,8 @@ const topicForQuestion = (question: Question) => {
   if (unit2Item) return unit2Item.topic;
   const unit3Item = unit3Items.find((item) => item.prompt === question.question);
   if (unit3Item) return unit3Item.topic;
+  const unit4Item = unit4Items.find((item) => item.prompt === question.question);
+  if (unit4Item) return unit4Item.topic;
   const unit6Item = unit6Items.find((item) => item.prompt === question.question);
   if (unit6Item) return unit6Item.topic;
   const index = exactUnit5Questions.findIndex(
@@ -3269,6 +3328,8 @@ export default function ChemistryHub() {
       ? unit2Questions
       : selectedUnit === "Unit 3"
       ? unit3Questions
+      : selectedUnit === "Unit 4"
+      ? unit4Questions
       : selectedUnit === "Unit 5"
       ? exactUnit5Questions
       : selectedUnit === "Unit 6"
@@ -3279,6 +3340,8 @@ export default function ChemistryHub() {
       ? unit2JeopardyBoard
       : selectedUnit === "Unit 3"
         ? unit3JeopardyBoard
+      : selectedUnit === "Unit 4"
+        ? unit4JeopardyBoard
       : selectedUnit === "Unit 6"
         ? unit6JeopardyBoard
         : jeopardyBoard;
