@@ -1163,7 +1163,7 @@ function SnakeGame({ questions }: { questions: Question[] }) {
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
   const [questionOpen, setQuestionOpen] = useState(false);
-  const [correctAnswerPause, setCorrectAnswerPause] = useState(false);
+  const [snakeCountdown, setSnakeCountdown] = useState<number | null>(null);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [wrongAnswer, setWrongAnswer] = useState(false);
   const [typedAnswer, setTypedAnswer] = useState("");
@@ -1192,14 +1192,14 @@ function SnakeGame({ questions }: { questions: Question[] }) {
     setGameOver(false);
     setScore(0);
     setQuestionOpen(false);
-    setCorrectAnswerPause(false);
+    setSnakeCountdown(null);
     setQuestionIndex(0);
     setWrongAnswer(false);
     setTypedAnswer("");
   };
 
   useEffect(() => {
-    if (!running || questionOpen || correctAnswerPause) return;
+    if (!running || questionOpen || (snakeCountdown !== null && snakeCountdown > 0)) return;
     const timer = window.setTimeout(() => {
       setBody((current) => {
         const head = current[0];
@@ -1221,13 +1221,16 @@ function SnakeGame({ questions }: { questions: Question[] }) {
       });
     }, 150);
     return () => window.clearTimeout(timer);
-  }, [running, body, questionOpen, correctAnswerPause, food]);
+  }, [running, body, questionOpen, snakeCountdown, food]);
 
   useEffect(() => {
-    if (!correctAnswerPause) return;
-    const timer = window.setTimeout(() => setCorrectAnswerPause(false), 2000);
+    if (snakeCountdown === null) return;
+    const timer = window.setTimeout(
+      () => setSnakeCountdown((count) => count === null ? null : count > 0 ? count - 1 : null),
+      snakeCountdown > 0 ? 1000 : 400,
+    );
     return () => window.clearTimeout(timer);
-  }, [correctAnswerPause]);
+  }, [snakeCountdown]);
 
   useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {
@@ -1235,13 +1238,13 @@ function SnakeGame({ questions }: { questions: Question[] }) {
         ArrowUp: "up", w: "up", ArrowDown: "down", s: "down", ArrowLeft: "left", a: "left", ArrowRight: "right", d: "right",
       };
       const next = controls[event.key];
-      if (!next || questionOpen || correctAnswerPause || gameOver) return;
+      if (!next || questionOpen || (snakeCountdown !== null && snakeCountdown > 0) || gameOver) return;
       event.preventDefault();
       changeDirection(next);
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [questionOpen, correctAnswerPause, gameOver]);
+  }, [questionOpen, snakeCountdown, gameOver]);
 
   if (gameOver) {
     return (
@@ -1285,7 +1288,7 @@ function SnakeGame({ questions }: { questions: Question[] }) {
                   setFood(newFood(body));
                   setQuestionIndex((current) => current + 1);
                   setTypedAnswer("");
-                  setCorrectAnswerPause(true);
+                  setSnakeCountdown(2);
                   setQuestionOpen(false);
                 } else {
                   setWrongAnswer(true);
@@ -1299,7 +1302,7 @@ function SnakeGame({ questions }: { questions: Question[] }) {
                   setScore((current) => current + 10);
                   setFood(newFood(body));
                   setQuestionIndex((current) => current + 1);
-                  setCorrectAnswerPause(true);
+                  setSnakeCountdown(2);
                   setQuestionOpen(false);
                 } else {
                   setWrongAnswer(true);
@@ -1329,7 +1332,7 @@ function SnakeGame({ questions }: { questions: Question[] }) {
             <span /> <button onClick={() => changeDirection("down")}>↓</button> <span />
           </div>
           <p style={styles.snakeHint}>Use the arrow keys or buttons. Eat the red dot, then answer a question to grow.</p>
-          {correctAnswerPause && <p style={styles.snakeHint}>Correct! The snake will keep moving in a moment.</p>}
+          {snakeCountdown !== null && <p style={styles.snakeHint}>{snakeCountdown === 0 ? "GO!" : `Correct! ${snakeCountdown}...`}</p>}
         </>
       )}
     </>
