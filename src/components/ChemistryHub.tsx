@@ -2902,6 +2902,7 @@ function EquationCheatSheet({
   buttonLabel = "Equation Cheat Sheet",
   headers = ["Given", "Find", "Equation"],
   notice,
+  compact = false,
   rows = [
     ["Frequency", "Wavelength", "λ = c / ν"],
     ["Wavelength", "Frequency", "ν = c / λ"],
@@ -2917,13 +2918,14 @@ function EquationCheatSheet({
   buttonLabel?: string;
   headers?: [string, string, string];
   notice?: string;
+  compact?: boolean;
   rows?: string[][];
 }) {
   const { panelStyle, dragProps } = useDraggablePanel();
   return (
     <div style={styles.cheatDock}>
       {open && (
-        <aside style={{ ...styles.cheatSheet, ...panelStyle }} aria-label="Equation cheat sheet">
+        <aside style={{ ...styles.cheatSheet, ...(compact ? styles.compactCheatSheet : {}), ...panelStyle }} aria-label="Equation cheat sheet">
           <div style={styles.panelDragHandle} {...dragProps}>
             <button
               type="button"
@@ -2941,11 +2943,13 @@ function EquationCheatSheet({
           <div style={styles.cheatHeader}>
             <span>{headers[0]}</span><span>{headers[1]}</span><span>{headers[2]}</span>
           </div>
-          {rows.map(([given, find, equation]) => (
-            <div key={equation} style={styles.cheatRow}>
-              <span>{given}</span><span>{find}</span><em>{equation}</em>
-            </div>
-          ))}
+          <div style={compact ? styles.cheatRows : undefined}>
+            {rows.map(([given, find, equation]) => (
+              <div key={equation} style={styles.cheatRow}>
+                <span>{given}</span><span>{find}</span><em>{equation}</em>
+              </div>
+            ))}
+          </div>
         </aside>
       )}
       {!open && <button style={styles.cheatButton} onClick={onToggle}>{buttonLabel}</button>}
@@ -3711,6 +3715,7 @@ export default function ChemistryHub() {
           title="Naming Cheat Sheet"
           buttonLabel="Naming Cheat Sheet"
           headers={["Number / Rule", "Prefix / Meaning", "Example"]}
+          compact
           notice="YOU’LL NEED YOUR POLYATOMIC ION CHART TO PRACTICE THIS UNIT."
           rows={[
             ["1", "mono-", "CO → carbon monoxide"],
@@ -4587,6 +4592,15 @@ const styles: Record<string, React.CSSProperties> = {
     resize: "both",
     overflow: "auto",
   },
+  compactCheatSheet: {
+    width: "min(390px,calc(100vw - 40px))",
+    minHeight: 0,
+    height: "min(420px,calc(100vh - 120px))",
+    maxHeight: "calc(100vh - 120px)",
+    display: "flex",
+    flexDirection: "column",
+    overflow: "hidden",
+  },
   cheatTitle: {
     display: "block",
     fontFamily: "Londrina Solid,Impact,sans-serif",
@@ -4624,6 +4638,12 @@ const styles: Record<string, React.CSSProperties> = {
     borderBottom: "1px solid #d9f5ef",
     fontSize: 13,
     lineHeight: 1.25,
+  },
+  cheatRows: {
+    flex: "1 1 0",
+    minHeight: 0,
+    overflowY: "auto",
+    paddingRight: 4,
   },
   calculator: {
     width: "min(330px,calc(100vw - 40px))",
