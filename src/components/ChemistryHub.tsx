@@ -3087,6 +3087,7 @@ function EquationCheatSheet({
   headers = ["Given", "Find", "Equation"],
   notice,
   compact = false,
+  hideExamples = false,
   rows = [
     ["Frequency", "Wavelength", "λ = c / ν"],
     ["Wavelength", "Frequency", "ν = c / λ"],
@@ -3103,6 +3104,7 @@ function EquationCheatSheet({
   headers?: [string, string, string];
   notice?: string;
   compact?: boolean;
+  hideExamples?: boolean;
   rows?: string[][];
 }) {
   const { panelStyle, dragProps } = useDraggablePanel();
@@ -3124,13 +3126,13 @@ function EquationCheatSheet({
             <span style={styles.dragHint}>Drag me</span>
           </div>
           {notice && <p style={styles.cheatNotice}>{notice}</p>}
-          <div style={styles.cheatHeader}>
-            <span>{headers[0]}</span><span>{headers[1]}</span><span>{headers[2]}</span>
+          <div style={{ ...styles.cheatHeader, ...(hideExamples ? styles.twoColumnCheatGrid : {}) }}>
+            <span>{headers[0]}</span><span>{headers[1]}</span>{!hideExamples && <span>{headers[2]}</span>}
           </div>
           <div style={compact ? styles.cheatRows : undefined}>
             {rows.map(([given, find, equation]) => (
-              <div key={equation} style={styles.cheatRow}>
-                <span>{given}</span><span>{find}</span><em>{equation}</em>
+              <div key={equation} style={{ ...styles.cheatRow, ...(hideExamples ? styles.twoColumnCheatGrid : {}) }}>
+                <span>{given}</span><span>{find}</span>{!hideExamples && <em>{equation}</em>}
               </div>
             ))}
           </div>
@@ -3902,6 +3904,7 @@ export default function ChemistryHub() {
           buttonLabel="Naming Cheat Sheet"
           headers={["Number / Rule", "Prefix / Meaning", "Example"]}
           compact
+          hideExamples
           notice="YOU’LL NEED YOUR POLYATOMIC ION CHART TO PRACTICE THIS UNIT."
           rows={[
             ["1", "mono-", "CO → carbon monoxide"],
@@ -4856,6 +4859,9 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#0f766e",
     fontWeight: 850,
     fontSize: 12,
+  },
+  twoColumnCheatGrid: {
+    gridTemplateColumns: "1fr 1fr",
   },
   cheatRow: {
     display: "grid",
