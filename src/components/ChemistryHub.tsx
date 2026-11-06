@@ -3429,7 +3429,7 @@ export default function ChemistryHub() {
     if (game === "Match") setMatchRound((round) => round + 1);
     if (questions.length) {
       setGameQuestionSet(makeGameSet(questions));
-      setJeopardySet(questions.map(shuffleChoices));
+      setJeopardySet(makeGameSet(questions));
     }
     if (game === "Bomb" && questions.length) setBombSet(makeBombSet(questions));
   };
@@ -3754,12 +3754,12 @@ export default function ChemistryHub() {
                   })()
                 )}
               </>
-            ) : selectedGame === "Snake" && questions.length ? (
-              <SnakeGame questions={makeGameSet(questions)} />
+            ) : selectedGame === "Snake" && gameQuestionSet.length ? (
+              <SnakeGame questions={gameQuestionSet} />
             ) : selectedGame === "Match" && questions.length ? (
               <MatchGame
                 key={matchRound}
-                questions={makeGameSet(questions)}
+                questions={gameQuestionSet}
                 onComplete={(matches, tries) => {
                   setCorrectCount(matches);
                   setAttemptCount(tries);
