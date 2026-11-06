@@ -853,11 +853,13 @@ function AnswerChoices({
   value,
   checked,
   onChange,
+  onEnter,
 }: {
   question: Question;
   value: string | null;
   checked: boolean;
   onChange: (answer: string) => void;
+  onEnter?: () => void;
 }) {
   if (isTypedQuestion(question)) {
     const right = value ? answersMatch(value, question.answer) : false;
@@ -870,6 +872,12 @@ function AnswerChoices({
         placeholder={isFormulaAnswer(question.answer) ? "Type formula (ex: H2SO4)" : "Type your answer"}
         value={value || ""}
         onChange={(event) => onChange(event.target.value)}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" && !checked && value?.trim()) {
+            event.preventDefault();
+            onEnter?.();
+          }
+        }}
         style={{
           ...styles.textAnswer,
           ...(checked ? right ? styles.correctInput : styles.incorrectInput : {}),
@@ -946,7 +954,7 @@ function BombGame({
       </div>
       <h2 style={styles.question}>{question.question}</h2>
       <div style={styles.choices}>
-        <AnswerChoices question={question} value={choice} checked={checked} onChange={onChoose} />
+        <AnswerChoices question={question} value={choice} checked={checked} onChange={onChoose} onEnter={onCheck} />
         {checked && choice && (
           <p style={styles.explanation}>
             {answersMatch(choice, question.answer) ? (
@@ -3647,7 +3655,7 @@ export default function ChemistryHub() {
                   </>
                 ) : (
                   <div style={styles.choices}>
-                    <AnswerChoices question={currentQuestion} value={choice} checked={checked} onChange={setChoice} />
+                    <AnswerChoices question={currentQuestion} value={choice} checked={checked} onChange={setChoice} onEnter={checkAnswer} />
                     {checked && choice && (
                       <p style={styles.explanation}>
                         {answersMatch(choice, currentQuestion.answer) ? (
