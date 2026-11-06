@@ -665,6 +665,39 @@ const unit2Items: StudyItem[] = [
   { prompt: "What is the layer order in a test tube, from bottom to top?", answer: "Blue, green, yellow", explanation: "The most dense liquid settles on bottom: blue (1.35), then green (1.00), then yellow (0.70).", topic: "Density Lab" },
 ];
 
+const unit3Items: StudyItem[] = [
+  { prompt: "What are the vertical columns on the periodic table called?", answer: "Groups or families", explanation: "Elements in a vertical column are called groups, or families.", topic: "Periodic Table Map" },
+  { prompt: "What are the horizontal rows on the periodic table called?", answer: "Periods", explanation: "The horizontal rows are periods.", topic: "Periodic Table Map" },
+  { prompt: "Why do elements in the same group often have similar properties?", answer: "They have similar valence-electron patterns", explanation: "Valence electrons strongly affect how elements react.", topic: "Periodic Table Map" },
+  { prompt: "Where are metals found on the periodic table?", answer: "Mostly on the left and center", explanation: "Metals fill the left side and center of the periodic table.", topic: "Periodic Table Map" },
+  { prompt: "Where are nonmetals found on the periodic table?", answer: "Mostly on the upper right", explanation: "Nonmetals are mostly to the right of the stair-step line.", topic: "Periodic Table Map" },
+  { prompt: "Where are metalloids found on the periodic table?", answer: "Along the stair-step line", explanation: "Metalloids border the zigzag stair-step line between metals and nonmetals.", topic: "Periodic Table Map" },
+  { prompt: "Who arranged elements by properties and predicted undiscovered elements?", answer: "Dmitri Mendeleev", explanation: "Mendeleev organized an early periodic table and left spaces for elements not yet discovered.", topic: "Periodic Table Map" },
+  { prompt: "Why is an atom electrically neutral?", answer: "Its protons and electrons are equal", explanation: "Positive protons and negative electrons cancel when their numbers are equal.", topic: "Atomic Structure" },
+  { prompt: "What charge does a proton have?", answer: "Positive", explanation: "A proton has a +1 charge.", topic: "Atomic Structure" },
+  { prompt: "What charge does a neutron have?", answer: "No charge", explanation: "Neutrons are neutral.", topic: "Atomic Structure" },
+  { prompt: "What charge does an electron have?", answer: "Negative", explanation: "An electron has a −1 charge.", topic: "Atomic Structure" },
+  { prompt: "Which part of an atom mainly determines its size?", answer: "The electron cloud", explanation: "The electron cloud determines an atom’s diameter and therefore its size.", topic: "Atomic Structure" },
+  { prompt: "What does an element’s atomic number tell you?", answer: "Its number of protons", explanation: "Every atom of an element has the same number of protons.", topic: "Atomic Structure" },
+  { prompt: "What does an element’s mass number tell you?", answer: "Protons plus neutrons", explanation: "Mass number counts the particles in the nucleus: protons + neutrons.", topic: "Atomic Structure" },
+  { prompt: "What does the atomic mass on the periodic table represent?", answer: "The weighted average of its isotopes", explanation: "Atomic mass is an average that considers each natural isotope and its abundance.", topic: "Atomic Structure" },
+  { prompt: "How many neutrons does carbon-14 have?", answer: "8", explanation: "Carbon has 6 protons, so 14 − 6 = 8 neutrons.", topic: "Atomic Structure" },
+  { prompt: "What is an isotope?", answer: "Atoms of one element with different neutrons", explanation: "Isotopes have the same number of protons but different numbers of neutrons.", topic: "Isotopes" },
+  { prompt: "What is the same in every isotope of an element?", answer: "The number of protons", explanation: "The proton number identifies the element, so it cannot change.", topic: "Isotopes" },
+  { prompt: "What can change between two isotopes of the same element?", answer: "The number of neutrons", explanation: "Different neutron counts give isotopes different masses.", topic: "Isotopes" },
+  { prompt: "How is average atomic mass calculated?", answer: "Add each isotope’s mass times its abundance", explanation: "Multiply every isotope’s mass by its decimal abundance, then add the results.", topic: "Isotopes" },
+  { prompt: "An element is 75% isotope-35 and 25% isotope-37. What is its average atomic mass?", answer: "35.5 amu", explanation: "(35 × 0.75) + (37 × 0.25) = 35.5 amu.", topic: "Isotopes" },
+  { prompt: "Which group contains the alkali metals?", answer: "Group 1", explanation: "Alkali metals are the first column, excluding hydrogen.", topic: "Element Families" },
+  { prompt: "Which group contains the alkaline earth metals?", answer: "Group 2", explanation: "Alkaline earth metals are in the second column.", topic: "Element Families" },
+  { prompt: "Which group contains the halogens?", answer: "Group 17", explanation: "Halogens are the second-to-last column.", topic: "Element Families" },
+  { prompt: "Which group contains the noble gases?", answer: "Group 18", explanation: "Noble gases are in the far-right column.", topic: "Element Families" },
+  { prompt: "Which property best describes most metals?", answer: "Shiny and good conductors", explanation: "Metals are usually lustrous and conduct heat and electricity well.", topic: "Element Families" },
+  { prompt: "Which property best describes most nonmetals?", answer: "Poor conductors and often dull", explanation: "Nonmetals generally do not conduct heat or electricity well.", topic: "Element Families" },
+  { prompt: "What is a compound?", answer: "Elements chemically bonded in a fixed ratio", explanation: "A compound’s elements combine in a specific ratio that gives it consistent properties.", topic: "Compounds" },
+  { prompt: "Why does water always have the formula H₂O?", answer: "Its elements combine in a fixed ratio", explanation: "A compound has a definite composition, so water always has two H atoms for one O atom.", topic: "Compounds" },
+  { prompt: "Can a compound keep the same properties if its element ratio changes?", answer: "No, changing the ratio makes a different substance", explanation: "Compounds have fixed ratios; a different ratio creates a different substance.", topic: "Compounds" },
+];
+
 const unit6Items: StudyItem[] = [
   { prompt: "Write the formula for sulfur tetroxide.", answer: "SO₄", explanation: "No prefix on sulfur means 1 sulfur; tetra- means 4 oxygens.", topic: "Molecular Formulas" },
   { prompt: "Write the formula for phosphorus trifluoride.", answer: "PF₃", explanation: "Tri- means 3 fluorines.", topic: "Molecular Formulas" },
@@ -744,6 +777,14 @@ const unit2JeopardyBoard = [
   { title: "DENSITY LAB", indexes: [21, 22, 23, 24, 25] },
 ];
 
+const unit3JeopardyBoard = [
+  { title: "TABLE MAP", indexes: [0, 1, 2, 3, 4] },
+  { title: "ATOMIC PARTS", indexes: [7, 8, 9, 10, 11] },
+  { title: "ATOMIC NUMBERS", indexes: [12, 13, 14, 15, 16] },
+  { title: "ISOTOPES", indexes: [17, 18, 19, 20, 21] },
+  { title: "FAMILIES", indexes: [22, 23, 24, 25, 26] },
+];
+
 const millionaireLevels = [
   "$100",
   "$200",
@@ -792,6 +833,7 @@ const buildMultipleChoiceQuestions = (
     };
   });
 const unit2Questions = buildMultipleChoiceQuestions(unit2Items);
+const unit3Questions = buildMultipleChoiceQuestions(unit3Items);
 const unit6Questions = buildMultipleChoiceQuestions(unit6Items, true);
 const isTypedQuestion = (question: Question) => question.answerMode === "type";
 const normalizeAnswer = (value: string) =>
@@ -827,6 +869,13 @@ const unitTopicGroups: Record<string, string[]> = {
     "Mixtures & States",
     "Density Lab",
   ],
+  "Unit 3": [
+    "Periodic Table Map",
+    "Atomic Structure",
+    "Isotopes",
+    "Element Families",
+    "Compounds",
+  ],
   "Unit 5": [
     "Electromagnetic Energy & Light",
     "Electrons & Energy Levels",
@@ -843,6 +892,8 @@ const unitTopicGroups: Record<string, string[]> = {
 const topicForQuestion = (question: Question) => {
   const unit2Item = unit2Items.find((item) => item.prompt === question.question);
   if (unit2Item) return unit2Item.topic;
+  const unit3Item = unit3Items.find((item) => item.prompt === question.question);
+  if (unit3Item) return unit3Item.topic;
   const unit6Item = unit6Items.find((item) => item.prompt === question.question);
   if (unit6Item) return unit6Item.topic;
   const index = exactUnit5Questions.findIndex(
@@ -3216,6 +3267,8 @@ export default function ChemistryHub() {
   const questions =
     selectedUnit === "Unit 2"
       ? unit2Questions
+      : selectedUnit === "Unit 3"
+      ? unit3Questions
       : selectedUnit === "Unit 5"
       ? exactUnit5Questions
       : selectedUnit === "Unit 6"
@@ -3224,6 +3277,8 @@ export default function ChemistryHub() {
   const activeJeopardyBoard =
     selectedUnit === "Unit 2"
       ? unit2JeopardyBoard
+      : selectedUnit === "Unit 3"
+        ? unit3JeopardyBoard
       : selectedUnit === "Unit 6"
         ? unit6JeopardyBoard
         : jeopardyBoard;
