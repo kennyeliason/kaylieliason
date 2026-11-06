@@ -2773,10 +2773,34 @@ function StatsScreen({
   onCancelReset: () => void;
   onReset: () => void;
 }) {
+  const total = Object.values(stats).reduce(
+    (sum, stat) => ({
+      correct: sum.correct + stat.correct,
+      attempts: sum.attempts + stat.attempts,
+    }),
+    { correct: 0, attempts: 0 },
+  );
+  const totalPercent = total.attempts
+    ? Math.round((total.correct / total.attempts) * 100)
+    : 0;
   return (
     <>
       <h2 style={styles.modalTitle}>{unit} Stats</h2>
       <p style={styles.modalText}>Your score for each topic in this unit.</p>
+      <div style={styles.totalStatsCard}>
+        <div>
+          <strong>All Units Total</strong>
+          <small>Every Chemistry question you have answered</small>
+        </div>
+        <div style={styles.totalStatsScore}>
+          <strong>{total.attempts ? `${totalPercent}%` : "—"}</strong>
+          <small>
+            {total.attempts
+              ? `${total.correct} / ${total.attempts} correct`
+              : "Not studied yet"}
+          </small>
+        </div>
+      </div>
       <div style={styles.statsGrid}>
         {topics.length ? topics.map((name) => {
           const stat = stats[name] || { correct: 0, attempts: 0 };
@@ -4254,6 +4278,24 @@ const styles: Record<string, React.CSSProperties> = {
     gridTemplateColumns: "repeat(auto-fit,minmax(160px,1fr))",
     gap: 12,
     textAlign: "left",
+  },
+  totalStatsCard: {
+    margin: "0 0 16px",
+    padding: "15px 18px",
+    borderRadius: 16,
+    background: "linear-gradient(135deg,#0f766e,#0891b2)",
+    color: "#fff",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 16,
+    textAlign: "left",
+  },
+  totalStatsScore: {
+    display: "grid",
+    justifyItems: "end",
+    gap: 3,
+    textAlign: "right",
   },
   statCard: {
     padding: 16,
