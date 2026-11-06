@@ -835,7 +835,7 @@ const unit6JeopardyBoard = [
   { title: "FORMULAS II", indexes: [5, 6, 7, 8, 9] },
   { title: "COMPOUND NAMES", indexes: [15, 16, 17, 18, 19] },
   { title: "ACID NAMES", indexes: [30, 31, 32, 33, 34] },
-  { title: "ACID FORMULAS", indexes: [35, 36, 37, 38, 39] },
+  { title: "ACID FORMULAS", indexes: [35, 36, 37, 38] },
 ];
 
 const unit2JeopardyBoard = [
@@ -3560,7 +3560,7 @@ export default function ChemistryHub() {
     setChecked(false);
   };
   useEffect(() => {
-    if (selectedGame === "Jeopardy" && jeopardyUsed.length === 25)
+    if (selectedGame === "Jeopardy" && jeopardyUsed.length === activeJeopardyBoard.flatMap((category) => category.indexes).length)
       setGameComplete(true);
     if (selectedGame === "Millionaire" && questionIndex === 14 && checked)
       setGameComplete(true);
@@ -3749,7 +3749,8 @@ export default function ChemistryHub() {
                   (() => {
                     const question =
                       jeopardySet[jeopardyQuestion] ||
-                      questions[jeopardyQuestion];
+                      questions[jeopardyQuestion] ||
+                      questions[0];
                     return (
                       <>
                         <button
