@@ -775,7 +775,6 @@ const unit6Items: StudyItem[] = [
   { prompt: "Name the acid HNO₂.", answer: "nitrous acid", explanation: "Nitrite (ending -ite) becomes nitrous acid.", topic: "Acid Names" },
   { prompt: "Write the formula for sulfuric acid.", answer: "H₂SO₄", explanation: "Sulfuric acid has the formula H₂SO₄.", topic: "Acid Formulas" },
   { prompt: "Write the formula for hydrofluoric acid.", answer: "HF", explanation: "Hydrofluoric acid has the formula HF.", topic: "Acid Formulas" },
-  { prompt: "Write the formula for phosphorous acid.", answer: "H₃PO₃", explanation: "Phosphorous acid has the formula H₃PO₃.", topic: "Acid Formulas" },
   { prompt: "Write the formula for carbonic acid.", answer: "H₂CO₃", explanation: "Carbonic acid has the formula H₂CO₃.", topic: "Acid Formulas" },
   { prompt: "Write the formula for hydrosulfuric acid.", answer: "H₂S", explanation: "Hydrosulfuric acid has the formula H₂S.", topic: "Acid Formulas" },
 ];
