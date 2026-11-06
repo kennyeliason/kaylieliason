@@ -2607,7 +2607,7 @@ function OrbitalLab() {
         Then answer questions 3–7.
       </p>
       <div style={styles.orbitalLabGrid}>
-        <div>
+        <div style={styles.totalStatsDetails}>
           <h2 style={styles.orbitalHeading}>{element.name} · Lewis Dot</h2>
           <LewisDot element={element} />
           <p style={styles.orbitalHint}>
