@@ -1241,6 +1241,13 @@ function SnakeGame({ questions }: { questions: Question[] }) {
         <div style={styles.gameName}>SNAKE</div>
         <h2 style={styles.modalTitle}>Game Over!</h2>
         <p style={styles.modalText}>Score: {score} · Length: {body.length}</p>
+        {wrongAnswer && (
+          <div style={styles.missedAnswer}>
+            <strong>What you missed</strong>
+            <span>{question.question}</span>
+            <small>Correct answer: {question.answer}</small>
+          </div>
+        )}
         <button style={styles.closeButton} onClick={restart}>Play Again</button>
       </>
     );
@@ -2986,6 +2993,7 @@ function GameEndScreen({
   onBackHome,
   exploded = false,
   millionaireWon = false,
+  missedQuestion,
 }: {
   game: string;
   correct: number;
@@ -2994,6 +3002,7 @@ function GameEndScreen({
   onBackHome: () => void;
   exploded?: boolean;
   millionaireWon?: boolean;
+  missedQuestion?: Question | null;
 }) {
   if (game === "Millionaire") {
     return (
@@ -3018,6 +3027,13 @@ function GameEndScreen({
             ? "You answered all 15 questions correctly."
             : `${correct} correct out of ${attempts} questions.`}
         </p>
+        {!millionaireWon && missedQuestion && (
+          <div style={styles.missedAnswer}>
+            <strong>What you missed</strong>
+            <span>{missedQuestion.question}</span>
+            <small>Correct answer: {missedQuestion.answer}</small>
+          </div>
+        )}
         <div style={styles.endActions}>
           <button style={styles.closeButton} onClick={onPlayAgain}>Play Again</button>
           <button style={styles.resetStatsButton} onClick={onBackHome}>Back to Home</button>
@@ -3042,6 +3058,13 @@ function GameEndScreen({
           ? `${correct} correct out of ${attempts} questions`
           : "10 cards reviewed"}
       </p>
+      {missedQuestion && (
+        <div style={styles.missedAnswer}>
+          <strong>What you missed</strong>
+          <span>{missedQuestion.question}</span>
+          <small>Correct answer: {missedQuestion.answer}</small>
+        </div>
+      )}
       <div style={styles.endActions}>
         <button style={styles.closeButton} onClick={onPlayAgain}>
           Play Again
@@ -3350,6 +3373,7 @@ export default function ChemistryHub() {
   const [bombComplete, setBombComplete] = useState(false);
   const [bombExploded, setBombExploded] = useState(false);
   const [gameComplete, setGameComplete] = useState(false);
+  const [missedQuestion, setMissedQuestion] = useState<Question | null>(null);
   const [gameStats, setGameStats] = useState<Record<string, GameStat>>({});
   const [statsLoaded, setStatsLoaded] = useState(false);
   const [resetStatsOpen, setResetStatsOpen] = useState(false);
@@ -3399,6 +3423,7 @@ export default function ChemistryHub() {
     setBombComplete(false);
     setBombExploded(false);
     setGameComplete(false);
+    setMissedQuestion(null);
     setCorrectCount(0);
     setAttemptCount(0);
     if (game === "Match") setMatchRound((round) => round + 1);
@@ -3433,13 +3458,15 @@ export default function ChemistryHub() {
     if (!choice || checked) return;
     setChecked(true);
     setAttemptCount((count) => count + 1);
-    if (answersMatch(choice, currentQuestion.answer))
+    const isCorrect = answersMatch(choice, currentQuestion.answer);
+    if (isCorrect)
       setCorrectCount((count) => count + 1);
     recordResult(
       topicForQuestion(currentQuestion),
-      answersMatch(choice, currentQuestion.answer),
+      isCorrect,
     );
-    if (selectedGame === "Millionaire" && !answersMatch(choice, currentQuestion.answer))
+    if (!isCorrect) setMissedQuestion(currentQuestion);
+    if (selectedGame === "Millionaire" && !isCorrect)
       setGameComplete(true);
   };
   const bombQuestion = bombSet[questionIndex];
@@ -3453,7 +3480,10 @@ export default function ChemistryHub() {
       topicForQuestion(bombQuestion),
       isCorrect,
     );
-    if (!isCorrect) setBombExploded(true);
+    if (!isCorrect) {
+      setMissedQuestion(bombQuestion);
+      setBombExploded(true);
+    }
   };
   const nextBomb = (timedOut = false) => {
     if (timedOut) {
@@ -3590,6 +3620,7 @@ export default function ChemistryHub() {
                     attempts={attemptCount}
                     exploded={bombExploded}
                     millionaireWon={selectedGame === "Millionaire" && correctCount === millionaireLevels.length}
+                    missedQuestion={missedQuestion}
                     onPlayAgain={() => openGame(selectedGame!)}
                     onBackHome={() => setSelectedGame(null)}
                   />
@@ -4160,6 +4191,18 @@ const styles: Record<string, React.CSSProperties> = {
   },
   millionaireWinAmount: { color: "#d97706", fontSize: 64 },
   millionaireOutAmount: { color: "#dc2626", fontSize: 72 },
+  missedAnswer: {
+    margin: "0 auto 20px",
+    padding: 14,
+    borderRadius: 14,
+    border: "2px solid #fecaca",
+    background: "#fff1f2",
+    color: "#881337",
+    display: "grid",
+    gap: 6,
+    textAlign: "left",
+    lineHeight: 1.35,
+  },
   jeopardyBoard: {
     display: "grid",
     gridTemplateColumns: "repeat(5,minmax(120px,1fr))",
