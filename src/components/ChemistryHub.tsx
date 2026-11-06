@@ -976,7 +976,7 @@ function AnswerChoices({
   value: string | null;
   checked: boolean;
   onChange: (answer: string) => void;
-  onEnter?: () => void;
+  onEnter?: (answer: string) => void;
 }) {
   if (isTypedQuestion(question)) {
     const right = value ? answersMatch(value, question.answer) : false;
@@ -992,7 +992,7 @@ function AnswerChoices({
         onKeyDown={(event) => {
           if (event.key === "Enter" && !checked && value?.trim()) {
             event.preventDefault();
-            onEnter?.();
+            onEnter?.(value);
           }
         }}
         style={{
@@ -1197,6 +1197,21 @@ function SnakeGame({ questions }: { questions: Question[] }) {
     setWrongAnswer(false);
     setTypedAnswer("");
   };
+  const submitTypedAnswer = () => {
+    if (!typedAnswer.trim()) return;
+    if (answersMatch(typedAnswer, question.answer)) {
+      setScore((current) => current + 10);
+      setFood(newFood(body));
+      setQuestionIndex((current) => current + 1);
+      setTypedAnswer("");
+      setSnakeCountdown(2);
+      setQuestionOpen(false);
+    } else {
+      setWrongAnswer(true);
+      setRunning(false);
+      setGameOver(true);
+    }
+  };
 
   useEffect(() => {
     if (!running || questionOpen || (snakeCountdown !== null && snakeCountdown > 0)) return;
@@ -1280,22 +1295,15 @@ function SnakeGame({ questions }: { questions: Question[] }) {
                 placeholder="Type your answer"
                 value={typedAnswer}
                 onChange={(event) => setTypedAnswer(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    submitTypedAnswer();
+                  }
+                }}
                 style={styles.textAnswer}
               />
-              <button style={styles.closeButton} disabled={!typedAnswer.trim()} onClick={() => {
-                if (answersMatch(typedAnswer, question.answer)) {
-                  setScore((current) => current + 10);
-                  setFood(newFood(body));
-                  setQuestionIndex((current) => current + 1);
-                  setTypedAnswer("");
-                  setSnakeCountdown(2);
-                  setQuestionOpen(false);
-                } else {
-                  setWrongAnswer(true);
-                  setRunning(false);
-                  setGameOver(true);
-                }
-              }}>Check Answer</button>
+              <button style={styles.closeButton} disabled={!typedAnswer.trim()} onClick={submitTypedAnswer}>Check Answer</button>
             </> : question.choices.map((answer) => (
               <button key={answer} style={styles.choice} onClick={() => {
                 if (answer === question.answer) {
@@ -3461,11 +3469,14 @@ export default function ChemistryHub() {
         attempts: (current[game]?.attempts || 0) + 1,
       },
     }));
-  const checkAnswer = () => {
-    if (!choice || checked) return;
+  const checkAnswer = (submittedAnswer = choice) => {
+    if (!submittedAnswer || checked) return;
+    const answer = submittedAnswer.trim();
+    if (!answer) return;
+    if (answer !== choice) setChoice(answer);
     setChecked(true);
     setAttemptCount((count) => count + 1);
-    const isCorrect = answersMatch(choice, currentQuestion.answer);
+    const isCorrect = answersMatch(answer, currentQuestion.answer);
     if (isCorrect)
       setCorrectCount((count) => count + 1);
     recordResult(
@@ -3477,11 +3488,14 @@ export default function ChemistryHub() {
       setGameComplete(true);
   };
   const bombQuestion = bombSet[questionIndex];
-  const checkBombAnswer = () => {
-    if (!choice || checked || !bombQuestion) return;
+  const checkBombAnswer = (submittedAnswer = choice) => {
+    if (!submittedAnswer || checked || !bombQuestion) return;
+    const answer = submittedAnswer.trim();
+    if (!answer) return;
+    if (answer !== choice) setChoice(answer);
     setChecked(true);
     setAttemptCount((count) => count + 1);
-    const isCorrect = answersMatch(choice, bombQuestion.answer);
+    const isCorrect = answersMatch(answer, bombQuestion.answer);
     if (isCorrect) setCorrectCount((count) => count + 1);
     recordResult(
       topicForQuestion(bombQuestion),
