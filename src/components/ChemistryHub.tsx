@@ -9,6 +9,37 @@ type Question = {
 };
 type GameStat = { correct: number; attempts: number };
 
+type SavedChemistryGame = {
+  selectedUnit?: string;
+  selectedGame?: string | null;
+  questionIndex?: number;
+  showAnswer?: boolean;
+  choice?: string | null;
+  checked?: boolean;
+  correctCount?: number;
+  attemptCount?: number;
+  jeopardyQuestion?: number | null;
+  jeopardyUsed?: number[];
+  bombSet?: Question[];
+  gameQuestionSet?: Question[];
+  matchRound?: number;
+  jeopardySet?: Question[];
+  bombComplete?: boolean;
+  bombExploded?: boolean;
+  gameComplete?: boolean;
+  missedQuestion?: Question | null;
+};
+
+const chemistryGameStorageKey = "chemistry-current-game";
+const loadSavedChemistryGame = (): SavedChemistryGame => {
+  if (typeof window === "undefined") return {};
+  try {
+    return JSON.parse(window.sessionStorage.getItem(chemistryGameStorageKey) || "{}") as SavedChemistryGame;
+  } catch {
+    return {};
+  }
+};
+
 const unit5Questions: Question[] = [
   {
     question: "What do all electromagnetic waves have in common?",
@@ -3373,24 +3404,27 @@ function DensityLab() {
 }
 
 export default function ChemistryHub() {
-  const [selectedUnit, setSelectedUnit] = useState("Unit 1");
-  const [selectedGame, setSelectedGame] = useState<string | null>(null);
-  const [questionIndex, setQuestionIndex] = useState(0);
-  const [showAnswer, setShowAnswer] = useState(false);
-  const [choice, setChoice] = useState<string | null>(null);
-  const [checked, setChecked] = useState(false);
-  const [correctCount, setCorrectCount] = useState(0);
-  const [attemptCount, setAttemptCount] = useState(0);
-  const [jeopardyQuestion, setJeopardyQuestion] = useState<number | null>(null);
-  const [jeopardyUsed, setJeopardyUsed] = useState<number[]>([]);
-  const [bombSet, setBombSet] = useState<Question[]>([]);
-  const [gameQuestionSet, setGameQuestionSet] = useState<Question[]>([]);
-  const [matchRound, setMatchRound] = useState(0);
-  const [jeopardySet, setJeopardySet] = useState<Question[]>([]);
-  const [bombComplete, setBombComplete] = useState(false);
-  const [bombExploded, setBombExploded] = useState(false);
-  const [gameComplete, setGameComplete] = useState(false);
-  const [missedQuestion, setMissedQuestion] = useState<Question | null>(null);
+  const savedGame = useRef<SavedChemistryGame | null>(null);
+  if (savedGame.current === null) savedGame.current = loadSavedChemistryGame();
+  const restoredGame = savedGame.current;
+  const [selectedUnit, setSelectedUnit] = useState(restoredGame.selectedUnit || "Unit 1");
+  const [selectedGame, setSelectedGame] = useState<string | null>(restoredGame.selectedGame || null);
+  const [questionIndex, setQuestionIndex] = useState(restoredGame.questionIndex || 0);
+  const [showAnswer, setShowAnswer] = useState(restoredGame.showAnswer || false);
+  const [choice, setChoice] = useState<string | null>(restoredGame.choice || null);
+  const [checked, setChecked] = useState(restoredGame.checked || false);
+  const [correctCount, setCorrectCount] = useState(restoredGame.correctCount || 0);
+  const [attemptCount, setAttemptCount] = useState(restoredGame.attemptCount || 0);
+  const [jeopardyQuestion, setJeopardyQuestion] = useState<number | null>(restoredGame.jeopardyQuestion ?? null);
+  const [jeopardyUsed, setJeopardyUsed] = useState<number[]>(restoredGame.jeopardyUsed || []);
+  const [bombSet, setBombSet] = useState<Question[]>(restoredGame.bombSet || []);
+  const [gameQuestionSet, setGameQuestionSet] = useState<Question[]>(restoredGame.gameQuestionSet || []);
+  const [matchRound, setMatchRound] = useState(restoredGame.matchRound || 0);
+  const [jeopardySet, setJeopardySet] = useState<Question[]>(restoredGame.jeopardySet || []);
+  const [bombComplete, setBombComplete] = useState(restoredGame.bombComplete || false);
+  const [bombExploded, setBombExploded] = useState(restoredGame.bombExploded || false);
+  const [gameComplete, setGameComplete] = useState(restoredGame.gameComplete || false);
+  const [missedQuestion, setMissedQuestion] = useState<Question | null>(restoredGame.missedQuestion || null);
   const [gameStats, setGameStats] = useState<Record<string, GameStat>>({});
   const [statsLoaded, setStatsLoaded] = useState(false);
   const [resetStatsOpen, setResetStatsOpen] = useState(false);
@@ -3543,6 +3577,31 @@ export default function ChemistryHub() {
         JSON.stringify(gameStats),
       );
   }, [gameStats, statsLoaded]);
+  useEffect(() => {
+    window.sessionStorage.setItem(
+      chemistryGameStorageKey,
+      JSON.stringify({
+        selectedUnit,
+        selectedGame,
+        questionIndex,
+        showAnswer,
+        choice,
+        checked,
+        correctCount,
+        attemptCount,
+        jeopardyQuestion,
+        jeopardyUsed,
+        bombSet,
+        gameQuestionSet,
+        matchRound,
+        jeopardySet,
+        bombComplete,
+        bombExploded,
+        gameComplete,
+        missedQuestion,
+      } satisfies SavedChemistryGame),
+    );
+  }, [selectedUnit, selectedGame, questionIndex, showAnswer, choice, checked, correctCount, attemptCount, jeopardyQuestion, jeopardyUsed, bombSet, gameQuestionSet, matchRound, jeopardySet, bombComplete, bombExploded, gameComplete, missedQuestion]);
 
   return (
     <main style={styles.page}>
