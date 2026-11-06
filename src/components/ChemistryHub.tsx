@@ -1163,6 +1163,7 @@ function SnakeGame({ questions }: { questions: Question[] }) {
   const [gameOver, setGameOver] = useState(false);
   const [score, setScore] = useState(0);
   const [questionOpen, setQuestionOpen] = useState(false);
+  const [correctAnswerPause, setCorrectAnswerPause] = useState(false);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [wrongAnswer, setWrongAnswer] = useState(false);
   const [typedAnswer, setTypedAnswer] = useState("");
@@ -1191,13 +1192,14 @@ function SnakeGame({ questions }: { questions: Question[] }) {
     setGameOver(false);
     setScore(0);
     setQuestionOpen(false);
+    setCorrectAnswerPause(false);
     setQuestionIndex(0);
     setWrongAnswer(false);
     setTypedAnswer("");
   };
 
   useEffect(() => {
-    if (!running || questionOpen) return;
+    if (!running || questionOpen || correctAnswerPause) return;
     const timer = window.setTimeout(() => {
       setBody((current) => {
         const head = current[0];
@@ -1219,7 +1221,13 @@ function SnakeGame({ questions }: { questions: Question[] }) {
       });
     }, 150);
     return () => window.clearTimeout(timer);
-  }, [running, body, questionOpen, food]);
+  }, [running, body, questionOpen, correctAnswerPause, food]);
+
+  useEffect(() => {
+    if (!correctAnswerPause) return;
+    const timer = window.setTimeout(() => setCorrectAnswerPause(false), 2000);
+    return () => window.clearTimeout(timer);
+  }, [correctAnswerPause]);
 
   useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {
@@ -1227,13 +1235,13 @@ function SnakeGame({ questions }: { questions: Question[] }) {
         ArrowUp: "up", w: "up", ArrowDown: "down", s: "down", ArrowLeft: "left", a: "left", ArrowRight: "right", d: "right",
       };
       const next = controls[event.key];
-      if (!next || questionOpen || gameOver) return;
+      if (!next || questionOpen || correctAnswerPause || gameOver) return;
       event.preventDefault();
       changeDirection(next);
     };
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
-  }, [questionOpen, gameOver]);
+  }, [questionOpen, correctAnswerPause, gameOver]);
 
   if (gameOver) {
     return (
@@ -1277,6 +1285,7 @@ function SnakeGame({ questions }: { questions: Question[] }) {
                   setFood(newFood(body));
                   setQuestionIndex((current) => current + 1);
                   setTypedAnswer("");
+                  setCorrectAnswerPause(true);
                   setQuestionOpen(false);
                 } else {
                   setWrongAnswer(true);
@@ -1290,6 +1299,7 @@ function SnakeGame({ questions }: { questions: Question[] }) {
                   setScore((current) => current + 10);
                   setFood(newFood(body));
                   setQuestionIndex((current) => current + 1);
+                  setCorrectAnswerPause(true);
                   setQuestionOpen(false);
                 } else {
                   setWrongAnswer(true);
@@ -1319,6 +1329,7 @@ function SnakeGame({ questions }: { questions: Question[] }) {
             <span /> <button onClick={() => changeDirection("down")}>↓</button> <span />
           </div>
           <p style={styles.snakeHint}>Use the arrow keys or buttons. Eat the red dot, then answer a question to grow.</p>
+          {correctAnswerPause && <p style={styles.snakeHint}>Correct! The snake will keep moving in a moment.</p>}
         </>
       )}
     </>
