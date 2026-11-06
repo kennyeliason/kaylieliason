@@ -3114,8 +3114,6 @@ function useDraggablePanel() {
 }
 
 function EquationCheatSheet({
-  open,
-  onToggle,
   title = "Equation Cheat Sheet",
   buttonLabel = "Equation Cheat Sheet",
   headers = ["Given", "Find", "Equation"],
@@ -3131,8 +3129,6 @@ function EquationCheatSheet({
     ["Energy", "Wavelength", "λ = hc / E"],
   ],
 }: {
-  open: boolean;
-  onToggle: () => void;
   title?: string;
   buttonLabel?: string;
   headers?: [string, string, string];
@@ -3141,6 +3137,8 @@ function EquationCheatSheet({
   hideExamples?: boolean;
   rows?: string[][];
 }) {
+  const [open, setOpen] = useState(false);
+  const onToggle = () => setOpen((current) => !current);
   const { panelStyle, dragProps } = useDraggablePanel();
   return (
     <div style={styles.cheatDock}>
@@ -3177,13 +3175,9 @@ function EquationCheatSheet({
   );
 }
 
-function ChemistryCalculator({
-  open,
-  onToggle,
-}: {
-  open: boolean;
-  onToggle: () => void;
-}) {
+function ChemistryCalculator() {
+  const [open, setOpen] = useState(false);
+  const onToggle = () => setOpen((current) => !current);
   const { panelStyle, dragProps } = useDraggablePanel();
   const [expression, setExpression] = useState("");
   const [result, setResult] = useState("");
@@ -3277,7 +3271,9 @@ const elementList = [
 ] as const;
 const elementInfo = new Map(elementList.map(([symbol, name], index) => [symbol, { name, number: index + 1 }]));
 
-function PeriodicTable({ open, onToggle }: { open: boolean; onToggle: () => void }) {
+function PeriodicTable() {
+  const [open, setOpen] = useState(false);
+  const onToggle = () => setOpen((current) => !current);
   const { panelStyle, dragProps } = useDraggablePanel();
   const [activeElement, setActiveElement] = useState("H");
   const activeInfo = elementInfo.get(activeElement) || { name: activeElement, number: 0 };
@@ -3389,9 +3385,6 @@ export default function ChemistryHub() {
   const [statsLoaded, setStatsLoaded] = useState(false);
   const [resetStatsOpen, setResetStatsOpen] = useState(false);
   const [resetCode, setResetCode] = useState("");
-  const [cheatSheetOpen, setCheatSheetOpen] = useState(false);
-  const [calculatorOpen, setCalculatorOpen] = useState(false);
-  const [periodicTableOpen, setPeriodicTableOpen] = useState(false);
   const questions =
     selectedUnit === "Unit 2"
       ? unit2Questions
@@ -3547,7 +3540,7 @@ export default function ChemistryHub() {
             {["Unit 1", "Unit 2", "Unit 3", "Unit 4", "Unit 5", "Unit 6"].map((unit) => (
               <button
                 key={unit}
-                onClick={() => { setSelectedUnit(unit); setCheatSheetOpen(false); setCalculatorOpen(false); }}
+                onClick={() => setSelectedUnit(unit)}
                 style={{
                   ...styles.unitButton,
                   ...(selectedUnit === unit ? styles.activeUnit : {}),
@@ -3918,15 +3911,10 @@ export default function ChemistryHub() {
         </section>
       )}
       {selectedUnit === "Unit 5" && (
-        <EquationCheatSheet
-          open={cheatSheetOpen}
-          onToggle={() => setCheatSheetOpen((open) => !open)}
-        />
+        <EquationCheatSheet />
       )}
       {selectedUnit === "Unit 2" && (
         <EquationCheatSheet
-          open={cheatSheetOpen}
-          onToggle={() => setCheatSheetOpen((open) => !open)}
           title="Density Cheat Sheet"
           buttonLabel="Density Cheat Sheet"
           rows={[
@@ -3940,8 +3928,6 @@ export default function ChemistryHub() {
       )}
       {selectedUnit === "Unit 6" && (
         <EquationCheatSheet
-          open={cheatSheetOpen}
-          onToggle={() => setCheatSheetOpen((open) => !open)}
           title="Naming Cheat Sheet"
           buttonLabel="Naming Cheat Sheet"
           headers={["Number / Rule", "Prefix / Meaning", "Example"]}
@@ -3968,14 +3954,8 @@ export default function ChemistryHub() {
           ]}
         />
       )}
-      <ChemistryCalculator
-        open={calculatorOpen}
-        onToggle={() => setCalculatorOpen((open) => !open)}
-      />
-      <PeriodicTable
-        open={periodicTableOpen}
-        onToggle={() => setPeriodicTableOpen((open) => !open)}
-      />
+      <ChemistryCalculator />
+      <PeriodicTable />
     </main>
   );
 }
