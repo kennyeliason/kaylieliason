@@ -2985,6 +2985,7 @@ function GameEndScreen({
   onPlayAgain,
   onBackHome,
   exploded = false,
+  millionaireWon = false,
 }: {
   game: string;
   correct: number;
@@ -2992,7 +2993,38 @@ function GameEndScreen({
   onPlayAgain: () => void;
   onBackHome: () => void;
   exploded?: boolean;
+  millionaireWon?: boolean;
 }) {
+  if (game === "Millionaire") {
+    return (
+      <>
+        {millionaireWon && (
+          <div style={styles.confetti} aria-hidden="true">
+            {Array.from({ length: 26 }, (_, index) => (
+              <span key={index} style={{ position: "absolute", top: 0, left: `${(index * 37) % 100}%`, animation: "chem-confetti-fall 2.3s ease-in infinite", animationDelay: `${(index % 7) * 0.12}s` }}>
+                {index % 3 === 0 ? "🎉" : index % 3 === 1 ? "✨" : "⭐"}
+              </span>
+            ))}
+          </div>
+        )}
+        <h2 style={{ ...styles.modalTitle, ...(millionaireWon ? styles.millionaireWinTitle : styles.millionaireOutTitle) }}>
+          {millionaireWon ? "YOU WON A MILLION!" : "YOU’RE OUT!"}
+        </h2>
+        <div style={{ ...styles.statsNumber, ...(millionaireWon ? styles.millionaireWinAmount : styles.millionaireOutAmount) }}>
+          {millionaireWon ? "$1,000,000" : "💥"}
+        </div>
+        <p style={styles.modalText}>
+          {millionaireWon
+            ? "You answered all 15 questions correctly."
+            : `${correct} correct out of ${attempts} questions.`}
+        </p>
+        <div style={styles.endActions}>
+          <button style={styles.closeButton} onClick={onPlayAgain}>Play Again</button>
+          <button style={styles.resetStatsButton} onClick={onBackHome}>Back to Home</button>
+        </div>
+      </>
+    );
+  }
   return (
     <>
       <h2 style={styles.modalTitle}>
@@ -3462,7 +3494,7 @@ export default function ChemistryHub() {
 
   return (
     <main style={styles.page}>
-      <style>{`*{box-sizing:border-box}.chem-game-card:hover{transform:translateY(-5px);box-shadow:0 18px 34px rgba(13,148,136,.25)!important}.chem-game-card:focus-visible{outline:4px solid #99f6e4;outline-offset:3px}`}</style>
+      <style>{`*{box-sizing:border-box}@keyframes chem-confetti-fall{0%{transform:translateY(-42px) rotate(0deg);opacity:0}12%{opacity:1}100%{transform:translateY(370px) rotate(540deg);opacity:0}}.chem-game-card:hover{transform:translateY(-5px);box-shadow:0 18px 34px rgba(13,148,136,.25)!important}.chem-game-card:focus-visible{outline:4px solid #99f6e4;outline-offset:3px}`}</style>
       {!selectedGame ? (
         <section style={styles.shell}>
           <header style={styles.header}>
@@ -3555,6 +3587,7 @@ export default function ChemistryHub() {
                     correct={correctCount}
                     attempts={attemptCount}
                     exploded={bombExploded}
+                    millionaireWon={selectedGame === "Millionaire" && correctCount === millionaireLevels.length}
                     onPlayAgain={() => openGame(selectedGame!)}
                     onBackHome={() => setSelectedGame(null)}
                   />
@@ -4112,6 +4145,18 @@ const styles: Record<string, React.CSSProperties> = {
     color: "#0f766e",
     lineHeight: 1,
   },
+  millionaireWinTitle: {
+    color: "#a16207",
+    fontFamily: "Londrina Solid,Impact,sans-serif",
+    fontSize: 42,
+  },
+  millionaireOutTitle: {
+    color: "#b91c1c",
+    fontFamily: "Londrina Solid,Impact,sans-serif",
+    fontSize: 42,
+  },
+  millionaireWinAmount: { color: "#d97706", fontSize: 64 },
+  millionaireOutAmount: { color: "#dc2626", fontSize: 72 },
   jeopardyBoard: {
     display: "grid",
     gridTemplateColumns: "repeat(5,minmax(120px,1fr))",
@@ -4707,6 +4752,14 @@ const styles: Record<string, React.CSSProperties> = {
     background: "#fff",
     textAlign: "center",
     boxShadow: "0 24px 64px rgba(4,47,46,.32)",
+    position: "relative",
+    overflow: "hidden",
+  },
+  confetti: {
+    position: "absolute",
+    inset: 0,
+    pointerEvents: "none",
+    overflow: "hidden",
   },
   endActions: {
     display: "flex",
