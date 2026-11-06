@@ -2773,11 +2773,14 @@ function StatsScreen({
   onCancelReset: () => void;
   onReset: () => void;
 }) {
-  const total = Object.values(stats).reduce(
-    (sum, stat) => ({
-      correct: sum.correct + stat.correct,
-      attempts: sum.attempts + stat.attempts,
-    }),
+  const total = topics.reduce(
+    (sum, topic) => {
+      const stat = stats[topic] || { correct: 0, attempts: 0 };
+      return {
+        correct: sum.correct + stat.correct,
+        attempts: sum.attempts + stat.attempts,
+      };
+    },
     { correct: 0, attempts: 0 },
   );
   const totalPercent = total.attempts
@@ -2789,8 +2792,8 @@ function StatsScreen({
       <p style={styles.modalText}>Your score for each topic in this unit.</p>
       <div style={styles.totalStatsCard}>
         <div>
-          <strong>All Units Total</strong>
-          <small>Every Chemistry question you have answered</small>
+          <strong>{unit} Total</strong>
+          <small>Every question you have answered in this unit</small>
         </div>
         <div style={styles.totalStatsScore}>
           <strong>{total.attempts ? `${totalPercent}%` : "—"}</strong>
