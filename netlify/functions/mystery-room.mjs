@@ -26,7 +26,13 @@ function advanceTurn(room) {
     steps += 1;
   } while (room.eliminated.includes(room.players[room.turnIndex].token) && steps < room.players.length);
   if (steps >= room.players.length && room.eliminated.includes(room.players[room.turnIndex].token)) room.phase = 'case-closed';
-  room.rolledToken = null; room.lastRoll = null;
+  room.rolledToken = null; room.pendingMoves = []; room.lastRoll = null;
+}
+
+function moveChoices(room, token, die) {
+  const from = room.positions[token] || 0;
+  const total = boardSpaces.length;
+  return [...new Set([(from + die) % total, (from - die + total) % total])];
 }
 
 function startGame(room) {
@@ -42,7 +48,7 @@ function startGame(room) {
   ]);
   room.hands = Object.fromEntries(room.players.map((player) => [player.token, []]));
   deck.forEach((entry, index) => room.hands[room.players[index % room.players.length].token].push(entry));
-  room.phase = 'turn'; room.turnIndex = 0; room.eliminated = []; room.positions = Object.fromEntries(room.players.map((player) => [player.token, 0])); room.rolledToken = null; room.lastRoll = null; room.log = ['The case has begun. Keep your cards secret.'];
+  room.phase = 'turn'; room.turnIndex = 0; room.eliminated = []; room.positions = Object.fromEntries(room.players.map((player) => [player.token, 0])); room.rolledToken = null; room.pendingMoves = []; room.lastRoll = null; room.log = ['The case has begun. Keep your cards secret.'];
   delete room.suggestion; delete room.refuterToken; delete room.shownCard; delete room.winnerToken;
 }
 
@@ -67,6 +73,7 @@ function view(room, token) {
     winner: room.players.find((entry) => entry.token === room.winnerToken)?.name || null, solution: room.phase === 'case-closed' ? room.solution : null,
     log: room.log?.slice(-5) || [], characters, rooms, items, boardSpaces,
     positions: room.players.map((entry) => ({ name: entry.name, character: entry.character, position: room.positions?.[entry.token] || 0 })), lastRoll: room.lastRoll || null, hasRolled: room.rolledToken === token,
+    moveChoices: room.rolledToken === token ? room.pendingMoves || [] : [],
   };
   return result;
 }
@@ -82,7 +89,7 @@ export default async (request) => {
       return reply(200, { room: view(room, token) });
     }
     if (request.method !== 'POST') return reply(405, { error: 'Use GET or POST.' });
-    const { action, roomCode: rawCode, token, name, character, suggestion, shownCard, accusation } = await request.json();
+    const { action, roomCode: rawCode, token, name, character, suggestion, shownCard, accusation, destination } = await request.json();
     const playerName = cleanName(name);
     if (action === 'create') {
       if (!playerName || !token) return reply(400, { error: 'Add your name first.' });
@@ -111,7 +118,11 @@ export default async (request) => {
       startGame(room);
     } else if (action === 'roll') {
       if (room.phase !== 'turn' || room.players[room.turnIndex]?.token !== token || room.rolledToken || room.eliminated.includes(token)) return reply(403, { error: 'Wait for your turn to roll.' });
-      const die = Math.floor(Math.random() * 6) + 1; room.positions[token] = ((room.positions[token] || 0) + die) % boardSpaces.length; room.rolledToken = token; room.lastRoll = { name: me.name, die }; room.log.push(`${me.name} rolled a ${die} and moved to the ${boardSpaces[room.positions[token]]}.`);
+      const die = Math.floor(Math.random() * 6) + 1; room.rolledToken = token; room.pendingMoves = moveChoices(room, token, die); room.lastRoll = { name: me.name, die }; room.log.push(`${me.name} rolled a ${die} and is choosing a path.`);
+    } else if (action === 'move') {
+      const destinationNumber = Number(destination);
+      if (room.phase !== 'turn' || room.players[room.turnIndex]?.token !== token || room.rolledToken !== token || !room.pendingMoves?.includes(destinationNumber)) return reply(403, { error: 'Roll first, then choose one highlighted place.' });
+      room.positions[token] = destinationNumber; room.pendingMoves = []; room.log.push(`${me.name} moved to the ${boardSpaces[destinationNumber]}.`);
     } else if (action === 'suggest') {
       if (room.phase !== 'turn' || room.players[room.turnIndex]?.token !== token || room.eliminated.includes(token) || room.rolledToken !== token) return reply(403, { error: 'Roll the dice before making a suggestion.' });
       if (!suggestion || !characters.some((entry) => entry.name === suggestion.character) || !rooms.includes(suggestion.room) || !items.includes(suggestion.item)) return reply(400, { error: 'Choose a character, room, and item.' });
@@ -130,7 +141,7 @@ export default async (request) => {
       else { room.eliminated.push(token); room.log.push(`${me.name} made a wrong accusation and is out of the case.`); advanceTurn(room); }
     } else if (action === 'new-game') {
       if (room.hostToken !== token) return reply(403, { error: 'Only the host can start a new case.' });
-      room.phase = 'lobby'; room.eliminated = []; room.log = []; delete room.solution; delete room.winnerToken; delete room.suggestion; delete room.refuterToken; delete room.shownCard; delete room.positions; delete room.rolledToken; delete room.lastRoll;
+      room.phase = 'lobby'; room.eliminated = []; room.log = []; delete room.solution; delete room.winnerToken; delete room.suggestion; delete room.refuterToken; delete room.shownCard; delete room.positions; delete room.rolledToken; delete room.pendingMoves; delete room.lastRoll;
     } else return reply(400, { error: 'Unknown room action.' });
     room.updatedAt = Date.now(); await store.setJSON(`room:${roomCode}`, room); return reply(200, { room: view(room, token) });
   } catch { return reply(500, { error: 'The mansion lights flickered. Try again.' }); }
