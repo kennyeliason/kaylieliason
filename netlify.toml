@@ -18,6 +18,11 @@
   status = 200
 
 [[redirects]]
-  from = "/api/bluff-room"
-  to = "/.netlify/functions/bluff-room"
-  status = 200
+from = "/api/bluff-room"
+to = "/.netlify/functions/bluff-room"
+status = 200
+
+[[redirects]]
+from = "/api/mystery-room"
+to = "/.netlify/functions/mystery-room"
+status = 200
