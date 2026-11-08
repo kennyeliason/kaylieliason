@@ -12,6 +12,7 @@ const characters = [
 ];
 const rooms = ['Ballroom', 'Library', 'Conservatory', 'Dining Room', 'Observatory', 'Gallery', 'Kitchen', 'Lounge', 'Study'];
 const items = ['Brass Key', 'Silk Rope', 'Crystal Candle', 'Silver Spoon', 'Garden Shears', 'Pocket Watch'];
+const boardSpaces = ['Foyer', 'Ballroom', 'Library', 'Courtyard', 'Conservatory', 'Dining Room', 'Observatory', 'Gallery', 'Kitchen', 'Lounge', 'Study', 'Secret Passage'];
 const cleanName = (value) => String(value ?? '').replace(/[^\p{L}\p{N} ._-]/gu, '').trim().slice(0, 18);
 const makeCode = () => Array.from({ length: 4 }, () => 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[Math.floor(Math.random() * 32)]).join('');
 const reply = (status, body) => Response.json(body, { status, headers: { 'Cache-Control': 'no-store' } });
@@ -25,6 +26,7 @@ function advanceTurn(room) {
     steps += 1;
   } while (room.eliminated.includes(room.players[room.turnIndex].token) && steps < room.players.length);
   if (steps >= room.players.length && room.eliminated.includes(room.players[room.turnIndex].token)) room.phase = 'case-closed';
+  room.rolledToken = null; room.lastRoll = null;
 }
 
 function startGame(room) {
@@ -40,7 +42,7 @@ function startGame(room) {
   ]);
   room.hands = Object.fromEntries(room.players.map((player) => [player.token, []]));
   deck.forEach((entry, index) => room.hands[room.players[index % room.players.length].token].push(entry));
-  room.phase = 'turn'; room.turnIndex = 0; room.eliminated = []; room.log = ['The case has begun. Keep your cards secret.'];
+  room.phase = 'turn'; room.turnIndex = 0; room.eliminated = []; room.positions = Object.fromEntries(room.players.map((player) => [player.token, 0])); room.rolledToken = null; room.lastRoll = null; room.log = ['The case has begun. Keep your cards secret.'];
   delete room.suggestion; delete room.refuterToken; delete room.shownCard; delete room.winnerToken;
 }
 
@@ -63,7 +65,8 @@ function view(room, token) {
     hand: mine, currentPlayer: room.players[room.turnIndex]?.name, isMyTurn: room.players[room.turnIndex]?.token === token,
     suggestion: room.suggestion, isRefuter: room.refuterToken === token, revealedCard: room.shownCard?.to === token ? room.shownCard.card : null,
     winner: room.players.find((entry) => entry.token === room.winnerToken)?.name || null, solution: room.phase === 'case-closed' ? room.solution : null,
-    log: room.log?.slice(-5) || [], characters, rooms, items,
+    log: room.log?.slice(-5) || [], characters, rooms, items, boardSpaces,
+    positions: room.players.map((entry) => ({ name: entry.name, character: entry.character, position: room.positions?.[entry.token] || 0 })), lastRoll: room.lastRoll || null, hasRolled: room.rolledToken === token,
   };
   return result;
 }
@@ -106,8 +109,11 @@ export default async (request) => {
     } else if (action === 'start') {
       if (room.hostToken !== token || room.players.length < 2) return reply(403, { error: 'You need at least two detectives.' });
       startGame(room);
+    } else if (action === 'roll') {
+      if (room.phase !== 'turn' || room.players[room.turnIndex]?.token !== token || room.rolledToken || room.eliminated.includes(token)) return reply(403, { error: 'Wait for your turn to roll.' });
+      const die = Math.floor(Math.random() * 6) + 1; room.positions[token] = ((room.positions[token] || 0) + die) % boardSpaces.length; room.rolledToken = token; room.lastRoll = { name: me.name, die }; room.log.push(`${me.name} rolled a ${die} and moved to the ${boardSpaces[room.positions[token]]}.`);
     } else if (action === 'suggest') {
-      if (room.phase !== 'turn' || room.players[room.turnIndex]?.token !== token || room.eliminated.includes(token)) return reply(403, { error: 'Wait for your turn.' });
+      if (room.phase !== 'turn' || room.players[room.turnIndex]?.token !== token || room.eliminated.includes(token) || room.rolledToken !== token) return reply(403, { error: 'Roll the dice before making a suggestion.' });
       if (!suggestion || !characters.some((entry) => entry.name === suggestion.character) || !rooms.includes(suggestion.room) || !items.includes(suggestion.item)) return reply(400, { error: 'Choose a character, room, and item.' });
       room.suggestion = suggestion; room.refuterToken = findRefuter(room, suggestion); room.shownCard = null;
       room.log.push(`${me.name} suggested ${suggestion.character} in the ${suggestion.room} with the ${suggestion.item}.`);
@@ -124,7 +130,7 @@ export default async (request) => {
       else { room.eliminated.push(token); room.log.push(`${me.name} made a wrong accusation and is out of the case.`); advanceTurn(room); }
     } else if (action === 'new-game') {
       if (room.hostToken !== token) return reply(403, { error: 'Only the host can start a new case.' });
-      room.phase = 'lobby'; room.eliminated = []; room.log = []; delete room.solution; delete room.winnerToken; delete room.suggestion; delete room.refuterToken; delete room.shownCard;
+      room.phase = 'lobby'; room.eliminated = []; room.log = []; delete room.solution; delete room.winnerToken; delete room.suggestion; delete room.refuterToken; delete room.shownCard; delete room.positions; delete room.rolledToken; delete room.lastRoll;
     } else return reply(400, { error: 'Unknown room action.' });
     room.updatedAt = Date.now(); await store.setJSON(`room:${roomCode}`, room); return reply(200, { room: view(room, token) });
   } catch { return reply(500, { error: 'The mansion lights flickered. Try again.' }); }
