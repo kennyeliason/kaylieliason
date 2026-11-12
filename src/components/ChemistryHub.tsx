@@ -30,7 +30,8 @@ type SavedChemistryGame = {
   missedQuestion?: Question | null;
 };
 
-const chemistryGameStorageKey = "chemistry-current-game";
+// Bump this when question content changes so an old saved round cannot keep showing removed wording.
+const chemistryGameStorageKey = "chemistry-current-game-v2";
 const loadSavedChemistryGame = (): SavedChemistryGame => {
   if (typeof window === "undefined") return {};
   try {
