@@ -779,11 +779,6 @@ const unit6Items: StudyItem[] = [
   { prompt: "Write the formula for oxygen difluoride.", answer: "OF₂", explanation: "Di- means 2 fluorines.", topic: "Molecular Formulas" },
   { prompt: "Write the formula for phosphorus pentachloride.", answer: "PCl₅", explanation: "Penta- means 5 chlorines.", topic: "Molecular Formulas" },
   { prompt: "Write the formula for nitrogen monoxide.", answer: "NO", explanation: "Mono- means 1 oxygen.", topic: "Molecular Formulas" },
-  { prompt: "Write the formula for dinitrogen tetroxide.", answer: "N₂O₄", explanation: "Di- means 2 nitrogens; tetra- means 4 oxygens.", topic: "Molecular Formulas" },
-  { prompt: "Write the formula for diphosphorus pentoxide.", answer: "P₂O₅", explanation: "Di- means 2 phosphorus atoms; penta- means 5 oxygens.", topic: "Molecular Formulas" },
-  { prompt: "Write the formula for disulfur difluoride.", answer: "S₂F₂", explanation: "Di- means 2 of each element.", topic: "Molecular Formulas" },
-  { prompt: "Write the formula for tetraphosphorus trisulfide.", answer: "P₄S₃", explanation: "Tetra- means 4 phosphorus atoms; tri- means 3 sulfurs.", topic: "Molecular Formulas" },
-  { prompt: "Write the formula for dinitrogen tetrachloride.", answer: "N₂Cl₄", explanation: "Di- means 2 nitrogens; tetra- means 4 chlorines.", topic: "Molecular Formulas" },
   { prompt: "Name the covalent compound CO₂.", answer: "carbon dioxide", explanation: "One carbon does not use mono-. Two oxygens is dioxide.", topic: "Molecular Names" },
   { prompt: "Name the covalent compound SO₃.", answer: "sulfur trioxide", explanation: "Three oxygens is trioxide.", topic: "Molecular Names" },
   { prompt: "Name the covalent compound N₂O₃.", answer: "dinitrogen trioxide", explanation: "Di- is 2 nitrogen atoms; tri- is 3 oxygens.", topic: "Molecular Names" },
@@ -794,11 +789,16 @@ const unit6Items: StudyItem[] = [
   { prompt: "Name the covalent compound P₂O₅.", answer: "diphosphorus pentoxide", explanation: "Di- is 2 phosphorus atoms; penta- plus oxide becomes pentoxide.", topic: "Molecular Names" },
   { prompt: "Name the covalent compound CCl₄.", answer: "carbon tetrachloride", explanation: "Four chlorines is tetrachloride.", topic: "Molecular Names" },
   { prompt: "Name the covalent compound SiO₂.", answer: "silicon dioxide", explanation: "Two oxygens is dioxide.", topic: "Molecular Names" },
-  { prompt: "Name the covalent compound CS₂.", answer: "carbon disulfide", explanation: "Two sulfurs is disulfide.", topic: "Molecular Names" },
-  { prompt: "Name the covalent compound PBr₃.", answer: "phosphorus tribromide", explanation: "Three bromines is tribromide.", topic: "Molecular Names" },
-  { prompt: "Name the covalent compound P₄O₁₀.", answer: "tetraphosphorus decoxide", explanation: "Tetra- is 4 phosphorus atoms; deca- plus oxide becomes decoxide.", topic: "Molecular Names" },
-  { prompt: "Name the covalent compound As₂O₃.", answer: "diarsenic trioxide", explanation: "Di- is 2 arsenic atoms; tri- is 3 oxygens.", topic: "Molecular Names" },
-  { prompt: "Name the covalent compound Cl₂O₇.", answer: "dichlorine heptoxide", explanation: "Di- is 2 chlorines; hepta- plus oxide becomes heptoxide.", topic: "Molecular Names" },
+  { prompt: "Write the formula for magnesium sulfide.", answer: "MgS", explanation: "Mg²⁺ and S²⁻ balance in a 1:1 ratio.", topic: "Ionic Formulas" },
+  { prompt: "Write the formula for silver oxide.", answer: "Ag₂O", explanation: "Two Ag⁺ ions balance one O²⁻ ion.", topic: "Ionic Formulas" },
+  { prompt: "Write the formula for lead(IV) sulfide.", answer: "PbS₂", explanation: "Pb⁴⁺ needs two S²⁻ ions.", topic: "Ionic Formulas" },
+  { prompt: "Write the formula for ammonium sulfate.", answer: "(NH₄)₂SO₄", explanation: "Two NH₄⁺ ions balance one SO₄²⁻ ion.", topic: "Ionic Formulas" },
+  { prompt: "Write the formula for potassium acetate.", answer: "KC₂H₃O₂", explanation: "K⁺ and acetate, C₂H₃O₂⁻, balance 1:1.", topic: "Ionic Formulas" },
+  { prompt: "Name the ionic compound BaCl₂.", answer: "barium chloride", explanation: "Barium is a group 2 metal, so no Roman numeral is needed.", topic: "Ionic Names" },
+  { prompt: "Name the ionic compound Li₃N.", answer: "lithium nitride", explanation: "Lithium has a fixed +1 charge and nitrogen becomes nitride.", topic: "Ionic Names" },
+  { prompt: "Name the ionic compound CuS.", answer: "copper(II) sulfide", explanation: "S²⁻ means Cu must be +2.", topic: "Ionic Names" },
+  { prompt: "Name the ionic compound CrS.", answer: "chromium(II) sulfide", explanation: "S²⁻ means Cr must be +2.", topic: "Ionic Names" },
+  { prompt: "Name the ionic compound Cu₂CO₃.", answer: "copper(I) carbonate", explanation: "CO₃²⁻ is balanced by two Cu⁺ ions.", topic: "Ionic Names" },
   { prompt: "Name the acid HNO₃.", answer: "nitric acid", explanation: "Nitrate (ending -ate) becomes nitric acid.", topic: "Acid Names" },
   { prompt: "Name the acid HCl.", answer: "hydrochloric acid", explanation: "A binary acid uses hydro- plus the root chlor- plus -ic acid.", topic: "Acid Names" },
   { prompt: "Name the acid HC₂H₃O₂.", answer: "acetic acid", explanation: "HC₂H₃O₂ is acetic acid.", topic: "Acid Names" },
@@ -808,6 +808,7 @@ const unit6Items: StudyItem[] = [
   { prompt: "Write the formula for hydrofluoric acid.", answer: "HF", explanation: "Hydrofluoric acid has the formula HF.", topic: "Acid Formulas" },
   { prompt: "Write the formula for carbonic acid.", answer: "H₂CO₃", explanation: "Carbonic acid has the formula H₂CO₃.", topic: "Acid Formulas" },
   { prompt: "Write the formula for hydrosulfuric acid.", answer: "H₂S", explanation: "Hydrosulfuric acid has the formula H₂S.", topic: "Acid Formulas" },
+  { prompt: "Write the formula for nitric acid.", answer: "HNO₃", explanation: "Nitric acid has the formula HNO₃.", topic: "Acid Formulas" },
 ];
 
 const games = [
@@ -831,11 +832,11 @@ const jeopardyBoard = [
 ];
 
 const unit6JeopardyBoard = [
-  { title: "FORMULAS I", indexes: [0, 1, 2, 3, 4] },
-  { title: "FORMULAS II", indexes: [5, 6, 7, 8, 9] },
-  { title: "COMPOUND NAMES", indexes: [15, 16, 17, 18, 19] },
-  { title: "ACID NAMES", indexes: [30, 31, 32, 33, 34] },
-  { title: "ACID FORMULAS", indexes: [35, 36, 37, 38] },
+  { title: "MOLECULAR FORMULAS", indexes: [0, 1, 2, 3, 4] },
+  { title: "MOLECULAR NAMES", indexes: [10, 11, 12, 13, 14] },
+  { title: "IONIC FORMULAS", indexes: [20, 21, 22, 23, 24] },
+  { title: "IONIC NAMES", indexes: [25, 26, 27, 28, 29] },
+  { title: "ACIDS", indexes: [30, 31, 32, 35, 36] },
 ];
 
 const unit2JeopardyBoard = [
@@ -972,6 +973,8 @@ const unitTopicGroups: Record<string, string[]> = {
   "Unit 6": [
     "Molecular Formulas",
     "Molecular Names",
+    "Ionic Formulas",
+    "Ionic Names",
     "Acid Names",
     "Acid Formulas",
   ],
