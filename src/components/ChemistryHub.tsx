@@ -2395,6 +2395,67 @@ function WorksheetOrbitalLab() {
   );
 }
 
+const vseprLabProblems = [
+  { formula: "HBr", electrons: "8", shape: "Linear", polarity: "Polar", resonance: "No", model: "H—Br", note: "Br has 3 lone pairs." },
+  { formula: "Cl₂", electrons: "14", shape: "Linear", polarity: "Nonpolar", resonance: "No", model: "Cl—Cl", note: "Each Cl has 3 lone pairs." },
+  { formula: "SCl₂", electrons: "20", shape: "Bent", polarity: "Polar", resonance: "No", model: "Cl—S—Cl", note: "S has 2 lone pairs, so the molecule is bent." },
+  { formula: "CCl₄", electrons: "32", shape: "Tetrahedral", polarity: "Nonpolar", resonance: "No", model: "  Cl\n  |\nCl—C—Cl\n  |\n  Cl", note: "The four identical bonds balance out." },
+  { formula: "NO₃⁻", electrons: "24", shape: "Trigonal planar", polarity: "Nonpolar", resonance: "Yes", model: "  O\n  |\nO—N=O", note: "It has 3 resonance forms and an overall −1 charge." },
+] as const;
+
+function VSEPRLab() {
+  const [problemIndex, setProblemIndex] = useState(0);
+  const [answers, setAnswers] = useState({ electrons: "", shape: "", polarity: "", resonance: "" });
+  const [checked, setChecked] = useState(false);
+  const problem = vseprLabProblems[problemIndex];
+  const correct = Object.entries(answers).every(([key, value]) => value === problem[key as keyof typeof answers]);
+  const reset = (next: number) => {
+    setProblemIndex(next);
+    setAnswers({ electrons: "", shape: "", polarity: "", resonance: "" });
+    setChecked(false);
+  };
+  const fields: Array<[keyof typeof answers, string, readonly string[]]> = [
+    ["electrons", "Number of valence electrons", ["8", "14", "20", "24", "32"]],
+    ["shape", "Shape", ["Linear", "Bent", "Trigonal planar", "Tetrahedral"]],
+    ["polarity", "Polarity", ["Polar", "Nonpolar"]],
+    ["resonance", "Resonance", ["Yes", "No"]],
+  ];
+  return (
+    <div style={{ textAlign: "left", maxWidth: 760, margin: "0 auto" }}>
+      <h2 style={styles.modalTitle}>VSEPR LAB</h2>
+      <p style={styles.modalText}>Build the model, then check your work.</p>
+      <div style={{ display: "flex", justifyContent: "center", gap: 8, flexWrap: "wrap", marginBottom: 24 }}>
+        {vseprLabProblems.map((item, index) => (
+          <button key={item.formula} onClick={() => reset(index)} style={{ border: 0, borderRadius: 999, padding: "9px 15px", cursor: "pointer", fontWeight: 850, background: index === problemIndex ? "#0f766e" : "#e6fffa", color: index === problemIndex ? "#fff" : "#0f766e" }}>{item.formula}</button>
+        ))}
+      </div>
+      <div style={{ border: "2px solid #99f6e4", background: "#f0fdfa", padding: "22px", borderRadius: 20 }}>
+        <div style={{ color: "#0f766e", fontWeight: 900, letterSpacing: 1 }}>MODEL {problemIndex + 1} OF {vseprLabProblems.length}</div>
+        <h3 style={{ color: "#115e59", fontSize: 34, margin: "8px 0 18px" }}>{problem.formula}</h3>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 14 }}>
+          {fields.map(([key, label, options]) => {
+            const right = answers[key] === problem[key];
+            return <label key={key} style={{ display: "grid", gap: 7, color: "#17433f", fontWeight: 800 }}>
+              {label}
+              <select value={answers[key]} disabled={checked} onChange={(event) => setAnswers((current) => ({ ...current, [key]: event.target.value }))} style={{ border: `2px solid ${checked ? (right ? "#22c55e" : "#f87171") : "#99f6e4"}`, borderRadius: 12, background: "#fff", padding: "12px", color: "#17433f", fontFamily: "Montserrat,sans-serif", fontSize: 16, fontWeight: 700 }}>
+                <option value="">Choose one…</option>
+                {options.map((option) => <option key={option}>{option}</option>)}
+              </select>
+            </label>;
+          })}
+        </div>
+        {checked && <div style={{ marginTop: 18, borderRadius: 14, padding: 16, background: correct ? "#dcfce7" : "#fff1f2", color: correct ? "#166534" : "#9f1239", fontWeight: 750 }}>
+          <strong>{correct ? "✓ Perfect!" : "Not quite — check the answer below."}</strong>
+          <pre style={{ margin: "12px 0 6px", whiteSpace: "pre-wrap", fontFamily: "Montserrat,sans-serif", fontSize: 18, lineHeight: 1.35 }}>{problem.model}</pre>
+          <div>{problem.electrons} valence electrons · {problem.shape} · {problem.polarity} · Resonance: {problem.resonance}</div>
+          <small style={{ display: "block", marginTop: 6 }}>{problem.note}</small>
+        </div>}
+        {!checked ? <button disabled={Object.values(answers).some((value) => !value)} style={{ ...styles.closeButton, opacity: Object.values(answers).some((value) => !value) ? .45 : 1 }} onClick={() => setChecked(true)}>Check model</button> : <button style={styles.closeButton} onClick={() => reset((problemIndex + 1) % vseprLabProblems.length)}>Next model</button>}
+      </div>
+    </div>
+  );
+}
+
 function OrbitalLab() {
   return <WorksheetOrbitalLab />;
   const [setIndex, setSetIndex] = useState(0);
@@ -3506,6 +3567,7 @@ export default function ChemistryHub() {
   const playable =
     selectedGame !== "My Stats" &&
     selectedGame !== "Orbital Lab" &&
+    selectedGame !== "VSEPR Lab" &&
     selectedGame !== "Density Lab";
   const openGame = (game: string) => {
     setSelectedGame(game);
@@ -3679,7 +3741,12 @@ export default function ChemistryHub() {
               : "Study guide coming soon"}
           </div>
           <section style={styles.grid}>
-            {(selectedUnit === "Unit 2"
+            {(selectedUnit === "Unit 7"
+              ? [
+                  ...games.filter(([name]) => name !== "Orbital Lab"),
+                  ["VSEPR Lab", "Build molecular models"],
+                ]
+              : selectedUnit === "Unit 2"
               ? [
                   ...games.filter(([name]) => name !== "Orbital Lab"),
                   ["Density Lab", "Calculate & layer"],
@@ -3754,6 +3821,7 @@ export default function ChemistryHub() {
               </div>
             )}
             {selectedGame === "Orbital Lab" && <OrbitalLab />}
+            {selectedGame === "VSEPR Lab" && <VSEPRLab />}
             {selectedGame === "Density Lab" && <DensityLab />}
             {selectedGame === "Jeopardy" && questions.length ? (
               <>
