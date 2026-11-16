@@ -2451,7 +2451,7 @@ function LewisBuilder({ formula, selected, onToggle, brackets, onBrackets }: { f
     "Cl₂": [3, 3],
     "SCl₂": [3, 2, 3],
     "CCl₄": [3, 3, 0, 3, 3],
-    "NO₃⁻": [3, 3, 0, 3],
+    "NO₃⁻": [3, 3, 1, 3],
   };
   const allPairs = layout.atoms.flatMap((atom, atomIndex) => {
     const connected = layout.bonds
@@ -2462,7 +2462,9 @@ function LewisBuilder({ formula, selected, onToggle, brackets, onBrackets }: { f
       : -Math.PI / 2;
     const count = pairSlots[formula][atomIndex];
     if (!count) return [];
-    const angles = formula === "SCl₂" && atomIndex === 1
+    const angles = formula === "NO₃⁻" && atomIndex === 2
+      ? [Math.PI / 2]
+      : formula === "SCl₂" && atomIndex === 1
       ? [-Math.PI / 2, Math.PI / 2]
       : connected.length === 1
       ? count === 3 ? [outward - 0.9, outward, outward + 0.9] : [outward - 0.35, outward + 0.35]
