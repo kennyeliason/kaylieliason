@@ -2436,12 +2436,13 @@ function LewisBuilder({ formula, selected, onToggle, brackets, onBrackets }: { f
     const uy = dy / distance;
     const px = -uy;
     const py = ux;
+    const inset = Math.min(66, distance * 0.3);
     return [-8, 0, 8].map((offset, lineIndex) => ({
       id: `line-${bondIndex}-${lineIndex}`,
-      x1: start.x + ux * 48 + px * offset,
-      y1: start.y + uy * 48 + py * offset,
-      x2: end.x - ux * 48 + px * offset,
-      y2: end.y - uy * 48 + py * offset,
+      x1: start.x + ux * inset + px * offset,
+      y1: start.y + uy * inset + py * offset,
+      x2: end.x - ux * inset + px * offset,
+      y2: end.y - uy * inset + py * offset,
     }));
   });
   const allPairs = layout.atoms.flatMap((atom, atomIndex) => {
