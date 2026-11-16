@@ -2492,7 +2492,7 @@ function LewisBuilder({ formula, selected, onToggle, brackets, onBrackets }: { f
 }
 
 function VSEPRLab() {
-  const [problemIndex, setProblemIndex] = useState(0);
+  const [problemIndex, setProblemIndex] = useState(() => Math.floor(Math.random() * vseprLabProblems.length));
   const [answers, setAnswers] = useState({ electrons: "", shape: "", polarity: "", resonance: "" });
   const [marks, setMarks] = useState<string[]>([]);
   const [brackets, setBrackets] = useState(false);
@@ -2508,6 +2508,12 @@ function VSEPRLab() {
     setBrackets(false);
     setChecked(false);
   };
+  const nextProblem = () => {
+    let next = Math.floor(Math.random() * vseprLabProblems.length);
+    if (vseprLabProblems.length > 1 && next === problemIndex)
+      next = (next + 1) % vseprLabProblems.length;
+    reset(next);
+  };
   const fields: Array<[keyof typeof answers, string, readonly string[]]> = [
     ["electrons", "Number of valence electrons", ["8", "14", "20", "24", "32"]],
     ["shape", "Shape", ["Linear", "Bent", "Trigonal planar", "Tetrahedral"]],
@@ -2518,13 +2524,8 @@ function VSEPRLab() {
     <div style={{ textAlign: "left", maxWidth: 760, margin: "0 auto" }}>
       <h2 style={styles.modalTitle}>VSEPR LAB</h2>
       <p style={styles.modalText}>Build the model, then check your work.</p>
-      <div style={{ display: "flex", justifyContent: "center", gap: 8, flexWrap: "wrap", marginBottom: 24 }}>
-        {vseprLabProblems.map((item, index) => (
-          <button key={item.formula} onClick={() => reset(index)} style={{ border: 0, borderRadius: 999, padding: "9px 15px", cursor: "pointer", fontWeight: 850, background: index === problemIndex ? "#0f766e" : "#e6fffa", color: index === problemIndex ? "#fff" : "#0f766e" }}>{item.formula}</button>
-        ))}
-      </div>
       <div style={{ border: "2px solid #99f6e4", background: "#f0fdfa", padding: "22px", borderRadius: 20 }}>
-        <div style={{ color: "#0f766e", fontWeight: 900, letterSpacing: 1 }}>MODEL {problemIndex + 1} OF {vseprLabProblems.length} · {problem.formula}</div>
+        <div style={{ color: "#0f766e", fontWeight: 900, letterSpacing: 1 }}>ROTATING QUESTION · {problem.formula}</div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 22, alignItems: "start", marginTop: 18 }}>
         <div><h3 style={{ color: "#115e59", fontSize: 22, margin: "0 0 14px" }}>VSEPR questions</h3><div style={{ display: "grid", gap: 14 }}>
           {fields.map(([key, label, options]) => {
@@ -2542,12 +2543,12 @@ function VSEPRLab() {
         <LewisBuilder formula={problem.formula} selected={marks} onToggle={(id) => !checked && setMarks((current) => current.includes(id) ? current.filter((mark) => mark !== id) : [...current, id])} brackets={brackets} onBrackets={() => !checked && setBrackets((value) => !value)} />
         </div>
         {checked && <div style={{ marginTop: 18, borderRadius: 14, padding: 16, background: correct && lewisCorrect ? "#dcfce7" : "#fff1f2", color: correct && lewisCorrect ? "#166534" : "#9f1239", fontWeight: 750 }}>
-          <strong>{correct && lewisCorrect ? "✓ Perfect!" : "Not quite — check the answers and your Lewis drawing."}</strong>
+          <strong>{correct && lewisCorrect ? "✓ Perfect!" : "Not quite — here are the correct answers:"}</strong>
           <pre style={{ margin: "12px 0 6px", whiteSpace: "pre-wrap", fontFamily: "Montserrat,sans-serif", fontSize: 18, lineHeight: 1.35 }}>{problem.model}</pre>
           <div>{problem.electrons} valence electrons · {problem.shape} · {problem.polarity} · Resonance: {problem.resonance}</div>
           <small style={{ display: "block", marginTop: 6 }}>{problem.note}</small>
         </div>}
-        {!checked ? <button disabled={Object.values(answers).some((value) => !value)} style={{ ...styles.closeButton, opacity: Object.values(answers).some((value) => !value) ? .45 : 1 }} onClick={() => setChecked(true)}>Check model</button> : <button style={styles.closeButton} onClick={() => reset((problemIndex + 1) % vseprLabProblems.length)}>Next model</button>}
+        {!checked ? <button disabled={Object.values(answers).some((value) => !value)} style={{ ...styles.closeButton, opacity: Object.values(answers).some((value) => !value) ? .45 : 1 }} onClick={() => setChecked(true)}>Submit answer</button> : <button style={styles.closeButton} onClick={nextProblem}>Next question</button>}
       </div>
     </div>
   );
