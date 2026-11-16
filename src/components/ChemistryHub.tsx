@@ -2446,6 +2446,13 @@ function LewisBuilder({ formula, selected, onToggle, brackets, onBrackets }: { f
       y2: end.y - uy * inset + py * offset,
     }));
   });
+  const pairSlots: Record<string, number[]> = {
+    HBr: [0, 3],
+    "Cl₂": [3, 3],
+    "SCl₂": [3, 2, 3],
+    "CCl₄": [3, 3, 0, 3, 3],
+    "NO₃⁻": [3, 3, 0, 3],
+  };
   const allPairs = layout.atoms.flatMap((atom, atomIndex) => {
     const connected = layout.bonds
       .filter(([left, right]) => left === atomIndex || right === atomIndex)
@@ -2453,9 +2460,11 @@ function LewisBuilder({ formula, selected, onToggle, brackets, onBrackets }: { f
     const outward = connected.length === 1
       ? Math.atan2(atom.y - connected[0].y, atom.x - connected[0].x)
       : -Math.PI / 2;
+    const count = pairSlots[formula][atomIndex];
+    if (!count) return [];
     const angles = connected.length === 1
-      ? [outward - 0.9, outward, outward + 0.9]
-      : [-Math.PI / 2, Math.PI / 6, (5 * Math.PI) / 6];
+      ? count === 3 ? [outward - 0.9, outward, outward + 0.9] : [outward - 0.35, outward + 0.35]
+      : count === 2 ? [-Math.PI / 2 - 0.35, -Math.PI / 2 + 0.35] : [-Math.PI / 2, Math.PI / 6, (5 * Math.PI) / 6];
     return angles.map((angle, pairIndex) => ({
       id: `pair-${atomIndex}-${pairIndex}`,
       x: atom.x + Math.cos(angle) * 43,
