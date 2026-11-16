@@ -2411,15 +2411,50 @@ const vseprLabProblems = [
   { formula: "NO₃⁻", electrons: "24", shape: "Trigonal planar", polarity: "Nonpolar", resonance: "Yes", model: "  O\n  |\nO—N=O", note: "It has 3 resonance forms and an overall −1 charge." },
 ] as const;
 
+type LewisMark = { id: string; x1: number; y1: number; x2: number; y2: number };
+type LewisPair = { id: string; x: number; y: number };
+type LewisLayout = { atoms: Array<{ symbol: string; x: number; y: number }>; lines: LewisMark[]; pairs: LewisPair[]; expectedLines: number; expectedPairs: number; ion?: boolean };
+
+const lewisLayouts: Record<string, LewisLayout> = {
+  HBr: { atoms: [{ symbol: "H", x: 90, y: 170 }, { symbol: "Br", x: 300, y: 170 }], lines: [{ id: "bond", x1: 130, y1: 170, x2: 250, y2: 170 }], pairs: [{ id: "a", x: 285, y: 105 }, { id: "b", x: 355, y: 130 }, { id: "c", x: 350, y: 215 }], expectedLines: 1, expectedPairs: 3 },
+  "Cl₂": { atoms: [{ symbol: "Cl", x: 125, y: 170 }, { symbol: "Cl", x: 305, y: 170 }], lines: [{ id: "bond", x1: 170, y1: 170, x2: 260, y2: 170 }], pairs: [{ id: "a", x: 105, y: 105 }, { id: "b", x: 55, y: 170 }, { id: "c", x: 105, y: 235 }, { id: "d", x: 325, y: 105 }, { id: "e", x: 375, y: 170 }, { id: "f", x: 325, y: 235 }], expectedLines: 1, expectedPairs: 6 },
+  "SCl₂": { atoms: [{ symbol: "Cl", x: 90, y: 200 }, { symbol: "S", x: 220, y: 130 }, { symbol: "Cl", x: 350, y: 200 }], lines: [{ id: "left", x1: 130, y1: 180, x2: 180, y2: 150 }, { id: "right", x1: 260, y1: 150, x2: 310, y2: 180 }], pairs: [{ id: "a", x: 190, y: 65 }, { id: "b", x: 245, y: 65 }, { id: "c", x: 70, y: 130 }, { id: "d", x: 30, y: 210 }, { id: "e", x: 100, y: 265 }, { id: "f", x: 370, y: 130 }, { id: "g", x: 410, y: 210 }, { id: "h", x: 340, y: 265 }], expectedLines: 2, expectedPairs: 8 },
+  "CCl₄": { atoms: [{ symbol: "Cl", x: 220, y: 45 }, { symbol: "Cl", x: 85, y: 170 }, { symbol: "C", x: 220, y: 170 }, { symbol: "Cl", x: 355, y: 170 }, { symbol: "Cl", x: 220, y: 295 }], lines: [{ id: "top", x1: 220, y1: 85, x2: 220, y2: 125 }, { id: "left", x1: 130, y1: 170, x2: 175, y2: 170 }, { id: "right", x1: 265, y1: 170, x2: 310, y2: 170 }, { id: "bottom", x1: 220, y1: 215, x2: 220, y2: 255 }], pairs: [{ id: "a", x: 180, y: 32 }, { id: "b", x: 260, y: 32 }, { id: "c", x: 220, y: 8 }, { id: "d", x: 52, y: 125 }, { id: "e", x: 30, y: 200 }, { id: "f", x: 100, y: 235 }, { id: "g", x: 388, y: 125 }, { id: "h", x: 410, y: 200 }, { id: "i", x: 340, y: 235 }, { id: "j", x: 180, y: 308 }, { id: "k", x: 260, y: 308 }, { id: "l", x: 220, y: 332 }], expectedLines: 4, expectedPairs: 12 },
+  "NO₃⁻": { atoms: [{ symbol: "O", x: 220, y: 55 }, { symbol: "O", x: 85, y: 245 }, { symbol: "N", x: 220, y: 185 }, { symbol: "O", x: 355, y: 245 }], lines: [{ id: "top1", x1: 214, y1: 95, x2: 214, y2: 140 }, { id: "top2", x1: 228, y1: 95, x2: 228, y2: 140 }, { id: "left1", x1: 180, y1: 205, x2: 125, y2: 230 }, { id: "left2", x1: 185, y1: 216, x2: 130, y2: 241 }, { id: "right1", x1: 260, y1: 205, x2: 315, y2: 230 }, { id: "right2", x1: 255, y1: 216, x2: 310, y2: 241 }], pairs: [{ id: "a", x: 180, y: 42 }, { id: "b", x: 260, y: 42 }, { id: "c", x: 55, y: 200 }, { id: "d", x: 70, y: 285 }, { id: "e", x: 125, y: 295 }, { id: "f", x: 385, y: 200 }, { id: "g", x: 370, y: 285 }, { id: "h", x: 315, y: 295 }], expectedLines: 4, expectedPairs: 8, ion: true },
+};
+
+function LewisBuilder({ formula, selected, onToggle, brackets, onBrackets }: { formula: string; selected: string[]; onToggle: (id: string) => void; brackets: boolean; onBrackets: () => void }) {
+  const layout = lewisLayouts[formula];
+  const on = (id: string) => selected.includes(id);
+  return <div style={{ textAlign: "center" }}>
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, marginBottom: 8 }}>
+      <strong style={{ color: "#115e59" }}>Tap the gray lines and dot pairs to build it.</strong>
+      {layout.ion && <button onClick={onBrackets} style={{ border: "2px solid #99f6e4", borderRadius: 999, background: brackets ? "#0f766e" : "#fff", color: brackets ? "#fff" : "#0f766e", padding: "8px 12px", fontWeight: 800, cursor: "pointer" }}>Brackets: {brackets ? "ON" : "OFF"}</button>}
+    </div>
+    <svg viewBox="0 0 440 340" style={{ width: "100%", maxHeight: 350, borderRadius: 18, background: "#fff" }} aria-label={`Build the Lewis structure for ${formula}`}>
+      {brackets && <><path d="M25 28h-14v285h14" fill="none" stroke="#115e59" strokeWidth="4"/><path d="M415 28h14v285h-14" fill="none" stroke="#115e59" strokeWidth="4"/>{layout.ion && <text x="406" y="28" fill="#115e59" fontSize="24" fontWeight="800">−</text>}</>}
+      {layout.lines.map((line) => <line key={line.id} onClick={() => onToggle(`line-${line.id}`)} x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke={on(`line-${line.id}`) ? "#111827" : "#cbd5e1"} strokeWidth="7" strokeLinecap="round" style={{ cursor: "pointer" }} />)}
+      {layout.pairs.map((pair) => <g key={pair.id} onClick={() => onToggle(`pair-${pair.id}`)} style={{ cursor: "pointer" }}><circle cx={pair.x - 5} cy={pair.y} r="5" fill={on(`pair-${pair.id}`) ? "#111827" : "#cbd5e1"}/><circle cx={pair.x + 5} cy={pair.y} r="5" fill={on(`pair-${pair.id}`) ? "#111827" : "#cbd5e1"}/></g>)}
+      {layout.atoms.map((atom, index) => <text key={`${atom.symbol}-${index}`} x={atom.x} y={atom.y} textAnchor="middle" dominantBaseline="middle" fill="#111827" fontSize="44" fontWeight="800">{atom.symbol}</text>)}
+    </svg>
+  </div>;
+}
+
 function VSEPRLab() {
   const [problemIndex, setProblemIndex] = useState(0);
   const [answers, setAnswers] = useState({ electrons: "", shape: "", polarity: "", resonance: "" });
+  const [marks, setMarks] = useState<string[]>([]);
+  const [brackets, setBrackets] = useState(false);
   const [checked, setChecked] = useState(false);
   const problem = vseprLabProblems[problemIndex];
   const correct = Object.entries(answers).every(([key, value]) => value === problem[key as keyof typeof answers]);
+  const layout = lewisLayouts[problem.formula];
+  const lewisCorrect = marks.filter((mark) => mark.startsWith("line-")).length === layout.expectedLines && marks.filter((mark) => mark.startsWith("pair-")).length === layout.expectedPairs && (!layout.ion || brackets);
   const reset = (next: number) => {
     setProblemIndex(next);
     setAnswers({ electrons: "", shape: "", polarity: "", resonance: "" });
+    setMarks([]);
+    setBrackets(false);
     setChecked(false);
   };
   const fields: Array<[keyof typeof answers, string, readonly string[]]> = [
@@ -2438,9 +2473,9 @@ function VSEPRLab() {
         ))}
       </div>
       <div style={{ border: "2px solid #99f6e4", background: "#f0fdfa", padding: "22px", borderRadius: 20 }}>
-        <div style={{ color: "#0f766e", fontWeight: 900, letterSpacing: 1 }}>MODEL {problemIndex + 1} OF {vseprLabProblems.length}</div>
-        <h3 style={{ color: "#115e59", fontSize: 34, margin: "8px 0 18px" }}>{problem.formula}</h3>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 14 }}>
+        <div style={{ color: "#0f766e", fontWeight: 900, letterSpacing: 1 }}>MODEL {problemIndex + 1} OF {vseprLabProblems.length} · {problem.formula}</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(260px,1fr))", gap: 22, alignItems: "start", marginTop: 18 }}>
+        <div><h3 style={{ color: "#115e59", fontSize: 22, margin: "0 0 14px" }}>VSEPR questions</h3><div style={{ display: "grid", gap: 14 }}>
           {fields.map(([key, label, options]) => {
             const right = answers[key] === problem[key];
             return <label key={key} style={{ display: "grid", gap: 7, color: "#17433f", fontWeight: 800 }}>
@@ -2451,9 +2486,11 @@ function VSEPRLab() {
               </select>
             </label>;
           })}
+        </div></div>
+        <LewisBuilder formula={problem.formula} selected={marks} onToggle={(id) => !checked && setMarks((current) => current.includes(id) ? current.filter((mark) => mark !== id) : [...current, id])} brackets={brackets} onBrackets={() => !checked && setBrackets((value) => !value)} />
         </div>
-        {checked && <div style={{ marginTop: 18, borderRadius: 14, padding: 16, background: correct ? "#dcfce7" : "#fff1f2", color: correct ? "#166534" : "#9f1239", fontWeight: 750 }}>
-          <strong>{correct ? "✓ Perfect!" : "Not quite — check the answer below."}</strong>
+        {checked && <div style={{ marginTop: 18, borderRadius: 14, padding: 16, background: correct && lewisCorrect ? "#dcfce7" : "#fff1f2", color: correct && lewisCorrect ? "#166534" : "#9f1239", fontWeight: 750 }}>
+          <strong>{correct && lewisCorrect ? "✓ Perfect!" : "Not quite — check the answers and your Lewis drawing."}</strong>
           <pre style={{ margin: "12px 0 6px", whiteSpace: "pre-wrap", fontFamily: "Montserrat,sans-serif", fontSize: 18, lineHeight: 1.35 }}>{problem.model}</pre>
           <div>{problem.electrons} valence electrons · {problem.shape} · {problem.polarity} · Resonance: {problem.resonance}</div>
           <small style={{ display: "block", marginTop: 6 }}>{problem.note}</small>
