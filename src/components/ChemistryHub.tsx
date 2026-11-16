@@ -2447,7 +2447,7 @@ function LewisBuilder({ formula, selected, onToggle, brackets, onBrackets }: { f
     }));
   });
   const pairSlots: Record<string, number[]> = {
-    HBr: [0, 3],
+    HBr: [3, 3],
     "Cl₂": [3, 3],
     "SCl₂": [3, 2, 3],
     "CCl₄": [3, 3, 0, 3, 3],
@@ -2462,7 +2462,9 @@ function LewisBuilder({ formula, selected, onToggle, brackets, onBrackets }: { f
       : -Math.PI / 2;
     const count = pairSlots[formula][atomIndex];
     if (!count) return [];
-    const angles = connected.length === 1
+    const angles = formula === "SCl₂" && atomIndex === 1
+      ? [-Math.PI / 2, Math.PI / 2]
+      : connected.length === 1
       ? count === 3 ? [outward - 0.9, outward, outward + 0.9] : [outward - 0.35, outward + 0.35]
       : count === 2 ? [-Math.PI / 2 - 0.35, -Math.PI / 2 + 0.35] : [-Math.PI / 2, Math.PI / 6, (5 * Math.PI) / 6];
     return angles.map((angle, pairIndex) => ({
