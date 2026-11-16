@@ -2458,10 +2458,10 @@ function LewisBuilder({ formula, selected, onToggle, brackets, onBrackets }: { f
       : [-Math.PI / 2, Math.PI / 6, (5 * Math.PI) / 6];
     return angles.map((angle, pairIndex) => ({
       id: `pair-${atomIndex}-${pairIndex}`,
-      x: atom.x + Math.cos(angle) * 58,
-      y: atom.y + Math.sin(angle) * 58,
-      dx: Math.cos(angle + Math.PI / 2) * 5,
-      dy: Math.sin(angle + Math.PI / 2) * 5,
+      x: atom.x + Math.cos(angle) * 43,
+      y: atom.y + Math.sin(angle) * 43,
+      dx: Math.cos(angle + Math.PI / 2) * 4.5,
+      dy: Math.sin(angle + Math.PI / 2) * 4.5,
     }));
   });
   return <div style={{ textAlign: "center" }}>
@@ -2472,7 +2472,7 @@ function LewisBuilder({ formula, selected, onToggle, brackets, onBrackets }: { f
     <svg viewBox="0 0 440 340" style={{ width: "100%", maxHeight: 350, borderRadius: 18, background: "#fff" }} aria-label={`Build the Lewis structure for ${formula}`}>
       {brackets && <><path d="M25 28h-14v285h14" fill="none" stroke="#115e59" strokeWidth="4"/><path d="M415 28h14v285h-14" fill="none" stroke="#115e59" strokeWidth="4"/>{layout.ion && <text x="406" y="28" fill="#115e59" fontSize="24" fontWeight="800">−</text>}</>}
       {allLines.map((line) => <line key={line.id} onClick={() => onToggle(line.id)} x1={line.x1} y1={line.y1} x2={line.x2} y2={line.y2} stroke={on(line.id) ? "#111827" : "#cbd5e1"} strokeWidth="4" strokeLinecap="round" style={{ cursor: "pointer" }} />)}
-      {allPairs.map((pair) => <g key={pair.id} onClick={() => onToggle(pair.id)} style={{ cursor: "pointer" }}><circle cx={pair.x - pair.dx} cy={pair.y - pair.dy} r="5" fill={on(pair.id) ? "#111827" : "#cbd5e1"}/><circle cx={pair.x + pair.dx} cy={pair.y + pair.dy} r="5" fill={on(pair.id) ? "#111827" : "#cbd5e1"}/></g>)}
+      {allPairs.map((pair) => <g key={pair.id} onClick={() => onToggle(pair.id)} style={{ cursor: "pointer" }}><circle cx={pair.x - pair.dx} cy={pair.y - pair.dy} r="4.5" fill={on(pair.id) ? "#111827" : "#cbd5e1"}/><circle cx={pair.x + pair.dx} cy={pair.y + pair.dy} r="4.5" fill={on(pair.id) ? "#111827" : "#cbd5e1"}/></g>)}
       {layout.atoms.map((atom, index) => <text key={`${atom.symbol}-${index}`} x={atom.x} y={atom.y} textAnchor="middle" dominantBaseline="middle" fill="#111827" fontSize="44" fontWeight="800">{atom.symbol}</text>)}
     </svg>
   </div>;
