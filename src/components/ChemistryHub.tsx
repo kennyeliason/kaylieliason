@@ -31,7 +31,7 @@ type SavedChemistryGame = {
 };
 
 // Bump this when question content changes so an old saved round cannot keep showing removed wording.
-const chemistryGameStorageKey = "chemistry-current-game-v2";
+const chemistryGameStorageKey = "chemistry-current-game-v3";
 const loadSavedChemistryGame = (): SavedChemistryGame => {
   if (typeof window === "undefined") return {};
   try {
@@ -812,6 +812,28 @@ const unit6Items: StudyItem[] = [
   { prompt: "Write the formula for nitric acid.", answer: "HNO₃", explanation: "Nitric acid has the formula HNO₃.", topic: "Acid Formulas" },
 ];
 
+// Keep this list to Kayli's Bonding Study Guide only until she sends more Unit 7 material.
+const unit7Items: StudyItem[] = [
+  { prompt: "What electrons are involved in a chemical bond?", answer: "Valence electrons", explanation: "Valence electrons are the outer electrons involved in bonding.", topic: "Bonding Basics" },
+  { prompt: "Why do atoms form chemical bonds?", answer: "To decrease their potential energy and become more stable", explanation: "Bonding lowers potential energy and makes atoms more stable.", topic: "Bonding Basics" },
+  { prompt: "What type of bond forms from a diatomic molecule?", answer: "Covalent", explanation: "A diatomic molecule is held together by a covalent bond.", topic: "Bonding Basics" },
+  { prompt: "What type of bond forms when atoms do not share electrons equally?", answer: "Polar covalent", explanation: "Unequal sharing of electrons makes a covalent bond polar.", topic: "Bonding Basics" },
+  { prompt: "What is shared when atoms form a bond?", answer: "Valence electrons", explanation: "Bonds involve an atom's valence electrons.", topic: "Bonding Basics" },
+  { prompt: "Using an electronegativity chart, which atoms form the greatest and least ionic bonds?", answer: "Greatest: Li and F; least: Al and F", explanation: "Li and F have the greatest electronegativity difference; Al and F have the least of the two pairs.", topic: "Electronegativity" },
+  { prompt: "Know the difference between a molecule and a compound.", answer: "A molecule is composed of one type of atom or many; a compound is composed of more than one type of atom", explanation: "This is the wording from the Unit 7 study guide.", topic: "Bonding Basics" },
+  { prompt: "What happens to potential energy when two or more atoms form a bond?", answer: "It decreases", explanation: "Bond formation decreases potential energy.", topic: "Bonding Basics" },
+  { prompt: "How many electrons are in the outer energy level when atoms form a bond?", answer: "8", explanation: "Atoms generally form bonds to reach a stable octet of 8 valence electrons.", topic: "Bonding Basics" },
+  { prompt: "What group of atoms generally do not form bonds?", answer: "Noble gases", explanation: "Noble gases already have full outer energy levels.", topic: "Bonding Basics" },
+  { prompt: "When drawing a Lewis structure, how do you determine which atom to place in the center?", answer: "Choose the atom with the smallest electronegativity value", explanation: "The least electronegative atom is usually the central atom.", topic: "Lewis Structures" },
+  { prompt: "What must you first determine to draw a Lewis structure?", answer: "The total number of valence electrons for each atom", explanation: "Start by counting all available valence electrons.", topic: "Lewis Structures" },
+  { prompt: "What does a molecule have if it can be drawn more than one way correctly?", answer: "Resonance", explanation: "Resonance means there is more than one correct Lewis structure.", topic: "Lewis Structures" },
+  { prompt: "What shape do ionic compounds form?", answer: "Crystals", explanation: "Ionic compounds form crystal lattices.", topic: "Ionic and Metallic Bonds" },
+  { prompt: "Metals or nonmetals have a greater number of valence electrons?", answer: "Nonmetals", explanation: "Nonmetals usually have more valence electrons than metals.", topic: "Ionic and Metallic Bonds" },
+  { prompt: "What is the name given to valence electrons when forming a metallic bond?", answer: "Sea of electrons", explanation: "Metallic bonding has a sea of mobile valence electrons.", topic: "Ionic and Metallic Bonds" },
+  { prompt: "What does the VSEPR model predict?", answer: "Three-dimensional shape", explanation: "VSEPR predicts a molecule's 3D shape.", topic: "Molecular Shape" },
+  { prompt: "What is a polar molecule?", answer: "A covalent bond between 2 nonmetals where valence electrons are not shared equally", explanation: "Unequal sharing of valence electrons makes a bond polar covalent.", topic: "Molecular Shape" },
+];
+
 const games = [
   ["Flashcards", "Flip to reveal"],
   ["Quiz", "Multiple choice"],
@@ -838,6 +860,13 @@ const unit6JeopardyBoard = [
   { title: "IONIC FORMULAS", indexes: [20, 21, 22, 23, 24] },
   { title: "IONIC NAMES", indexes: [25, 26, 27, 28, 29] },
   { title: "ACIDS", indexes: [30, 31, 32, 35, 36] },
+];
+
+const unit7JeopardyBoard = [
+  { title: "BONDING", indexes: [0, 1, 2, 3, 4] },
+  { title: "STABILITY", indexes: [5, 6, 7, 8, 9] },
+  { title: "LEWIS STRUCTURES", indexes: [10, 11, 12] },
+  { title: "SHAPES & BONDS", indexes: [13, 14, 15, 16, 17] },
 ];
 
 const unit2JeopardyBoard = [
@@ -915,6 +944,7 @@ const unit2Questions = buildMultipleChoiceQuestions(unit2Items);
 const unit3Questions = buildMultipleChoiceQuestions(unit3Items);
 const unit4Questions = buildMultipleChoiceQuestions(unit4Items);
 const unit6Questions = buildMultipleChoiceQuestions(unit6Items, true);
+const unit7Questions = buildMultipleChoiceQuestions(unit7Items);
 const isTypedQuestion = (question: Question) => question.answerMode === "type";
 const normalizeAnswer = (value: string) =>
   value
@@ -979,6 +1009,13 @@ const unitTopicGroups: Record<string, string[]> = {
     "Acid Names",
     "Acid Formulas",
   ],
+  "Unit 7": [
+    "Bonding Basics",
+    "Electronegativity",
+    "Lewis Structures",
+    "Ionic and Metallic Bonds",
+    "Molecular Shape",
+  ],
 };
 const topicForQuestion = (question: Question) => {
   const unit2Item = unit2Items.find((item) => item.prompt === question.question);
@@ -989,6 +1026,8 @@ const topicForQuestion = (question: Question) => {
   if (unit4Item) return unit4Item.topic;
   const unit6Item = unit6Items.find((item) => item.prompt === question.question);
   if (unit6Item) return unit6Item.topic;
+  const unit7Item = unit7Items.find((item) => item.prompt === question.question);
+  if (unit7Item) return unit7Item.topic;
   const index = exactUnit5Questions.findIndex(
     (item) => item.question === question.question,
   );
@@ -3444,6 +3483,8 @@ export default function ChemistryHub() {
       ? exactUnit5Questions
       : selectedUnit === "Unit 6"
         ? unit6Questions
+        : selectedUnit === "Unit 7"
+          ? unit7Questions
         : [];
   const activeJeopardyBoard =
     selectedUnit === "Unit 2"
@@ -3454,6 +3495,8 @@ export default function ChemistryHub() {
         ? unit4JeopardyBoard
       : selectedUnit === "Unit 6"
         ? unit6JeopardyBoard
+        : selectedUnit === "Unit 7"
+          ? unit7JeopardyBoard
         : jeopardyBoard;
   const statsTopics = unitTopicGroups[selectedUnit] || [];
   const currentQuestion =
@@ -3616,7 +3659,7 @@ export default function ChemistryHub() {
             <h1 style={styles.title}>Chemistry Study Guide</h1>
           </header>
           <div style={styles.unitRow}>
-            {["Unit 1", "Unit 2", "Unit 3", "Unit 4", "Unit 5", "Unit 6"].map((unit) => (
+            {["Unit 1", "Unit 2", "Unit 3", "Unit 4", "Unit 5", "Unit 6", "Unit 7"].map((unit) => (
               <button
                 key={unit}
                 onClick={() => setSelectedUnit(unit)}
