@@ -846,6 +846,14 @@ const games = [
   ["My Stats", "See progress"],
 ];
 
+const unit7Games = [
+  ...games.filter(([name]) => ["Flashcards", "Quiz", "Match"].includes(name)),
+  ["VSEPR Lab", "Build molecular models"],
+  ...games.filter(
+    ([name]) => !["Flashcards", "Quiz", "Match", "Orbital Lab"].includes(name),
+  ),
+];
+
 const jeopardyBoard = [
   { title: "EM WAVES", indexes: [0, 1, 2, 3, 4] },
   { title: "LIGHT ENERGY", indexes: [5, 6, 7, 8, 24] },
@@ -3742,10 +3750,7 @@ export default function ChemistryHub() {
           </div>
           <section style={styles.grid}>
             {(selectedUnit === "Unit 7"
-              ? [
-                  ...games.filter(([name]) => name !== "Orbital Lab"),
-                  ["VSEPR Lab", "Build molecular models"],
-                ]
+              ? unit7Games
               : selectedUnit === "Unit 2"
               ? [
                   ...games.filter(([name]) => name !== "Orbital Lab"),
