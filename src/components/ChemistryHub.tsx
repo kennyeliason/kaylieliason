@@ -2436,7 +2436,8 @@ function LewisBuilder({ formula, selected, onToggle, brackets, onBrackets }: { f
     const uy = dy / distance;
     const px = -uy;
     const py = ux;
-    const inset = Math.min(66, distance * 0.3);
+    // Keep each possible bond line short, with plenty of white space around the atoms.
+    const inset = Math.max(28, (distance - 70) / 2);
     return [-8, 0, 8].map((offset, lineIndex) => ({
       id: `line-${bondIndex}-${lineIndex}`,
       x1: start.x + ux * inset + px * offset,
