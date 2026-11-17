@@ -832,6 +832,16 @@ const unit7Items: StudyItem[] = [
   { prompt: "What is the name given to valence electrons when forming a metallic bond?", answer: "Sea of electrons", explanation: "Metallic bonding has a sea of mobile valence electrons.", topic: "Ionic and Metallic Bonds" },
   { prompt: "What does the VSEPR model predict?", answer: "Three-dimensional shape", explanation: "VSEPR predicts a molecule's 3D shape.", topic: "Molecular Shape" },
   { prompt: "What is a polar molecule?", answer: "A covalent bond between 2 nonmetals where valence electrons are not shared equally", explanation: "Unequal sharing of valence electrons makes a bond polar covalent.", topic: "Molecular Shape" },
+  { prompt: "Classify CaS as ionic, covalent, or both.", answer: "Ionic", explanation: "Calcium is a metal and sulfur is a nonmetal, so CaS is ionic.", topic: "Compound Classification" },
+  { prompt: "Classify H₂O as ionic, covalent, or both.", answer: "Covalent", explanation: "Hydrogen and oxygen are both nonmetals, so H₂O is covalent.", topic: "Compound Classification" },
+  { prompt: "Classify BaSO₄ as ionic, covalent, or both.", answer: "Both", explanation: "Barium and sulfate form an ionic compound, while sulfate has covalent bonds inside it.", topic: "Compound Classification" },
+  { prompt: "Classify Zn(ClO)₂ as ionic, covalent, or both.", answer: "Both", explanation: "Zinc and hypochlorite form an ionic compound, while hypochlorite has covalent bonds inside it.", topic: "Compound Classification" },
+  { prompt: "Classify MgO as ionic, covalent, or both.", answer: "Ionic", explanation: "Magnesium is a metal and oxygen is a nonmetal, so MgO is ionic.", topic: "Compound Classification" },
+  { prompt: "Classify Na₃PO₄ as ionic, covalent, or both.", answer: "Both", explanation: "Sodium and phosphate form an ionic compound, while phosphate has covalent bonds inside it.", topic: "Compound Classification" },
+  { prompt: "Classify CO₂ as ionic, covalent, or both.", answer: "Covalent", explanation: "Carbon and oxygen are both nonmetals, so CO₂ is covalent.", topic: "Compound Classification" },
+  { prompt: "Classify KCl as ionic, covalent, or both.", answer: "Ionic", explanation: "Potassium is a metal and chlorine is a nonmetal, so KCl is ionic.", topic: "Compound Classification" },
+  { prompt: "Classify SO₃ as ionic, covalent, or both.", answer: "Covalent", explanation: "Sulfur and oxygen are both nonmetals, so SO₃ is covalent.", topic: "Compound Classification" },
+  { prompt: "Classify Fe₂O₃ as ionic, covalent, or both.", answer: "Ionic", explanation: "Iron is a metal and oxygen is a nonmetal, so Fe₂O₃ is ionic.", topic: "Compound Classification" },
 ];
 
 const games = [
@@ -1023,6 +1033,7 @@ const unitTopicGroups: Record<string, string[]> = {
     "Lewis Structures",
     "Ionic and Metallic Bonds",
     "Molecular Shape",
+    "Compound Classification",
   ],
 };
 const topicForQuestion = (question: Question) => {
