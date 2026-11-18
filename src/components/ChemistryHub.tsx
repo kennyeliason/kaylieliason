@@ -859,13 +859,6 @@ const games = [
 const unit7Games = [
   ...games.filter(([name]) => ["Flashcards", "Quiz", "Match"].includes(name)),
   ["VSEPR Lab", "Build molecular models"],
-  ...games.filter(
-    ([name]) => !["Flashcards", "Quiz", "Match", "Orbital Lab"].includes(name),
-  ),
-];
-
-const unit3Games = [
-  ...games.filter(([name]) => ["Flashcards", "Quiz", "Match"].includes(name)),
   ["Element Sort", "Select metals & nonmetals"],
   ...games.filter(
     ([name]) => !["Flashcards", "Quiz", "Match", "Orbital Lab"].includes(name),
@@ -3956,9 +3949,7 @@ export default function ChemistryHub() {
               : "Study guide coming soon"}
           </div>
           <section style={styles.grid}>
-            {(selectedUnit === "Unit 3"
-              ? unit3Games
-              : selectedUnit === "Unit 7"
+            {(selectedUnit === "Unit 7"
               ? unit7Games
               : selectedUnit === "Unit 2"
               ? [
