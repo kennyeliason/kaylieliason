@@ -6,6 +6,7 @@ type Question = {
   answer: string;
   explanation: string;
   answerMode?: "choice" | "type";
+  elementGroup?: "metals" | "nonmetals";
 };
 type GameStat = { correct: number; attempts: number };
 
@@ -859,7 +860,6 @@ const games = [
 const unit7Games = [
   ...games.filter(([name]) => ["Flashcards", "Quiz", "Match"].includes(name)),
   ["VSEPR Lab", "Build molecular models"],
-  ["Element Sort", "Select metals & nonmetals"],
   ...games.filter(
     ([name]) => !["Flashcards", "Quiz", "Match", "Orbital Lab"].includes(name),
   ),
@@ -964,6 +964,22 @@ const unit3Questions = buildMultipleChoiceQuestions(unit3Items);
 const unit4Questions = buildMultipleChoiceQuestions(unit4Items);
 const unit6Questions = buildMultipleChoiceQuestions(unit6Items, true);
 const unit7Questions = buildMultipleChoiceQuestions(unit7Items);
+const unit7ElementSortQuestions: Question[] = [
+  {
+    question: "Select all the nonmetals on the periodic table.",
+    choices: [],
+    answer: "All nonmetals",
+    explanation: "Nonmetals are on the upper-right side of the table, plus hydrogen.",
+    elementGroup: "nonmetals",
+  },
+  {
+    question: "Select all the metals on the periodic table.",
+    choices: [],
+    answer: "All metals",
+    explanation: "Metals are mostly on the left and center of the periodic table.",
+    elementGroup: "metals",
+  },
+];
 const isTypedQuestion = (question: Question) => question.answerMode === "type";
 const normalizeAnswer = (value: string) =>
   value
@@ -1035,9 +1051,11 @@ const unitTopicGroups: Record<string, string[]> = {
     "Ionic and Metallic Bonds",
     "Molecular Shape",
     "Compound Classification",
+    "Periodic Table Groups",
   ],
 };
 const topicForQuestion = (question: Question) => {
+  if (question.elementGroup) return "Periodic Table Groups";
   const unit2Item = unit2Items.find((item) => item.prompt === question.question);
   if (unit2Item) return unit2Item.topic;
   const unit3Item = unit3Items.find((item) => item.prompt === question.question);
@@ -3560,16 +3578,12 @@ function PeriodicTable() {
   </div>;
 }
 
-function ElementSort() {
-  const prompts = [
-    { key: "nonmetals", label: "Select all the nonmetals", answers: nonmetals },
-    { key: "metals", label: "Select all the metals", answers: metals },
-  ] as const;
-  const [questionIndex, setQuestionIndex] = useState(0);
+function ElementSort({ group, checked, onCheck, onNext }: { group: "metals" | "nonmetals"; checked: boolean; onCheck: (correct: boolean) => void; onNext: () => void }) {
+  const prompt = group === "metals"
+    ? { label: "Select all the metals", answers: metals }
+    : { label: "Select all the nonmetals", answers: nonmetals };
   const [selected, setSelected] = useState<string[]>([]);
-  const [checked, setChecked] = useState(false);
   const [dragging, setDragging] = useState(false);
-  const prompt = prompts[questionIndex];
   const selectedSet = new Set(selected);
   const correct =
     selectedSet.size === prompt.answers.size &&
@@ -3586,11 +3600,9 @@ function ElementSort() {
     window.addEventListener("pointerup", stopDragging);
     return () => window.removeEventListener("pointerup", stopDragging);
   }, []);
-  const moveOn = () => {
-    setQuestionIndex((index) => (index + 1) % prompts.length);
+  useEffect(() => {
     setSelected([]);
-    setChecked(false);
-  };
+  }, [group]);
   const tileStyle = (element: string): React.CSSProperties => {
     const selectedElement = selectedSet.has(element);
     if (!checked)
@@ -3640,12 +3652,12 @@ function ElementSort() {
         {actinides.map((element) => tile(element, `act-${element}`))}
       </div>
       {!checked ? (
-        <button style={{ ...styles.closeButton, opacity: selected.length ? 1 : .45 }} disabled={!selected.length} onClick={() => setChecked(true)}>Check selections</button>
+        <button style={{ ...styles.closeButton, opacity: selected.length ? 1 : .45 }} disabled={!selected.length} onClick={() => onCheck(correct)}>Check selections</button>
       ) : (
         <div style={{ marginTop: 18, padding: 16, borderRadius: 14, background: correct ? "#dcfce7" : "#fff1f2", color: correct ? "#166534" : "#9f1239", fontWeight: 750 }}>
           <strong>{correct ? "✓ You got every one!" : "Not quite — green elements are the correct answers, and red ones should not have been selected."}</strong>
           <p style={{ marginBottom: 0 }}>Metalloids are the elements along the stair-step line. They have a mix of metal and nonmetal properties.</p>
-          <button style={styles.closeButton} onClick={moveOn}>Next question</button>
+          <button style={styles.closeButton} onClick={onNext}>Next question</button>
         </div>
       )}
     </div>
@@ -3775,8 +3787,7 @@ export default function ChemistryHub() {
     selectedGame !== "My Stats" &&
     selectedGame !== "Orbital Lab" &&
     selectedGame !== "VSEPR Lab" &&
-    selectedGame !== "Density Lab" &&
-    selectedGame !== "Element Sort";
+    selectedGame !== "Density Lab";
   const openGame = (game: string) => {
     setSelectedGame(game);
     setQuestionIndex(0);
@@ -3792,14 +3803,18 @@ export default function ChemistryHub() {
     setCorrectCount(0);
     setAttemptCount(0);
     if (game === "Match") setMatchRound((round) => round + 1);
+    const quizQuestions =
+      game === "Quiz" && selectedUnit === "Unit 7"
+        ? [...questions, ...unit7ElementSortQuestions]
+        : questions;
     if (questions.length) {
-      setGameQuestionSet(makeGameSet(questions));
+      setGameQuestionSet(makeGameSet(quizQuestions));
       setJeopardySet(makeGameSet(questions));
     }
     if (game === "Bomb" && questions.length) setBombSet(makeBombSet(questions));
   };
   const next = () => {
-    const limit = selectedGame === "Quiz" ? questions.length : selectedGame === "Millionaire" ? 15 : 10;
+    const limit = selectedGame === "Quiz" ? gameQuestionSet.length : selectedGame === "Millionaire" ? 15 : 10;
     if (questionIndex >= limit - 1) {
       setGameComplete(true);
       setChoice(null);
@@ -4028,7 +4043,6 @@ export default function ChemistryHub() {
             {selectedGame === "Orbital Lab" && <OrbitalLab />}
             {selectedGame === "VSEPR Lab" && <VSEPRLab />}
             {selectedGame === "Density Lab" && <DensityLab />}
-            {selectedGame === "Element Sort" && <ElementSort />}
             {selectedGame === "Jeopardy" && questions.length ? (
               <>
                 {jeopardyQuestion === null ? (
@@ -4243,10 +4257,24 @@ export default function ChemistryHub() {
               <>
                 <div style={styles.gameName}>{selectedGame}</div>
                 <div style={styles.progress}>
-                  Question {questionIndex + 1} of {questions.length}
+                  Question {questionIndex + 1} of {selectedGame === "Quiz" ? gameQuestionSet.length : questions.length}
                 </div>
                 <h2 style={styles.question}>{currentQuestion.question}</h2>
-                {selectedGame === "Flashcards" ? (
+                {selectedGame === "Quiz" && currentQuestion.elementGroup ? (
+                  <ElementSort
+                    group={currentQuestion.elementGroup}
+                    checked={checked}
+                    onCheck={(isCorrect) => {
+                      setChoice(isCorrect ? "correct selection" : "incorrect selection");
+                      setChecked(true);
+                      setAttemptCount((count) => count + 1);
+                      if (isCorrect) setCorrectCount((count) => count + 1);
+                      recordResult(topicForQuestion(currentQuestion), isCorrect);
+                      if (!isCorrect) setMissedQuestion(currentQuestion);
+                    }}
+                    onNext={next}
+                  />
+                ) : selectedGame === "Flashcards" ? (
                   <>
                     <button
                       style={styles.flipButton}
