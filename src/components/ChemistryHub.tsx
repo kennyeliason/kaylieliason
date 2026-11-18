@@ -864,6 +864,14 @@ const unit7Games = [
   ),
 ];
 
+const unit3Games = [
+  ...games.filter(([name]) => ["Flashcards", "Quiz", "Match"].includes(name)),
+  ["Element Sort", "Select metals & nonmetals"],
+  ...games.filter(
+    ([name]) => !["Flashcards", "Quiz", "Match", "Orbital Lab"].includes(name),
+  ),
+];
+
 const jeopardyBoard = [
   { title: "EM WAVES", indexes: [0, 1, 2, 3, 4] },
   { title: "LIGHT ENERGY", indexes: [5, 6, 7, 8, 24] },
@@ -3524,6 +3532,11 @@ const elementList = [
   ["Fr", "Francium"], ["Ra", "Radium"], ["Ac", "Actinium"], ["Th", "Thorium"], ["Pa", "Protactinium"], ["U", "Uranium"], ["Np", "Neptunium"], ["Pu", "Plutonium"], ["Am", "Americium"], ["Cm", "Curium"], ["Bk", "Berkelium"], ["Cf", "Californium"], ["Es", "Einsteinium"], ["Fm", "Fermium"], ["Md", "Mendelevium"], ["No", "Nobelium"], ["Lr", "Lawrencium"], ["Rf", "Rutherfordium"], ["Db", "Dubnium"], ["Sg", "Seaborgium"], ["Bh", "Bohrium"], ["Hs", "Hassium"], ["Mt", "Meitnerium"], ["Ds", "Darmstadtium"], ["Rg", "Roentgenium"], ["Cn", "Copernicium"], ["Nh", "Nihonium"], ["Fl", "Flerovium"], ["Mc", "Moscovium"], ["Lv", "Livermorium"], ["Ts", "Tennessine"], ["Og", "Oganesson"],
 ] as const;
 const elementInfo = new Map(elementList.map(([symbol, name], index) => [symbol, { name, number: index + 1 }]));
+const metals = new Set(
+  elementList
+    .map(([symbol]) => symbol)
+    .filter((symbol) => !nonmetals.has(symbol) && !metalloids.has(symbol)),
+);
 
 function PeriodicTable() {
   const [open, setOpen] = useState(false);
@@ -3552,6 +3565,98 @@ function PeriodicTable() {
     </aside>}
     {!open && <button style={styles.cheatButton} onClick={onToggle}>Periodic Table</button>}
   </div>;
+}
+
+function ElementSort() {
+  const prompts = [
+    { key: "nonmetals", label: "Select all the nonmetals", answers: nonmetals },
+    { key: "metals", label: "Select all the metals", answers: metals },
+  ] as const;
+  const [questionIndex, setQuestionIndex] = useState(0);
+  const [selected, setSelected] = useState<string[]>([]);
+  const [checked, setChecked] = useState(false);
+  const [dragging, setDragging] = useState(false);
+  const prompt = prompts[questionIndex];
+  const selectedSet = new Set(selected);
+  const correct =
+    selectedSet.size === prompt.answers.size &&
+    [...prompt.answers].every((element) => selectedSet.has(element));
+  const choose = (element: string, addOnly = false) => {
+    if (checked) return;
+    setSelected((current) => {
+      if (current.includes(element)) return addOnly ? current : current.filter((item) => item !== element);
+      return [...current, element];
+    });
+  };
+  useEffect(() => {
+    const stopDragging = () => setDragging(false);
+    window.addEventListener("pointerup", stopDragging);
+    return () => window.removeEventListener("pointerup", stopDragging);
+  }, []);
+  const moveOn = () => {
+    setQuestionIndex((index) => (index + 1) % prompts.length);
+    setSelected([]);
+    setChecked(false);
+  };
+  const tileStyle = (element: string): React.CSSProperties => {
+    const selectedElement = selectedSet.has(element);
+    if (!checked)
+      return {
+        border: `2px solid ${selectedElement ? "#0f766e" : "#bae6fd"}`,
+        background: selectedElement ? "#99f6e4" : "#fff",
+        color: "#164e63",
+      };
+    const correctChoice = prompt.answers.has(element);
+    return {
+      border: "2px solid",
+      borderColor: correctChoice ? "#16a34a" : selectedElement ? "#ef4444" : "#bae6fd",
+      background: correctChoice ? "#dcfce7" : selectedElement ? "#fee2e2" : metalloids.has(element) ? "#ffe4e6" : metals.has(element) ? "#dbeafe" : "#f0fdf4",
+      color: "#164e63",
+    };
+  };
+  const tile = (element: string, key: string) => (
+    <button
+      key={key}
+      type="button"
+      aria-label={`Select ${elementInfo.get(element)?.name || element}`}
+      onPointerDown={(event) => {
+        event.preventDefault();
+        setDragging(true);
+        choose(element);
+      }}
+      onPointerEnter={() => dragging && choose(element, true)}
+      style={{ ...tileStyle(element), aspectRatio: "1 / 1", minWidth: 0, borderRadius: 5, cursor: checked ? "default" : "pointer", fontFamily: "Montserrat,sans-serif", fontWeight: 900, fontSize: "clamp(8px,1.7vw,15px)", padding: 1, touchAction: "none" }}
+    >
+      {element}
+    </button>
+  );
+  return (
+    <div style={{ maxWidth: 900, margin: "0 auto", textAlign: "left" }}>
+      <h2 style={styles.gameName}>ELEMENT SORT</h2>
+      <p style={styles.modalText}>{prompt.label}. Tap an element, or drag across several elements to select them.</p>
+      <div style={{ display: "flex", justifyContent: "center", flexWrap: "wrap", gap: 10, marginBottom: 16 }}>
+        <span style={{ padding: "7px 11px", borderRadius: 999, background: "#dbeafe", color: "#1d4ed8", fontWeight: 800 }}>Metals</span>
+        <span style={{ padding: "7px 11px", borderRadius: 999, background: "#dcfce7", color: "#166534", fontWeight: 800 }}>Nonmetals</span>
+        <span style={{ padding: "7px 11px", borderRadius: 999, background: "#ffe4e6", color: "#be123c", fontWeight: 800 }}>Metalloids = a mix of metal and nonmetal properties</span>
+      </div>
+      <div style={{ userSelect: "none", display: "grid", gridTemplateColumns: "repeat(18,minmax(0,1fr))", gap: 3, padding: 10, borderRadius: 18, background: "#f0fdfa" }}>
+        {periodicRows.flatMap((row, rowIndex) => row.map((element, columnIndex) => element ? tile(element, `${rowIndex}-${columnIndex}`) : <span key={`${rowIndex}-${columnIndex}`} />))}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(15,minmax(0,1fr))", gap: 3, margin: "12px 0 0 11.1%", padding: 8, borderRadius: 14, background: "#f0fdfa" }}>
+        {lanthanides.map((element) => tile(element, `lan-${element}`))}
+        {actinides.map((element) => tile(element, `act-${element}`))}
+      </div>
+      {!checked ? (
+        <button style={{ ...styles.closeButton, opacity: selected.length ? 1 : .45 }} disabled={!selected.length} onClick={() => setChecked(true)}>Check selections</button>
+      ) : (
+        <div style={{ marginTop: 18, padding: 16, borderRadius: 14, background: correct ? "#dcfce7" : "#fff1f2", color: correct ? "#166534" : "#9f1239", fontWeight: 750 }}>
+          <strong>{correct ? "✓ You got every one!" : "Not quite — green elements are the correct answers, and red ones should not have been selected."}</strong>
+          <p style={{ marginBottom: 0 }}>Metalloids are the elements along the stair-step line. They have a mix of metal and nonmetal properties.</p>
+          <button style={styles.closeButton} onClick={moveOn}>Next question</button>
+        </div>
+      )}
+    </div>
+  );
 }
 
 function DensityLab() {
@@ -3677,7 +3782,8 @@ export default function ChemistryHub() {
     selectedGame !== "My Stats" &&
     selectedGame !== "Orbital Lab" &&
     selectedGame !== "VSEPR Lab" &&
-    selectedGame !== "Density Lab";
+    selectedGame !== "Density Lab" &&
+    selectedGame !== "Element Sort";
   const openGame = (game: string) => {
     setSelectedGame(game);
     setQuestionIndex(0);
@@ -3850,7 +3956,9 @@ export default function ChemistryHub() {
               : "Study guide coming soon"}
           </div>
           <section style={styles.grid}>
-            {(selectedUnit === "Unit 7"
+            {(selectedUnit === "Unit 3"
+              ? unit3Games
+              : selectedUnit === "Unit 7"
               ? unit7Games
               : selectedUnit === "Unit 2"
               ? [
@@ -3929,6 +4037,7 @@ export default function ChemistryHub() {
             {selectedGame === "Orbital Lab" && <OrbitalLab />}
             {selectedGame === "VSEPR Lab" && <VSEPRLab />}
             {selectedGame === "Density Lab" && <DensityLab />}
+            {selectedGame === "Element Sort" && <ElementSort />}
             {selectedGame === "Jeopardy" && questions.length ? (
               <>
                 {jeopardyQuestion === null ? (
